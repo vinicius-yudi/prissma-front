@@ -2,23 +2,29 @@ import logo from "@/assets/svg/logo.svg"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
-import { ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
+import { Undo2, ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
 import { useCadastroForm } from "../hooks/useCadastroForm"
+import { ReturnButton } from "./ReturnButton"
 
 export function CadastroArquiteto() {
     const { formDataArquiteto, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroForm()
   return (
     <section
-      className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12"
+      className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 relative"
       style={{ backgroundColor: "#0a1a1b" }}
     >
+      <div className="absolute left-4 top-4 z-10">
+        <ReturnButton icon={Undo2} type="button" onClick={() => window.location.reload()}>
+          Voltar
+        </ReturnButton>
+      </div>
       <div className="w-full max-w-md space-y-12">
-        <div className="flex justify-center">
+        <div className="w-full max-w-md flex justify-center">
           <img src={logo} alt="Prissma" className="h-25" />
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-3xl font-bold tracking-tight">Crie sua conta</h2>
+          <h2 className="text-white text-3xl font-bold tracking-tight">Crie sua conta como arquiteto</h2>
           <p className="text-sm" style={{ color: "#bec8c8" }}>
             Insira suas credenciais para continuar
           </p>

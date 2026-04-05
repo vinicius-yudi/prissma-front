@@ -2,7 +2,11 @@ import logo from "@/assets/svg/logo.svg"
 import { SelectionButton } from "./SelectionButton"
 import { HardHat , DraftingCompass, User } from "lucide-react"
 
-export function CadastroType() {
+interface CadastroTypeProps {
+  onTypeSelected: (type: "arquiteto" | "engenheiro" | "cliente") => void
+}
+
+export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
   return (
     <section
       className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12"
@@ -22,17 +26,17 @@ export function CadastroType() {
 
             <div className="text-center space-y-2 w-full">
                 <div className="space-y-4 pt-4 w-full">
-                    <SelectionButton icon={HardHat} type="submit">
+                    <SelectionButton icon={HardHat} type="button" onClick={() => onTypeSelected("arquiteto")}>
                         Criar conta de Arquiteto
                     </SelectionButton>
                 </div>
                 <div className="space-y-4 pt-4 w-full">
-                    <SelectionButton icon={DraftingCompass} type="submit">
+                    <SelectionButton icon={DraftingCompass} type="button" onClick={() => onTypeSelected("engenheiro")}>
                         Criar conta de Engenheiro
                     </SelectionButton>
                 </div>
                 <div className="space-y-4 pt-4 w-full">
-                    <SelectionButton icon={User} type="submit">
+                    <SelectionButton icon={User} type="button" onClick={() => onTypeSelected("cliente")}>
                         Criar conta de Cliente
                     </SelectionButton>
                 </div>
