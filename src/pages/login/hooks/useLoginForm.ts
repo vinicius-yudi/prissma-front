@@ -1,16 +1,21 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
 import { login } from "../services/login.service"
 import type { LoginFormData } from "../types"
 
 export function useLoginForm() {
   const [formData, setFormData] = useState<LoginFormData>({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
+  const { saveToken } = useAuth()
+  const navigate = useNavigate()
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
-      // TODO: redirecionar para dashboard
+    onSuccess: ({ token }) => {
+      saveToken(token)
+      navigate("/dashboard")
     },
     onError: (error: Error) => {
       console.error(error.message)
