@@ -3,14 +3,16 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { useLoginForm } from "../hooks/useLoginForm"
 
 export function LoginForm() {
-  const { formData, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useLoginForm()
+  const { formData, showPassword, handleChange, handleSubmit, togglePassword, isPending } = useLoginForm()
 
   return (
     <section
-      className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12"
+      className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto"
       style={{ backgroundColor: "#0a1a1b" }}
     >
       <div className="w-full max-w-md space-y-12">
@@ -19,15 +21,15 @@ export function LoginForm() {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-3xl font-bold tracking-tight">Acesse sua conta</h2>
+          <h2 className="text-white text-3xl font-bold tracking-tight">Bem-vindo de volta</h2>
           <p className="text-sm" style={{ color: "#bec8c8" }}>
-            Insira suas credenciais para continuar
+            Entre com suas credenciais para acessar sua conta.
           </p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email *</Label>
             <Input
               id="email"
               name="email"
@@ -41,7 +43,16 @@ export function LoginForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Senha *</Label>
+              <a
+                href="#"
+                className="text-sm font-medium hover:underline underline-offset-4 transition-colors"
+                style={{ color: "#8ad3d6" }}
+              >
+                Esqueceu?
+              </a>
+            </div>
             <Input
               id="password"
               name="password"
@@ -62,19 +73,10 @@ export function LoginForm() {
             />
           </div>
 
-          {isError && (
-            <p className="text-sm text-center" style={{ color: "#ffb4ab" }}>
-              {errorMessage}
-            </p>
-          )}
-
           <div className="space-y-4 pt-4">
             <Button type="submit" disabled={isPending}>
               {isPending ? "Entrando..." : "Entrar"}
               {!isPending && <ArrowRight size={18} />}
-            </Button>
-            <Button type="button" variant="outline">
-              Esqueceu sua senha?
             </Button>
           </div>
         </form>
@@ -92,6 +94,7 @@ export function LoginForm() {
           </p>
         </div>
       </div>
+      <ToastContainer position="top-right" theme="dark" />
     </section>
   )
 }
