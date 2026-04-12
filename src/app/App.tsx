@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
+import { MainLayout } from "@/layouts/MainLayout"
 import { DashboardPage } from "@/pages/dashboard"
 import { LoginPage } from "@/pages/login"
 import { ProtectedRoute } from "./ProtectedRoute"
@@ -15,7 +16,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+              </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
