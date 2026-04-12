@@ -1,21 +1,77 @@
-import { useAuth } from "@/contexts/AuthContext"
+import { FolderKanban, ClipboardCheck, CalendarDays } from "lucide-react"
+
+const statsCards = [
+	{
+		icon: FolderKanban,
+		label: "PROJETOS ATIVOS",
+		value: 8,
+		detail: "+2 este mês",
+		accent: "border-t-primary bg-primary/5",
+		iconBg: "bg-primary/15 text-primary",
+		valueColor: "text-primary-fixed",
+	},
+	{
+		icon: ClipboardCheck,
+		label: "TAREFAS PENDENTES",
+		value: 14,
+		detail: "5 com prazo hoje",
+		accent: "border-t-secondary bg-secondary/5",
+		iconBg: "bg-secondary/15 text-secondary",
+		valueColor: "text-secondary",
+	},
+	{
+		icon: CalendarDays,
+		label: "PRÓXIMAS VISITAS",
+		value: 3,
+		detail: "Próxima: amanhã",
+		accent: "border-t-blue-400 bg-blue-400/5",
+		iconBg: "bg-blue-400/15 text-blue-400",
+		valueColor: "text-blue-400",
+	},
+] as const
 
 export function DashboardPage() {
-  const { logout } = useAuth()
+	return (
+		<div>
+			<div className="mb-6">
+				<h1 className="text-2xl font-bold text-on-surface">
+					Painel de Controle
+				</h1>
+				<p className="text-sm text-on-surface-variant">
+					Gerencie seus projetos e acompanhe o progresso
+				</p>
+			</div>
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-500">Você está autenticado!</p>
-        <button
-          type="button"
-          onClick={logout}
-          className="mt-6 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-        >
-          Sair
-        </button>
-      </div>
-    </div>
-  )
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+				{statsCards.map((card) => {
+					const Icon = card.icon
+
+					return (
+						<div
+							key={card.label}
+							className={`rounded-xl border border-outline-variant border-t-3 p-5 ${card.accent}`}
+						>
+							<div className="flex items-start justify-between">
+								<div
+									className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.iconBg}`}
+								>
+									<Icon className="h-5 w-5" />
+								</div>
+							</div>
+
+							<p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
+								{card.label}
+							</p>
+							<p className={`mt-1 text-3xl font-bold ${card.valueColor}`}>
+								{card.value}
+							</p>
+							<p className="mt-1 text-xs text-on-surface-variant">
+								{card.detail}
+							</p>
+						</div>
+					)
+				})}
+			</div>
+		</div>
+	)
 }
