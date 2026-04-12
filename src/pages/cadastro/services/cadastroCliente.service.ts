@@ -1,13 +1,12 @@
+import { api } from "@/lib/api"
 import type { CadastroFormDataCliente } from "../types"
 
-export async function cadastroCliente(data: CadastroFormDataCliente): Promise<void> {
-  const response = await fetch("/api/auth/cadastro", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
+interface CadastroResponse {
+  token: string
+}
 
-  if (!response.ok) {
-    throw new Error("Não foi possível realizar o cadastro")
-  }
+export async function cadastroCliente(data: CadastroFormDataCliente): Promise<CadastroResponse> {
+  const { confirmPassword, ...dataToSend } = data
+  const cadastroData = { ...dataToSend, role: 'USER' as const }
+  return api.post<CadastroResponse>("/users", cadastroData)
 }

@@ -3,11 +3,12 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { ArrowRight, Eye, EyeOff, Mail, Undo2 } from "lucide-react"
-import { useCadastroForm } from "../hooks/useCadastroForm"
+import { useCadastroEngenheiro } from "../hooks/useCadastroEngenheiro"
 import { ReturnButton } from "./ReturnButton"
+import { Link } from "react-router-dom"
 
 export function CadastroEngenheiro() {
-    const { formDataArquiteto: formDataEngenheiro, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroForm()
+    const { formDataEngenheiro, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroEngenheiro()
   return (
     <section
       className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 relative"
@@ -18,7 +19,7 @@ export function CadastroEngenheiro() {
           Voltar
         </ReturnButton>
       </div>
-      <div className="w-full max-w-md space-y-12">
+      <div className="w-full max-w-md space-y-10">
         <div className="flex justify-center">
           <img src={logo} alt="Prissma" className="h-25" />
         </div>
@@ -31,6 +32,19 @@ export function CadastroEngenheiro() {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <Label htmlFor="name">Nome Completo</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Seu nome completo"
+              value={formDataEngenheiro.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -103,18 +117,18 @@ export function CadastroEngenheiro() {
           </div>
         </form>
 
-        <div className="text-center">
+        <div className="text-center pb-5">
                 <p className="text-sm" style={{ color: "#bec8c8" }}>
                     Já possui uma conta?{" "}
-                    <a
-                    href="#"
+                    <Link
+                    to={"/login"}
                     className="font-bold underline-offset-4 hover:underline ml-1"
                     style={{ color: "#8ad3d6" }}
                     >
                     Faça login
-                    </a>
+                    </Link>
                 </p>
-            </div>
+        </div>
       </div>
     </section>
   )

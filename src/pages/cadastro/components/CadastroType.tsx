@@ -1,5 +1,6 @@
 import logo from "@/assets/svg/logo.svg"
 import { SelectionButton } from "./SelectionButton"
+import { Link } from "react-router-dom"
 import { HardHat , DraftingCompass, User } from "lucide-react"
 
 interface CadastroTypeProps {
@@ -9,7 +10,7 @@ interface CadastroTypeProps {
 export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
   return (
     <section
-      className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12"
+      className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto"
       style={{ backgroundColor: "#0a1a1b" }}
     >
         <div className="w-full max-w-md space-y-12">
@@ -44,13 +45,13 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
             <div className="text-center">
                 <p className="text-sm" style={{ color: "#bec8c8" }}>
                     Já possui uma conta?{" "}
-                    <a
-                    href="#"
+                    <Link
+                    to={"/login"}
                     className="font-bold underline-offset-4 hover:underline ml-1"
                     style={{ color: "#8ad3d6" }}
                     >
                     Faça login
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>
