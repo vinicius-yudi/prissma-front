@@ -3,6 +3,7 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
+import { Link } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useLoginForm } from "../hooks/useLoginForm"
@@ -45,13 +46,13 @@ export function LoginForm() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Senha *</Label>
-              <a
-                href="#"
+              <Link
+                to="/forgot-password"
                 className="text-sm font-medium hover:underline underline-offset-4 transition-colors"
                 style={{ color: "#8ad3d6" }}
               >
                 Esqueceu?
-              </a>
+              </Link>
             </div>
             <Input
               id="password"
