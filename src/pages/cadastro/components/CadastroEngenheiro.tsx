@@ -11,7 +11,7 @@ export function CadastroEngenheiro() {
     const { formDataEngenheiro, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroEngenheiro()
   return (
     <section
-      className="w-full lg:w-[45%] flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 relative"
+      className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto relative"
       style={{ backgroundColor: "#0a1a1b" }}
     >
       <div className="absolute left-4 top-4 z-10">
