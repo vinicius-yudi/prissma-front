@@ -7,13 +7,21 @@ const input = tv({
     withSuffix: {
       true: "pr-12",
     },
+    withPrefix: {
+      true: "pl-10",
+    },
   },
 })
 
-export function Input({ suffix, className, ...props }: InterfaceInputProps) {
+export function Input({ suffix, prefix, className, ...props }: InterfaceInputProps) {
   return (
     <div className="relative">
-      <input className={input({ withSuffix: !!suffix, className })} {...props} />
+      {prefix && (
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 flex items-center justify-center">
+          {prefix}
+        </span>
+      )}
+      <input className={input({ withSuffix: !!suffix, withPrefix: !!prefix, className })} {...props} />
       {suffix && (
         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
           {suffix}
