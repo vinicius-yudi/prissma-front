@@ -1,4 +1,5 @@
 import logo from "@/assets/svg/logo.svg"
+import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
@@ -84,13 +85,13 @@ export function LoginForm() {
         <div className="text-center">
           <p className="text-sm" style={{ color: "#bec8c8" }}>
             Não tem uma conta?{" "}
-            <a
-              href="#"
+            <Link
+              to="/cadastro"
               className="font-bold underline-offset-4 hover:underline ml-1"
               style={{ color: "#8ad3d6" }}
             >
               Cadastre-se
-            </a>
+            </Link>
           </p>
         </div>
       </div>

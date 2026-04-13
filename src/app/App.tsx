@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext"
 import { MainLayout } from "@/layouts/MainLayout"
 import { DashboardPage } from "@/pages/dashboard"
 import { LoginPage } from "@/pages/login"
+import { CadastroPage } from "@/pages/cadastro"
 import { ProtectedRoute } from "./ProtectedRoute"
 
 const queryClient = new QueryClient()
@@ -15,6 +16,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/cadastro" element={<CadastroPage />} />
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
