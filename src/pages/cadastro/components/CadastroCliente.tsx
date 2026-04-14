@@ -11,7 +11,7 @@ export function CadastroCliente() {
     const { formDataCliente, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroCliente()
   return (
     <section
-      className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto relative"
+      className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative"
       style={{ backgroundColor: "#0a1a1b" }}
     >
       <div className="absolute left-4 top-4 z-10">
@@ -19,13 +19,13 @@ export function CadastroCliente() {
           Voltar
         </ReturnButton>
       </div>
-      <div className="w-full max-w-md space-y-10">
+      <div className="w-full max-w-md space-y-6 sm:space-y-8 my-auto">
         <div className="flex justify-center">
           <img src={logo} alt="Prissma" className="h-25" />
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-3xl font-bold tracking-tight">Crie sua conta como cliente</h2>
+          <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como cliente</h2>
           <p className="text-sm" style={{ color: "#bec8c8" }}>
             Insira suas credenciais para continuar
           </p>

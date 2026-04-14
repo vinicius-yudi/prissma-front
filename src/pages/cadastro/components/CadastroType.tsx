@@ -10,16 +10,16 @@ interface CadastroTypeProps {
 export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
   return (
     <section
-      className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto"
+      className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-16 pb-10 lg:py-12 overflow-y-auto"
       style={{ backgroundColor: "#0a1a1b" }}
     >
-        <div className="w-full max-w-md space-y-12">
+        <div className="w-full max-w-md space-y-8 sm:space-y-12 my-auto">
             <div className="flex justify-center">
                 <img src={logo} alt="Prissma" className="h-25" />
             </div>
 
             <div className="text-center space-y-2">
-                <h2 className="text-white text-3xl font-bold tracking-tight">Crie sua conta</h2>
+                <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta</h2>
                 <p className="text-sm" style={{ color: "#bec8c8" }}>
                     Escolha o tipo de conta que deseja criar
                 </p>
