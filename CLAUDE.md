@@ -13,15 +13,12 @@ Todas as decisões seguem: **DRY**, **KISS**, **YAGNI**. Nada é implementado se
 ```bash
 bun --bun run dev       # Dev server na porta 3000
 bun --bun run build     # Build de produção
-bun --bun run test      # Testes com Vitest
-bun --bun run check     # Lint + format com Biome
 bun --bun run lint      # Lint apenas
-bun --bun run format    # Format apenas
 ```
 
 ## Stack
 
-Vite · React · TypeScript · TailwindCSS · TanStack Router
+Vite · React · TypeScript · TailwindCSS · React Router DOM · TanStack Query
 
 ## Estrutura de pastas
 
@@ -46,8 +43,7 @@ pages/
     ├── hooks/
     ├── services/
     ├── utils/
-    ├── types.ts
-    └── README.md   ← síntese do módulo, obrigatório
+    └── types.ts
 ```
 
 ### Shared
@@ -101,7 +97,63 @@ Context API é exceção, não padrão — só se mais de uma página consumir.
 - Tipagem explícita sempre
 - Early return como padrão
 - Zero código morto
-- Zero comentário explicando código óbvio
+- Zero comentário de código — código deve ser autoexplicativo
+- Nunca usar `var`; preferir `const`, `let` apenas quando há reatribuição
+- Nenhuma variável, parâmetro ou import sem uso
+- Funções com no máximo 2 parâmetros; se precisar de mais, usar objeto de opções
+- Funções devem ser pequenas e com responsabilidade única; preferir funções puras
+- Nunca usar `console.log`
+- Nunca usar ternários
+
+## JSX / UI
+
+- Nunca usar strings literais diretamente no JSX — texto visível vem de constantes ou helpers
+- Sempre usar `key` em listas
+- Nunca criar objetos, arrays ou funções inline em props
+- Componentes devem ser puros
+- Evitar renderização condicional com ternários
+
+## Imports
+
+Ordem obrigatória (separar grupos com linha em branco, ordenar alfabeticamente dentro de cada grupo):
+
+1. Builtin
+2. External
+3. Internal
+4. Parent
+5. Sibling
+6. Index
+
+## Acessibilidade
+
+- Toda imagem deve ter `alt`
+- Links semanticamente válidos
+- Componentes interativos acessíveis via teclado
+
+## Promises e Async
+
+- Toda Promise com tratamento de erro
+- Evitar promises aninhadas
+- Preferir `async/await`
+
+## Segurança
+
+- Nunca usar `eval`
+- Evitar acesso dinâmico a objetos sem validação
+
+## TanStack Query
+
+- Fonte única de verdade para dados remotos
+- Evitar estados locais redundantes com query
+- Mutations devem invalidar apenas caches necessários
+- Requests apenas via services
+
+## Modais
+
+- Controle exclusivo via `ModalContext`
+- Proibido abrir/fechar modais via `useState` local
+- Todo modal deve ter `open`, `close` e `payload`
+- Nunca usar ternários para modais
 
 ## Estilo visual
 
@@ -111,10 +163,6 @@ Context API é exceção, não padrão — só se mais de uma página consumir.
 
 ## Configurações técnicas
 
-**Roteamento**: TanStack Router com file-based routing em `src/routes/`. `routeTree.gen.ts` é auto-gerado — nunca editar manualmente.
-
 **Path aliases**: `#/*` e `@/*` resolvem para `src/*`.
 
-**Linting**: Biome (`biome.json`) — indentação com tab, aspas duplas em JS/TS. Ignora `routeTree.gen.ts` e `styles.css`.
-
-**Tema**: toggle light/dark/auto salvo em `localStorage` com chave `theme`. Script inline em `__root.tsx` aplica o tema antes do paint para evitar flash.
+**Linting**: ESLint — código deve passar em `npm run lint` sem ajustes manuais.
