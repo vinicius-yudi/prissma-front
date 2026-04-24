@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { resetPassword } from "../services/reset-password.service"
@@ -8,6 +8,12 @@ export function useResetPasswordForm() {
 	const [searchParams] = useSearchParams()
 	const token = searchParams.get("token") ?? ""
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (!token) {
+			navigate("/forgot-password", { replace: true })
+		}
+	}, [token, navigate])
 
 	const [newPassword, setNewPassword] = useState("")
 	const [confirmPassword, setConfirmPassword] = useState("")
@@ -31,8 +37,20 @@ export function useResetPasswordForm() {
 			toast.error("Token inválido ou ausente.")
 			return
 		}
-		if (newPassword.length < 6) {
-			toast.warning("A senha deve ter no mínimo 6 caracteres.")
+		if (!/[A-Z]/.test(newPassword)) {
+			toast.warning("A senha deve conter pelo menos uma letra maiúscula.")
+			return
+		}
+		if (!/[a-z]/.test(newPassword)) {
+			toast.warning("A senha deve conter pelo menos uma letra minúscula.")
+			return
+		}
+		if (!/[0-9]/.test(newPassword)) {
+			toast.warning("A senha deve conter pelo menos um número.")
+			return
+		}
+		if (!/[^a-zA-Z0-9]/.test(newPassword)) {
+			toast.warning("A senha deve conter pelo menos um caractere especial.")
 			return
 		}
 		if (newPassword !== confirmPassword) {
@@ -53,6 +71,5 @@ export function useResetPasswordForm() {
 		toggleConfirm: () => setShowConfirm((p) => !p),
 		handleSubmit,
 		isPending: mutation.isPending,
-		hasToken: !!token,
 	}
 }

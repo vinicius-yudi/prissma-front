@@ -6,7 +6,7 @@ import { cadastroCliente } from "../services/cadastroCliente.service"
 import type { CadastroFormDataCliente } from "../types"
 
 export function useCadastroCliente() {
-  const [formDataCliente, setFormData] = useState<CadastroFormDataCliente>({ email: "", password: "", confirmPassword: "" })
+  const [formDataCliente, setFormData] = useState<CadastroFormDataCliente>({ name: "", email: "", password: "", confirmPassword: "" })
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { saveToken } = useAuth()

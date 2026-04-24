@@ -20,35 +20,7 @@ export function ResetPasswordForm() {
 		toggleConfirm,
 		handleSubmit,
 		isPending,
-		hasToken,
 	} = useResetPasswordForm()
-
-	if (!hasToken) {
-		return (
-			<section
-				className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12"
-				style={{ backgroundColor: "#0a1a1b" }}
-			>
-				<div className="w-full max-w-md text-center space-y-6">
-					<img src={logo} alt="Prissma" className="h-25 mx-auto" />
-					<div className="space-y-2">
-						<h2 className="text-white text-3xl font-bold tracking-tight">Link inválido</h2>
-						<p className="text-sm" style={{ color: "#bec8c8" }}>
-							Este link de redefinição é inválido ou expirou. Solicite um novo link.
-						</p>
-					</div>
-					<Link
-						to="/forgot-password"
-						className="flex items-center justify-center gap-2 text-sm font-medium hover:underline underline-offset-4 transition-colors"
-						style={{ color: "#8ad3d6" }}
-					>
-						Solicitar novo link
-						<ArrowRight size={16} />
-					</Link>
-				</div>
-			</section>
-		)
-	}
 
 	return (
 		<section

@@ -6,7 +6,7 @@ import { cadastroEngenheiro } from "../services/cadastroEngenheiro.service"
 import type { CadastroFormDataEngenheiro } from "../types"
 
 export function useCadastroEngenheiro() {
-  const [formDataEngenheiro, setFormData] = useState<CadastroFormDataEngenheiro>({ email: "", password: "", confirmPassword: "" })
+  const [formDataEngenheiro, setFormData] = useState<CadastroFormDataEngenheiro>({ name: "", email: "", password: "", confirmPassword: "" })
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { saveToken } = useAuth()
