@@ -5,6 +5,7 @@ import { MainLayout } from "@/layouts/MainLayout"
 import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { LoginPage } from "@/pages/login"
+import { CadastroPage } from "@/pages/cadastro"
 import { ResetPasswordPage } from "@/pages/reset-password"
 import { ProtectedRoute } from "./ProtectedRoute"
 
@@ -17,6 +18,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/cadastro" element={<CadastroPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route element={<ProtectedRoute />}>

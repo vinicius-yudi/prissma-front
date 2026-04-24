@@ -1,14 +1,16 @@
 import { NavLink, useLocation } from "react-router-dom"
 import {
-	Home,
-	FolderKanban,
-	ClipboardList,
-	Users,
 	BarChart3,
-	Settings,
+	ClipboardList,
+	FolderKanban,
+	Home,
 	LogOut,
-	Monitor,
+	Settings,
+	Users,
+	X,
 } from "lucide-react"
+import { tv } from "tailwind-variants"
+import logo from "@/assets/svg/logo.svg"
 import { useAuth } from "@/contexts/AuthContext"
 
 const navItems = [
@@ -20,15 +22,48 @@ const navItems = [
 	{ to: "/configuracoes", label: "Configurações", icon: Settings },
 ] as const
 
-export function Sidebar() {
+const aside = tv({
+	base: "fixed inset-y-0 left-0 z-30 flex h-screen w-64 flex-col bg-surface-container-low border-r border-outline-variant transition-transform duration-300 ease-in-out lg:relative lg:w-60 lg:translate-x-0",
+	variants: {
+		open: {
+			true: "translate-x-0",
+			false: "-translate-x-full",
+		},
+	},
+})
+
+const navLink = tv({
+	base: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+	variants: {
+		active: {
+			true: "bg-primary-container text-on-primary-container",
+			false: "text-on-surface-variant hover:bg-surface-container-high",
+		},
+	},
+})
+
+interface SidebarProps {
+	isOpen: boolean
+	onClose: () => void
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
 	const { logout } = useAuth()
 	const location = useLocation()
 
 	return (
-		<aside className="flex h-screen w-60 flex-col bg-surface-container-low border-r border-outline-variant">
-			<div className="flex items-center gap-2 px-6 py-5">
-				<Monitor className="h-6 w-6 text-primary" />
-				<span className="text-lg font-bold text-on-surface">Prissma</span>
+		<aside className={aside({ open: isOpen })}>
+			<div className="flex items-center justify-between px-6 py-5">
+				<div className="flex items-center gap-2">
+					<img src={logo} alt="Prissma" className="h-10" />
+				</div>
+				<button
+					type="button"
+					onClick={onClose}
+					className="rounded-lg p-1.5 text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer lg:hidden"
+				>
+					<X className="h-5 w-5" />
+				</button>
 			</div>
 
 			<nav className="flex-1 flex flex-col gap-1 px-3 mt-2">
@@ -39,11 +74,8 @@ export function Sidebar() {
 						<NavLink
 							key={to}
 							to={to}
-							className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-								isActive
-									? "bg-primary-container text-on-primary-container"
-									: "text-on-surface-variant hover:bg-surface-container-high"
-							}`}
+							onClick={onClose}
+							className={navLink({ active: isActive })}
 						>
 							<Icon className="h-5 w-5" />
 							{label}

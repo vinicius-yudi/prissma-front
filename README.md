@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# PRISSMA — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma web de gerenciamento de obras e reformas de pequeno porte. Centraliza etapas, equipes, tarefas e orçamento em um único sistema, permitindo que engenheiros, arquitetos, mestres de obra e proprietários acompanhem o andamento de cada projeto em tempo real.
 
-Currently, two official plugins are available:
+## Sobre o projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O PRISSMA é um SaaS voltado ao ramo residencial e comercial de pequeno porte. Seus três pilares são:
 
-## React Compiler
+1. **Gerenciamento de etapas e equipes** — acompanhamento do ciclo completo da obra
+2. **Controle orçamentário** — relatórios e dashboards financeiros
+3. **Fluxo de trabalho integrado** — visibilidade compartilhada entre todos os envolvidos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+| Camada | Tecnologia |
+|---|---|
+| Bundler | [Vite](https://vite.dev) |
+| UI | [React 19](https://react.dev) |
+| Tipagem | [TypeScript 5](https://www.typescriptlang.org) |
+| Estilo | [TailwindCSS 4](https://tailwindcss.com) |
+| Roteamento | [React Router DOM 7](https://reactrouter.com) |
+| Dados remotos | [TanStack Query 5](https://tanstack.com/query) |
+| Ícones | [Lucide React](https://lucide.dev) |
+| Animações | [@lottiefiles/dotlottie-react](https://github.com/LottieFiles/dotlottie-react) |
+| Notificações | [React Toastify](https://fkhadra.github.io/react-toastify) |
+| Lint | ESLint 9 + typescript-eslint |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Pré-requisitos
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Bun](https://bun.sh) >= 1.x
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Instalação
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Comandos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+bun --bun run dev      # Servidor de desenvolvimento na porta 3000
+bun --bun run build    # Build de produção (tsc + vite build)
+bun --bun run lint     # Verificação estática de código
+bun --bun run preview  # Prévia local do build de produção
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estrutura de pastas
+
+```
+src/
+├── pages/          # Features da aplicação (feature-based)
+│   ├── login/
+│   ├── cadastro/
+│   └── dashboard/
+├── shared/         # Código reutilizável entre páginas
+│   ├── components/
+│   ├── hooks/
+│   ├── services/
+│   ├── utils/
+│   ├── types/
+│   └── constants/
+├── assets/
+├── styles/         # Tokens de design como CSS custom properties
+└── main.tsx
+```
+
+Cada página é uma pasta autocontida com seus próprios `components/`, `hooks/`, `services/`, `utils/` e `types.ts`. Código específico de uma feature nunca vai para `shared/`.
+
+## Path aliases
+
+`#/*` e `@/*` resolvem para `src/*`.
+
+```ts
+import { Button } from '#/shared/components/Button'
 ```
