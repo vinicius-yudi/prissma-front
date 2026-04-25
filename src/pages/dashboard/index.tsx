@@ -8,7 +8,7 @@ const statsCards = [
 		detail: "+2 este mês",
 		accent: "border-t-primary bg-primary/5",
 		iconBg: "bg-primary/15 text-primary",
-		valueColor: "text-primary-fixed",
+		valueColor: "text-primary",
 	},
 	{
 		icon: ClipboardCheck,
@@ -24,9 +24,9 @@ const statsCards = [
 		label: "PRÓXIMAS VISITAS",
 		value: 3,
 		detail: "Próxima: amanhã",
-		accent: "border-t-blue-400 bg-blue-400/5",
-		iconBg: "bg-blue-400/15 text-blue-400",
-		valueColor: "text-blue-400",
+		accent: "border-t-tertiary bg-tertiary/5",
+		iconBg: "bg-tertiary/15 text-tertiary",
+		valueColor: "text-tertiary",
 	},
 ] as const
 

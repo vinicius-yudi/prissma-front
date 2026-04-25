@@ -54,7 +54,7 @@ export function PerfilForm() {
 		<button
 			type="button"
 			onClick={togglePassword}
-			className="hover:text-slate-600 transition-colors cursor-pointer"
+			className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
 		>
 			{showPassword ? EyeOffIcon : EyeOnIcon}
 		</button>
@@ -64,7 +64,7 @@ export function PerfilForm() {
 		<button
 			type="button"
 			onClick={toggleConfirm}
-			className="hover:text-slate-600 transition-colors cursor-pointer"
+			className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
 		>
 			{showConfirm ? EyeOffIcon : EyeOnIcon}
 		</button>
