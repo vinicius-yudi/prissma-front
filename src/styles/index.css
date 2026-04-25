@@ -12,24 +12,24 @@
   --color-surface-bright: #253536;
   --color-surface-variant: #1A2627;
 
-  --color-primary: #F97316;
-  --color-primary-container: #7C2D12;
-  --color-primary-fixed: #FDBA74;
-  --color-primary-fixed-dim: #FB923C;
-  --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #FED7AA;
-  --color-on-primary-fixed: #431407;
-  --color-on-primary-fixed-variant: #9A3412;
-  --color-inverse-primary: #EA580C;
+  --color-primary: #8ad3d6;
+  --color-primary-container: #01534c;
+  --color-primary-fixed: #a6eff2;
+  --color-primary-fixed-dim: #8ad3d6;
+  --color-on-primary: #003739;
+  --color-on-primary-container: #9ee7ea;
+  --color-on-primary-fixed: #002021;
+  --color-on-primary-fixed-variant: #004f52;
+  --color-inverse-primary: #15696c;
 
-  --color-secondary: #22D3EE;
-  --color-secondary-container: #164E63;
-  --color-secondary-fixed: #A5F3FC;
-  --color-secondary-fixed-dim: #67E8F9;
-  --color-on-secondary: #083344;
-  --color-on-secondary-container: #CFFAFE;
-  --color-on-secondary-fixed: #042030;
-  --color-on-secondary-fixed-variant: #0E7490;
+  --color-secondary: #34D399;
+  --color-secondary-container: #064E3B;
+  --color-secondary-fixed: #A7F3D0;
+  --color-secondary-fixed-dim: #6EE7B7;
+  --color-on-secondary: #022C22;
+  --color-on-secondary-container: #D1FAE5;
+  --color-on-secondary-fixed: #011A15;
+  --color-on-secondary-fixed-variant: #065F46;
 
   --color-tertiary: #FBBF24;
   --color-tertiary-container: #78350F;
@@ -45,15 +45,15 @@
   --color-on-error: #690005;
   --color-on-error-container: #ffdad6;
 
-  --color-background: #080D0E;
-  --color-on-background: #E7ECEC;
-  --color-on-surface: #E7ECEC;
+  --color-background: #041617;
+  --color-on-background: #d2e6e7;
+  --color-on-surface: #d2e6e7;
   --color-on-surface-variant: #9EAEB0;
   --color-outline: #2E4042;
   --color-outline-variant: #1A2C2E;
-  --color-inverse-surface: #E7ECEC;
-  --color-inverse-on-surface: #1A2C2E;
-  --color-surface-tint: #F97316;
+  --color-inverse-surface: #d2e6e7;
+  --color-inverse-on-surface: #223334;
+  --color-surface-tint: #8ad3d6;
 
   --font-sans: "DM Sans", system-ui, sans-serif;
 }
