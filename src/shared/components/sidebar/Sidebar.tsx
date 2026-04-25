@@ -1,17 +1,20 @@
 import { NavLink, useLocation } from "react-router-dom"
 import {
 	BarChart3,
+	ChevronDown,
 	ClipboardList,
 	FolderKanban,
 	Home,
 	LogOut,
 	Settings,
+	UserCircle,
 	Users,
-	X,
 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { tv } from "tailwind-variants"
-import logo from "@/assets/svg/logo.svg"
 import { useAuth } from "@/contexts/AuthContext"
+import { getMyProfile } from "@/shared/services/user.service"
 
 const navItems = [
 	{ to: "/dashboard", label: "Início", icon: Home },
@@ -19,8 +22,14 @@ const navItems = [
 	{ to: "/tarefas", label: "Tarefas", icon: ClipboardList },
 	{ to: "/equipe", label: "Equipe", icon: Users },
 	{ to: "/relatorios", label: "Relatórios", icon: BarChart3 },
-	{ to: "/configuracoes", label: "Configurações", icon: Settings },
 ] as const
+
+const USER_MENU_LABELS = {
+	role: "Conta pessoal",
+	perfil: "Perfil",
+	configuracoes: "Configurações",
+	sair: "Sair",
+} as const
 
 const aside = tv({
 	base: "fixed inset-y-0 left-0 z-30 flex h-screen w-64 flex-col bg-surface-container-low border-r border-outline-variant transition-transform duration-300 ease-in-out lg:relative lg:w-60 lg:translate-x-0",
@@ -42,6 +51,27 @@ const navLink = tv({
 	},
 })
 
+const chevronIcon = tv({
+	base: "h-4 w-4 shrink-0 transition-transform duration-200",
+	variants: {
+		open: {
+			true: "rotate-180",
+			false: "",
+		},
+	},
+})
+
+const menuItemBase = tv({
+	base: "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+	variants: {
+		variant: {
+			default: "text-on-surface-variant hover:bg-surface-container-high cursor-pointer",
+			danger: "text-error hover:bg-error/10 cursor-pointer",
+			disabled: "text-on-surface-variant/40 cursor-not-allowed",
+		},
+	},
+})
+
 interface SidebarProps {
 	isOpen: boolean
 	onClose: () => void
@@ -50,23 +80,98 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
 	const { logout } = useAuth()
 	const location = useLocation()
+	const [menuOpen, setMenuOpen] = useState(false)
+	const menuRef = useRef<HTMLDivElement>(null)
+
+	const { data: profile } = useQuery({
+		queryKey: ["profile"],
+		queryFn: getMyProfile,
+	})
+
+	const initial = profile?.name?.[0]?.toUpperCase() ?? "U"
+	const displayName = profile?.name ?? "Usuário"
+
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+				setMenuOpen(false)
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside)
+		return () => document.removeEventListener("mousedown", handleClickOutside)
+	}, [])
+
+	function toggleMenu() {
+		setMenuOpen((prev) => !prev)
+	}
+
+	function closeMenu() {
+		setMenuOpen(false)
+		onClose()
+	}
+
+	function handleLogout() {
+		setMenuOpen(false)
+		logout()
+	}
 
 	return (
 		<aside className={aside({ open: isOpen })}>
-			<div className="flex items-center justify-between px-6 py-5">
-				<div className="flex items-center gap-2">
-					<img src={logo} alt="Prissma" className="h-10" />
-				</div>
+			<div ref={menuRef} className="relative border-b border-outline-variant px-3 py-1">
+
 				<button
 					type="button"
-					onClick={onClose}
-					className="rounded-lg p-1.5 text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer lg:hidden"
+					onClick={toggleMenu}
+					className="flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
 				>
-					<X className="h-5 w-5" />
+					<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-container text-sm font-bold text-on-primary-container">
+						{initial}
+					</div>
+					<div className="min-w-0 flex-1 overflow-hidden">
+						<div className="flex min-w-0 items-center justify-between gap-1">
+							<span className="min-w-0 flex-1 truncate text-sm font-medium text-on-surface">
+								{displayName}
+							</span>
+							<ChevronDown
+								className={chevronIcon({ open: menuOpen })}
+								aria-hidden
+							/>
+						</div>
+						<p className="text-xs text-on-surface-variant">{USER_MENU_LABELS.role}</p>
+					</div>
 				</button>
+
+				{menuOpen && (
+					<div className="absolute top-full left-3 right-3 mt-1 rounded-xl border border-outline-variant bg-surface-container py-1 shadow-lg z-10">
+						<NavLink
+							to="/perfil"
+							onClick={closeMenu}
+							className={menuItemBase({ variant: "default" })}
+						>
+							<UserCircle className="h-5 w-5" />
+							{USER_MENU_LABELS.perfil}
+						</NavLink>
+						<button
+							type="button"
+							disabled
+							className={menuItemBase({ variant: "disabled" })}
+						>
+							<Settings className="h-5 w-5" />
+							{USER_MENU_LABELS.configuracoes}
+						</button>
+						<button
+							type="button"
+							onClick={handleLogout}
+							className={menuItemBase({ variant: "danger" })}
+						>
+							<LogOut className="h-5 w-5" />
+							{USER_MENU_LABELS.sair}
+						</button>
+					</div>
+				)}
 			</div>
 
-			<nav className="flex-1 flex flex-col gap-1 px-3 mt-2">
+			<nav className="flex-1 flex flex-col gap-1 px-3 py-2">
 				{navItems.map(({ to, label, icon: Icon }) => {
 					const isActive = location.pathname === to
 
@@ -83,17 +188,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 					)
 				})}
 			</nav>
-
-			<div className="border-t border-outline-variant px-3 py-4">
-				<button
-					type="button"
-					onClick={logout}
-					className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-error hover:bg-error/10 transition-colors cursor-pointer"
-				>
-					<LogOut className="h-5 w-5" />
-					Sair
-				</button>
-			</div>
 		</aside>
 	)
 }
