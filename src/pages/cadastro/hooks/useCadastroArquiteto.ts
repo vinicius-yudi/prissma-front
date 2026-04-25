@@ -6,7 +6,7 @@ import { cadastroArquiteto } from "../services/cadastroArquiteto.service"
 import type { CadastroFormDataArquiteto } from "../types"
 
 export function useCadastroArquiteto() {
-  const [formDataArquiteto, setFormData] = useState<CadastroFormDataArquiteto>({ email: "", password: "", confirmPassword: "" })
+  const [formDataArquiteto, setFormData] = useState<CadastroFormDataArquiteto>({ name: "", email: "", password: "", confirmPassword: "" })
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { saveToken } = useAuth()
