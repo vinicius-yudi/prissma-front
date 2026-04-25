@@ -10,10 +10,7 @@ import { Link } from "react-router-dom"
 export function CadastroCliente() {
     const { formDataCliente, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroCliente()
   return (
-    <section
-      className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative"
-      style={{ backgroundColor: "#0a1a1b" }}
-    >
+    <section className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative bg-surface">
       <div className="absolute left-4 top-4 z-10">
         <ReturnButton icon={Undo2} type="button" onClick={() => window.location.reload()}>
           Voltar
@@ -26,7 +23,7 @@ export function CadastroCliente() {
 
         <div className="text-center space-y-2">
           <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como cliente</h2>
-          <p className="text-sm" style={{ color: "#bec8c8" }}>
+          <p className="text-sm text-on-surface-variant">
             Insira suas credenciais para continuar
           </p>
         </div>
@@ -73,7 +70,7 @@ export function CadastroCliente() {
                 <button
                   type="button"
                   onClick={togglePassword}
-                  className="hover:text-slate-600 transition-colors cursor-pointer"
+                  className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -95,7 +92,7 @@ export function CadastroCliente() {
                 <button
                   type="button"
                   onClick={togglePassword}
-                  className="hover:text-slate-600 transition-colors cursor-pointer"
+                  className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -104,7 +101,7 @@ export function CadastroCliente() {
           </div>
 
           {isError && (
-            <p className="text-sm text-center" style={{ color: "#ffb4ab" }}>
+            <p className="text-sm text-center text-error">
               {errorMessage}
             </p>
           )}
@@ -118,16 +115,15 @@ export function CadastroCliente() {
         </form>
 
         <div className="text-center pb-5">
-                <p className="text-sm" style={{ color: "#bec8c8" }}>
-                    Já possui uma conta?{" "}
-                    <Link
-                    to={"/login"}
-                    className="font-bold underline-offset-4 hover:underline ml-1"
-                    style={{ color: "#8ad3d6" }}
-                    >
-                    Faça login
-                    </Link>
-                </p>
+          <p className="text-sm text-on-surface-variant">
+            Já possui uma conta?{" "}
+            <Link
+              to="/login"
+              className="font-bold text-secondary underline-offset-4 hover:underline ml-1"
+            >
+              Faça login
+            </Link>
+          </p>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { Bell, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 
 interface HeaderProps {
 	onMenuClick: () => void
@@ -15,28 +15,6 @@ export function Header({ onMenuClick }: HeaderProps) {
 			>
 				<Menu className="h-5 w-5" />
 			</button>
-
-			<div className="flex items-center gap-4 ml-auto">
-				<button
-					type="button"
-					className="relative rounded-lg p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
-				>
-					<Bell className="h-5 w-5" />
-					<span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[10px] font-bold text-on-error">
-						3
-					</span>
-				</button>
-
-				<div className="flex items-center gap-3">
-					<div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-container text-sm font-bold text-on-primary-container">
-						U
-					</div>
-					<div className="hidden sm:flex flex-col">
-						<span className="text-sm font-medium text-on-surface">Usuário</span>
-						<span className="text-xs text-on-surface-variant">Arquiteto</span>
-					</div>
-				</div>
-			</div>
 		</header>
 	)
 }
