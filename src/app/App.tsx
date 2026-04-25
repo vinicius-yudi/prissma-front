@@ -6,6 +6,7 @@ import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { LoginPage } from "@/pages/login"
 import { CadastroPage } from "@/pages/cadastro"
+import { PerfilPage } from "@/pages/perfil"
 import { ResetPasswordPage } from "@/pages/reset-password"
 import { ProtectedRoute } from "./ProtectedRoute"
 
@@ -24,6 +25,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/perfil" element={<PerfilPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
