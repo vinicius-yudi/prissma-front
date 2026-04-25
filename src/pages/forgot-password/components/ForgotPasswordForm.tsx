@@ -12,10 +12,7 @@ export function ForgotPasswordForm() {
 	const { email, setEmail, handleSubmit, isPending, submitted } = useForgotPasswordForm()
 
 	return (
-		<section
-			className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto"
-			style={{ backgroundColor: "#0a1a1b" }}
-		>
+		<section className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
 			<div className="w-full max-w-md space-y-12">
 				<div className="flex justify-center">
 					<img src={logo} alt="Prissma" className="h-25" />
@@ -25,15 +22,14 @@ export function ForgotPasswordForm() {
 					<div className="text-center space-y-6">
 						<div className="space-y-2">
 							<h2 className="text-white text-3xl font-bold tracking-tight">Verifique seu e-mail</h2>
-							<p className="text-sm" style={{ color: "#bec8c8" }}>
-								Se o e-mail <span className="font-semibold" style={{ color: "#8ad3d6" }}>{email}</span> estiver
+							<p className="text-sm text-on-surface-variant">
+								Se o e-mail <span className="font-semibold text-secondary">{email}</span> estiver
 								cadastrado, você receberá um link para redefinir sua senha em breve.
 							</p>
 						</div>
 						<Link
 							to="/login"
-							className="flex items-center justify-center gap-2 text-sm font-medium hover:underline underline-offset-4 transition-colors"
-							style={{ color: "#8ad3d6" }}
+							className="flex items-center justify-center gap-2 text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
 						>
 							<ArrowLeft size={16} />
 							Voltar ao login
@@ -43,7 +39,7 @@ export function ForgotPasswordForm() {
 					<>
 						<div className="text-center space-y-2">
 							<h2 className="text-white text-3xl font-bold tracking-tight">Esqueceu a senha?</h2>
-							<p className="text-sm" style={{ color: "#bec8c8" }}>
+							<p className="text-sm text-on-surface-variant">
 								Informe seu e-mail e enviaremos um link para redefinir sua senha.
 							</p>
 						</div>
@@ -74,8 +70,7 @@ export function ForgotPasswordForm() {
 						<div className="text-center">
 							<Link
 								to="/login"
-								className="flex items-center justify-center gap-2 text-sm font-medium hover:underline underline-offset-4 transition-colors"
-								style={{ color: "#8ad3d6" }}
+								className="flex items-center justify-center gap-2 text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
 							>
 								<ArrowLeft size={16} />
 								Voltar ao login
