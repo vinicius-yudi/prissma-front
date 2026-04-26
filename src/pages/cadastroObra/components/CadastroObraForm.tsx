@@ -1,7 +1,7 @@
 import { Button } from '@/shared/components/ui/button/Button';
 import { Input } from '@/shared/components/ui/input/Input';
 import { Label } from '@/shared/components/ui/label/Label';
-import { Select } from '@/shared/components/ui/select/select';
+import { Select } from '@/shared/components/ui/select/Select';
 import type { InterfaceButtonProps } from '@/shared/components/ui/button/ButtonInterface';
 import { MapPin, Save } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -24,14 +24,14 @@ function IconButton({ icon: Icon, children, ...props }: IconButtonProps) {
 export function CadastroObraForm() {
     const { register, handleSubmit, isLoading } = useCadastroObraForm();
   return (
-    <div className="flex-1 md:ml-64 bg-background p-6 md:p-12 overflow-y-auto">
-        <div className="max-w-5xl mx-auto">
-            <header className="mb-6">
+    <div className="flex-1 w-full overflow-y-auto bg-surface">
+        <div className="w-full max-w-3xl mx-auto min-h-full px-6 py-2">
+            <header className="w-full mb-6">
                 <h1 className="text-5xl font-black text-on-surface tracking-tighter leading-none mb-4">Cadastro de Obra</h1>
                 <p className="text-on-surface-variant text-lg max-w-2xl">Defina as informações estruturais e cronológicos para o seu novo projeto.</p>
             </header>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8 glass-panel p-8 rounded-xl shadow-2xl relative overflow-hidden">
+            <div className="w-full grid grid-cols-1 gap-8">
+            <div className="lg:col-span-8 bg-white/3 backdrop-blur-xl p-8 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] relative overflow-hidden">
                 <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="md:col-span-2 space-y-2">
@@ -53,7 +53,6 @@ export function CadastroObraForm() {
                         <Label className="block text-xs uppercase tracking-widest text-primary font-semibold">Tipo de Obra</Label>
                         <Select className="w-full bg-surface-container-highest text-white focus:ring-1"
                         {...register("projectType")}>
-                            <option value="">Selecione...</option>
                             <option value="Residencial">Residencial</option>
                             <option value="Comercial">Comercial</option>
                             <option value="Industrial">Industrial</option>
@@ -64,7 +63,6 @@ export function CadastroObraForm() {
                         <Label className="block text-xs uppercase tracking-widest text-primary font-semibold">Categoria</Label>
                         <Select className="w-full bg-surface-container-highest text-white focus:ring-1"
                         {...register("category")}>
-                            <option value="">Selecione...</option>
                             <option value="New-construction">Nova construção</option>
                             <option value="Renovation">Reforma</option>
                         </Select>
