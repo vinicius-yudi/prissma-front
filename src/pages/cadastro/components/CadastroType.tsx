@@ -16,7 +16,7 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta</h2>
+          <h2 className="text-on-surface text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta</h2>
           <p className="text-sm text-on-surface-variant">
             Escolha o tipo de conta que deseja criar
           </p>

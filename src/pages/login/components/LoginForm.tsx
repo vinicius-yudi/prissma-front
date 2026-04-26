@@ -19,7 +19,7 @@ export function LoginForm() {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-3xl font-bold tracking-tight">Bem-vindo de volta</h2>
+          <h2 className="text-on-surface text-3xl font-bold tracking-tight">Bem-vindo de volta</h2>
           <p className="text-sm text-on-surface-variant">
             Entre com suas credenciais para acessar sua conta.
           </p>

@@ -11,8 +11,8 @@ const filterButton = tv({
   base: "flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all",
   variants: {
     active: {
-      true: "bg-primary-container text-white shadow-sm",
-      false: "text-on-surface-variant hover:text-on-surface hover:bg-white/5",
+      true: "bg-primary text-on-primary shadow-sm",
+      false: "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
     },
   },
 })
@@ -21,8 +21,8 @@ const filterBadge = tv({
   base: "text-xs px-1.5 py-0.5 rounded-full font-semibold",
   variants: {
     active: {
-      true: "bg-white/20 text-white",
-      false: "bg-white/10 text-on-surface-variant",
+      true: "bg-on-primary/15 text-on-primary",
+      false: "bg-outline-variant/50 text-on-surface-variant",
     },
   },
 })
@@ -78,17 +78,17 @@ export function ProjectsFilter({ search, onSearch, filter, onFilter, stats }: Pr
       <div className="relative flex-1">
         <Search
           size={15}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
         />
         <input
           type="text"
           placeholder={SEARCH_PLACEHOLDER}
           value={search}
           onChange={handleSearchChange}
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-sm text-on-surface placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary-container/40"
+          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
-      <div className="flex items-center gap-1 bg-white/5 border border-white/8 p-1 rounded-xl">
+      <div className="flex items-center gap-1 bg-surface-container border border-outline-variant p-1 rounded-xl">
         {FILTER_OPTIONS.map((option) => (
           <FilterButton
             key={option.value}

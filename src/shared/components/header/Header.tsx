@@ -1,5 +1,7 @@
 import { Menu } from "lucide-react"
 
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
+
 interface HeaderProps {
 	onMenuClick: () => void
 }
@@ -15,6 +17,10 @@ export function Header({ onMenuClick }: HeaderProps) {
 			>
 				<Menu className="h-5 w-5" />
 			</button>
+
+			<div className="ml-auto">
+				<ThemeToggle />
+			</div>
 		</header>
 	)
 }

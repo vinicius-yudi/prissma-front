@@ -16,11 +16,11 @@ const statusBadge = tv({
   base: "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border",
   variants: {
     status: {
-      [ProjectStatus.PLANNING]: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-      [ProjectStatus.IN_PROGRESS]: "bg-teal-500/10 text-teal-400 border-teal-500/20",
-      [ProjectStatus.PAUSED]: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      [ProjectStatus.COMPLETED]: "bg-green-500/10 text-green-400 border-green-500/20",
-      [ProjectStatus.CANCELLED]: "bg-white/5 text-white/40 border-white/10",
+      [ProjectStatus.PLANNING]: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      [ProjectStatus.IN_PROGRESS]: "bg-teal-500/10 text-teal-600 border-teal-500/20",
+      [ProjectStatus.PAUSED]: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+      [ProjectStatus.COMPLETED]: "bg-green-500/10 text-green-600 border-green-500/20",
+      [ProjectStatus.CANCELLED]: "bg-outline-variant/40 text-on-surface-variant border-outline-variant",
     },
   },
 })
@@ -29,11 +29,11 @@ const statusDot = tv({
   base: "w-1.5 h-1.5 rounded-full flex-none",
   variants: {
     status: {
-      [ProjectStatus.PLANNING]: "bg-blue-400",
-      [ProjectStatus.IN_PROGRESS]: "bg-teal-400",
-      [ProjectStatus.PAUSED]: "bg-amber-400",
-      [ProjectStatus.COMPLETED]: "bg-green-400",
-      [ProjectStatus.CANCELLED]: "bg-white/30",
+      [ProjectStatus.PLANNING]: "bg-blue-500",
+      [ProjectStatus.IN_PROGRESS]: "bg-teal-500",
+      [ProjectStatus.PAUSED]: "bg-amber-500",
+      [ProjectStatus.COMPLETED]: "bg-green-500",
+      [ProjectStatus.CANCELLED]: "bg-on-surface-variant",
     },
   },
 })
@@ -42,11 +42,11 @@ const progressBar = tv({
   base: "h-full rounded-full transition-all",
   variants: {
     status: {
-      [ProjectStatus.PLANNING]: "bg-blue-400",
-      [ProjectStatus.IN_PROGRESS]: "bg-teal-400",
-      [ProjectStatus.PAUSED]: "bg-amber-400",
-      [ProjectStatus.COMPLETED]: "bg-green-400",
-      [ProjectStatus.CANCELLED]: "bg-white/20",
+      [ProjectStatus.PLANNING]: "bg-blue-500",
+      [ProjectStatus.IN_PROGRESS]: "bg-teal-500",
+      [ProjectStatus.PAUSED]: "bg-amber-500",
+      [ProjectStatus.COMPLETED]: "bg-green-500",
+      [ProjectStatus.CANCELLED]: "bg-on-surface-variant/40",
     },
   },
 })
@@ -91,22 +91,22 @@ interface DaysDisplayProps {
 
 function DaysDisplay({ days, status }: DaysDisplayProps) {
   if (status === ProjectStatus.COMPLETED) {
-    return <span className="text-sm font-semibold text-green-400">{COMPLETED_LABEL}</span>
+    return <span className="text-sm font-semibold text-green-600">{COMPLETED_LABEL}</span>
   }
   if (status === ProjectStatus.CANCELLED) {
-    return <span className="text-sm font-medium text-white/40">{CANCELLED_LABEL}</span>
+    return <span className="text-sm font-medium text-on-surface-variant">{CANCELLED_LABEL}</span>
   }
   if (days === null) {
-    return <span className="text-sm text-white/30">{NO_DATE}</span>
+    return <span className="text-sm text-on-surface-variant">{NO_DATE}</span>
   }
   if (days < 0) {
-    return <span className="text-sm font-semibold text-red-400">{DAYS_OVERDUE_LABEL}</span>
+    return <span className="text-sm font-semibold text-red-500">{DAYS_OVERDUE_LABEL}</span>
   }
   if (days === 0) {
-    return <span className="text-sm font-semibold text-amber-400">{TODAY_LABEL}</span>
+    return <span className="text-sm font-semibold text-amber-600">{TODAY_LABEL}</span>
   }
   return (
-    <span className="text-sm font-medium text-teal-400">
+    <span className="text-sm font-medium text-teal-600">
       {days}{DAYS_REMAINING_SUFFIX}
     </span>
   )
@@ -122,13 +122,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const progressBarStyle: CSSProperties = { width: `${progress}%` }
 
   return (
-    <div className="bg-white/4 backdrop-blur-sm border border-white/7 rounded-2xl p-5 flex flex-col gap-4 hover:bg-white/7 hover:border-white/12 transition-all duration-200">
+    <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface-container-low hover:border-outline transition-all duration-200">
       <div className="flex items-start justify-between gap-2">
         <span className={statusBadge({ status: project.status })}>
           <span className={statusDot({ status: project.status })} />
           {STATUS_LABELS[project.status]}
         </span>
-        <span className="text-xs text-white/35 uppercase tracking-wider font-medium mt-0.5 shrink-0">
+        <span className="text-xs text-on-surface-variant uppercase tracking-wider font-medium mt-0.5 shrink-0">
           {project.projectType}
         </span>
       </div>
@@ -137,13 +137,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <h3 className="font-semibold text-on-surface text-[17px] leading-snug line-clamp-1">
           {project.title}
         </h3>
-        <div className="flex items-center gap-1.5 text-white/45 text-sm">
+        <div className="flex items-center gap-1.5 text-on-surface-variant text-sm">
           <MapPin size={13} className="flex-none" />
           <span className="line-clamp-1">{project.address}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 text-xs text-white/35">
+      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
         <Calendar size={13} className="flex-none" />
         <span>{formatDate(project.plannedStartDate)}</span>
         <span>{DATE_SEPARATOR}</span>
@@ -152,10 +152,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-white/40">{PROGRESS_LABEL}</span>
+          <span className="text-on-surface-variant">{PROGRESS_LABEL}</span>
           <span className="font-semibold text-on-surface-variant">{progress}%</span>
         </div>
-        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
           <div
             className={progressBar({ status: project.status })}
             style={progressBarStyle}
@@ -163,8 +163,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-white/6">
-        <span className="text-xs text-white/35">{formatArea(project.builtArea)}</span>
+      <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
+        <span className="text-xs text-on-surface-variant">{formatArea(project.builtArea)}</span>
         <DaysDisplay days={daysRemaining} status={project.status} />
       </div>
     </div>
