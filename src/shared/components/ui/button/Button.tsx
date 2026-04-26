@@ -7,7 +7,7 @@ const button = tv({
     variant: {
       primary: "text-white bg-primary-container hover:bg-transparent hover:border-2 hover:border-primary-container hover:text-primary cursor-pointer transition-all",
       outline: "bg-transparent border-2 border-primary-container text-primary hover:bg-primary-container hover:text-white cursor-pointer transition-all",
-      ghost: "bg-transparent border-0 text-secondary hover:bg-surface-container-high cursor-pointer transition-all",
+      ghost: "bg-transparent border-0 text-primary hover:text-white cursor-pointer transition-all",
     },
   },
   defaultVariants: {
