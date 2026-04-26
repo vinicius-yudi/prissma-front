@@ -2,7 +2,7 @@ import { tv } from "tailwind-variants"
 import type { InterfaceInputProps } from "./InputInterface"
 
 const input = tv({
-  base: "w-full bg-surface-container text-on-surface placeholder:text-on-surface-variant px-5 py-4 rounded-xl outline-none border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all",
+  base: "w-full bg-surface-container text-on-surface text-sm placeholder:text-on-surface-variant px-4 py-2.5 rounded-lg outline-none border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all",
   variants: {
     withSuffix: {
       true: "pr-12",

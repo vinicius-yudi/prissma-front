@@ -4,6 +4,8 @@ import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { ArrowRight, Eye, EyeOff, Mail, Undo2 } from "lucide-react"
 import { useCadastroCliente } from "../hooks/useCadastroCliente"
+import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { ReturnButton } from "./ReturnButton"
 import { Link } from "react-router-dom"
 
@@ -15,6 +17,10 @@ export function CadastroCliente() {
         <ReturnButton icon={Undo2} type="button" onClick={() => window.location.reload()}>
           Voltar
         </ReturnButton>
+      </div>
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <LanguageSelect />
+        <ThemeToggle />
       </div>
       <div className="w-full max-w-md space-y-6 sm:space-y-8 my-auto">
         <div className="flex justify-center">

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
+import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useLoginForm } from "../hooks/useLoginForm"
@@ -26,7 +28,11 @@ export function LoginForm() {
   )
 
   return (
-    <section className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+    <section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <LanguageSelect />
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md space-y-12">
         <div className="flex justify-center">
           <img src={logo} alt={LOGO_ALT} className="h-25" />
