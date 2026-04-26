@@ -1,4 +1,6 @@
 import logo from "@/assets/svg/logo.svg"
+import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { HardHat, DraftingCompass, User } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
@@ -18,7 +20,11 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
   function handleClient() { onTypeSelected("cliente") }
 
   return (
-    <section className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-16 pb-10 lg:py-12 overflow-y-auto bg-surface">
+    <section className="relative w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-16 pb-10 lg:py-12 overflow-y-auto bg-surface">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <LanguageSelect />
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md space-y-8 sm:space-y-12 my-auto">
         <div className="flex justify-center">
           <img src={logo} alt={LOGO_ALT} className="h-25" />

@@ -2,6 +2,8 @@ import logo from "@/assets/svg/logo.svg"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
+import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
@@ -12,7 +14,11 @@ export function ForgotPasswordForm() {
 	const { email, setEmail, handleSubmit, isPending, submitted } = useForgotPasswordForm()
 
 	return (
-		<section className="w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+			<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+				<LanguageSelect />
+				<ThemeToggle />
+			</div>
 			<div className="w-full max-w-md space-y-12">
 				<div className="flex justify-center">
 					<img src={logo} alt="Prissma" className="h-25" />

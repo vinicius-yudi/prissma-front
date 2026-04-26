@@ -2,12 +2,12 @@ import { tv } from "tailwind-variants"
 import type { InterfaceButtonProps } from "./ButtonInterface"
 
 const button = tv({
-  base: "w-full font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer",
+  base: "w-full font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer",
   variants: {
     variant: {
-      primary: "text-on-primary bg-primary hover:bg-transparent hover:border-2 hover:border-primary hover:text-primary cursor-pointer transition-all",
-      outline: "bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-on-primary cursor-pointer transition-all",
-      ghost: "bg-transparent border-0 text-primary hover:text-white cursor-pointer transition-all",
+      primary: "text-on-primary bg-primary hover:brightness-[0.92]",
+      outline: "bg-transparent border-2 border-primary text-primary hover:bg-primary/10",
+      ghost: "bg-transparent border-0 text-primary hover:bg-primary/[0.08]",
     },
   },
   defaultVariants: {
