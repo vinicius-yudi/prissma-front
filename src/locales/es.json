@@ -1,0 +1,136 @@
+{
+  "header": {
+    "openMenu": "Abrir menú",
+    "themeLight": "Activar modo claro",
+    "themeDark": "Activar modo oscuro"
+  },
+  "sidebar": {
+    "accountType": "Cuenta personal",
+    "user": "Usuario",
+    "nav": {
+      "home": "Inicio",
+      "projects": "Proyectos",
+      "tasks": "Tareas",
+      "team": "Equipo",
+      "reports": "Informes"
+    },
+    "menu": {
+      "profile": "Perfil",
+      "settings": "Configuración",
+      "logout": "Salir"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "subtitle": "Gestiona tus proyectos y monitorea el progreso",
+    "stats": {
+      "activeProjects": "PROYECTOS ACTIVOS",
+      "activeProjectsDetail": "+2 este mes",
+      "pendingTasks": "TAREAS PENDIENTES",
+      "pendingTasksDetail": "5 con plazo hoy",
+      "nextVisits": "PRÓXIMAS VISITAS",
+      "nextVisitsDetail": "Próxima: mañana"
+    }
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Gestiona todos tus proyectos",
+    "newProject": "Nuevo Proyecto",
+    "loading": "Cargando proyectos...",
+    "errorTitle": "Error al cargar proyectos",
+    "errorHint": "Intente de nuevo más tarde",
+    "emptyTitle": "Ningún proyecto encontrado",
+    "emptyHint": "Ajusta los filtros o crea un nuevo proyecto",
+    "filter": {
+      "search": "Buscar proyectos...",
+      "all": "Todos",
+      "inProgress": "En Progreso",
+      "completed": "Completados",
+      "overdue": "Atrasados"
+    },
+    "status": {
+      "planning": "Planificación",
+      "inProgress": "En Progreso",
+      "paused": "Pausado",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
+    },
+    "card": {
+      "progress": "Progreso",
+      "daysRemaining": "{{count}} días restantes",
+      "overdue": "Plazo vencido",
+      "dueToday": "Vence hoy",
+      "completed": "Completado",
+      "cancelled": "Cancelado",
+      "built": "{{area}} m² construido"
+    }
+  },
+  "login": {
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Ingresa tus credenciales para acceder a tu cuenta.",
+    "email": "Email *",
+    "emailPlaceholder": "nombre@example.com",
+    "password": "Contraseña *",
+    "passwordPlaceholder": "Escribe tu contraseña",
+    "forgotPassword": "¿Olvidaste?",
+    "submit": "Iniciar sesión",
+    "submitting": "Iniciando sesión...",
+    "noAccount": "¿No tienes una cuenta?",
+    "register": "Regístrate"
+  },
+  "brand": {
+    "name": "PRISSMA",
+    "headline": "Control total",
+    "headlineSuffix": "de tus obras.",
+    "tagline": "Del presupuesto inicial",
+    "taglineSuffix": "a la entrega de llaves."
+  },
+  "register": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Elige el tipo de cuenta que deseas crear",
+    "typeArchitect": "Crear cuenta de Arquitecto",
+    "typeEngineer": "Crear cuenta de Ingeniero",
+    "typeClient": "Crear cuenta de Cliente",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "login": "Inicia sesión"
+  },
+  "registerWork": {
+    "title": "Registro de Obra",
+    "subtitle": "Define la información estructural y cronológica de tu nuevo proyecto.",
+    "name": "Nombre de la Obra",
+    "namePlaceholder": "Ej: Residencial Aurora",
+    "address": "Dirección Completa",
+    "addressPlaceholder": "Calle, Número, Colonia, Ciudad - Estado",
+    "type": "Tipo de Obra",
+    "typeResidential": "Residencial",
+    "typeCommercial": "Comercial",
+    "typeIndustrial": "Industrial",
+    "category": "Categoría",
+    "categoryBuilding": "Nueva construcción",
+    "categoryRenovation": "Remodelación",
+    "landArea": "Área del Terreno (m²)",
+    "builtArea": "Área de Construcción (m²)",
+    "startDate": "Fecha Planeada de Inicio",
+    "endDate": "Fecha Planeada de Fin",
+    "save": "Guardar Obra",
+    "saving": "Guardando...",
+    "cancel": "Cancelar"
+  },
+  "profile": {
+    "title": "Edición de Perfil",
+    "subtitle": "Actualiza tu información personal.",
+    "name": "Nombre",
+    "email": "E-mail",
+    "role": "Rol",
+    "newPassword": "Nueva contraseña",
+    "newPasswordPlaceholder": "Déjalo en blanco para no cambiar",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "save": "Guardar cambios",
+    "saving": "Guardando...",
+    "loading": "Cargando perfil...",
+    "roles": {
+      "engineer": "Ingeniero",
+      "user": "Usuario"
+    }
+  }
+}

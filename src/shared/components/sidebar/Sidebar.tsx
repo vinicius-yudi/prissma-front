@@ -12,24 +12,18 @@ import {
 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 import { useAuth } from "@/contexts/AuthContext"
 import { getMyProfile } from "@/shared/services/user.service"
 
-const navItems = [
-	{ to: "/dashboard", label: "Início", icon: Home },
-	{ to: "/projetos", label: "Projetos", icon: FolderKanban },
-	{ to: "/tarefas", label: "Tarefas", icon: ClipboardList },
-	{ to: "/equipe", label: "Equipe", icon: Users },
-	{ to: "/relatorios", label: "Relatórios", icon: BarChart3 },
+const NAV_ITEMS = [
+	{ to: "/dashboard", key: "sidebar.nav.home", icon: Home },
+	{ to: "/projetos", key: "sidebar.nav.projects", icon: FolderKanban },
+	{ to: "/tarefas", key: "sidebar.nav.tasks", icon: ClipboardList },
+	{ to: "/equipe", key: "sidebar.nav.team", icon: Users },
+	{ to: "/relatorios", key: "sidebar.nav.reports", icon: BarChart3 },
 ] as const
-
-const USER_MENU_LABELS = {
-	role: "Conta pessoal",
-	perfil: "Perfil",
-	configuracoes: "Configurações",
-	sair: "Sair",
-} as const
 
 const aside = tv({
 	base: "fixed inset-y-0 left-0 z-30 flex h-screen w-64 flex-col bg-surface-container-low border-r border-outline-variant transition-transform duration-300 ease-in-out lg:relative lg:w-60 lg:translate-x-0",
@@ -79,6 +73,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
 	const { logout } = useAuth()
+	const { t } = useTranslation()
 	const location = useLocation()
 	const [menuOpen, setMenuOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null)
@@ -89,7 +84,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 	})
 
 	const initial = profile?.name?.[0]?.toUpperCase() ?? "U"
-	const displayName = profile?.name ?? "Usuário"
+	const displayName = profile?.name ?? t("sidebar.user")
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -137,7 +132,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 								aria-hidden
 							/>
 						</div>
-						<p className="text-xs text-on-surface-variant">{USER_MENU_LABELS.role}</p>
+						<p className="text-xs text-on-surface-variant">{t("sidebar.accountType")}</p>
 					</div>
 				</button>
 
@@ -149,7 +144,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 							className={menuItemBase({ variant: "default" })}
 						>
 							<UserCircle className="h-5 w-5" />
-							{USER_MENU_LABELS.perfil}
+							{t("sidebar.menu.profile")}
 						</NavLink>
 						<button
 							type="button"
@@ -157,7 +152,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 							className={menuItemBase({ variant: "disabled" })}
 						>
 							<Settings className="h-5 w-5" />
-							{USER_MENU_LABELS.configuracoes}
+							{t("sidebar.menu.settings")}
 						</button>
 						<button
 							type="button"
@@ -165,14 +160,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 							className={menuItemBase({ variant: "danger" })}
 						>
 							<LogOut className="h-5 w-5" />
-							{USER_MENU_LABELS.sair}
+							{t("sidebar.menu.logout")}
 						</button>
 					</div>
 				)}
 			</div>
 
 			<nav className="flex-1 flex flex-col gap-1 px-3 py-2">
-				{navItems.map(({ to, label, icon: Icon }) => {
+				{NAV_ITEMS.map(({ to, key, icon: Icon }) => {
 					const isActive = location.pathname === to
 
 					return (
@@ -183,7 +178,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 							className={navLink({ active: isActive })}
 						>
 							<Icon className="h-5 w-5" />
-							{label}
+							{t(key)}
 						</NavLink>
 					)
 				})}

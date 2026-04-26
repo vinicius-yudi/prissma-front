@@ -1,11 +1,10 @@
 import { Search } from "lucide-react"
 import type { ChangeEvent } from "react"
+import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
 import type { ProjectStats } from "../hooks/useProjects"
 import { ProjectFilter } from "../types"
-
-const SEARCH_PLACEHOLDER = "Buscar projetos..."
 
 const filterButton = tv({
   base: "flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all",
@@ -29,15 +28,15 @@ const filterBadge = tv({
 
 interface FilterOption {
   value: ProjectFilter
-  label: string
+  labelKey: string
   countKey: keyof ProjectStats
 }
 
 const FILTER_OPTIONS: FilterOption[] = [
-  { value: ProjectFilter.ALL, label: "Todos", countKey: "total" },
-  { value: ProjectFilter.IN_PROGRESS, label: "Em Andamento", countKey: "inProgress" },
-  { value: ProjectFilter.COMPLETED, label: "Concluídos", countKey: "completed" },
-  { value: ProjectFilter.OVERDUE, label: "Atrasados", countKey: "overdue" },
+  { value: ProjectFilter.ALL, labelKey: "projects.filter.all", countKey: "total" },
+  { value: ProjectFilter.IN_PROGRESS, labelKey: "projects.filter.inProgress", countKey: "inProgress" },
+  { value: ProjectFilter.COMPLETED, labelKey: "projects.filter.completed", countKey: "completed" },
+  { value: ProjectFilter.OVERDUE, labelKey: "projects.filter.overdue", countKey: "overdue" },
 ]
 
 interface FilterButtonProps {
@@ -48,13 +47,15 @@ interface FilterButtonProps {
 }
 
 function FilterButton({ option, isActive, count, onSelect }: FilterButtonProps) {
+  const { t } = useTranslation()
+
   function handleClick() {
     onSelect(option.value)
   }
 
   return (
-    <button onClick={handleClick} className={filterButton({ active: isActive })}>
-      {option.label}
+    <button type="button" onClick={handleClick} className={filterButton({ active: isActive })}>
+      {t(option.labelKey)}
       <span className={filterBadge({ active: isActive })}>{count}</span>
     </button>
   )
@@ -69,6 +70,8 @@ interface ProjectsFilterProps {
 }
 
 export function ProjectsFilter({ search, onSearch, filter, onFilter, stats }: ProjectsFilterProps) {
+  const { t } = useTranslation()
+
   function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
     onSearch(e.target.value)
   }
@@ -82,7 +85,7 @@ export function ProjectsFilter({ search, onSearch, filter, onFilter, stats }: Pr
         />
         <input
           type="text"
-          placeholder={SEARCH_PLACEHOLDER}
+          placeholder={t("projects.filter.search")}
           value={search}
           onChange={handleSearchChange}
           className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/40"
