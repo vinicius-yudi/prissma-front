@@ -53,9 +53,9 @@ export function CadastroObraForm() {
                         <Label className="block text-xs uppercase tracking-widest text-primary font-semibold">Tipo de Obra</Label>
                         <Select className="w-full bg-surface-container-highest text-white focus:ring-1"
                         {...register("projectType")}>
-                            <option value="Residencial">Residencial</option>
-                            <option value="Comercial">Comercial</option>
-                            <option value="Industrial">Industrial</option>
+                            <option value="RESIDENTIAL">Residencial</option>
+                            <option value="COMMERCIAL">Comercial</option>
+                            <option value="INDUSTRIAL">Industrial</option>
                         </Select>
                     </div>
 
@@ -63,8 +63,8 @@ export function CadastroObraForm() {
                         <Label className="block text-xs uppercase tracking-widest text-primary font-semibold">Categoria</Label>
                         <Select className="w-full bg-surface-container-highest text-white focus:ring-1"
                         {...register("category")}>
-                            <option value="New-construction">Nova construção</option>
-                            <option value="Renovation">Reforma</option>
+                            <option value="BUILDING">Nova construção</option>
+                            <option value="RENOVATION">Reforma</option>
                         </Select>
                     </div>
 

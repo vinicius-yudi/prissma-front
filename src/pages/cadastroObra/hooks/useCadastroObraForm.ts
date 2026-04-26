@@ -27,7 +27,7 @@ export function useCadastroObraForm() {
     mutationFn: cadastroObra,
     onSuccess: () => {
       toast.success("Obra cadastrada com sucesso!");
-      navigate("/dashboard");
+      navigate("/projetos");
     },
     onError: (error: any) => {
       const mensagem = error.response?.data?.message || error.message || "Erro ao cadastrar obra";
