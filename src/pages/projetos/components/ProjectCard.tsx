@@ -1,15 +1,16 @@
 import { Calendar, MapPin } from "lucide-react"
 import type { CSSProperties } from "react"
+import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
 import { ProjectStatus, type Project } from "@/shared/types/project"
 
-const STATUS_LABELS: Record<ProjectStatus, string> = {
-  [ProjectStatus.PLANNING]: "Planejamento",
-  [ProjectStatus.IN_PROGRESS]: "Em Andamento",
-  [ProjectStatus.PAUSED]: "Pausado",
-  [ProjectStatus.COMPLETED]: "Concluído",
-  [ProjectStatus.CANCELLED]: "Cancelado",
+const STATUS_KEYS: Record<ProjectStatus, string> = {
+  [ProjectStatus.PLANNING]: "projects.status.planning",
+  [ProjectStatus.IN_PROGRESS]: "projects.status.inProgress",
+  [ProjectStatus.PAUSED]: "projects.status.paused",
+  [ProjectStatus.COMPLETED]: "projects.status.completed",
+  [ProjectStatus.CANCELLED]: "projects.status.cancelled",
 }
 
 const statusBadge = tv({
@@ -53,20 +54,10 @@ const progressBar = tv({
 
 const DATE_SEPARATOR = "→"
 const NO_DATE = "—"
-const PROGRESS_LABEL = "Progresso"
-const DAYS_REMAINING_SUFFIX = " dias restantes"
-const DAYS_OVERDUE_LABEL = "Prazo vencido"
-const TODAY_LABEL = "Vence hoje"
-const COMPLETED_LABEL = "Concluído"
-const CANCELLED_LABEL = "Cancelado"
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return NO_DATE
   return new Date(dateStr).toLocaleDateString("pt-BR")
-}
-
-function formatArea(area: number): string {
-  return `${area} m² construído`
 }
 
 function calcProgress(start: string | null, end: string | null): number {
@@ -90,24 +81,26 @@ interface DaysDisplayProps {
 }
 
 function DaysDisplay({ days, status }: DaysDisplayProps) {
+  const { t } = useTranslation()
+
   if (status === ProjectStatus.COMPLETED) {
-    return <span className="text-sm font-semibold text-green-600">{COMPLETED_LABEL}</span>
+    return <span className="text-sm font-semibold text-green-600">{t("projects.card.completed")}</span>
   }
   if (status === ProjectStatus.CANCELLED) {
-    return <span className="text-sm font-medium text-on-surface-variant">{CANCELLED_LABEL}</span>
+    return <span className="text-sm font-medium text-on-surface-variant">{t("projects.card.cancelled")}</span>
   }
   if (days === null) {
     return <span className="text-sm text-on-surface-variant">{NO_DATE}</span>
   }
   if (days < 0) {
-    return <span className="text-sm font-semibold text-red-500">{DAYS_OVERDUE_LABEL}</span>
+    return <span className="text-sm font-semibold text-red-500">{t("projects.card.overdue")}</span>
   }
   if (days === 0) {
-    return <span className="text-sm font-semibold text-amber-600">{TODAY_LABEL}</span>
+    return <span className="text-sm font-semibold text-amber-600">{t("projects.card.dueToday")}</span>
   }
   return (
     <span className="text-sm font-medium text-teal-600">
-      {days}{DAYS_REMAINING_SUFFIX}
+      {t("projects.card.daysRemaining", { count: days })}
     </span>
   )
 }
@@ -117,6 +110,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { t } = useTranslation()
   const progress = calcProgress(project.plannedStartDate, project.plannedEndDate)
   const daysRemaining = calcDaysRemaining(project.plannedEndDate)
   const progressBarStyle: CSSProperties = { width: `${progress}%` }
@@ -126,7 +120,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="flex items-start justify-between gap-2">
         <span className={statusBadge({ status: project.status })}>
           <span className={statusDot({ status: project.status })} />
-          {STATUS_LABELS[project.status]}
+          {t(STATUS_KEYS[project.status])}
         </span>
         <span className="text-xs text-on-surface-variant uppercase tracking-wider font-medium mt-0.5 shrink-0">
           {project.projectType}
@@ -152,19 +146,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-on-surface-variant">{PROGRESS_LABEL}</span>
+          <span className="text-on-surface-variant">{t("projects.card.progress")}</span>
           <span className="font-semibold text-on-surface-variant">{progress}%</span>
         </div>
         <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-          <div
-            className={progressBar({ status: project.status })}
-            style={progressBarStyle}
-          />
+          <div className={progressBar({ status: project.status })} style={progressBarStyle} />
         </div>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
-        <span className="text-xs text-on-surface-variant">{formatArea(project.builtArea)}</span>
+        <span className="text-xs text-on-surface-variant">
+          {t("projects.card.built", { area: project.builtArea })}
+        </span>
         <DaysDisplay days={daysRemaining} status={project.status} />
       </div>
     </div>

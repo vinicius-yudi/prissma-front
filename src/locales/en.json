@@ -1,0 +1,136 @@
+{
+  "header": {
+    "openMenu": "Open menu",
+    "themeLight": "Switch to light mode",
+    "themeDark": "Switch to dark mode"
+  },
+  "sidebar": {
+    "accountType": "Personal account",
+    "user": "User",
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "tasks": "Tasks",
+      "team": "Team",
+      "reports": "Reports"
+    },
+    "menu": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Logout"
+    }
+  },
+  "dashboard": {
+    "title": "Control Panel",
+    "subtitle": "Manage your projects and track progress",
+    "stats": {
+      "activeProjects": "ACTIVE PROJECTS",
+      "activeProjectsDetail": "+2 this month",
+      "pendingTasks": "PENDING TASKS",
+      "pendingTasksDetail": "5 due today",
+      "nextVisits": "UPCOMING VISITS",
+      "nextVisitsDetail": "Next: tomorrow"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Manage all your projects",
+    "newProject": "New Project",
+    "loading": "Loading projects...",
+    "errorTitle": "Error loading projects",
+    "errorHint": "Please try again later",
+    "emptyTitle": "No projects found",
+    "emptyHint": "Adjust filters or create a new project",
+    "filter": {
+      "search": "Search projects...",
+      "all": "All",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "overdue": "Overdue"
+    },
+    "status": {
+      "planning": "Planning",
+      "inProgress": "In Progress",
+      "paused": "Paused",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "card": {
+      "progress": "Progress",
+      "daysRemaining": "{{count}} days remaining",
+      "overdue": "Overdue",
+      "dueToday": "Due today",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "built": "{{area}} m² built"
+    }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in with your credentials to access your account.",
+    "email": "Email *",
+    "emailPlaceholder": "name@company.com",
+    "password": "Password *",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot?",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up"
+  },
+  "brand": {
+    "name": "PRISSMA",
+    "headline": "Total control",
+    "headlineSuffix": "of your projects.",
+    "tagline": "From the initial budget",
+    "taglineSuffix": "to the handover."
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Choose the type of account you want to create",
+    "typeArchitect": "Create Architect account",
+    "typeEngineer": "Create Engineer account",
+    "typeClient": "Create Client account",
+    "hasAccount": "Already have an account?",
+    "login": "Sign in"
+  },
+  "registerWork": {
+    "title": "Project Registration",
+    "subtitle": "Define the structural and chronological information for your new project.",
+    "name": "Project Name",
+    "namePlaceholder": "E.g.: Aurora Residential",
+    "address": "Full Address",
+    "addressPlaceholder": "Street, Number, District, City - State",
+    "type": "Project Type",
+    "typeResidential": "Residential",
+    "typeCommercial": "Commercial",
+    "typeIndustrial": "Industrial",
+    "category": "Category",
+    "categoryBuilding": "New construction",
+    "categoryRenovation": "Renovation",
+    "landArea": "Land Area (m²)",
+    "builtArea": "Built Area (m²)",
+    "startDate": "Planned Start Date",
+    "endDate": "Planned End Date",
+    "save": "Save Project",
+    "saving": "Saving...",
+    "cancel": "Cancel"
+  },
+  "profile": {
+    "title": "Edit Profile",
+    "subtitle": "Update your personal information.",
+    "name": "Name",
+    "email": "E-mail",
+    "role": "Role",
+    "newPassword": "New password",
+    "newPasswordPlaceholder": "Leave blank to keep unchanged",
+    "confirmPassword": "Confirm new password",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "loading": "Loading profile...",
+    "roles": {
+      "engineer": "Engineer",
+      "user": "User"
+    }
+  }
+}

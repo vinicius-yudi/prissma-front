@@ -1,17 +1,15 @@
 import type { CSSProperties } from "react"
 import { Moon, Sun } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { useTheme } from "@/contexts/ThemeContext"
-
-const LABEL_DARK = "Ativar modo claro"
-const LABEL_LIGHT = "Ativar modo escuro"
 
 const KNOB_STYLE_DARK: CSSProperties = { transform: "translateX(0)" }
 const KNOB_STYLE_LIGHT: CSSProperties = { transform: "translateX(1.25rem)" }
 
-function getAriaLabel(isDark: boolean): string {
-  if (isDark) return LABEL_DARK
-  return LABEL_LIGHT
+function getAriaLabel(isDark: boolean, t: (key: string) => string): string {
+  if (isDark) return t("header.themeLight")
+  return t("header.themeDark")
 }
 
 function getKnobStyle(isDark: boolean): CSSProperties {
@@ -26,13 +24,14 @@ function ToggleIcon({ isDark }: { isDark: boolean }) {
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
+  const { t } = useTranslation()
   const isDark = theme === "dark"
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={getAriaLabel(isDark)}
+      aria-label={getAriaLabel(isDark, t)}
       className="relative flex h-8 w-[3.25rem] shrink-0 items-center rounded-full border border-outline-variant bg-surface-container-high p-0.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
     >
       <span

@@ -1,13 +1,15 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
+import { useTranslation } from "react-i18next"
 import homeLottie from "#/assets/lotties/Home.lottie?url"
 
 export function BrandPanel() {
+  const { t } = useTranslation()
+
   return (
     <section
       className="hidden lg:flex lg:w-[55%] h-full relative flex-col justify-between p-16 overflow-hidden"
       style={{ backgroundColor: "#041617" }}
     >
-      {/* Grid pattern */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -19,7 +21,6 @@ export function BrandPanel() {
         }}
       />
 
-      {/* Teal glow top-left */}
       <div
         className="absolute top-0 left-0 pointer-events-none"
         style={{
@@ -29,35 +30,31 @@ export function BrandPanel() {
         }}
       />
 
-      {/* Headline */}
       <div className="z-10">
         <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary mb-4">
-          PRISSMA
+          {t("brand.name")}
         </span>
         <h1 className="text-white text-4xl font-bold leading-tight">
-          Controle total<br />
-          <span className="text-primary">de suas obras.</span>
+          {t("brand.headline")}<br />
+          <span className="text-primary">{t("brand.headlineSuffix")}</span>
         </h1>
       </div>
 
-      {/* Hero visual */}
       <div className="relative flex-1 flex items-center justify-center">
         <div className="relative w-full h-full z-10">
           <DotLottieReact src={homeLottie} loop autoplay className="w-full h-full" />
         </div>
       </div>
 
-      {/* Tagline */}
       <div className="z-10">
         <p className="text-on-surface-variant text-lg font-medium leading-snug">
-          Do orçamento inicial
+          {t("brand.tagline")}
         </p>
         <p className="text-white text-2xl font-bold">
-          à entrega das chaves.
+          {t("brand.taglineSuffix")}
         </p>
       </div>
 
-      {/* Bottom gradient */}
       <div
         className="absolute bottom-0 left-0 w-full h-1/3 pointer-events-none"
         style={{ background: "linear-gradient(to top, rgba(1, 83, 76, 0.15), transparent)" }}
