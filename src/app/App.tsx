@@ -10,6 +10,7 @@ import { CadastroPage } from "@/pages/cadastro"
 import { CadastroObra } from "@/pages/cadastroObra"
 import { PerfilPage } from "@/pages/perfil"
 import { ProjetosPage } from "@/pages/projetos"
+import { ObraSelecionadaPage } from "@/pages/obra-selecionada"
 import { ResetPasswordPage } from "@/pages/reset-password"
 import { ProtectedRoute } from "./ProtectedRoute"
 
@@ -31,7 +32,8 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/perfil" element={<PerfilPage />} />
                 <Route path="/projetos" element={<ProjetosPage />} />
-                <Route path="/cadastroObra" element={<CadastroObra />} />
+                <Route path="/cadastro-obra" element={<CadastroObra />} />
+                <Route path="/obra-selecionada" element={<ObraSelecionadaPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
