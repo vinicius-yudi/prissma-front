@@ -33,7 +33,7 @@ function App() {
                 <Route path="/perfil" element={<PerfilPage />} />
                 <Route path="/projetos" element={<ProjetosPage />} />
                 <Route path="/cadastro-obra" element={<CadastroObra />} />
-                <Route path="/obra-selecionada" element={<ObraSelecionadaPage />} />
+                <Route path="/obras/:id" element={<ObraSelecionadaPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />

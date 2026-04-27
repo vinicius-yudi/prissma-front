@@ -49,7 +49,7 @@ export function ProjetosPage() {
   const { t } = useTranslation()
 
   function handleNewProject() {
-    navigate("/cadastroObra")
+    navigate("/cadastro-obra")
   }
 
   if (isLoading) return <LoadingState />

@@ -1,6 +1,7 @@
 import { Calendar, MapPin } from "lucide-react"
 import type { CSSProperties } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
 import { ProjectStatus, type Project } from "@/shared/types/project"
@@ -111,12 +112,20 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const progress = calcProgress(project.plannedStartDate, project.plannedEndDate)
   const daysRemaining = calcDaysRemaining(project.plannedEndDate)
   const progressBarStyle: CSSProperties = { width: `${progress}%` }
 
+  function handleClick() {
+    navigate(`/obras/${project.id}`)
+  }
+
   return (
-    <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface-container-low hover:border-outline transition-all duration-200">
+    <div
+      onClick={handleClick}
+      className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface-container-low hover:border-outline transition-all duration-200 cursor-pointer"
+    >
       <div className="flex items-start justify-between gap-2">
         <span className={statusBadge({ status: project.status })}>
           <span className={statusDot({ status: project.status })} />

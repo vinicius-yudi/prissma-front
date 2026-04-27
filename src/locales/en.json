@@ -116,6 +116,60 @@
     "saving": "Saving...",
     "cancel": "Cancel"
   },
+  "obra": {
+    "back": "Back",
+    "edit": "Edit",
+    "notFound": "Project not found",
+    "notFoundDesc": "The requested project does not exist or has been removed.",
+    "backToList": "Back to list",
+    "acompError": "Could not load project progress.",
+    "retry": "Try again",
+    "comingSoon": "Coming soon",
+    "tabs": {
+      "visaoGeral": "Overview",
+      "etapas": "Stages",
+      "equipe": "Team",
+      "orcamento": "Budget",
+      "chat": "Chat"
+    },
+    "visaoGeral": {
+      "title": "Project Summary",
+      "totalProgress": "Total Progress",
+      "location": "Location",
+      "deadline": "Deadline",
+      "deadlineOverdue": "Overdue",
+      "areas": "Areas",
+      "landArea": "Land",
+      "builtArea": "Built",
+      "stages": "Stages",
+      "stagesProgress": "Stage Progress",
+      "total": "Total",
+      "inProgress": "In progress",
+      "completed": "Completed"
+    },
+    "etapas": {
+      "empty": "No stages registered.",
+      "tasksEmpty": "No tasks in this stage.",
+      "tasks": "Tasks",
+      "etapaStatus": {
+        "PLANNED": "Planned",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Done",
+        "BLOCKED": "Blocked"
+      },
+      "tarefaStatus": {
+        "TODO": "To do",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Done",
+        "BLOCKED": "Blocked"
+      },
+      "priority": {
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low"
+      }
+    }
+  },
   "profile": {
     "title": "Edit Profile",
     "subtitle": "Update your personal information.",
