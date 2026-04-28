@@ -116,6 +116,60 @@
     "saving": "Salvando...",
     "cancel": "Cancelar"
   },
+  "obra": {
+    "back": "Voltar",
+    "edit": "Editar",
+    "notFound": "Obra não encontrada",
+    "notFoundDesc": "A obra solicitada não existe ou foi removida.",
+    "backToList": "Voltar para a listagem",
+    "acompError": "Não foi possível carregar o acompanhamento.",
+    "retry": "Tentar novamente",
+    "comingSoon": "Em breve",
+    "tabs": {
+      "visaoGeral": "Visão Geral",
+      "etapas": "Etapas",
+      "equipe": "Equipe",
+      "orcamento": "Orçamento",
+      "chat": "Chat"
+    },
+    "visaoGeral": {
+      "title": "Resumo do Projeto",
+      "totalProgress": "Progresso Total",
+      "location": "Localização",
+      "deadline": "Prazo",
+      "deadlineOverdue": "Prazo vencido",
+      "areas": "Áreas",
+      "landArea": "Terreno",
+      "builtArea": "Construção",
+      "stages": "Etapas",
+      "stagesProgress": "Progresso das Etapas",
+      "total": "Total",
+      "inProgress": "Em andamento",
+      "completed": "Concluídas"
+    },
+    "etapas": {
+      "empty": "Nenhuma etapa cadastrada.",
+      "tasksEmpty": "Nenhuma tarefa nesta etapa.",
+      "tasks": "Tarefas",
+      "etapaStatus": {
+        "PLANNED": "Planejada",
+        "IN_PROGRESS": "Em andamento",
+        "DONE": "Concluída",
+        "BLOCKED": "Bloqueada"
+      },
+      "tarefaStatus": {
+        "TODO": "A fazer",
+        "IN_PROGRESS": "Em andamento",
+        "DONE": "Concluída",
+        "BLOCKED": "Bloqueada"
+      },
+      "priority": {
+        "HIGH": "Alta",
+        "MEDIUM": "Média",
+        "LOW": "Baixa"
+      }
+    }
+  },
   "profile": {
     "title": "Edição de Perfil",
     "subtitle": "Atualize suas informações pessoais.",
