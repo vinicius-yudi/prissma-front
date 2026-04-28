@@ -11,6 +11,7 @@ import { CadastroObra } from "@/pages/cadastroObra"
 import { PerfilPage } from "@/pages/perfil"
 import { ProjetosPage } from "@/pages/projetos"
 import { ObraSelecionadaPage } from "@/pages/obra-selecionada"
+import { NotFoundPage } from "@/pages/not-found"
 import { ResetPasswordPage } from "@/pages/reset-password"
 import { ProtectedRoute } from "./ProtectedRoute"
 
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/projetos" element={<ProjetosPage />} />
                 <Route path="/cadastro-obra" element={<CadastroObra />} />
                 <Route path="/obras/:id" element={<ObraSelecionadaPage />} />
+                <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />

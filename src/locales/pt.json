@@ -116,6 +116,12 @@
     "saving": "Salvando...",
     "cancel": "Cancelar"
   },
+  "notFound": {
+    "code": "ERRO 404",
+    "title": "PÁGINA NÃO ENCONTRADA",
+    "description": "A página que você está procurando não existe ou foi movida.",
+    "action": "Ir para o Dashboard"
+  },
   "obra": {
     "back": "Voltar",
     "edit": "Editar",
