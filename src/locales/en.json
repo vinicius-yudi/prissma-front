@@ -116,6 +116,12 @@
     "saving": "Saving...",
     "cancel": "Cancel"
   },
+  "notFound": {
+    "code": "ERROR 404",
+    "title": "PAGE NOT FOUND",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "action": "Go to Dashboard"
+  },
   "obra": {
     "back": "Back",
     "edit": "Edit",
