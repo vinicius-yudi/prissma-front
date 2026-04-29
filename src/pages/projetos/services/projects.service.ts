@@ -3,6 +3,22 @@ import { api } from "@/lib/api"
 import type { Project, ProjectStatus } from "@/shared/types/project"
 import type { ProjetoAcompanhamento } from "../types"
 
+export interface CreateProjectPayload {
+  title: string
+  address: string
+  projectType: string
+  category: string
+  status: string
+  landArea: number
+  builtArea: number
+  plannedStartDate: string
+  plannedEndDate: string
+}
+
+export async function createProject(payload: CreateProjectPayload): Promise<void> {
+  return api.post<void>("/projects", payload)
+}
+
 export interface UpdateProjectPayload {
   title?: string
   address?: string

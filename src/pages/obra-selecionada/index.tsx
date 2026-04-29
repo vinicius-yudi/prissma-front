@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { DeleteProjectModal } from "@/pages/projetos/components/DeleteProjectModal"
+import { ProjectStepModal } from "@/pages/projetos/components/ProjectStepModal"
 import type { ProjetoAcompanhamento } from "@/pages/projetos/types"
 import type { Project } from "@/shared/types/project"
 
@@ -96,6 +98,8 @@ export function ObraSelecionadaPage() {
   const id = Number(idParam)
 
   const { projectQuery, acompQuery } = useObraSelecionada(id)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   function handleBack() {
     navigate(-1)
@@ -134,7 +138,10 @@ export function ObraSelecionadaPage() {
             {project.address}
           </p>
         </div>
-        <Button variant="primary" className="w-auto px-5 py-2.5 text-sm shrink-0">{t("obra.edit")}</Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="outline" className="w-auto px-5 py-2.5 text-sm text-error border-error/40 hover:bg-error/10 hover:border-error" onClick={() => setDeleteOpen(true)}>{t("obra.delete")}</Button>
+          <Button variant="primary" className="w-auto px-5 py-2.5 text-sm" onClick={() => setEditOpen(true)}>{t("obra.edit")}</Button>
+        </div>
       </header>
 
       <nav className="bg-surface-container-low px-4 pt-2 pb-0 border border-outline-variant/10 rounded-xl flex gap-1">
@@ -160,6 +167,13 @@ export function ObraSelecionadaPage() {
           onRetry={handleRetry}
         />
       </main>
+
+      <ProjectStepModal open={editOpen} onClose={() => setEditOpen(false)} project={project} />
+      <DeleteProjectModal
+        project={deleteOpen ? project : null}
+        onClose={() => setDeleteOpen(false)}
+        onDeleted={() => navigate("/projetos")}
+      />
     </div>
   )
 }

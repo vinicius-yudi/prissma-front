@@ -1,3 +1,4 @@
+import { forwardRef } from "react"
 import { tv } from "tailwind-variants"
 import type { InterfaceInputProps } from "./InputInterface"
 
@@ -13,20 +14,22 @@ const input = tv({
   },
 })
 
-export function Input({ suffix, prefix, className, ...props }: InterfaceInputProps) {
-  return (
-    <div className="relative">
-      {prefix && (
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 flex items-center justify-center">
-          {prefix}
-        </span>
-      )}
-      <input className={input({ withSuffix: !!suffix, withPrefix: !!prefix, className })} {...props} />
-      {suffix && (
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant">
-          {suffix}
-        </span>
-      )}
-    </div>
-  )
-}
+export const Input = forwardRef<HTMLInputElement, InterfaceInputProps>(
+  function Input({ suffix, prefix, className, ...props }, ref) {
+    return (
+      <div className="relative">
+        {prefix && (
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 flex items-center justify-center">
+            {prefix}
+          </span>
+        )}
+        <input ref={ref} className={input({ withSuffix: !!suffix, withPrefix: !!prefix, className })} {...props} />
+        {suffix && (
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant">
+            {suffix}
+          </span>
+        )}
+      </div>
+    )
+  }
+)

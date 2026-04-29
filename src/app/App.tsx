@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 import { MainLayout } from "@/layouts/MainLayout"
@@ -7,7 +9,6 @@ import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { LoginPage } from "@/pages/login"
 import { CadastroPage } from "@/pages/cadastro"
-import { CadastroObra } from "@/pages/cadastroObra"
 import { PerfilPage } from "@/pages/perfil"
 import { ProjetosPage } from "@/pages/projetos"
 import { ObraSelecionadaPage } from "@/pages/obra-selecionada"
@@ -33,7 +34,6 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/perfil" element={<PerfilPage />} />
                 <Route path="/projetos" element={<ProjetosPage />} />
-                <Route path="/cadastro-obra" element={<CadastroObra />} />
                 <Route path="/obras/:id" element={<ObraSelecionadaPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
@@ -41,6 +41,7 @@ function App() {
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>
+        <ToastContainer position="top-right" theme="dark" autoClose={3000} />
       </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

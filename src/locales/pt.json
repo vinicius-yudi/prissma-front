@@ -62,7 +62,25 @@
       "dueToday": "Vence hoje",
       "completed": "Concluído",
       "cancelled": "Cancelado",
-      "built": "{{area}} m² construído"
+      "built": "{{area}} m² construído",
+      "edit": "Editar obra",
+      "delete": "Excluir obra"
+    },
+    "editModal": {
+      "title": "Editar Obra",
+      "description": "Atualize as informações do projeto.",
+      "status": "Status",
+      "statusPlaceholder": "Selecione o status",
+      "save": "Salvar alterações",
+      "saving": "Salvando...",
+      "cancel": "Cancelar"
+    },
+    "deleteModal": {
+      "title": "Excluir Obra",
+      "message": "Tem certeza que deseja excluir \"{{name}}\"? Essa ação não pode ser desfeita.",
+      "cancel": "Cancelar",
+      "confirm": "Excluir",
+      "deleting": "Excluindo..."
     }
   },
   "login": {
@@ -102,10 +120,12 @@
     "address": "Endereço Completo",
     "addressPlaceholder": "Rua, Número, Bairro, Cidade - UF",
     "type": "Tipo de Obra",
+    "typePlaceholder": "Selecione o tipo",
     "typeResidential": "Residencial",
     "typeCommercial": "Comercial",
     "typeIndustrial": "Industrial",
     "category": "Categoria",
+    "categoryPlaceholder": "Selecione a categoria",
     "categoryBuilding": "Nova construção",
     "categoryRenovation": "Reforma",
     "landArea": "Área do Terreno (m²)",
@@ -116,6 +136,34 @@
     "saving": "Salvando...",
     "cancel": "Cancelar"
   },
+  "projectModal": {
+    "createTitle": "Nova Obra",
+    "editTitle": "Editar Obra",
+    "createDescription": "Preencha as informações em 2 passos.",
+    "editDescription": "Atualize as informações do projeto.",
+    "steps": {
+      "obra": "Obra",
+      "endereco": "Endereço"
+    },
+    "next": "Próximo",
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "cep": "CEP",
+    "cepPlaceholder": "00000-000",
+    "logradouro": "Logradouro",
+    "logradouroPlaceholder": "Rua, Avenida...",
+    "numero": "Número",
+    "complemento": "Complemento",
+    "complementoPlaceholder": "Apto, Sala... (opcional)",
+    "bairro": "Bairro",
+    "bairroPlaceholder": "Nome do bairro",
+    "cidade": "Cidade",
+    "cidadePlaceholder": "Nome da cidade",
+    "uf": "UF",
+    "currentAddress": "Endereço atual"
+  },
   "notFound": {
     "code": "ERRO 404",
     "title": "PÁGINA NÃO ENCONTRADA",
@@ -125,6 +173,7 @@
   "obra": {
     "back": "Voltar",
     "edit": "Editar",
+    "delete": "Excluir",
     "notFound": "Obra não encontrada",
     "notFoundDesc": "A obra solicitada não existe ou foi removida.",
     "backToList": "Voltar para a listagem",

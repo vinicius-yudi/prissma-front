@@ -62,7 +62,25 @@
       "dueToday": "Vence hoy",
       "completed": "Completado",
       "cancelled": "Cancelado",
-      "built": "{{area}} m² construido"
+      "built": "{{area}} m² construido",
+      "edit": "Editar proyecto",
+      "delete": "Eliminar proyecto"
+    },
+    "editModal": {
+      "title": "Editar Proyecto",
+      "description": "Actualiza la información del proyecto.",
+      "status": "Estado",
+      "statusPlaceholder": "Selecciona el estado",
+      "save": "Guardar cambios",
+      "saving": "Guardando...",
+      "cancel": "Cancelar"
+    },
+    "deleteModal": {
+      "title": "Eliminar Proyecto",
+      "message": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleting": "Eliminando..."
     }
   },
   "login": {
@@ -102,10 +120,12 @@
     "address": "Dirección Completa",
     "addressPlaceholder": "Calle, Número, Colonia, Ciudad - Estado",
     "type": "Tipo de Obra",
+    "typePlaceholder": "Selecciona el tipo",
     "typeResidential": "Residencial",
     "typeCommercial": "Comercial",
     "typeIndustrial": "Industrial",
     "category": "Categoría",
+    "categoryPlaceholder": "Selecciona la categoría",
     "categoryBuilding": "Nueva construcción",
     "categoryRenovation": "Remodelación",
     "landArea": "Área del Terreno (m²)",
@@ -116,6 +136,34 @@
     "saving": "Guardando...",
     "cancel": "Cancelar"
   },
+  "projectModal": {
+    "createTitle": "Nueva Obra",
+    "editTitle": "Editar Obra",
+    "createDescription": "Completa la información en 2 pasos.",
+    "editDescription": "Actualiza la información del proyecto.",
+    "steps": {
+      "obra": "Obra",
+      "endereco": "Dirección"
+    },
+    "next": "Siguiente",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cep": "CEP",
+    "cepPlaceholder": "00000-000",
+    "logradouro": "Calle",
+    "logradouroPlaceholder": "Calle, Avenida...",
+    "numero": "Número",
+    "complemento": "Complemento",
+    "complementoPlaceholder": "Apto, Oficina... (opcional)",
+    "bairro": "Colonia",
+    "bairroPlaceholder": "Nombre de la colonia",
+    "cidade": "Ciudad",
+    "cidadePlaceholder": "Nombre de la ciudad",
+    "uf": "Estado",
+    "currentAddress": "Dirección actual"
+  },
   "notFound": {
     "code": "ERROR 404",
     "title": "PÁGINA NO ENCONTRADA",
@@ -124,6 +172,7 @@
   },
   "obra": {
     "back": "Volver",
+    "delete": "Eliminar",
     "edit": "Editar",
     "notFound": "Obra no encontrada",
     "notFoundDesc": "La obra solicitada no existe o ha sido eliminada.",
