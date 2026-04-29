@@ -62,7 +62,25 @@
       "dueToday": "Due today",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "built": "{{area}} m² built"
+      "built": "{{area}} m² built",
+      "edit": "Edit project",
+      "delete": "Delete project"
+    },
+    "editModal": {
+      "title": "Edit Project",
+      "description": "Update the project information.",
+      "status": "Status",
+      "statusPlaceholder": "Select a status",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "deleteModal": {
+      "title": "Delete Project",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
     }
   },
   "login": {
@@ -102,10 +120,12 @@
     "address": "Full Address",
     "addressPlaceholder": "Street, Number, District, City - State",
     "type": "Project Type",
+    "typePlaceholder": "Select a type",
     "typeResidential": "Residential",
     "typeCommercial": "Commercial",
     "typeIndustrial": "Industrial",
     "category": "Category",
+    "categoryPlaceholder": "Select a category",
     "categoryBuilding": "New construction",
     "categoryRenovation": "Renovation",
     "landArea": "Land Area (m²)",
@@ -116,6 +136,34 @@
     "saving": "Saving...",
     "cancel": "Cancel"
   },
+  "projectModal": {
+    "createTitle": "New Project",
+    "editTitle": "Edit Project",
+    "createDescription": "Fill in the information in 2 steps.",
+    "editDescription": "Update the project information.",
+    "steps": {
+      "obra": "Project",
+      "endereco": "Address"
+    },
+    "next": "Next",
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "cep": "ZIP Code",
+    "cepPlaceholder": "00000-000",
+    "logradouro": "Street",
+    "logradouroPlaceholder": "Street, Avenue...",
+    "numero": "Number",
+    "complemento": "Complement",
+    "complementoPlaceholder": "Apt, Suite... (optional)",
+    "bairro": "Neighborhood",
+    "bairroPlaceholder": "Neighborhood name",
+    "cidade": "City",
+    "cidadePlaceholder": "City name",
+    "uf": "State",
+    "currentAddress": "Current address"
+  },
   "notFound": {
     "code": "ERROR 404",
     "title": "PAGE NOT FOUND",
@@ -125,6 +173,7 @@
   "obra": {
     "back": "Back",
     "edit": "Edit",
+    "delete": "Delete",
     "notFound": "Project not found",
     "notFoundDesc": "The requested project does not exist or has been removed.",
     "backToList": "Back to list",

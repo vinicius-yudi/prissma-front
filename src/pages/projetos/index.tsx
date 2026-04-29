@@ -1,10 +1,11 @@
 import { FolderOpen, Plus } from "lucide-react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
 
 import { ProjectCard } from "./components/ProjectCard"
+import { ProjectStepModal } from "./components/ProjectStepModal"
 import { ProjectsFilter } from "./components/ProjectsFilter"
 import { useProjects } from "./hooks/useProjects"
 
@@ -45,12 +46,8 @@ function EmptyState() {
 export function ProjetosPage() {
   const { projects, isLoading, isError, search, setSearch, filter, setFilter, stats } =
     useProjects()
-  const navigate = useNavigate()
   const { t } = useTranslation()
-
-  function handleNewProject() {
-    navigate("/cadastro-obra")
-  }
+  const [createOpen, setCreateOpen] = useState(false)
 
   if (isLoading) return <LoadingState />
   if (isError) return <ErrorState />
@@ -62,7 +59,7 @@ export function ProjetosPage() {
           <h1 className="text-2xl font-bold text-on-surface">{t("projects.title")}</h1>
           <p className="text-sm text-on-surface-variant">{t("projects.subtitle")}</p>
         </div>
-        <Button onClick={handleNewProject} className="w-auto px-5 py-2.5 text-sm shrink-0">
+        <Button onClick={() => setCreateOpen(true)} className="w-auto px-5 py-2.5 text-sm shrink-0">
           <Plus size={15} />
           {t("projects.newProject")}
         </Button>
@@ -83,6 +80,8 @@ export function ProjetosPage() {
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
+
+      <ProjectStepModal open={createOpen} onClose={() => setCreateOpen(false)} />
     </div>
   )
 }
