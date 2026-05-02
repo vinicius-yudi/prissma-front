@@ -10,7 +10,7 @@ import { ReturnButton } from "./ReturnButton"
 import { Link } from "react-router-dom"
 
 export function CadastroCliente() {
-    const { formDataCliente, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroCliente()
+    const { formDataCliente, showPassword, handleChange, handleSubmit, togglePassword, isPending } = useCadastroCliente()
   return (
     <section className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative bg-surface">
       <div className="absolute left-4 top-4 z-10">
@@ -28,13 +28,13 @@ export function CadastroCliente() {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como cliente</h2>
+          <h2 className="text-on-surface text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como cliente</h2>
           <p className="text-sm text-on-surface-variant">
             Insira suas credenciais para continuar
           </p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="space-y-2">
             <Label htmlFor="name">Nome Completo</Label>
             <Input
@@ -44,7 +44,6 @@ export function CadastroCliente() {
               placeholder="Seu nome completo"
               value={formDataCliente.name}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -71,7 +70,6 @@ export function CadastroCliente() {
               placeholder="••••••••"
               value={formDataCliente.password}
               onChange={handleChange}
-              required
               suffix={
                 <button
                   type="button"
@@ -93,7 +91,6 @@ export function CadastroCliente() {
               placeholder="••••••••"
               value={formDataCliente.confirmPassword}
               onChange={handleChange}
-              required
               suffix={
                 <button
                   type="button"
@@ -105,12 +102,6 @@ export function CadastroCliente() {
               }
             />
           </div>
-
-          {isError && (
-            <p className="text-sm text-center text-error">
-              {errorMessage}
-            </p>
-          )}
 
           <div className="space-y-4 pt-4">
             <Button type="submit" disabled={isPending}>

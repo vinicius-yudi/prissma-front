@@ -4,17 +4,8 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useAuth } from "@/contexts/AuthContext"
 import { login } from "../services/login.service"
+import { loginSchema } from "../schemas/login.schema"
 import type { LoginFormData } from "../types"
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function validate(formData: LoginFormData): string | null {
-	if (!formData.email.trim()) return "O e-mail é obrigatório."
-	if (!EMAIL_REGEX.test(formData.email)) return "Informe um e-mail válido."
-	if (!formData.password) return "A senha é obrigatória."
-	if (formData.password.length < 6) return "A senha deve ter no mínimo 6 caracteres."
-	return null
-}
 
 export function useLoginForm() {
 	const [formData, setFormData] = useState<LoginFormData>({ email: "", password: "" })
@@ -39,14 +30,23 @@ export function useLoginForm() {
 	}
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		const error = validate(formData)
-		if (error) {
-			toast.warning(error)
-			return
-		}
-		mutation.mutate(formData)
-	}
+        e.preventDefault()
+        const result = loginSchema.safeParse(formData)
+        if (!result.success) {
+            const fieldErrors = result.error.flatten().fieldErrors
+            const firstErrorKey = Object.keys(fieldErrors).find(
+                (key) => fieldErrors[key as keyof typeof fieldErrors]?.length
+            )
+            if (firstErrorKey) {
+                const messages = fieldErrors[firstErrorKey as keyof typeof fieldErrors]
+                if (messages && messages.length > 0) {
+                    toast.error(messages[0])
+                }
+            }
+            return
+        }
+        mutation.mutate(formData)
+    }
 
 	function togglePassword() {
 		setShowPassword((prev) => !prev)

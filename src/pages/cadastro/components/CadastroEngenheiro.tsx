@@ -10,7 +10,7 @@ import { ReturnButton } from "./ReturnButton"
 import { Link } from "react-router-dom"
 
 export function CadastroEngenheiro() {
-    const { formDataEngenheiro, showPassword, handleChange, handleSubmit, togglePassword, isPending, isError, errorMessage } = useCadastroEngenheiro()
+    const { formDataEngenheiro, showPassword, handleChange, handleSubmit, togglePassword, isPending} = useCadastroEngenheiro()
   return (
     <section className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative bg-surface">
       <div className="absolute left-4 top-4 z-10">
@@ -28,13 +28,13 @@ export function CadastroEngenheiro() {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como engenheiro</h2>
+          <h2 className="text-on-surface text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como engenheiro</h2>
           <p className="text-sm text-on-surface-variant">
             Insira suas credenciais para continuar
           </p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="space-y-2">
             <Label htmlFor="name">Nome Completo</Label>
             <Input
@@ -44,7 +44,6 @@ export function CadastroEngenheiro() {
               placeholder="Seu nome completo"
               value={formDataEngenheiro.name}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -57,7 +56,6 @@ export function CadastroEngenheiro() {
               placeholder="nome@empresa.com.br"
               value={formDataEngenheiro.email}
               onChange={handleChange}
-              required
               suffix={<Mail size={20} />}
             />
           </div>
@@ -71,7 +69,6 @@ export function CadastroEngenheiro() {
               placeholder="••••••••"
               value={formDataEngenheiro.password}
               onChange={handleChange}
-              required
               suffix={
                 <button
                   type="button"
@@ -93,7 +90,6 @@ export function CadastroEngenheiro() {
               placeholder="••••••••"
               value={formDataEngenheiro.confirmPassword}
               onChange={handleChange}
-              required
               suffix={
                 <button
                   type="button"
@@ -105,12 +101,6 @@ export function CadastroEngenheiro() {
               }
             />
           </div>
-
-          {isError && (
-            <p className="text-sm text-center text-error">
-              {errorMessage}
-            </p>
-          )}
 
           <div className="space-y-4 pt-4">
             <Button type="submit" disabled={isPending}>

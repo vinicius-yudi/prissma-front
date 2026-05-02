@@ -2,11 +2,17 @@ import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
+import { toast } from "react-toastify"
 import { cadastroCliente } from "../services/cadastroCliente.service"
+import { cadastroClienteSchema } from "../schemas/cadastroCliente.schema"
 import type { CadastroFormDataCliente } from "../types"
 
 export function useCadastroCliente() {
-  const [formDataCliente, setFormData] = useState<CadastroFormDataCliente>({ name: "", email: "", password: "", confirmPassword: "" })
+  const [formDataCliente, setFormData] = useState<CadastroFormDataCliente>({ 
+    name: "", 
+    email: "", 
+    password: "", 
+    confirmPassword: "" })
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { saveToken } = useAuth()
@@ -29,8 +35,18 @@ export function useCadastroCliente() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (formDataCliente.password !== formDataCliente.confirmPassword) {
-      alert("As senhas não coincidem")
+    const result = cadastroClienteSchema.safeParse(formDataCliente)
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors
+      const firstErrorKey = Object.keys(fieldErrors).find(
+        (key) => fieldErrors[key as keyof typeof fieldErrors]?.length
+      )
+      if (firstErrorKey) {
+        const messages = fieldErrors[firstErrorKey as keyof typeof fieldErrors]
+        if (messages && messages.length > 0) {
+          toast.error(messages[0])
+        }
+      }
       return
     }
     mutation.mutate(formDataCliente)
@@ -47,7 +63,5 @@ export function useCadastroCliente() {
     handleSubmit,
     togglePassword,
     isPending: mutation.isPending,
-    isError: mutation.isError,
-    errorMessage: mutation.error?.message,
   }
 }
