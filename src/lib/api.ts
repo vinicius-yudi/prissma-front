@@ -6,7 +6,8 @@ type RequestOptions = Omit<RequestInit, "body"> & {
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const token = localStorage.getItem("token")
-
+  console.log("LOCAL STORAGE TOKEN:", localStorage.getItem("token"))
+  
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -20,14 +21,26 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   })
 
   if (response.status === 401) {
-    localStorage.removeItem("token")
-    window.location.href = "/login"
-    throw new Error("Sessão expirada. Faça login novamente.")
+  const isLoginRoute = path.includes("/login")
+    if (!isLoginRoute) {
+      localStorage.removeItem("token")
+      window.location.href = "/login"
+      throw new Error("Sessão expirada. Faça login novamente.")
+    }
   }
 
   if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(errorText || `Erro ${response.status}`)
+  let errorMessage = `Erro ${response.status}`
+  const text = await response.text()
+  if (text) {
+    try {
+      const data = JSON.parse(text)
+      errorMessage = data.message || text
+    } catch {
+      errorMessage = text
+    }
+  }
+  throw new Error(errorMessage)
   }
 
   const contentType = response.headers.get("content-type")

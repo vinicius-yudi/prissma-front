@@ -1,13 +1,20 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import { useAuth } from "@/contexts/AuthContext"
 import { cadastroArquiteto } from "../services/cadastroArquiteto.service"
+import { cadastroArquitetoSchema } from "../schemas/cadastroArquiteto.schema"
 import type { CadastroFormDataArquiteto } from "../types"
 
 export function useCadastroArquiteto() {
-  const [formDataArquiteto, setFormData] = useState<CadastroFormDataArquiteto>({ name: "", email: "", password: "", confirmPassword: "" })
+  const [formDataArquiteto, setFormData] = useState<CadastroFormDataArquiteto>({ 
+    name: "", 
+    email: "", 
+    password: "", 
+    confirmPassword: "" })
   const [showPassword, setShowPassword] = useState(false)
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof CadastroFormDataArquiteto, string>>>({});
   const navigate = useNavigate()
   const { saveToken } = useAuth()
 
@@ -18,19 +25,38 @@ export function useCadastroArquiteto() {
       navigate("/dashboard")
     },
     onError: (error: Error) => {
-      console.error(error.message)
-    },
+    console.error("Erro completo:", error)
+    if (error.message.includes("Email já cadastrado")) {
+      toast.error("Este e-mail já está sendo utilizado.")
+    } else {
+      toast.error("Erro ao cadastrar usuário.")
+    }
+    }
   })
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (formErrors[name as keyof CadastroFormDataArquiteto]) {
+      setFormErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (formDataArquiteto.password !== formDataArquiteto.confirmPassword) {
-      alert("As senhas não coincidem")
+    const result = cadastroArquitetoSchema.safeParse(formDataArquiteto)
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors
+      const firstErrorKey = Object.keys(fieldErrors).find(
+        (key) => fieldErrors[key as keyof typeof fieldErrors]?.length
+      )
+      if (firstErrorKey) {
+        const messages = fieldErrors[firstErrorKey as keyof typeof fieldErrors]
+        if (messages && messages.length > 0) {
+          toast.error(messages[0])
+        }
+      }
       return
     }
     mutation.mutate(formDataArquiteto)
@@ -46,8 +72,6 @@ export function useCadastroArquiteto() {
     handleChange,
     handleSubmit,
     togglePassword,
-    isPending: mutation.isPending,
-    isError: mutation.isError,
-    errorMessage: mutation.error?.message,
+    isPending: mutation.isPending
   }
 }
