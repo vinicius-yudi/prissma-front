@@ -10,7 +10,7 @@ import type { LoginFormData } from "../types"
 export function useLoginForm() {
 	const [formData, setFormData] = useState<LoginFormData>({ email: "", password: "" })
 	const [showPassword, setShowPassword] = useState(false)
-	const { saveToken } = useAuth()
+	const { saveToken, logout } = useAuth()
 	const navigate = useNavigate()
 
 	const mutation = useMutation({
@@ -19,10 +19,15 @@ export function useLoginForm() {
 			saveToken(token)
 			navigate("/dashboard")
 		},
-		onError: (error: Error) => {
-			toast.error(error.message)
-		},
-	})
+		onError: (error: any) => {
+            const serverMessage = error.response?.data?.message || error.message || ""
+            if (serverMessage.includes("Invalid credentials")) {
+                toast.error("E-mail ou senha incorretos.")
+            } else {
+                toast.error("Ocorreu um erro ao realizar o login.")
+            }
+        },
+    })
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target
@@ -45,6 +50,7 @@ export function useLoginForm() {
             }
             return
         }
+		logout()
         mutation.mutate(formData)
     }
 

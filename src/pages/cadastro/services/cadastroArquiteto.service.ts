@@ -7,6 +7,6 @@ interface CadastroResponse {
 
 export async function cadastroArquiteto(data: CadastroFormDataArquiteto): Promise<CadastroResponse> {
   const { confirmPassword, ...dataToSend } = data
-  const cadastroData = { ...dataToSend, role: 'arquiteto' as const }
+  const cadastroData = { ...dataToSend, role: 'ARQ' as const }
   return api.post<CadastroResponse>("/users", cadastroData)
 }

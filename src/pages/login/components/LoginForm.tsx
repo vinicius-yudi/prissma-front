@@ -43,7 +43,7 @@ export function LoginForm() {
           <p className="text-sm text-on-surface-variant">{t("login.subtitle")}</p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="space-y-2">
             <Label htmlFor="email">{t("login.email")}</Label>
             <Input
@@ -53,7 +53,6 @@ export function LoginForm() {
               placeholder={t("login.emailPlaceholder")}
               value={formData.email}
               onChange={handleChange}
-              required
               suffix={<Mail size={20} />}
             />
           </div>
@@ -75,7 +74,6 @@ export function LoginForm() {
               placeholder={t("login.passwordPlaceholder")}
               value={formData.password}
               onChange={handleChange}
-              required
               suffix={passwordSuffix}
             />
           </div>

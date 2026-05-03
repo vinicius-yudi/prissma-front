@@ -25,8 +25,13 @@ export function useCadastroArquiteto() {
       navigate("/dashboard")
     },
     onError: (error: Error) => {
-      console.error(error.message)
-    },
+    console.error("Erro completo:", error)
+    if (error.message.includes("Email já cadastrado")) {
+      toast.error("Este e-mail já está sendo utilizado.")
+    } else {
+      toast.error("Erro ao cadastrar usuário.")
+    }
+    }
   })
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
