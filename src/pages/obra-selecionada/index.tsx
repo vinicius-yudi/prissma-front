@@ -135,7 +135,7 @@ export function ObraSelecionadaPage() {
           <h1 className="text-3xl font-black tracking-tighter text-on-surface">{project.title}</h1>
           <p className="text-primary text-sm flex items-center gap-2">
             <MapPin size={14} />
-            {project.address}
+            {[`${project.city} - ${project.state}`].filter(Boolean).join(", ")}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">

@@ -177,7 +177,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </h3>
           <div className="flex items-center gap-1.5 text-on-surface-variant text-sm">
             <MapPin size={13} className="flex-none" />
-            <span className="line-clamp-1">{project.address}</span>
+            <span className="line-clamp-1">{[`${project.city} - ${project.state}`,].filter(Boolean).join(", ")}</span>
           </div>
         </div>
 

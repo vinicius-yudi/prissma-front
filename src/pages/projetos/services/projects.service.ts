@@ -5,7 +5,12 @@ import type { ProjetoAcompanhamento } from "../types"
 
 export interface CreateProjectPayload {
   title: string
-  address: string
+  cep: string
+  street: string
+  city: string
+  state: string
+  number: string
+  complement?: string
   projectType: string
   category: string
   status: string
@@ -21,7 +26,12 @@ export async function createProject(payload: CreateProjectPayload): Promise<void
 
 export interface UpdateProjectPayload {
   title?: string
-  address?: string
+  cep: string
+  street: string
+  city: string
+  state: string
+  number: string
+  complement?: string
   projectType?: string
   category?: string
   landArea?: number

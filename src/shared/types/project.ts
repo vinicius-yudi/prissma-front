@@ -11,7 +11,12 @@ export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 export interface Project {
   id: number
   title: string
-  address: string
+  cep: string
+  street: string
+  city: string
+  state: string
+  number: string
+  complement?: string | null
   projectType: string
   category: string
   landArea: number

@@ -65,10 +65,3 @@ export const PROJECT_FORM_DEFAULTS: ProjectFormData = {
   cidade: "",
   uf: "",
 }
-
-export function formatAddress(data: Pick<ProjectFormData, "logradouro" | "numero" | "complemento" | "bairro" | "cidade" | "uf" | "cep">): string {
-  const { logradouro, numero, complemento, bairro, cidade, uf, cep } = data
-  const cepFormatted = `${cep.slice(0, 5)}-${cep.slice(5)}`
-  const compPart = complemento && complemento.trim() ? `, ${complemento.trim()}` : ""
-  return `${logradouro}, ${numero}${compPart} - ${bairro}, ${cidade} - ${uf}, ${cepFormatted}`
-}

@@ -19,6 +19,11 @@ function isProjectOverdue(project: Project): boolean {
   return new Date(project.plannedEndDate) < new Date()
 }
 
+export function formatAddress(project: Project) {
+  const comp = project.complement ? ` - ${project.complement}` : ""
+  return `${project.street}, ${project.number}${comp} - ${project.city} - ${project.state}, ${project.cep}`
+}
+
 export function useProjects() {
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState<ProjectFilter>(ProjectFilter.ALL)
@@ -53,7 +58,7 @@ export function useProjects() {
     const term = search.toLowerCase()
     return byFilter.filter(
       (p) =>
-        p.title.toLowerCase().includes(term) || p.address.toLowerCase().includes(term),
+        p.title.toLowerCase().includes(term) || formatAddress(p).toLowerCase().includes(term)
     )
   }, [allProjects, filter, search])
 

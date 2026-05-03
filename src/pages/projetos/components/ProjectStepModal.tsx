@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Building2, MapPin, Search } from "lucide-react"
+import { Building2, Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -17,7 +17,6 @@ import { useCreateProject } from "../hooks/useCreateProject"
 import { useEditProject } from "../hooks/useEditProject"
 import { useCepLookup } from "../hooks/useCepLookup"
 import {
-  formatAddress,
   PROJECT_FORM_DEFAULTS,
   projectSchema,
   STEP1_FIELDS,
@@ -59,7 +58,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
   const { handleEdit, isLoading: isEditing } = useEditProject({ onSuccess: onClose })
   const isLoading = isCreating || isEditing
 
-  // Reset form and step whenever modal opens
   useEffect(() => {
     if (!open) return
     setStep(1)
@@ -74,6 +72,12 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
         builtArea: project.builtArea,
         plannedStartDate: project.plannedStartDate ?? "",
         plannedEndDate: project.plannedEndDate ?? "",
+        cep: project.cep ?? "",
+        logradouro: project.street ?? "",
+        cidade: project.city ?? "",
+        uf: project.state ?? "",
+        numero: project.number ?? "",
+        complemento: project.complement ?? "",
       })
     } else {
       form.reset(PROJECT_FORM_DEFAULTS)
@@ -106,10 +110,14 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
   }
 
   function onSubmit(data: ProjectFormData) {
-    const address = formatAddress(data)
     const payload = {
       title: data.title,
-      address,
+      cep: data.cep,
+      street: data.logradouro,
+      city: data.cidade,
+      state: data.uf,
+      number: data.numero,
+      complement: data.complemento ?? undefined,
       projectType: data.projectType,
       category: data.category,
       status: data.status,
@@ -252,17 +260,8 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
         {/* ── PASSO 2: Endereço ── */}
         {step === 2 && (
           <div className="px-6 pt-5 pb-2 space-y-5">
-            {isEdit && project?.address && (
-              <div className="flex items-start gap-2 px-3 py-2.5 bg-surface-container-low rounded-lg border border-outline-variant">
-                <MapPin size={14} className="text-on-surface-variant mt-0.5 flex-none" />
-                <div>
-                  <p className="text-xs text-on-surface-variant mb-0.5">{t("projectModal.currentAddress")}</p>
-                  <p className="text-sm text-on-surface">{project.address}</p>
-                </div>
-              </div>
-            )}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              
               {/* CEP */}
               <div className="space-y-1.5">
                 <Label className={formLabel()}>{t("projectModal.cep")}</Label>
@@ -274,18 +273,26 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                       className={formInput()}
                       placeholder={t("projectModal.cepPlaceholder")}
                       suffix={
-                        isLookingUp
-                          ? <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          : <Search size={14} className="text-on-surface-variant" />
+                        isLookingUp ? (
+                          <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Search size={14} className="text-on-surface-variant" />
+                        )
                       }
                       value={maskCep(field.value)}
-                      onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 8))}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 8)
+                        )
+                      }
                     />
                   )}
                 />
                 {cepError && <p className="text-xs text-error mt-1">{cepError}</p>}
                 {form.formState.errors.cep && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.cep.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.cep.message}
+                  </p>
                 )}
               </div>
 
@@ -299,7 +306,9 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   {...form.register("uf")}
                 />
                 {form.formState.errors.uf && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.uf.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.uf.message}
+                  </p>
                 )}
               </div>
 
@@ -313,7 +322,9 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   {...form.register("logradouro")}
                 />
                 {form.formState.errors.logradouro && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.logradouro.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.logradouro.message}
+                  </p>
                 )}
               </div>
 
@@ -327,7 +338,9 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   {...numeroRegisterProps}
                 />
                 {form.formState.errors.numero && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.numero.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.numero.message}
+                  </p>
                 )}
               </div>
 
@@ -351,7 +364,9 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   {...form.register("bairro")}
                 />
                 {form.formState.errors.bairro && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.bairro.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.bairro.message}
+                  </p>
                 )}
               </div>
 
@@ -365,7 +380,9 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   {...form.register("cidade")}
                 />
                 {form.formState.errors.cidade && (
-                  <p className="text-xs text-error mt-1">{form.formState.errors.cidade.message}</p>
+                  <p className="text-xs text-error mt-1">
+                    {form.formState.errors.cidade.message}
+                  </p>
                 )}
               </div>
             </div>
