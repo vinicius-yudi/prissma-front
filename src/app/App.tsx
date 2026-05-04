@@ -9,7 +9,6 @@ import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { LoginPage } from "@/pages/login"
 import { CadastroPage } from "@/pages/cadastro"
-import { PerfilPage } from "@/pages/perfil"
 import { ProjetosPage } from "@/pages/projetos"
 import { ObraSelecionadaPage } from "@/pages/obra-selecionada"
 import { NotFoundPage } from "@/pages/not-found"
@@ -32,7 +31,6 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/perfil" element={<PerfilPage />} />
                 <Route path="/projetos" element={<ProjetosPage />} />
                 <Route path="/obras/:id" element={<ObraSelecionadaPage />} />
                 <Route path="*" element={<NotFoundPage />} />

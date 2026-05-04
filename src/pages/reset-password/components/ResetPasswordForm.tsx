@@ -4,8 +4,6 @@ import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react"
 import { Link } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import { useResetPasswordForm } from "../hooks/useResetPasswordForm"
 
 export function ResetPasswordForm() {
@@ -99,7 +97,6 @@ export function ResetPasswordForm() {
 					</Link>
 				</div>
 			</div>
-			<ToastContainer position="top-right" theme="dark" />
 		</section>
 	)
 }

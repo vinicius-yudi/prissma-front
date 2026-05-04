@@ -6,8 +6,6 @@ import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageS
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import { useForgotPasswordForm } from "../hooks/useForgotPasswordForm"
 
 export function ForgotPasswordForm() {
@@ -85,7 +83,6 @@ export function ForgotPasswordForm() {
 					</>
 				)}
 			</div>
-			<ToastContainer position="top-right" theme="dark" />
 		</section>
 	)
 }

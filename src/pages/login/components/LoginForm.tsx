@@ -7,8 +7,6 @@ import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import { useLoginForm } from "../hooks/useLoginForm"
 
 const LOGO_ALT = "Prissma"
@@ -98,7 +96,6 @@ export function LoginForm() {
           </p>
         </div>
       </div>
-      <ToastContainer position="top-right" theme="dark" />
     </section>
   )
 }

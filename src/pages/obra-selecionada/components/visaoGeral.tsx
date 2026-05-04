@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
 import type { Etapa, ProjetoAcompanhamento } from "@/pages/projetos/types"
-import type { Project } from "@/shared/types/project"
+import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 const NO_DATE = "—"
 const DATE_SEPARATOR = " → "
@@ -167,7 +167,7 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
 
         <div className="grid grid-cols-3 gap-3">
           <InfoCard icon={MapPin} label={t("obra.visaoGeral.location")}>
-            <p className="text-sm text-on-surface line-clamp-2">{project.address}</p>
+            <p className="text-sm text-on-surface line-clamp-2">{formatProjectAddress(project)}</p>
           </InfoCard>
           <InfoCard icon={Calendar} label={t("obra.visaoGeral.deadline")}>
             <PrazoContent start={project.plannedStartDate} end={project.plannedEndDate} />
