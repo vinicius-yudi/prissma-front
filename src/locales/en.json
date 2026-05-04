@@ -23,6 +23,8 @@
   "dashboard": {
     "title": "Control Panel",
     "subtitle": "Manage your projects and track progress",
+    "inProgressTitle": "In Progress Projects",
+    "inProgressEmpty": "No projects in progress at the moment.",
     "stats": {
       "activeProjects": "ACTIVE PROJECTS",
       "activeProjectsDetail": "+2 this month",
@@ -110,7 +112,20 @@
     "typeEngineer": "Create Engineer account",
     "typeClient": "Create Client account",
     "hasAccount": "Already have an account?",
-    "login": "Sign in"
+    "login": "Sign in",
+    "titleClient": "Create your account as client",
+    "titleArchitect": "Create your account as architect",
+    "titleEngineer": "Create your account as engineer",
+    "formSubtitle": "Enter your credentials to continue",
+    "back": "Back",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your full name",
+    "email": "Email",
+    "emailPlaceholder": "name@company.com",
+    "password": "Password",
+    "confirmPassword": "Confirm your password",
+    "submit": "Confirm",
+    "submitting": "Registering..."
   },
   "registerWork": {
     "title": "Project Registration",
@@ -228,6 +243,14 @@
   "profile": {
     "title": "Edit Profile",
     "subtitle": "Update your personal information.",
+    "deleteAccount": "Delete account",
+    "deleteModal": {
+      "title": "Delete Account",
+      "message": "Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.",
+      "cancel": "Cancel",
+      "confirm": "Delete account",
+      "deleting": "Deleting..."
+    },
     "name": "Name",
     "email": "E-mail",
     "role": "Role",

@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 import { useAuth } from "@/contexts/AuthContext"
 import { getMyProfile } from "@/shared/services/user.service"
+import { DeleteAccountModal } from "@/pages/perfil/components/DeleteAccountModal"
+import { PerfilModal } from "@/pages/perfil/components/PerfilModal"
 
 const NAV_ITEMS = [
 	{ to: "/dashboard", key: "sidebar.nav.home", icon: Home },
@@ -76,6 +78,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 	const { t } = useTranslation()
 	const location = useLocation()
 	const [menuOpen, setMenuOpen] = useState(false)
+	const [perfilOpen, setPerfilOpen] = useState(false)
+	const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null)
 
 	const { data: profile } = useQuery({
@@ -98,11 +102,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
 	function toggleMenu() {
 		setMenuOpen((prev) => !prev)
-	}
-
-	function closeMenu() {
-		setMenuOpen(false)
-		onClose()
 	}
 
 	function handleLogout() {
@@ -138,14 +137,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
 				{menuOpen && (
 					<div className="absolute top-full left-3 right-3 mt-1 rounded-xl border border-outline-variant bg-surface-container py-1 shadow-lg z-10">
-						<NavLink
-							to="/perfil"
-							onClick={closeMenu}
+						<button
+							type="button"
+							onClick={() => { setPerfilOpen(true); setMenuOpen(false) }}
 							className={menuItemBase({ variant: "default" })}
 						>
 							<UserCircle className="h-5 w-5" />
 							{t("sidebar.menu.profile")}
-						</NavLink>
+						</button>
 						<button
 							type="button"
 							disabled
@@ -165,6 +164,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 					</div>
 				)}
 			</div>
+
+			<PerfilModal
+				open={perfilOpen}
+				onClose={() => setPerfilOpen(false)}
+				onDeleteAccount={() => { setPerfilOpen(false); setDeleteAccountOpen(true) }}
+			/>
+			<DeleteAccountModal open={deleteAccountOpen} onClose={() => setDeleteAccountOpen(false)} />
 
 			<nav className="flex-1 flex flex-col gap-1 px-3 py-2">
 				{NAV_ITEMS.map(({ to, key, icon: Icon }) => {

@@ -23,6 +23,8 @@
   "dashboard": {
     "title": "Panel de Control",
     "subtitle": "Gestiona tus proyectos y monitorea el progreso",
+    "inProgressTitle": "Proyectos en Curso",
+    "inProgressEmpty": "No hay proyectos en curso en este momento.",
     "stats": {
       "activeProjects": "PROYECTOS ACTIVOS",
       "activeProjectsDetail": "+2 este mes",
@@ -110,7 +112,20 @@
     "typeEngineer": "Crear cuenta de Ingeniero",
     "typeClient": "Crear cuenta de Cliente",
     "hasAccount": "¿Ya tienes una cuenta?",
-    "login": "Inicia sesión"
+    "login": "Inicia sesión",
+    "titleClient": "Crea tu cuenta como cliente",
+    "titleArchitect": "Crea tu cuenta como arquitecto",
+    "titleEngineer": "Crea tu cuenta como ingeniero",
+    "formSubtitle": "Ingresa tus credenciales para continuar",
+    "back": "Volver",
+    "fullName": "Nombre Completo",
+    "fullNamePlaceholder": "Tu nombre completo",
+    "email": "Email",
+    "emailPlaceholder": "nombre@empresa.com",
+    "password": "Contraseña",
+    "confirmPassword": "Confirma tu contraseña",
+    "submit": "Confirmar",
+    "submitting": "Registrando..."
   },
   "registerWork": {
     "title": "Registro de Obra",
@@ -228,6 +243,14 @@
   "profile": {
     "title": "Edición de Perfil",
     "subtitle": "Actualiza tu información personal.",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteModal": {
+      "title": "Eliminar Cuenta",
+      "message": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y todos tus datos se perderán permanentemente.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar cuenta",
+      "deleting": "Eliminando..."
+    },
     "name": "Nombre",
     "email": "E-mail",
     "role": "Rol",

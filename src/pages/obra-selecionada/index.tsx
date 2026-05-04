@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
 import { DeleteProjectModal } from "@/pages/projetos/components/DeleteProjectModal"
 import { ProjectStepModal } from "@/pages/projetos/components/ProjectStepModal"
 import type { ProjetoAcompanhamento } from "@/pages/projetos/types"
-import type { Project } from "@/shared/types/project"
+import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 import { EtapasTab } from "./components/EtapasTab"
 import { VisaoGeral } from "./components/visaoGeral"
@@ -132,10 +133,13 @@ export function ObraSelecionadaPage() {
             <ArrowLeft size={14} />
             {t("obra.back")}
           </button>
-          <h1 className="text-3xl font-black tracking-tighter text-on-surface">{project.title}</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-black tracking-tighter text-on-surface">{project.title}</h1>
+            <StatusBadge status={project.status} />
+          </div>
           <p className="text-primary text-sm flex items-center gap-2">
             <MapPin size={14} />
-            {project.address}
+            {formatProjectAddress(project)}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">

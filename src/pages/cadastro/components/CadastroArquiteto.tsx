@@ -2,20 +2,23 @@ import logo from "@/assets/svg/logo.svg"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
-import { Undo2, ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
-import { useCadastroArquiteto } from "../hooks/useCadastroArquiteto"
+import { ArrowRight, Eye, EyeOff, Mail, Undo2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import { Link } from "react-router-dom"
 import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
+import { useCadastroArquiteto } from "../hooks/useCadastroArquiteto"
 import { ReturnButton } from "./ReturnButton"
-import { Link } from "react-router-dom"
 
 export function CadastroArquiteto() {
-    const { formDataArquiteto, showPassword, handleChange, handleSubmit, togglePassword, isPending } = useCadastroArquiteto()
+  const { formDataArquiteto, showPassword, handleChange, handleSubmit, togglePassword, isPending } = useCadastroArquiteto()
+  const { t } = useTranslation()
+
   return (
     <section className="w-full lg:w-[45%] h-full flex flex-col items-center px-6 sm:px-16 lg:px-24 pt-20 pb-10 lg:py-12 overflow-y-auto relative bg-surface">
       <div className="absolute left-4 top-4 z-10">
         <ReturnButton icon={Undo2} type="button" onClick={() => window.location.reload()}>
-          Voltar
+          {t("register.back")}
         </ReturnButton>
       </div>
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
@@ -28,32 +31,32 @@ export function CadastroArquiteto() {
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-on-surface text-2xl sm:text-3xl font-bold tracking-tight">Crie sua conta como arquiteto</h2>
+          <h2 className="text-on-surface text-2xl sm:text-3xl font-bold tracking-tight">{t("register.titleArchitect")}</h2>
           <p className="text-sm text-on-surface-variant">
-            Insira suas credenciais para continuar
+            {t("register.formSubtitle")}
           </p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="space-y-2">
-            <Label htmlFor="name">Nome Completo</Label>
+            <Label htmlFor="name">{t("register.fullName")}</Label>
             <Input
               id="name"
               name="name"
               type="text"
-              placeholder="Seu nome completo"
+              placeholder={t("register.fullNamePlaceholder")}
               value={formDataArquiteto.name}
               onChange={handleChange}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("register.email")}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="nome@empresa.com.br"
+              placeholder={t("register.emailPlaceholder")}
               value={formDataArquiteto.email}
               onChange={handleChange}
               suffix={<Mail size={20} />}
@@ -61,7 +64,7 @@ export function CadastroArquiteto() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
+            <Label htmlFor="password">{t("register.password")}</Label>
             <Input
               id="password"
               name="password"
@@ -82,7 +85,7 @@ export function CadastroArquiteto() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirme sua senha</Label>
+            <Label htmlFor="confirmPassword">{t("register.confirmPassword")}</Label>
             <Input
               id="confirmPassword"
               name="confirmPassword"
@@ -104,7 +107,7 @@ export function CadastroArquiteto() {
 
           <div className="space-y-4 pt-4">
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Realizando cadastro..." : "Confirmar"}
+              {isPending ? t("register.submitting") : t("register.submit")}
               {!isPending && <ArrowRight size={18} />}
             </Button>
           </div>
@@ -112,12 +115,12 @@ export function CadastroArquiteto() {
 
         <div className="text-center pb-5">
           <p className="text-sm text-on-surface-variant">
-            Já possui uma conta?{" "}
+            {t("register.hasAccount")}{" "}
             <Link
               to="/login"
               className="font-bold text-secondary underline-offset-4 hover:underline ml-1"
             >
-              Faça login
+              {t("register.login")}
             </Link>
           </p>
         </div>

@@ -4,44 +4,11 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
+import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
 import { ProjectStatus, type Project } from "@/shared/types/project"
 
 import { DeleteProjectModal } from "./DeleteProjectModal"
 import { ProjectStepModal } from "./ProjectStepModal"
-
-const STATUS_KEYS: Record<ProjectStatus, string> = {
-  [ProjectStatus.PLANNING]: "projects.status.planning",
-  [ProjectStatus.IN_PROGRESS]: "projects.status.inProgress",
-  [ProjectStatus.PAUSED]: "projects.status.paused",
-  [ProjectStatus.COMPLETED]: "projects.status.completed",
-  [ProjectStatus.CANCELLED]: "projects.status.cancelled",
-}
-
-const statusBadge = tv({
-  base: "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border",
-  variants: {
-    status: {
-      [ProjectStatus.PLANNING]: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      [ProjectStatus.IN_PROGRESS]: "bg-teal-500/10 text-teal-600 border-teal-500/20",
-      [ProjectStatus.PAUSED]: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-      [ProjectStatus.COMPLETED]: "bg-green-500/10 text-green-600 border-green-500/20",
-      [ProjectStatus.CANCELLED]: "bg-outline-variant/40 text-on-surface-variant border-outline-variant",
-    },
-  },
-})
-
-const statusDot = tv({
-  base: "w-1.5 h-1.5 rounded-full flex-none",
-  variants: {
-    status: {
-      [ProjectStatus.PLANNING]: "bg-blue-500",
-      [ProjectStatus.IN_PROGRESS]: "bg-teal-500",
-      [ProjectStatus.PAUSED]: "bg-amber-500",
-      [ProjectStatus.COMPLETED]: "bg-green-500",
-      [ProjectStatus.CANCELLED]: "bg-on-surface-variant",
-    },
-  },
-})
 
 const progressBar = tv({
   base: "h-full rounded-full transition-all",
@@ -144,10 +111,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface-container-low hover:border-outline transition-all duration-200 cursor-pointer group"
       >
         <div className="flex items-start justify-between gap-2">
-          <span className={statusBadge({ status: project.status })}>
-            <span className={statusDot({ status: project.status })} />
-            {t(STATUS_KEYS[project.status])}
-          </span>
+          <StatusBadge status={project.status} />
           <div className="flex items-center gap-1">
             <span className="text-xs text-on-surface-variant uppercase tracking-wider font-medium mt-0.5 shrink-0 group-hover:opacity-0 transition-opacity">
               {project.projectType}
