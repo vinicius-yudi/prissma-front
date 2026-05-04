@@ -151,7 +151,7 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
   const totalBarStyle: CSSProperties = { width: `${totalProgress}%` }
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col lg:flex-row gap-6">
       <div className="flex-1 bg-surface-container-low rounded-xl p-6 space-y-6">
         <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.title")}</h2>
 
@@ -165,7 +165,7 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <InfoCard icon={MapPin} label={t("obra.visaoGeral.location")}>
             <p className="text-sm text-on-surface line-clamp-2">{formatProjectAddress(project)}</p>
           </InfoCard>
@@ -189,7 +189,7 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
         </div>
       </div>
 
-      <div className="w-72 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
+      <div className="w-full lg:w-72 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
         <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stagesProgress")}</h2>
         <div className="flex justify-center">
           <ProgressRing percent={etapasPercent} />

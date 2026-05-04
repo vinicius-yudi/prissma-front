@@ -124,7 +124,7 @@ export function ObraSelecionadaPage() {
 
   return (
     <div>
-      <header className="flex justify-between items-center pb-4">
+      <header className="flex flex-col gap-3 pb-4 sm:flex-row sm:justify-between sm:items-start">
         <div className="flex flex-col gap-2">
           <button
             onClick={handleBack}
@@ -133,8 +133,8 @@ export function ObraSelecionadaPage() {
             <ArrowLeft size={14} />
             {t("obra.back")}
           </button>
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-black tracking-tighter text-on-surface">{project.title}</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tighter text-on-surface">{project.title}</h1>
             <StatusBadge status={project.status} />
           </div>
           <p className="text-primary text-sm flex items-center gap-2">
@@ -143,19 +143,19 @@ export function ObraSelecionadaPage() {
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" className="w-auto px-5 py-2.5 text-sm text-error border-error/40 hover:bg-error/10 hover:border-error" onClick={() => setDeleteOpen(true)}>{t("obra.delete")}</Button>
-          <Button variant="primary" className="w-auto px-5 py-2.5 text-sm" onClick={() => setEditOpen(true)}>{t("obra.edit")}</Button>
+          <Button variant="outline" className="flex-1 sm:flex-none w-auto px-4 py-2 text-sm text-error border-error/40 hover:bg-error/10 hover:border-error" onClick={() => setDeleteOpen(true)}>{t("obra.delete")}</Button>
+          <Button variant="primary" className="flex-1 sm:flex-none w-auto px-4 py-2 text-sm" onClick={() => setEditOpen(true)}>{t("obra.edit")}</Button>
         </div>
       </header>
 
-      <nav className="bg-surface-container-low px-4 pt-2 pb-0 border border-outline-variant/10 rounded-xl flex gap-1">
+      <nav className="bg-surface-container-low px-4 pt-2 pb-0 border border-outline-variant/10 rounded-xl flex gap-1 overflow-x-auto">
         {TABS.map(tab => (
           <Button
             key={tab}
             data-tab={tab}
             variant={getTabVariant(tab, activeTab)}
             onClick={handleTabChange}
-            className="w-auto px-4 py-2 text-sm"
+            className="w-auto px-4 py-2 text-sm shrink-0 whitespace-nowrap"
           >
             {t(TAB_KEYS[tab])}
           </Button>
