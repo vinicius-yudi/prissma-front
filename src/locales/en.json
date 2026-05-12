@@ -179,6 +179,28 @@
     "uf": "State",
     "currentAddress": "Current address"
   },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "subtitle": "Enter your e-mail and we'll send you a link to reset your password.",
+    "email": "Email *",
+    "emailPlaceholder": "name@company.com",
+    "submit": "Send link",
+    "submitting": "Sending...",
+    "backToLogin": "Back to login",
+    "sentTitle": "Check your e-mail",
+    "sentBefore": "If the e-mail",
+    "sentAfter": "is registered, you'll receive a link to reset your password shortly."
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "subtitle": "Create a new password for your account.",
+    "newPassword": "New password *",
+    "confirmPassword": "Confirm password *",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Reset password",
+    "submitting": "Saving...",
+    "backToLogin": "Back to login"
+  },
   "notFound": {
     "code": "ERROR 404",
     "title": "PAGE NOT FOUND",

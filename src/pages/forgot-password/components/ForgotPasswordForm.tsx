@@ -6,10 +6,14 @@ import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageS
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { useForgotPasswordForm } from "../hooks/useForgotPasswordForm"
+
+const LOGO_ALT = "Prissma"
 
 export function ForgotPasswordForm() {
 	const { email, setEmail, handleSubmit, isPending, submitted } = useForgotPasswordForm()
+	const { t } = useTranslation()
 
 	return (
 		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
@@ -19,16 +23,17 @@ export function ForgotPasswordForm() {
 			</div>
 			<div className="w-full max-w-md space-y-12">
 				<div className="flex justify-center">
-					<img src={logo} alt="Prissma" className="h-25" />
+					<img src={logo} alt={LOGO_ALT} className="h-25" />
 				</div>
 
 				{submitted ? (
 					<div className="text-center space-y-6">
 						<div className="space-y-2">
-							<h2 className="text-white text-3xl font-bold tracking-tight">Verifique seu e-mail</h2>
+							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.sentTitle")}</h2>
 							<p className="text-sm text-on-surface-variant">
-								Se o e-mail <span className="font-semibold text-secondary">{email}</span> estiver
-								cadastrado, você receberá um link para redefinir sua senha em breve.
+								{t("forgotPassword.sentBefore")}{" "}
+								<span className="font-semibold text-secondary">{email}</span>{" "}
+								{t("forgotPassword.sentAfter")}
 							</p>
 						</div>
 						<Link
@@ -36,26 +41,24 @@ export function ForgotPasswordForm() {
 							className="flex items-center justify-center gap-2 text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
 						>
 							<ArrowLeft size={16} />
-							Voltar ao login
+							{t("forgotPassword.backToLogin")}
 						</Link>
 					</div>
 				) : (
 					<>
 						<div className="text-center space-y-2">
-							<h2 className="text-white text-3xl font-bold tracking-tight">Esqueceu a senha?</h2>
-							<p className="text-sm text-on-surface-variant">
-								Informe seu e-mail e enviaremos um link para redefinir sua senha.
-							</p>
+							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.title")}</h2>
+							<p className="text-sm text-on-surface-variant">{t("forgotPassword.subtitle")}</p>
 						</div>
 
 						<form className="space-y-6" onSubmit={handleSubmit}>
 							<div className="space-y-2">
-								<Label htmlFor="email">Email *</Label>
+								<Label htmlFor="email">{t("forgotPassword.email")}</Label>
 								<Input
 									id="email"
 									name="email"
 									type="email"
-									placeholder="nome@empresa.com.br"
+									placeholder={t("forgotPassword.emailPlaceholder")}
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
 									required
@@ -65,7 +68,7 @@ export function ForgotPasswordForm() {
 
 							<div className="space-y-4 pt-4">
 								<Button type="submit" disabled={isPending}>
-									{isPending ? "Enviando..." : "Enviar link"}
+									{isPending ? t("forgotPassword.submitting") : t("forgotPassword.submit")}
 									{!isPending && <ArrowRight size={18} />}
 								</Button>
 							</div>
@@ -77,7 +80,7 @@ export function ForgotPasswordForm() {
 								className="flex items-center justify-center gap-2 text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
 							>
 								<ArrowLeft size={16} />
-								Voltar ao login
+								{t("forgotPassword.backToLogin")}
 							</Link>
 						</div>
 					</>

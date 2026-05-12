@@ -179,6 +179,28 @@
     "uf": "UF",
     "currentAddress": "Endereço atual"
   },
+  "forgotPassword": {
+    "title": "Esqueceu a senha?",
+    "subtitle": "Informe seu e-mail e enviaremos um link para redefinir sua senha.",
+    "email": "Email *",
+    "emailPlaceholder": "nome@empresa.com.br",
+    "submit": "Enviar link",
+    "submitting": "Enviando...",
+    "backToLogin": "Voltar ao login",
+    "sentTitle": "Verifique seu e-mail",
+    "sentBefore": "Se o e-mail",
+    "sentAfter": "estiver cadastrado, você receberá um link para redefinir sua senha em breve."
+  },
+  "resetPassword": {
+    "title": "Redefinir senha",
+    "subtitle": "Crie uma nova senha para sua conta.",
+    "newPassword": "Nova senha *",
+    "confirmPassword": "Confirmar senha *",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Redefinir senha",
+    "submitting": "Salvando...",
+    "backToLogin": "Voltar ao login"
+  },
   "notFound": {
     "code": "ERRO 404",
     "title": "PÁGINA NÃO ENCONTRADA",
