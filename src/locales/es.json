@@ -179,6 +179,28 @@
     "uf": "Estado",
     "currentAddress": "Dirección actual"
   },
+  "forgotPassword": {
+    "title": "¿Olvidaste la contraseña?",
+    "subtitle": "Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.",
+    "email": "Email *",
+    "emailPlaceholder": "nombre@empresa.com",
+    "submit": "Enviar enlace",
+    "submitting": "Enviando...",
+    "backToLogin": "Volver al inicio de sesión",
+    "sentTitle": "Revisa tu correo",
+    "sentBefore": "Si el correo",
+    "sentAfter": "está registrado, recibirás un enlace para restablecer tu contraseña en breve."
+  },
+  "resetPassword": {
+    "title": "Restablecer contraseña",
+    "subtitle": "Crea una nueva contraseña para tu cuenta.",
+    "newPassword": "Nueva contraseña *",
+    "confirmPassword": "Confirmar contraseña *",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Restablecer contraseña",
+    "submitting": "Guardando...",
+    "backToLogin": "Volver al inicio de sesión"
+  },
   "notFound": {
     "code": "ERROR 404",
     "title": "PÁGINA NO ENCONTRADA",
