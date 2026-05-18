@@ -256,9 +256,62 @@
       "empty": "No se han añadido fotos."
     },
     "etapas": {
+      "title": "Etapas",
       "empty": "Ninguna etapa registrada.",
       "tasksEmpty": "Ninguna tarea en esta etapa.",
       "tasks": "Tareas",
+      "sections": {
+        "inProgress": "En Progreso",
+        "pending": "Pendientes",
+        "done": "Completadas",
+        "emptySection": "Arrastra etapas a esta sección."
+      },
+      "actions": {
+        "create": "Nueva Etapa",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "Guardando..."
+      },
+      "card": {
+        "progress": "Progreso",
+        "tasksCount_one": "{{count}} tarea",
+        "tasksCount_other": "{{count}} tareas",
+        "photosCount_one": "{{count}} foto",
+        "photosCount_other": "{{count}} fotos"
+      },
+      "form": {
+        "title": {
+          "create": "Nueva etapa",
+          "edit": "Editar etapa"
+        },
+        "fields": {
+          "name": "Nombre",
+          "namePlaceholder": "Ej.: Cimentación",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Detalles de esta etapa (opcional)",
+          "status": "Estado",
+          "displayOrder": "Orden",
+          "plannedStartDate": "Inicio Planificado",
+          "plannedEndDate": "Fin Planificado"
+        }
+      },
+      "deleteModal": {
+        "title": "Eliminar etapa",
+        "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "toasts": {
+        "createSuccess": "¡Etapa creada con éxito!",
+        "createError": "Error al crear etapa",
+        "updateSuccess": "¡Etapa actualizada con éxito!",
+        "updateError": "Error al actualizar etapa",
+        "deleteSuccess": "¡Etapa eliminada con éxito!",
+        "deleteError": "Error al eliminar etapa",
+        "reorderError": "Error al reordenar etapas"
+      },
       "etapaStatus": {
         "PLANNED": "Planificada",
         "IN_PROGRESS": "En progreso",

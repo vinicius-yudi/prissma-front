@@ -85,9 +85,7 @@ function TabContent({ tab, project, acompanhamento, acompError, onRetry }: TabCo
     return <VisaoGeral project={project} acompanhamento={acompanhamento} />
   }
   if (tab === "etapas") {
-    if (acompError) return <AcompErrorCard onRetry={onRetry} />
-    if (!acompanhamento) return <LoadingState />
-    return <EtapasTab acompanhamento={acompanhamento} />
+    return <EtapasTab projectId={project.id} />
   }
   if (tab === "documentos") {
     return <DocumentosTab projectId={project.id} />
