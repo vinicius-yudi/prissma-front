@@ -7,6 +7,8 @@ import { tv } from "tailwind-variants"
 import type { Etapa, ProjetoAcompanhamento } from "@/pages/projetos/types"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 
+import { FotosRecentes } from "./FotosRecentes"
+
 const NO_DATE = "—"
 const DATE_SEPARATOR = " → "
 const M2 = "m²"
@@ -152,41 +154,45 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <div className="flex-1 bg-surface-container-low rounded-xl p-6 space-y-6">
-        <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.title")}</h2>
+      <div className="flex-1 flex flex-col gap-6">
+        <div className="bg-surface-container-low rounded-xl p-6 space-y-6">
+          <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.title")}</h2>
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-on-surface-variant">{t("obra.visaoGeral.totalProgress")}</span>
-            <span className="font-semibold text-on-surface">{totalProgress}%</span>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-on-surface-variant">{t("obra.visaoGeral.totalProgress")}</span>
+              <span className="font-semibold text-on-surface">{totalProgress}%</span>
+            </div>
+            <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+              <div className="h-full bg-primary rounded-full transition-all" style={totalBarStyle} />
+            </div>
           </div>
-          <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
-            <div className="h-full bg-primary rounded-full transition-all" style={totalBarStyle} />
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <InfoCard icon={MapPin} label={t("obra.visaoGeral.location")}>
+              <p className="text-sm text-on-surface line-clamp-2">{formatProjectAddress(project)}</p>
+            </InfoCard>
+            <InfoCard icon={Calendar} label={t("obra.visaoGeral.deadline")}>
+              <PrazoContent start={project.plannedStartDate} end={project.plannedEndDate} />
+            </InfoCard>
+            <InfoCard icon={Layers} label={t("obra.visaoGeral.areas")}>
+              <p className="text-sm text-on-surface">
+                {t("obra.visaoGeral.landArea")}: {project.landArea}{M2}
+                {" · "}
+                {t("obra.visaoGeral.builtArea")}: {project.builtArea}{M2}
+              </p>
+            </InfoCard>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stages")}</h3>
+            {acompanhamento.etapas.map(etapa => (
+              <EtapaRow key={etapa.id} etapa={etapa} />
+            ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <InfoCard icon={MapPin} label={t("obra.visaoGeral.location")}>
-            <p className="text-sm text-on-surface line-clamp-2">{formatProjectAddress(project)}</p>
-          </InfoCard>
-          <InfoCard icon={Calendar} label={t("obra.visaoGeral.deadline")}>
-            <PrazoContent start={project.plannedStartDate} end={project.plannedEndDate} />
-          </InfoCard>
-          <InfoCard icon={Layers} label={t("obra.visaoGeral.areas")}>
-            <p className="text-sm text-on-surface">
-              {t("obra.visaoGeral.landArea")}: {project.landArea}{M2}
-              {" · "}
-              {t("obra.visaoGeral.builtArea")}: {project.builtArea}{M2}
-            </p>
-          </InfoCard>
-        </div>
-
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stages")}</h3>
-          {acompanhamento.etapas.map(etapa => (
-            <EtapaRow key={etapa.id} etapa={etapa} />
-          ))}
-        </div>
+        <FotosRecentes projectId={project.id} />
       </div>
 
       <div className="w-full lg:w-72 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
