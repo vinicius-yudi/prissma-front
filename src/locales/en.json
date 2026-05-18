@@ -222,6 +222,7 @@
       "etapas": "Stages",
       "equipe": "Team",
       "orcamento": "Budget",
+      "documentos": "Documents",
       "chat": "Chat"
     },
     "visaoGeral": {
@@ -238,6 +239,21 @@
       "total": "Total",
       "inProgress": "In progress",
       "completed": "Completed"
+    },
+    "documentos": {
+      "title": "Documents",
+      "add": "Add Document",
+      "uploading": "Uploading...",
+      "empty": "No documents added yet.",
+      "download": "Download",
+      "downloading": "Downloading...",
+      "downloadError": "Failed to download document"
+    },
+    "fotos": {
+      "title": "Recent Photos",
+      "add": "Add Photo",
+      "uploading": "Uploading...",
+      "empty": "No photos added yet."
     },
     "etapas": {
       "empty": "No stages registered.",

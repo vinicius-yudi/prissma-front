@@ -222,6 +222,7 @@
       "etapas": "Etapas",
       "equipe": "Equipe",
       "orcamento": "Orçamento",
+      "documentos": "Documentos",
       "chat": "Chat"
     },
     "visaoGeral": {
@@ -238,6 +239,21 @@
       "total": "Total",
       "inProgress": "Em andamento",
       "completed": "Concluídas"
+    },
+    "documentos": {
+      "title": "Documentos",
+      "add": "Adicionar Documento",
+      "uploading": "Enviando...",
+      "empty": "Nenhum documento adicionado.",
+      "download": "Baixar",
+      "downloading": "Baixando...",
+      "downloadError": "Erro ao baixar documento"
+    },
+    "fotos": {
+      "title": "Fotos Recentes",
+      "add": "Adicionar Foto",
+      "uploading": "Enviando...",
+      "empty": "Nenhuma foto adicionada."
     },
     "etapas": {
       "empty": "Nenhuma etapa cadastrada.",
