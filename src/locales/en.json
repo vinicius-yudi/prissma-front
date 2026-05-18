@@ -256,9 +256,62 @@
       "empty": "No photos added yet."
     },
     "etapas": {
+      "title": "Stages",
       "empty": "No stages registered.",
       "tasksEmpty": "No tasks in this stage.",
       "tasks": "Tasks",
+      "sections": {
+        "inProgress": "In Progress",
+        "pending": "Pending",
+        "done": "Completed",
+        "emptySection": "Drag stages into this section."
+      },
+      "actions": {
+        "create": "New Stage",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "card": {
+        "progress": "Progress",
+        "tasksCount_one": "{{count}} task",
+        "tasksCount_other": "{{count}} tasks",
+        "photosCount_one": "{{count}} photo",
+        "photosCount_other": "{{count}} photos"
+      },
+      "form": {
+        "title": {
+          "create": "New stage",
+          "edit": "Edit stage"
+        },
+        "fields": {
+          "name": "Name",
+          "namePlaceholder": "e.g. Foundation",
+          "description": "Description",
+          "descriptionPlaceholder": "Details about this stage (optional)",
+          "status": "Status",
+          "displayOrder": "Order",
+          "plannedStartDate": "Planned Start",
+          "plannedEndDate": "Planned End"
+        }
+      },
+      "deleteModal": {
+        "title": "Delete stage",
+        "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "createSuccess": "Stage created successfully!",
+        "createError": "Failed to create stage",
+        "updateSuccess": "Stage updated successfully!",
+        "updateError": "Failed to update stage",
+        "deleteSuccess": "Stage deleted successfully!",
+        "deleteError": "Failed to delete stage",
+        "reorderError": "Failed to reorder stages"
+      },
       "etapaStatus": {
         "PLANNED": "Planned",
         "IN_PROGRESS": "In progress",

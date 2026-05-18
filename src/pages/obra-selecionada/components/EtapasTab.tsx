@@ -1,153 +1,398 @@
-import { Calendar } from "lucide-react"
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCorners,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core"
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable"
+import { AlertTriangle, Plus, RefreshCw } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { tv } from "tailwind-variants"
 
-import type { Etapa, EtapaStatus, ProjetoAcompanhamento, Tarefa, TarefaPriority, TarefaStatus } from "@/pages/projetos/types"
+import { Button } from "@/shared/components/ui/button/Button"
+import { Modal } from "@/shared/components/ui/modal/Modal"
+import type { EtapaStatus } from "@/pages/projetos/types"
 
-const ETAPA_STATUS_KEY: Record<EtapaStatus, string> = {
-  PLANNED: "obra.etapas.etapaStatus.PLANNED",
-  IN_PROGRESS: "obra.etapas.etapaStatus.IN_PROGRESS",
-  DONE: "obra.etapas.etapaStatus.DONE",
-  BLOCKED: "obra.etapas.etapaStatus.BLOCKED",
+import { useAttachments } from "../hooks/useAttachments"
+import { useProjectRole } from "../hooks/useProjectRole"
+import { useStages, useStagesList } from "../hooks/useStages"
+import type { Stage } from "../services/stages.service"
+import { EtapaCard } from "./EtapaCard"
+import { StageFormModal } from "./StageFormModal"
+
+type SectionKey = "IN_PROGRESS" | "PENDING" | "DONE"
+
+const SECTION_ORDER: SectionKey[] = ["IN_PROGRESS", "PENDING", "DONE"]
+
+const SECTION_TITLE_KEY: Record<SectionKey, string> = {
+  IN_PROGRESS: "obra.etapas.sections.inProgress",
+  PENDING: "obra.etapas.sections.pending",
+  DONE: "obra.etapas.sections.done",
 }
 
-const TAREFA_STATUS_KEY: Record<TarefaStatus, string> = {
-  TODO: "obra.etapas.tarefaStatus.TODO",
-  IN_PROGRESS: "obra.etapas.tarefaStatus.IN_PROGRESS",
-  DONE: "obra.etapas.tarefaStatus.DONE",
-  BLOCKED: "obra.etapas.tarefaStatus.BLOCKED",
+const SECTION_STATUS: Record<SectionKey, EtapaStatus> = {
+  IN_PROGRESS: "IN_PROGRESS",
+  PENDING: "PLANNED",
+  DONE: "DONE",
 }
 
-const TAREFA_PRIORITY_KEY: Record<TarefaPriority, string> = {
-  HIGH: "obra.etapas.priority.HIGH",
-  MEDIUM: "obra.etapas.priority.MEDIUM",
-  LOW: "obra.etapas.priority.LOW",
+function statusToSection(status: EtapaStatus): SectionKey {
+  if (status === "IN_PROGRESS") return "IN_PROGRESS"
+  if (status === "DONE") return "DONE"
+  return "PENDING"
 }
 
-const etapaStatusBadge = tv({
-  base: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border",
-  variants: {
-    status: {
-      PLANNED: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      IN_PROGRESS: "bg-primary/10 text-primary border-primary/20",
-      DONE: "bg-secondary/10 text-secondary border-secondary/20",
-      BLOCKED: "bg-error/10 text-error border-error/20",
-    },
-  },
-})
-
-const tarefaStatusBadge = tv({
-  base: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border",
-  variants: {
-    status: {
-      TODO: "bg-surface-container-highest text-on-surface-variant border-outline-variant",
-      IN_PROGRESS: "bg-primary/10 text-primary border-primary/20",
-      DONE: "bg-secondary/10 text-secondary border-secondary/20",
-      BLOCKED: "bg-error/10 text-error border-error/20",
-    },
-  },
-})
-
-const priorityBadge = tv({
-  base: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border",
-  variants: {
-    priority: {
-      HIGH: "bg-error/10 text-error border-error/20",
-      MEDIUM: "bg-tertiary/10 text-tertiary border-tertiary/20",
-      LOW: "bg-surface-container-highest text-on-surface-variant border-outline-variant",
-    },
-  },
-})
-
-function formatDate(d: string): string {
-  return new Date(d).toLocaleDateString("pt-BR")
-}
-
-function TasksList({ tasks }: { tasks: Tarefa[] }) {
-  const { t } = useTranslation()
-  if (tasks.length === 0) {
-    return <p className="text-sm text-on-surface-variant py-2">{t("obra.etapas.tasksEmpty")}</p>
+function groupBySection(stages: Stage[]): Record<SectionKey, Stage[]> {
+  const groups: Record<SectionKey, Stage[]> = {
+    IN_PROGRESS: [],
+    PENDING: [],
+    DONE: [],
   }
-  return (
-    <>
-      {tasks.map(tarefa => (
-        <TarefaRow key={tarefa.id} tarefa={tarefa} />
-      ))}
-    </>
-  )
+  for (const stage of [...stages].sort((a, b) => a.displayOrder - b.displayOrder)) {
+    groups[statusToSection(stage.status)].push(stage)
+  }
+  return groups
 }
 
-function TarefaRow({ tarefa }: { tarefa: Tarefa }) {
-  const { t } = useTranslation()
-  return (
-    <div className="flex items-start gap-3 py-3 border-b border-outline-variant/20 last:border-0">
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-on-surface font-medium">{tarefa.title}</p>
-        <p className="text-xs text-on-surface-variant mt-0.5 line-clamp-1">{tarefa.description}</p>
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <span className={priorityBadge({ priority: tarefa.priority })}>
-          {t(TAREFA_PRIORITY_KEY[tarefa.priority])}
-        </span>
-        <span className={tarefaStatusBadge({ status: tarefa.status })}>
-          {t(TAREFA_STATUS_KEY[tarefa.status])}
-        </span>
-      </div>
-    </div>
-  )
+interface DroppableSectionProps {
+  sectionKey: SectionKey
+  stages: Stage[]
+  photoCountByStage: Map<number, number>
+  onCardClick?: (stage: Stage) => void
+  onCardDelete?: (stage: Stage) => void
+  canDrag: boolean
+  canMutate: boolean
+  isEmpty: boolean
 }
 
-function EtapaCard({ etapa }: { etapa: Etapa }) {
+function DroppableSection({
+  sectionKey,
+  stages,
+  photoCountByStage,
+  onCardClick,
+  onCardDelete,
+  canDrag,
+  canMutate,
+  isEmpty,
+}: DroppableSectionProps) {
   const { t } = useTranslation()
+  const { setNodeRef, isOver } = useDroppable({ id: `section:${sectionKey}` })
+
   return (
-    <div className="bg-surface-container-low rounded-xl p-5 space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-on-surface-variant font-medium">#{etapa.displayOrder}</span>
-            <h3 className="font-semibold text-on-surface">{etapa.name}</h3>
-          </div>
-          <p className="text-sm text-on-surface-variant line-clamp-1">{etapa.description}</p>
+    <section className="space-y-3">
+      <h2 className="font-semibold text-on-surface text-base">
+        {t(SECTION_TITLE_KEY[sectionKey])}
+      </h2>
+      <SortableContext
+        id={`section:${sectionKey}`}
+        items={stages.map(s => s.id)}
+        strategy={rectSortingStrategy}
+      >
+        <div
+          ref={setNodeRef}
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-24 rounded-xl ${
+            isOver ? "bg-primary/5 ring-1 ring-primary/30" : ""
+          } ${isEmpty ? "p-4 border border-dashed border-outline-variant/40" : ""}`}
+        >
+          {stages.length === 0 ? (
+            <p className="text-sm text-on-surface-variant col-span-full text-center py-3">
+              {t("obra.etapas.sections.emptySection")}
+            </p>
+          ) : (
+            stages.map(stage => (
+              <EtapaCard
+                key={stage.id}
+                stage={stage}
+                photoCount={photoCountByStage.get(stage.id) ?? 0}
+                onClick={onCardClick}
+                onDelete={onCardDelete}
+                disableDrag={!canDrag}
+                canMutate={canMutate}
+              />
+            ))
+          )}
         </div>
-        <span className={etapaStatusBadge({ status: etapa.status, class: "shrink-0" })}>
-          {t(ETAPA_STATUS_KEY[etapa.status])}
-        </span>
-      </div>
-
-      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-        <Calendar size={12} />
-        {formatDate(etapa.plannedStartDate)}
-        {" → "}
-        {formatDate(etapa.plannedEndDate)}
-      </div>
-
-      <div className="space-y-0">
-        <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-2">{t("obra.etapas.tasks")}</p>
-        <TasksList tasks={etapa.tasks} />
-      </div>
-    </div>
+      </SortableContext>
+    </section>
   )
 }
 
 interface EtapasTabProps {
-  acompanhamento: ProjetoAcompanhamento
+  projectId: number
 }
 
-export function EtapasTab({ acompanhamento }: EtapasTabProps) {
+export function EtapasTab({ projectId }: EtapasTabProps) {
   const { t } = useTranslation()
-  if (acompanhamento.etapas.length === 0) {
+  const { canMutate } = useProjectRole(projectId)
+  const { attachments } = useAttachments(projectId)
+  const { stages, isLoading, isError, refetch } = useStagesList(projectId)
+  const { reorder, update, remove, isDeleting } = useStages(projectId)
+
+  const [localStages, setLocalStages] = useState<Stage[]>([])
+  const [modalState, setModalState] = useState<
+    { mode: "create" } | { mode: "edit"; stage: Stage } | { mode: "closed" }
+  >({ mode: "closed" })
+  const [pendingDelete, setPendingDelete] = useState<Stage | null>(null)
+  const [activeDragId, setActiveDragId] = useState<number | null>(null)
+
+  useEffect(() => {
+    setLocalStages(stages)
+  }, [stages])
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+  )
+
+  const grouped = useMemo(() => groupBySection(localStages), [localStages])
+
+  const photoCountByStage = useMemo(() => {
+    const map = new Map<number, number>()
+    for (const a of attachments) {
+      if (a.fileType?.toLowerCase().startsWith("image/") && a.stageId != null) {
+        map.set(a.stageId, (map.get(a.stageId) ?? 0) + 1)
+      }
+    }
+    return map
+  }, [attachments])
+
+  const maxDisplayOrder = useMemo(
+    () => localStages.reduce((acc, s) => Math.max(acc, s.displayOrder), 0),
+    [localStages],
+  )
+
+  const activeDragStage = useMemo(
+    () => (activeDragId != null ? localStages.find(s => s.id === activeDragId) ?? null : null),
+    [activeDragId, localStages],
+  )
+
+  function findSectionOfId(id: number): SectionKey | null {
+    for (const key of SECTION_ORDER) {
+      if (grouped[key].some(s => s.id === id)) return key
+    }
+    return null
+  }
+
+  function parseContainerId(raw: string | number | null | undefined): SectionKey | null {
+    if (typeof raw !== "string") return null
+    if (!raw.startsWith("section:")) return null
+    const key = raw.slice("section:".length) as SectionKey
+    return SECTION_ORDER.includes(key) ? key : null
+  }
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveDragId(typeof event.active.id === "number" ? event.active.id : Number(event.active.id))
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveDragId(null)
+    const { active, over } = event
+    if (!over) return
+
+    const activeId = Number(active.id)
+    const fromSection = findSectionOfId(activeId)
+    if (!fromSection) return
+
+    const toSection =
+      parseContainerId(over.id) ?? findSectionOfId(Number(over.id))
+    if (!toSection) return
+
+    const activeStage = localStages.find(s => s.id === activeId)
+    if (!activeStage) return
+
+    if (fromSection === toSection) {
+      const items = grouped[fromSection]
+      const oldIndex = items.findIndex(s => s.id === activeId)
+      const overIdNum = Number(over.id)
+      const newIndex = items.findIndex(s => s.id === overIdNum)
+      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return
+
+      const reordered = arrayMove(items, oldIndex, newIndex)
+
+      const orderMap = new Map<number, number>()
+      reordered.forEach((s, idx) => orderMap.set(s.id, idx + 1))
+
+      setLocalStages(prev =>
+        prev.map(s =>
+          orderMap.has(s.id) ? { ...s, displayOrder: orderMap.get(s.id)! } : s,
+        ),
+      )
+
+      const globalOrder: number[] = []
+      for (const key of SECTION_ORDER) {
+        const list = key === fromSection ? reordered : grouped[key]
+        for (const s of list) globalOrder.push(s.id)
+      }
+
+      reorder(globalOrder)
+      return
+    }
+
+    const newStatus = SECTION_STATUS[toSection]
+    update({
+      id: activeId,
+      payload: {
+        name: activeStage.name,
+        description: activeStage.description,
+        displayOrder: activeStage.displayOrder,
+        status: newStatus,
+        plannedStartDate: activeStage.plannedStartDate,
+        plannedEndDate: activeStage.plannedEndDate,
+      },
+    })
+
+    setLocalStages(prev =>
+      prev.map(s => (s.id === activeId ? { ...s, status: newStatus } : s)),
+    )
+  }
+
+  function openCreate() {
+    setModalState({ mode: "create" })
+  }
+
+  function openEdit(stage: Stage) {
+    setModalState({ mode: "edit", stage })
+  }
+
+  function closeModal() {
+    setModalState({ mode: "closed" })
+  }
+
+  function requestDelete(stage: Stage) {
+    setPendingDelete(stage)
+  }
+
+  function cancelDelete() {
+    setPendingDelete(null)
+  }
+
+  function confirmDelete() {
+    if (!pendingDelete) return
+    remove(pendingDelete.id, {
+      onSuccess: () => setPendingDelete(null),
+    })
+  }
+
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20 text-on-surface-variant text-sm">
-        {t("obra.etapas.empty")}
+      <div className="animate-pulse space-y-4 py-2">
+        <div className="h-6 bg-surface-container-low rounded w-1/3" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="h-40 bg-surface-container-low rounded-xl" />
+          <div className="h-40 bg-surface-container-low rounded-xl" />
+          <div className="h-40 bg-surface-container-low rounded-xl" />
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 p-12 bg-surface-container-low rounded-xl border border-error/20">
+        <p className="text-on-surface-variant text-sm">{t("obra.acompError")}</p>
+        <Button variant="outline" onClick={() => refetch()}>
+          <RefreshCw size={14} />
+          {t("obra.retry")}
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
-      {acompanhamento.etapas.map(etapa => (
-        <EtapaCard key={etapa.id} etapa={etapa} />
-      ))}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-on-surface">{t("obra.etapas.title")}</h1>
+        {canMutate && (
+          <Button onClick={openCreate} variant="primary" className="w-auto px-4 py-2 text-sm">
+            <Plus size={16} />
+            {t("obra.etapas.actions.create")}
+          </Button>
+        )}
+      </div>
+
+      {localStages.length === 0 ? (
+        <div className="flex items-center justify-center py-20 text-on-surface-variant text-sm">
+          {t("obra.etapas.empty")}
+        </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="space-y-8">
+            {SECTION_ORDER.map(section => (
+              <DroppableSection
+                key={section}
+                sectionKey={section}
+                stages={grouped[section]}
+                photoCountByStage={photoCountByStage}
+                onCardClick={openEdit}
+                onCardDelete={requestDelete}
+                canDrag={canMutate}
+                canMutate={canMutate}
+                isEmpty={grouped[section].length === 0}
+              />
+            ))}
+          </div>
+          <DragOverlay>
+            {activeDragStage && (
+              <EtapaCard
+                stage={activeDragStage}
+                photoCount={photoCountByStage.get(activeDragStage.id) ?? 0}
+                disableDrag
+              />
+            )}
+          </DragOverlay>
+        </DndContext>
+      )}
+
+      <StageFormModal
+        open={modalState.mode !== "closed"}
+        onClose={closeModal}
+        projectId={projectId}
+        stage={modalState.mode === "edit" ? modalState.stage : null}
+        suggestedDisplayOrder={maxDisplayOrder + 1}
+        canMutate={canMutate}
+      />
+
+      <Modal
+        open={!!pendingDelete}
+        onClose={cancelDelete}
+        title={t("obra.etapas.deleteModal.title")}
+        icon={<AlertTriangle size={20} />}
+        variant="danger"
+        size="sm"
+      >
+        <div className="px-6 pb-6 space-y-5">
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            {t("obra.etapas.deleteModal.message", { name: pendingDelete?.name ?? "" })}
+          </p>
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={cancelDelete} disabled={isDeleting}>
+              {t("obra.etapas.actions.cancel")}
+            </Button>
+            <Button
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className="bg-error text-on-error border-0 hover:brightness-[0.92]"
+            >
+              {isDeleting
+                ? t("obra.etapas.deleteModal.deleting")
+                : t("obra.etapas.deleteModal.confirm")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
