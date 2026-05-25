@@ -12,6 +12,7 @@ import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 import { DocumentosTab } from "./components/DocumentosTab"
 import { EtapasTab } from "./components/EtapasTab"
+import { OrcamentoTab } from "./components/OrcamentoTab"
 import { VisaoGeral } from "./components/visaoGeral"
 import { useObraSelecionada } from "./hooks/useObraSelecionada"
 import { TABS, TAB_KEYS, type TabKey } from "./types"
@@ -70,6 +71,9 @@ function TabContent({ tab, project }: TabContentProps) {
   }
   if (tab === "documentos") {
     return <DocumentosTab projectId={project.id} />
+  }
+  if (tab === "orcamento") {
+    return <OrcamentoTab projectId={project.id} />
   }
   return <ComingSoon />
 }

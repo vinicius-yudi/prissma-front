@@ -261,6 +261,119 @@
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
       "mimeMismatch": "File contents do not match the declared extension."
     },
+    "orcamento": {
+      "title": "Budget",
+      "subtitle": "Track planned, spent and remaining values for the project.",
+      "empty": {
+        "title": "No budget created yet",
+        "description": "Define the planned total to start tracking expenses for this project.",
+        "cta": "Create budget"
+      },
+      "actions": {
+        "addCategory": "New category",
+        "addExpense": "Add expense",
+        "editBudget": "Edit budget",
+        "deleteBudget": "Delete budget",
+        "editCategory": "Edit category",
+        "deleteCategory": "Delete category",
+        "editExpense": "Edit expense",
+        "deleteExpense": "Delete expense",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "kpi": {
+        "planned": "Planned",
+        "spent": "Spent",
+        "remaining": "Remaining",
+        "exceeded": "Overruns",
+        "exceededOne": "{{count}} category",
+        "exceededOther": "{{count}} categories",
+        "used": "{{percent}}% of the budget used"
+      },
+      "charts": {
+        "donutTitle": "Spending by category",
+        "barTitle": "% spent vs planned",
+        "percentOfTotal": "{{percent}}% of total spent",
+        "limitLabel": "Limit",
+        "noData": "Add an expense to see the charts."
+      },
+      "category": {
+        "empty": "No expenses recorded for this category.",
+        "expensesCount_one": "{{count}} expense",
+        "expensesCount_other": "{{count}} expenses",
+        "expand": "Expand",
+        "collapse": "Collapse"
+      },
+      "expense": {
+        "noStage": "No stage",
+        "noSupplier": "No supplier",
+        "receipt": "Receipt"
+      },
+      "status": {
+        "ok": "On track",
+        "warning": "Near limit",
+        "exceeded": "Overrun"
+      },
+      "budgetForm": {
+        "createTitle": "Create budget",
+        "editTitle": "Edit budget",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Downtown Project Budget",
+        "plannedTotal": "Planned total ($)"
+      },
+      "itemForm": {
+        "createTitle": "New category",
+        "editTitle": "Edit category",
+        "category": "Category",
+        "categoryPlaceholder": "e.g. Foundation",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Concrete, rebar and labor",
+        "plannedAmount": "Planned amount ($)"
+      },
+      "expenseForm": {
+        "createTitle": "Add expense",
+        "editTitle": "Edit expense",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Purchase of 5m³ concrete",
+        "amount": "Amount ($)",
+        "spentAt": "Expense date",
+        "stage": "Stage (optional)",
+        "stagePlaceholder": "Select a stage",
+        "stageNone": "No stage linked",
+        "supplier": "Supplier (optional)",
+        "supplierPlaceholder": "e.g. XYZ Concrete Co.",
+        "receiptUrl": "Receipt URL (optional)",
+        "receiptUrlPlaceholder": "https://..."
+      },
+      "toasts": {
+        "budgetCreated": "Budget created successfully!",
+        "budgetUpdated": "Budget updated.",
+        "budgetDeleted": "Budget removed.",
+        "itemCreated": "Category created.",
+        "itemUpdated": "Category updated.",
+        "itemDeleted": "Category removed.",
+        "expenseCreated": "Expense added.",
+        "expenseUpdated": "Expense updated.",
+        "expenseDeleted": "Expense removed.",
+        "categoryExceededWarning": "Warning: this category exceeded its planned amount.",
+        "budgetExceededWarning": "Warning: the total budget was exceeded.",
+        "alreadyExists": "This project already has a budget."
+      },
+      "delete": {
+        "budgetTitle": "Delete budget",
+        "budgetMessage": "Are you sure? All linked categories and expenses will be removed.",
+        "itemTitle": "Delete category",
+        "itemMessage": "Are you sure? All expenses in this category will be removed.",
+        "expenseTitle": "Delete expense",
+        "expenseMessage": "Are you sure? This action cannot be undone."
+      },
+      "errors": {
+        "loadFailed": "Failed to load the budget."
+      }
+    },
     "etapas": {
       "title": "Stages",
       "empty": "No stages registered.",
