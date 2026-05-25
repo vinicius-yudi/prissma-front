@@ -247,13 +247,19 @@
       "empty": "Nenhum documento adicionado.",
       "download": "Baixar",
       "downloading": "Baixando...",
-      "downloadError": "Erro ao baixar documento"
+      "downloadError": "Erro ao baixar documento",
+      "unsupportedType": "Tipo de arquivo não suportado. Envie PDF ou DOCX."
     },
     "fotos": {
       "title": "Fotos Recentes",
       "add": "Adicionar Foto",
       "uploading": "Enviando...",
-      "empty": "Nenhuma foto adicionada."
+      "empty": "Nenhuma foto adicionada.",
+      "unsupportedType": "Tipo de imagem não suportado. Envie PNG, JPEG, GIF, BMP, TIFF ou WEBP."
+    },
+    "attachments": {
+      "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
+      "mimeMismatch": "O conteúdo do arquivo não corresponde à extensão informada."
     },
     "etapas": {
       "title": "Etapas",

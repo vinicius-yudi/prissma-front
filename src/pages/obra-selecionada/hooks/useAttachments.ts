@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
+import { MAX_ATTACHMENT_SIZE_MB } from "@/shared/constants/attachments"
+
 import {
+  AttachmentRequestError,
   deleteAttachment,
   listAttachments,
   uploadAttachment,
@@ -33,6 +37,7 @@ export const DOCUMENTO_LABELS: AttachmentLabels = {
 }
 
 export function useAttachments(projectId: number, options: UseAttachmentsOptions = { labels: FOTO_LABELS }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const queryKey = ["attachments", projectId]
   const { labels } = options
@@ -49,6 +54,16 @@ export function useAttachments(projectId: number, options: UseAttachmentsOptions
       toast.success(labels.uploadSuccess)
     },
     onError: (error: Error) => {
+      if (error instanceof AttachmentRequestError) {
+        if (error.status === 413) {
+          toast.error(t("obra.attachments.fileTooLarge", { max: MAX_ATTACHMENT_SIZE_MB }))
+          return
+        }
+        if (error.status === 415) {
+          toast.error(t("obra.attachments.mimeMismatch"))
+          return
+        }
+      }
       toast.error(error.message || labels.uploadError)
     },
   })

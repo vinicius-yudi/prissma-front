@@ -2,15 +2,20 @@ import type { ChangeEvent } from "react"
 import { useEffect, useRef, useState } from "react"
 import { ImageOff, Plus, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 
 import type { Attachment } from "@/shared/types/attachment"
 import { Button } from "@/shared/components/ui/button/Button"
+import {
+  IMAGE_ACCEPT_ATTRIBUTE,
+  MAX_ATTACHMENT_SIZE_BYTES,
+  MAX_ATTACHMENT_SIZE_MB,
+  isImageMime,
+} from "@/shared/constants/attachments"
 import { formatDate, stripExtension } from "@/shared/utils/formatters"
 
 import { downloadAttachment } from "../services/attachments.service"
 import { useAttachments } from "../hooks/useAttachments"
-
-const PNG_TYPE = "image/png"
 
 interface PhotoCardProps {
   attachment: Attachment
@@ -101,7 +106,7 @@ export function FotosRecentes({ projectId }: FotosRecentesProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { attachments, isLoading, upload, isUploading, remove } = useAttachments(projectId)
 
-  const photos = attachments.filter(a => a.fileType === PNG_TYPE)
+  const photos = attachments.filter(a => isImageMime(a.fileType))
 
   function handleUploadClick() {
     fileInputRef.current?.click()
@@ -110,6 +115,16 @@ export function FotosRecentes({ projectId }: FotosRecentesProps) {
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+      toast.error(t("obra.attachments.fileTooLarge", { max: MAX_ATTACHMENT_SIZE_MB }))
+      e.target.value = ""
+      return
+    }
+    if (!isImageMime(file.type)) {
+      toast.error(t("obra.fotos.unsupportedType"))
+      e.target.value = ""
+      return
+    }
     upload(file)
     e.target.value = ""
   }
@@ -145,7 +160,7 @@ export function FotosRecentes({ projectId }: FotosRecentesProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/png"
+          accept={IMAGE_ACCEPT_ATTRIBUTE}
           className="hidden"
           onChange={handleFileChange}
         />
