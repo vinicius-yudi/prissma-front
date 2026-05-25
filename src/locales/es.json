@@ -261,6 +261,119 @@
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
       "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."
     },
+    "orcamento": {
+      "title": "Presupuesto",
+      "subtitle": "Sigue lo planeado, lo gastado y el saldo de la obra.",
+      "empty": {
+        "title": "Aún no hay presupuesto",
+        "description": "Define el valor total planeado para comenzar a controlar los gastos de la obra.",
+        "cta": "Crear presupuesto"
+      },
+      "actions": {
+        "addCategory": "Nueva categoría",
+        "addExpense": "Registrar gasto",
+        "editBudget": "Editar presupuesto",
+        "deleteBudget": "Eliminar presupuesto",
+        "editCategory": "Editar categoría",
+        "deleteCategory": "Eliminar categoría",
+        "editExpense": "Editar gasto",
+        "deleteExpense": "Eliminar gasto",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "kpi": {
+        "planned": "Planeado",
+        "spent": "Gastado",
+        "remaining": "Restante",
+        "exceeded": "Excesos",
+        "exceededOne": "{{count}} categoría",
+        "exceededOther": "{{count}} categorías",
+        "used": "{{percent}}% del presupuesto utilizado"
+      },
+      "charts": {
+        "donutTitle": "Gasto por categoría",
+        "barTitle": "% gastado vs planeado",
+        "percentOfTotal": "{{percent}}% del gasto total",
+        "limitLabel": "Límite",
+        "noData": "Registra un gasto para ver los gráficos."
+      },
+      "category": {
+        "empty": "Sin gastos registrados en esta categoría.",
+        "expensesCount_one": "{{count}} gasto",
+        "expensesCount_other": "{{count}} gastos",
+        "expand": "Expandir",
+        "collapse": "Contraer"
+      },
+      "expense": {
+        "noStage": "Sin etapa",
+        "noSupplier": "Sin proveedor",
+        "receipt": "Comprobante"
+      },
+      "status": {
+        "ok": "Al día",
+        "warning": "Cerca del límite",
+        "exceeded": "Excedido"
+      },
+      "budgetForm": {
+        "createTitle": "Crear presupuesto",
+        "editTitle": "Editar presupuesto",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Presupuesto de Obra Centro",
+        "plannedTotal": "Valor total planeado ($)"
+      },
+      "itemForm": {
+        "createTitle": "Nueva categoría",
+        "editTitle": "Editar categoría",
+        "category": "Categoría",
+        "categoryPlaceholder": "Ej: Cimentación",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Concreto, hierro y mano de obra",
+        "plannedAmount": "Valor planeado ($)"
+      },
+      "expenseForm": {
+        "createTitle": "Registrar gasto",
+        "editTitle": "Editar gasto",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Compra de 5m³ de concreto",
+        "amount": "Valor ($)",
+        "spentAt": "Fecha del gasto",
+        "stage": "Etapa (opcional)",
+        "stagePlaceholder": "Selecciona una etapa",
+        "stageNone": "Sin etapa vinculada",
+        "supplier": "Proveedor (opcional)",
+        "supplierPlaceholder": "Ej: Concretera XYZ",
+        "receiptUrl": "Enlace del comprobante (opcional)",
+        "receiptUrlPlaceholder": "https://..."
+      },
+      "toasts": {
+        "budgetCreated": "Presupuesto creado con éxito.",
+        "budgetUpdated": "Presupuesto actualizado.",
+        "budgetDeleted": "Presupuesto eliminado.",
+        "itemCreated": "Categoría creada.",
+        "itemUpdated": "Categoría actualizada.",
+        "itemDeleted": "Categoría eliminada.",
+        "expenseCreated": "Gasto registrado.",
+        "expenseUpdated": "Gasto actualizado.",
+        "expenseDeleted": "Gasto eliminado.",
+        "categoryExceededWarning": "Atención: esta categoría superó el valor planeado.",
+        "budgetExceededWarning": "Atención: el presupuesto total fue superado.",
+        "alreadyExists": "Este proyecto ya tiene un presupuesto."
+      },
+      "delete": {
+        "budgetTitle": "Eliminar presupuesto",
+        "budgetMessage": "¿Seguro? Todas las categorías y gastos vinculados serán eliminados.",
+        "itemTitle": "Eliminar categoría",
+        "itemMessage": "¿Seguro? Todos los gastos de esta categoría serán eliminados.",
+        "expenseTitle": "Eliminar gasto",
+        "expenseMessage": "¿Seguro? Esta acción no se puede deshacer."
+      },
+      "errors": {
+        "loadFailed": "No se pudo cargar el presupuesto."
+      }
+    },
     "etapas": {
       "title": "Etapas",
       "empty": "Ninguna etapa registrada.",
