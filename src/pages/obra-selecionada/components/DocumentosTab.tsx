@@ -48,8 +48,8 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
   async function handleDownload(attachment: Attachment) {
     setDownloadingId(attachment.id)
     try {
-      const result = await downloadAttachment(projectId, attachment.id)
-      triggerFileDownload(result.blob, result.fileName)
+      const blob = await downloadAttachment(projectId, attachment.id)
+      triggerFileDownload(blob, attachment.fileName)
     } catch {
       toast.error(t("obra.documentos.downloadError"))
     } finally {

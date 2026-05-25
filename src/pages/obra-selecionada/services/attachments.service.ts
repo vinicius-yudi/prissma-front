@@ -50,25 +50,14 @@ export async function uploadAttachment(projectId: number, file: File): Promise<A
   return response.json() as Promise<Attachment>
 }
 
-export interface DownloadResult {
-  blob: Blob
-  fileName: string
-}
-
-export async function downloadAttachment(projectId: number, id: number): Promise<DownloadResult> {
+export async function downloadAttachment(projectId: number, id: number): Promise<Blob> {
   const response = await fetch(
     `${BASE_URL}/projects/${projectId}/attachments/${id}/download`,
     { headers: buildAuthHeader() },
   )
 
   await handleRawResponse(response)
-
-  const blob = await response.blob()
-  const disposition = response.headers.get("Content-Disposition")
-  const match = disposition?.match(/filename\*?=(?:UTF-8'')?(.+)/i)
-  const fileName = match ? decodeURIComponent(match[1].replace(/['"]/g, "")) : "arquivo"
-
-  return { blob, fileName }
+  return response.blob()
 }
 
 export async function deleteAttachment(projectId: number, id: number): Promise<void> {
