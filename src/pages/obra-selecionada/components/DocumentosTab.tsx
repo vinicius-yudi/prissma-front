@@ -6,12 +6,16 @@ import { toast } from "react-toastify"
 
 import type { Attachment } from "@/shared/types/attachment"
 import { Button } from "@/shared/components/ui/button/Button"
+import {
+  DOCUMENT_ACCEPT_ATTRIBUTE,
+  MAX_ATTACHMENT_SIZE_BYTES,
+  MAX_ATTACHMENT_SIZE_MB,
+  isDocumentMime,
+} from "@/shared/constants/attachments"
 
 import { downloadAttachment, triggerFileDownload } from "../services/attachments.service"
 import { DOCUMENTO_LABELS, useAttachments } from "../hooks/useAttachments"
 import { DocumentRow } from "./DocumentRow"
-
-const PDF_TYPE = "application/pdf"
 
 interface DocumentosTabProps {
   projectId: number
@@ -32,7 +36,7 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
   const { attachments, isLoading, upload, isUploading, remove } = useAttachments(projectId, { labels: DOCUMENTO_LABELS })
   const [downloadingId, setDownloadingId] = useState<number | null>(null)
 
-  const documents = attachments.filter(a => a.fileType === PDF_TYPE)
+  const documents = attachments.filter(a => isDocumentMime(a.fileType))
 
   function handleUploadClick() {
     fileInputRef.current?.click()
@@ -41,6 +45,16 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+      toast.error(t("obra.attachments.fileTooLarge", { max: MAX_ATTACHMENT_SIZE_MB }))
+      e.target.value = ""
+      return
+    }
+    if (!isDocumentMime(file.type)) {
+      toast.error(t("obra.documentos.unsupportedType"))
+      e.target.value = ""
+      return
+    }
     upload(file)
     e.target.value = ""
   }
@@ -85,7 +99,7 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept="application/pdf"
+          accept={DOCUMENT_ACCEPT_ATTRIBUTE}
           className="hidden"
           onChange={handleFileChange}
         />

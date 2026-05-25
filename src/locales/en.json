@@ -247,13 +247,19 @@
       "empty": "No documents added yet.",
       "download": "Download",
       "downloading": "Downloading...",
-      "downloadError": "Failed to download document"
+      "downloadError": "Failed to download document",
+      "unsupportedType": "Unsupported file type. Upload PDF or DOCX."
     },
     "fotos": {
       "title": "Recent Photos",
       "add": "Add Photo",
       "uploading": "Uploading...",
-      "empty": "No photos added yet."
+      "empty": "No photos added yet.",
+      "unsupportedType": "Unsupported image type. Upload PNG, JPEG, GIF, BMP, TIFF or WEBP."
+    },
+    "attachments": {
+      "fileTooLarge": "File exceeds the {{max}} MB limit.",
+      "mimeMismatch": "File contents do not match the declared extension."
     },
     "etapas": {
       "title": "Stages",
