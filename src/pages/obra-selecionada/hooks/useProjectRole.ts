@@ -30,10 +30,13 @@ export function useProjectRole(projectId: number): UseProjectRoleResult {
   const role =
     membersQuery.data?.find(m => m.userId === meQuery.data?.id)?.roleInProject ?? null
 
-  // Fail-open: if the members endpoint errors (e.g. not implemented yet) or the
-  // current user isn't listed but is authenticated, allow mutations. The backend
-  // still enforces the OWNER/ENGINEER check and returns 403 if not permitted.
+  const isLoading = meQuery.isLoading || membersQuery.isLoading
+
+  // Fail-open: while loading, on member-endpoint error, or when the user isn't
+  // listed but is authenticated, allow mutations so the UI doesn't gate on the
+  // round-trip. The backend still enforces OWNER/ENGINEER and returns 403.
   const canMutate =
+    isLoading ||
     role === "OWNER" ||
     role === "ENGINEER" ||
     membersQuery.isError ||
@@ -42,6 +45,6 @@ export function useProjectRole(projectId: number): UseProjectRoleResult {
   return {
     role,
     canMutate,
-    isLoading: meQuery.isLoading || membersQuery.isLoading,
+    isLoading,
   }
 }

@@ -281,48 +281,33 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
     })
   }
 
-  if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-4 py-2">
-        <div className="h-6 bg-surface-container-low rounded w-1/3" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="h-40 bg-surface-container-low rounded-xl" />
-          <div className="h-40 bg-surface-container-low rounded-xl" />
-          <div className="h-40 bg-surface-container-low rounded-xl" />
+  function renderBody() {
+    if (isLoading) {
+      return (
+        <div className="animate-pulse space-y-4 py-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="h-40 bg-surface-container-low rounded-xl" />
+            <div className="h-40 bg-surface-container-low rounded-xl" />
+            <div className="h-40 bg-surface-container-low rounded-xl" />
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  if (isError) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 p-12 bg-surface-container-low rounded-xl border border-error/20">
-        <p className="text-on-surface-variant text-sm">{t("obra.acompError")}</p>
-        <Button variant="outline" onClick={() => refetch()}>
-          <RefreshCw size={14} />
-          {t("obra.retry")}
-        </Button>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-on-surface">{t("obra.etapas.title")}</h1>
-        {canMutate && (
-          <Button onClick={openCreate} variant="primary" className="w-auto px-4 py-2 text-sm">
-            <Plus size={16} />
-            {t("obra.etapas.actions.create")}
+    if (isError) {
+      return (
+        <div className="flex flex-col items-center justify-center gap-4 p-12 bg-surface-container-low rounded-xl border border-error/20">
+          <p className="text-on-surface-variant text-sm">{t("obra.acompError")}</p>
+          <Button variant="outline" onClick={() => refetch()}>
+            <RefreshCw size={14} />
+            {t("obra.retry")}
           </Button>
-        )}
-      </div>
-
-      {localStages.length === 0 ? (
-        <div className="flex items-center justify-center py-20 text-on-surface-variant text-sm">
-          {t("obra.etapas.empty")}
         </div>
-      ) : (
+      )
+    }
+
+    if (localStages.length > 0) {
+      return (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -354,7 +339,29 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
             )}
           </DragOverlay>
         </DndContext>
-      )}
+      )
+    }
+
+    return (
+      <div className="flex items-center justify-center py-20 text-on-surface-variant text-sm">
+        {t("obra.etapas.empty")}
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-on-surface">{t("obra.etapas.title")}</h1>
+        {canMutate && (
+          <Button onClick={openCreate} variant="primary" className="w-auto px-4 py-2 text-sm">
+            <Plus size={16} />
+            {t("obra.etapas.actions.create")}
+          </Button>
+        )}
+      </div>
+
+      {renderBody()}
 
       <StageFormModal
         open={modalState.mode !== "closed"}

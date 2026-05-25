@@ -28,9 +28,9 @@ function PhotoCard({ attachment, projectId, onRemove }: PhotoCardProps) {
 
     async function load() {
       try {
-        const result = await downloadAttachment(projectId, attachment.id)
+        const blob = await downloadAttachment(projectId, attachment.id)
         if (cancelled) return
-        url = URL.createObjectURL(result.blob)
+        url = URL.createObjectURL(blob)
         setBlobUrl(url)
       } catch {
         if (!cancelled) setHasError(true)

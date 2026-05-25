@@ -4,33 +4,40 @@ import type { LucideIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import type { Etapa, ProjetoAcompanhamento } from "@/pages/projetos/types"
+import { EtapaStatus } from "@/pages/projetos/types"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 
+import { useStagesList } from "../hooks/useStages"
+import type { Stage } from "../services/stages.service"
 import { FotosRecentes } from "./FotosRecentes"
 
 const NO_DATE = "—"
 const DATE_SEPARATOR = " → "
 const M2 = "m²"
 
-function calcTotalProgress(ac: ProjetoAcompanhamento): number {
-  if (ac.totalTarefas === 0) return 0
-  return Math.round((ac.tarefasConcluidas / ac.totalTarefas) * 100)
+const STAGE_PROGRESS: Record<EtapaStatus, number> = {
+  [EtapaStatus.PLANNED]: 0,
+  [EtapaStatus.IN_PROGRESS]: 50,
+  [EtapaStatus.BLOCKED]: 0,
+  [EtapaStatus.DONE]: 100,
 }
 
-function calcEtapasPercent(ac: ProjetoAcompanhamento): number {
-  if (ac.totalEtapas === 0) return 0
-  return Math.round((ac.etapasConcluidas / ac.totalEtapas) * 100)
+function calcStageProgress(stage: Stage): number {
+  return STAGE_PROGRESS[stage.status]
 }
 
-function calcEtapasEmAndamento(ac: ProjetoAcompanhamento): number {
-  return ac.etapas.filter(e => e.status === "IN_PROGRESS").length
+function calcAverageProgress(stages: Stage[]): number {
+  if (stages.length === 0) return 0
+  const sum = stages.reduce((acc, s) => acc + STAGE_PROGRESS[s.status], 0)
+  return Math.round(sum / stages.length)
 }
 
-function calcEtapaProgress(etapa: Etapa): number {
-  if (etapa.tasks.length === 0) return 0
-  const done = etapa.tasks.filter(t => t.status === "DONE").length
-  return Math.round((done / etapa.tasks.length) * 100)
+function calcEtapasEmAndamento(stages: Stage[]): number {
+  return stages.filter(s => s.status === EtapaStatus.IN_PROGRESS).length
+}
+
+function calcEtapasConcluidas(stages: Stage[]): number {
+  return stages.filter(s => s.status === EtapaStatus.DONE).length
 }
 
 function formatDate(d: string | null): string {
@@ -102,12 +109,12 @@ function PrazoContent({ start, end }: { start: string | null; end: string | null
   )
 }
 
-function EtapaRow({ etapa }: { etapa: Etapa }) {
-  const progress = calcEtapaProgress(etapa)
+function EtapaRow({ stage }: { stage: Stage }) {
+  const progress = calcStageProgress(stage)
   const barStyle: CSSProperties = { width: `${progress}%` }
   return (
     <div className="flex items-center gap-4">
-      <span className="text-sm text-on-surface flex-1 truncate">{etapa.name}</span>
+      <span className="text-sm text-on-surface flex-1 truncate">{stage.name}</span>
       <div className="flex items-center gap-2 w-36">
         <div className="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
           <div className="h-full bg-primary rounded-full transition-all" style={barStyle} />
@@ -142,15 +149,16 @@ function CounterCard({ count, label, variant }: { count: number; label: string; 
 
 interface VisaoGeralProps {
   project: Project
-  acompanhamento: ProjetoAcompanhamento
 }
 
-export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
+export function VisaoGeral({ project }: VisaoGeralProps) {
   const { t } = useTranslation()
-  const totalProgress = calcTotalProgress(acompanhamento)
-  const etapasPercent = calcEtapasPercent(acompanhamento)
-  const emAndamento = calcEtapasEmAndamento(acompanhamento)
-  const totalBarStyle: CSSProperties = { width: `${totalProgress}%` }
+  const { stages } = useStagesList(project.id)
+  const orderedStages = [...stages].sort((a, b) => a.displayOrder - b.displayOrder)
+  const stagesProgress = calcAverageProgress(stages)
+  const emAndamento = calcEtapasEmAndamento(stages)
+  const etapasConcluidas = calcEtapasConcluidas(stages)
+  const totalBarStyle: CSSProperties = { width: `${stagesProgress}%` }
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
@@ -161,7 +169,7 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">{t("obra.visaoGeral.totalProgress")}</span>
-              <span className="font-semibold text-on-surface">{totalProgress}%</span>
+              <span className="font-semibold text-on-surface">{stagesProgress}%</span>
             </div>
             <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
               <div className="h-full bg-primary rounded-full transition-all" style={totalBarStyle} />
@@ -186,9 +194,13 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
 
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stages")}</h3>
-            {acompanhamento.etapas.map(etapa => (
-              <EtapaRow key={etapa.id} etapa={etapa} />
-            ))}
+            {orderedStages.length > 0 ? (
+              orderedStages.map(stage => (
+                <EtapaRow key={stage.id} stage={stage} />
+              ))
+            ) : (
+              <p className="text-sm text-on-surface-variant">{t("obra.etapas.empty")}</p>
+            )}
           </div>
         </div>
 
@@ -198,12 +210,12 @@ export function VisaoGeral({ project, acompanhamento }: VisaoGeralProps) {
       <div className="w-full lg:w-72 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
         <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stagesProgress")}</h2>
         <div className="flex justify-center">
-          <ProgressRing percent={etapasPercent} />
+          <ProgressRing percent={stagesProgress} />
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <CounterCard count={acompanhamento.totalEtapas} label={t("obra.visaoGeral.total")} variant="neutral" />
+          <CounterCard count={stages.length} label={t("obra.visaoGeral.total")} variant="neutral" />
           <CounterCard count={emAndamento} label={t("obra.visaoGeral.inProgress")} variant="primary" />
-          <CounterCard count={acompanhamento.etapasConcluidas} label={t("obra.visaoGeral.completed")} variant="secondary" />
+          <CounterCard count={etapasConcluidas} label={t("obra.visaoGeral.completed")} variant="secondary" />
         </div>
       </div>
     </div>
