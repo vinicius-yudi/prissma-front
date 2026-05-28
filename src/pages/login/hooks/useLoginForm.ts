@@ -10,6 +10,7 @@ import type { LoginFormData } from "../types"
 export function useLoginForm() {
 	const [formData, setFormData] = useState<LoginFormData>({ email: "", password: "" })
 	const [showPassword, setShowPassword] = useState(false)
+	const [rememberMe, setRememberMe] = useState(true)
 	const { saveToken, logout } = useAuth()
 	const navigate = useNavigate()
 
@@ -19,8 +20,11 @@ export function useLoginForm() {
 			saveToken(token)
 			navigate("/dashboard")
 		},
-		onError: (error: any) => {
-            const serverMessage = error.response?.data?.message || error.message || ""
+		onError: (error: Error) => {
+            const serverMessage =
+                (error as { response?: { data?: { message?: string } } }).response?.data?.message ??
+                error.message ??
+                ""
             if (serverMessage.includes("Invalid credentials")) {
                 toast.error("E-mail ou senha incorretos.")
             } else {
@@ -58,12 +62,18 @@ export function useLoginForm() {
 		setShowPassword((prev) => !prev)
 	}
 
+	function toggleRememberMe() {
+		setRememberMe((prev) => !prev)
+	}
+
 	return {
 		formData,
 		showPassword,
+		rememberMe,
 		handleChange,
 		handleSubmit,
 		togglePassword,
+		toggleRememberMe,
 		isPending: mutation.isPending,
 	}
 }

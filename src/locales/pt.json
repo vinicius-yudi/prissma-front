@@ -86,17 +86,24 @@
     }
   },
   "login": {
-    "title": "Bem-vindo de volta",
-    "subtitle": "Entre com suas credenciais para acessar sua conta.",
-    "email": "Email *",
-    "emailPlaceholder": "seuemail@example.com",
-    "password": "Senha *",
+    "title": "Bem-vindo de volta!",
+    "subtitle": "Faça login para acessar sua conta e gerenciar suas obras e projetos.",
+    "brandTagline": "Gestão que constrói resultados.",
+    "email": "E-mail",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
     "passwordPlaceholder": "Digite sua senha",
-    "forgotPassword": "Esqueceu?",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
+    "rememberMe": "Lembrar de mim",
+    "forgotPassword": "Esqueci minha senha",
     "submit": "Entrar",
     "submitting": "Entrando...",
-    "noAccount": "Não tem uma conta?",
-    "register": "Cadastre-se"
+    "orContinueWith": "ou continue com",
+    "continueGoogle": "Continuar com Google",
+    "continueMicrosoft": "Continuar com Microsoft",
+    "noAccount": "Ainda não tem uma conta?",
+    "register": "Cadastrar"
   },
   "brand": {
     "name": "PRISSMA",

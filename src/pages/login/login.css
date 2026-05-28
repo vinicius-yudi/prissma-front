@@ -1,0 +1,197 @@
+/* BuildFlow login — palette + animations scoped under .bf-login.
+   Kept in CSS (not Tailwind utilities) because keyframes, SVG line-drawing and
+   prefers-reduced-motion handling are not expressible as utility classes. */
+
+.bf-login {
+  --bf-bg: #020617;
+  --bf-surface: #07111f;
+  --bf-surface-elevated: #0b1628;
+  --bf-surface-input: #101b2d;
+  --bf-border: #1e2a3d;
+  --bf-border-active: #3b82f6;
+  --bf-primary: #2563eb;
+  --bf-blue: #3b82f6;
+  --bf-glow: #60a5fa;
+  --bf-holo: #00a3ff;
+  --bf-text: #f8fafc;
+  --bf-text-2: #cbd5e1;
+  --bf-muted: #94a3b8;
+
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: var(--bf-text);
+}
+
+/* ---------- Entrance ---------- */
+
+@keyframes bf-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bf-hero-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.bf-enter {
+  opacity: 0;
+  animation: bf-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.bf-hero-enter {
+  opacity: 0;
+  animation: bf-hero-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.bf-delay-1 { animation-delay: 0.08s; }
+.bf-delay-2 { animation-delay: 0.16s; }
+.bf-delay-3 { animation-delay: 0.24s; }
+.bf-delay-4 { animation-delay: 0.32s; }
+.bf-delay-5 { animation-delay: 0.4s; }
+.bf-delay-6 { animation-delay: 0.48s; }
+
+/* ---------- Holographic building ---------- */
+
+@keyframes bf-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bf-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes bf-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes bf-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bf-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bf-win-pulse {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.bf-win {
+  animation: bf-win-pulse 5s ease-in-out infinite;
+}
+
+/* BIM scan sweep climbing the facade */
+@keyframes bf-scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-430px);
+    opacity: 0;
+  }
+}
+
+.bf-scan {
+  transform-box: view-box;
+  animation: bf-scan 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Lines use pathLength="1" so a single dash length works regardless of geometry. */
+.bf-draw-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bf-draw 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.bf-glow-line {
+  animation: bf-glow-pulse 4.5s ease-in-out infinite;
+}
+
+.bf-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bf-dot-pulse 2.8s ease-in-out infinite;
+}
+
+.bf-orbit {
+  transform-origin: center;
+  animation: bf-orbit 28s linear infinite;
+}
+
+.bf-float {
+  animation: bf-float 7s ease-in-out infinite;
+}
+
+/* ---------- Respeitar prefers-reduced-motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-login *,
+  .bf-login *::before,
+  .bf-login *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .bf-enter,
+  .bf-hero-enter {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .bf-draw-line {
+    stroke-dashoffset: 0 !important;
+  }
+}

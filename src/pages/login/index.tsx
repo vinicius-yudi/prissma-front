@@ -1,11 +1,12 @@
-import { BrandPanel } from "./components/BrandPanel"
+import { ConstructionHero } from "./components/ConstructionHero"
 import { LoginForm } from "./components/LoginForm"
+import "./login.css"
 
 export function LoginPage() {
   return (
-    <main className="flex h-screen overflow-hidden" style={{ backgroundColor: "#041617" }}>
-      <BrandPanel />
+    <main className="bf-login flex h-screen w-full overflow-hidden bg-[#020617]">
       <LoginForm />
+      <ConstructionHero />
     </main>
   )
 }
