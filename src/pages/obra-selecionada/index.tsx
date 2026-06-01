@@ -12,6 +12,7 @@ import type { ProjetoAcompanhamento } from "@/pages/projetos/types"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 import { DocumentosTab } from "./components/DocumentosTab"
+import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { VisaoGeral } from "./components/visaoGeral"
 import { useObraSelecionada } from "./hooks/useObraSelecionada"
@@ -88,6 +89,9 @@ function TabContent({ tab, project, acompanhamento, acompError, onRetry }: TabCo
     if (acompError) return <AcompErrorCard onRetry={onRetry} />
     if (!acompanhamento) return <LoadingState />
     return <EtapasTab acompanhamento={acompanhamento} />
+  }
+  if (tab === "equipe") {
+    return <EquipesTab obraId={project.id} />
   }
   if (tab === "documentos") {
     return <DocumentosTab projectId={project.id} />
