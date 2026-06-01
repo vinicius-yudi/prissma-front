@@ -6,7 +6,8 @@ export interface User {
   avatar?: string
 }
 
-export type RoleInProject = 'OWNER' | 'ARCHITECT' | 'ENGINEER' | 'FOREMAN' | 'CLIENT'
+export type ProjectRoleInRequest = 'OWNER' | 'ARCHITECT' | 'ENGINEER' | 'FOREMAN'
+export type RoleInProject = ProjectRoleInRequest | 'USER'
 
 export interface ConstructionProjectMember {
   id: number
@@ -19,7 +20,7 @@ export interface ConstructionProjectMember {
 
 export interface AddMemberRequest {
   userId: number
-  roleInProject: RoleInProject
+  roleInProject: ProjectRoleInRequest
 }
 
 export interface AddMemberResponse {
