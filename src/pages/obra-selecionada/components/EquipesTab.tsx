@@ -4,7 +4,10 @@ import { Input } from '@/shared/components/ui/input/Input'
 import { Modal } from '@/shared/components/ui/modal/Modal'
 import { CirclePlus, CircleX, Mail, Search, Loader, ShieldCheck } from 'lucide-react'
 import { useEquipes } from '../hooks/useEquipes'
+import { useProjectPermissions } from '../hooks/useProjectPermissions'
+import { ProjectPermission } from '../services/projectPermissions.service'
 import type { ConstructionProjectMember, ProjectRoleInRequest, RoleInProject } from '../types/equipes'
+import { RolePermissionsModal } from './RolePermissionsModal'
 
 interface EquipesTabProps {
   obraId: number
