@@ -4,10 +4,7 @@ import { Input } from '@/shared/components/ui/input/Input'
 import { Modal } from '@/shared/components/ui/modal/Modal'
 import { CirclePlus, CircleX, Mail, Search, Loader, ShieldCheck } from 'lucide-react'
 import { useEquipes } from '../hooks/useEquipes'
-import { useProjectPermissions } from '../hooks/useProjectPermissions'
-import { ProjectPermission } from '../services/projectPermissions.service'
-import type { ConstructionProjectMember, RoleInProject } from '../types/equipes'
-import { RolePermissionsModal } from './RolePermissionsModal'
+import type { ConstructionProjectMember, ProjectRoleInRequest, RoleInProject } from '../types/equipes'
 
 interface EquipesTabProps {
   obraId: number
@@ -26,7 +23,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   const [addOpen, setAddOpen] = useState(false)
   const [permsOpen, setPermsOpen] = useState(false)
   const [selectedSection, setSelectedSection] = useState<'client' | 'team'>('team')
-  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<RoleInProject>('ENGINEER')
+  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>('ENGINEER')
 
   const { can } = useProjectPermissions(obraId)
   const canManageMembers = can(ProjectPermission.MANAGE_MEMBERS)
@@ -62,7 +59,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     setSelectedSection(section)
     setSearchQuery('')
     setSelectedUserId(null)
-    setSelectedRoleInAdd(section === 'client' ? 'CLIENT' : 'ENGINEER')
+    setSelectedRoleInAdd('ENGINEER')
     setAddOpen(true)
   }
 
@@ -81,7 +78,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
 
   function handleConfirmAdd() {
     if (selectedSection === 'client') {
-      handleAddMember('USER' as RoleInProject)
+      handleAddMember()
     } else {
       handleAddMember(selectedRoleInAdd)
     }
@@ -212,7 +209,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
               <div
                 key={member.id}
                 className="border-2 border-outline-variant/60 rounded-xl p-6 group relative overflow-hidden">
-                {canManageMembers && (
+                {member.roleInProject !== 'OWNER' && (
                   <div className="absolute top-0 right-0 p-4">
                     <Button
                       variant="ghost"
@@ -395,7 +392,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
               <label className="block text-sm font-semibold text-on-surface">Papel na obra</label>
               <select
                 value={selectedRoleInAdd}
-                onChange={(e) => setSelectedRoleInAdd(e.target.value as RoleInProject)}
+                onChange={(e) => setSelectedRoleInAdd(e.target.value as ProjectRoleInRequest)}
                 className="w-full px-4 py-2 rounded-lg border border-outline-variant/60 bg-surface-container text-on-surface"
               >
                 <option value="ENGINEER">Engenheiro</option>

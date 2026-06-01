@@ -7,7 +7,7 @@ import {
   removeEquipeMember,
   getAvailableUsers,
 } from "../services/equipes.service"
-import type { AddMemberRequest, RoleInProject } from "../types/equipes"
+import type { AddMemberRequest, ProjectRoleInRequest } from "../types/equipes"
 
 const RESULTS_PER_PAGE = 5
 
@@ -23,7 +23,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   const queryClient = useQueryClient()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
-  const [selectedRole, setSelectedRole] = useState<RoleInProject>("ENGINEER")
+  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>("ENGINEER")
   const [clientOffset, setClientOffset] = useState(0)
   const [collaboratorOffset, setCollaboratorOffset] = useState(0)
 
@@ -112,7 +112,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
     },
   })
 
-  function handleAddMember(role?: RoleInProject) {
+  function handleAddMember(role?: ProjectRoleInRequest) {
     if (!selectedUserId) {
       toast.error("Selecione um usuário")
       return
