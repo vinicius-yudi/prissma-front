@@ -247,18 +247,190 @@
       "empty": "Nenhum documento adicionado.",
       "download": "Baixar",
       "downloading": "Baixando...",
-      "downloadError": "Erro ao baixar documento"
+      "downloadError": "Erro ao baixar documento",
+      "unsupportedType": "Tipo de arquivo não suportado. Envie PDF ou DOCX."
     },
     "fotos": {
       "title": "Fotos Recentes",
       "add": "Adicionar Foto",
       "uploading": "Enviando...",
-      "empty": "Nenhuma foto adicionada."
+      "empty": "Nenhuma foto adicionada.",
+      "unsupportedType": "Tipo de imagem não suportado. Envie PNG, JPEG, GIF, BMP, TIFF ou WEBP."
+    },
+    "attachments": {
+      "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
+      "mimeMismatch": "O conteúdo do arquivo não corresponde à extensão informada."
+    },
+    "orcamento": {
+      "title": "Orçamento",
+      "subtitle": "Acompanhe o planejado, o gasto e o saldo da obra.",
+      "empty": {
+        "title": "Nenhum orçamento criado",
+        "description": "Defina o valor planejado total para começar a acompanhar os gastos da obra.",
+        "cta": "Criar orçamento"
+      },
+      "actions": {
+        "addCategory": "Nova categoria",
+        "addExpense": "Lançar despesa",
+        "editBudget": "Editar orçamento",
+        "deleteBudget": "Excluir orçamento",
+        "editCategory": "Editar categoria",
+        "deleteCategory": "Excluir categoria",
+        "editExpense": "Editar despesa",
+        "deleteExpense": "Excluir despesa",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "kpi": {
+        "planned": "Planejado",
+        "spent": "Gasto",
+        "remaining": "Restante",
+        "exceeded": "Estouros",
+        "exceededOne": "{{count}} categoria",
+        "exceededOther": "{{count}} categorias",
+        "used": "{{percent}}% do orçamento utilizado"
+      },
+      "charts": {
+        "donutTitle": "Gasto por categoria",
+        "barTitle": "% gasto vs planejado",
+        "percentOfTotal": "{{percent}}% do gasto total",
+        "limitLabel": "Limite",
+        "noData": "Lance uma despesa para ver os gráficos."
+      },
+      "category": {
+        "empty": "Nenhuma despesa lançada nesta categoria.",
+        "expensesCount_one": "{{count}} despesa",
+        "expensesCount_other": "{{count}} despesas",
+        "expand": "Expandir",
+        "collapse": "Recolher"
+      },
+      "expense": {
+        "noStage": "Sem etapa",
+        "noSupplier": "Sem fornecedor",
+        "receipt": "Comprovante"
+      },
+      "status": {
+        "ok": "Em dia",
+        "warning": "Próximo do limite",
+        "exceeded": "Estourado"
+      },
+      "budgetForm": {
+        "createTitle": "Criar orçamento",
+        "editTitle": "Editar orçamento",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Ex: Orçamento da Obra Centro",
+        "plannedTotal": "Valor planejado total (R$)"
+      },
+      "itemForm": {
+        "createTitle": "Nova categoria",
+        "editTitle": "Editar categoria",
+        "category": "Categoria",
+        "categoryPlaceholder": "Ex: Fundação",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Ex: Concreto, ferragem e mão de obra",
+        "plannedAmount": "Valor planejado (R$)"
+      },
+      "expenseForm": {
+        "createTitle": "Lançar despesa",
+        "editTitle": "Editar despesa",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Ex: Compra de 5m³ de concreto",
+        "amount": "Valor (R$)",
+        "spentAt": "Data do gasto",
+        "stage": "Etapa (opcional)",
+        "stagePlaceholder": "Selecione uma etapa",
+        "stageNone": "Sem etapa vinculada",
+        "supplier": "Fornecedor (opcional)",
+        "supplierPlaceholder": "Ex: Concreteira XYZ",
+        "receiptUrl": "Link do comprovante (opcional)",
+        "receiptUrlPlaceholder": "https://..."
+      },
+      "toasts": {
+        "budgetCreated": "Orçamento criado com sucesso!",
+        "budgetUpdated": "Orçamento atualizado.",
+        "budgetDeleted": "Orçamento removido.",
+        "itemCreated": "Categoria criada.",
+        "itemUpdated": "Categoria atualizada.",
+        "itemDeleted": "Categoria removida.",
+        "expenseCreated": "Despesa lançada.",
+        "expenseUpdated": "Despesa atualizada.",
+        "expenseDeleted": "Despesa removida.",
+        "categoryExceededWarning": "Atenção: esta categoria ultrapassou o valor planejado.",
+        "budgetExceededWarning": "Atenção: o orçamento total foi ultrapassado.",
+        "alreadyExists": "Este projeto já possui um orçamento."
+      },
+      "delete": {
+        "budgetTitle": "Excluir orçamento",
+        "budgetMessage": "Tem certeza? Todas as categorias e despesas vinculadas serão removidas.",
+        "itemTitle": "Excluir categoria",
+        "itemMessage": "Tem certeza? Todas as despesas desta categoria serão removidas.",
+        "expenseTitle": "Excluir despesa",
+        "expenseMessage": "Tem certeza? Esta ação não pode ser desfeita."
+      },
+      "errors": {
+        "loadFailed": "Não foi possível carregar o orçamento."
+      }
     },
     "etapas": {
+      "title": "Etapas",
       "empty": "Nenhuma etapa cadastrada.",
       "tasksEmpty": "Nenhuma tarefa nesta etapa.",
       "tasks": "Tarefas",
+      "sections": {
+        "inProgress": "Em Andamento",
+        "pending": "Pendentes",
+        "done": "Concluídas",
+        "emptySection": "Arraste etapas para esta seção."
+      },
+      "actions": {
+        "create": "Nova Etapa",
+        "edit": "Editar",
+        "delete": "Excluir",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "saving": "Salvando..."
+      },
+      "card": {
+        "progress": "Progresso",
+        "tasksCount_one": "{{count}} tarefa",
+        "tasksCount_other": "{{count}} tarefas",
+        "photosCount_one": "{{count}} foto",
+        "photosCount_other": "{{count}} fotos"
+      },
+      "form": {
+        "title": {
+          "create": "Nova etapa",
+          "edit": "Editar etapa"
+        },
+        "fields": {
+          "name": "Nome",
+          "namePlaceholder": "Ex.: Fundação",
+          "description": "Descrição",
+          "descriptionPlaceholder": "Detalhes desta etapa (opcional)",
+          "status": "Status",
+          "displayOrder": "Ordem",
+          "plannedStartDate": "Início Planejado",
+          "plannedEndDate": "Término Planejado"
+        }
+      },
+      "deleteModal": {
+        "title": "Excluir etapa",
+        "message": "Tem certeza que deseja excluir a etapa \"{{name}}\"? Esta ação não pode ser desfeita.",
+        "confirm": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "createSuccess": "Etapa criada com sucesso!",
+        "createError": "Erro ao criar etapa",
+        "updateSuccess": "Etapa atualizada com sucesso!",
+        "updateError": "Erro ao atualizar etapa",
+        "deleteSuccess": "Etapa excluída com sucesso!",
+        "deleteError": "Erro ao excluir etapa",
+        "reorderError": "Erro ao reordenar etapas"
+      },
       "etapaStatus": {
         "PLANNED": "Planejada",
         "IN_PROGRESS": "Em andamento",

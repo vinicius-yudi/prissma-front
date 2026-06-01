@@ -19,7 +19,7 @@ function isCollaborator(role: string): boolean {
   return role !== 'USER' && role !== 'ADMIN'
 }
 
-export function useEquipes(obraId: number) {
+export function useEquipes(obraId: number, usersEnabled = false) {
   const queryClient = useQueryClient()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
@@ -42,16 +42,19 @@ export function useEquipes(obraId: number) {
   } = useQuery({
     queryKey: ["availableUsers"],
     queryFn: getAvailableUsers,
+    // GET /users is admin-gated on the backend; fetching it for users who
+    // can't manage members returns 401 and the global handler would log them
+    // out. Only fetch when the caller explicitly opts in (modal open + permission).
+    enabled: usersEnabled,
   })
 
-  const memberIds = new Set(members.map((m) => m.user.id))
-  
   const baseFilteredUsers = useMemo(() => {
+    const memberIds = new Set(members.map((m) => m.user.id))
     return availableUsers.filter(
       (user) =>
         !memberIds.has(user.id) && user.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
-  }, [availableUsers, memberIds, searchQuery])
+  }, [availableUsers, members, searchQuery])
   const clientUsers = useMemo(() => {
     return baseFilteredUsers.filter((user) => isClient(user.role))
   }, [baseFilteredUsers])
@@ -93,9 +96,8 @@ export function useEquipes(obraId: number) {
       setSelectedUserId(null)
       setSearchQuery("")
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.message || error.message
-      toast.error(`Erro ao adicionar membro: ${message}`)
+    onError: (error: Error) => {
+      toast.error(`Erro ao adicionar membro: ${error.message}`)
     },
   })
 
@@ -105,9 +107,8 @@ export function useEquipes(obraId: number) {
       queryClient.invalidateQueries({ queryKey: ["equipes", obraId] })
       toast.success("Membro removido da equipe com sucesso!")
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.message || error.message
-      toast.error(`Erro ao remover membro: ${message}`)
+    onError: (error: Error) => {
+      toast.error(`Erro ao remover membro: ${error.message}`)
     },
   })
 

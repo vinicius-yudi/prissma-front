@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react"
 import { useState } from "react"
-import { ArrowLeft, MapPin, RefreshCw } from "lucide-react"
+import { ArrowLeft, MapPin } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 
@@ -8,12 +8,12 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
 import { DeleteProjectModal } from "@/pages/projetos/components/DeleteProjectModal"
 import { ProjectStepModal } from "@/pages/projetos/components/ProjectStepModal"
-import type { ProjetoAcompanhamento } from "@/pages/projetos/types"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 import { DocumentosTab } from "./components/DocumentosTab"
 import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
+import { OrcamentoTab } from "./components/OrcamentoTab"
 import { VisaoGeral } from "./components/visaoGeral"
 import { useObraSelecionada } from "./hooks/useObraSelecionada"
 import { TABS, TAB_KEYS, type TabKey } from "./types"
@@ -49,19 +49,6 @@ function NotFoundState({ onBack }: { onBack: () => void }) {
   )
 }
 
-function AcompErrorCard({ onRetry }: { onRetry: () => void }) {
-  const { t } = useTranslation()
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 p-12 bg-surface-container-low rounded-xl border border-error/20">
-      <p className="text-on-surface-variant text-sm">{t("obra.acompError")}</p>
-      <Button variant="outline" onClick={onRetry}>
-        <RefreshCw size={14} />
-        {t("obra.retry")}
-      </Button>
-    </div>
-  )
-}
-
 function ComingSoon() {
   const { t } = useTranslation()
   return (
@@ -74,27 +61,23 @@ function ComingSoon() {
 interface TabContentProps {
   tab: TabKey
   project: Project
-  acompanhamento: ProjetoAcompanhamento | undefined
-  acompError: boolean
-  onRetry: () => void
 }
 
-function TabContent({ tab, project, acompanhamento, acompError, onRetry }: TabContentProps) {
+function TabContent({ tab, project }: TabContentProps) {
   if (tab === "visaoGeral") {
-    if (acompError) return <AcompErrorCard onRetry={onRetry} />
-    if (!acompanhamento) return <LoadingState />
-    return <VisaoGeral project={project} acompanhamento={acompanhamento} />
+    return <VisaoGeral project={project} />
   }
   if (tab === "etapas") {
-    if (acompError) return <AcompErrorCard onRetry={onRetry} />
-    if (!acompanhamento) return <LoadingState />
-    return <EtapasTab acompanhamento={acompanhamento} />
+    return <EtapasTab projectId={project.id} />
   }
   if (tab === "equipe") {
     return <EquipesTab obraId={project.id} />
   }
   if (tab === "documentos") {
     return <DocumentosTab projectId={project.id} />
+  }
+  if (tab === "orcamento") {
+    return <OrcamentoTab projectId={project.id} />
   }
   return <ComingSoon />
 }
@@ -106,7 +89,7 @@ export function ObraSelecionadaPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("visaoGeral")
   const id = Number(idParam)
 
-  const { projectQuery, acompQuery } = useObraSelecionada(id)
+  const { projectQuery } = useObraSelecionada(id)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
 
@@ -119,12 +102,8 @@ export function ObraSelecionadaPage() {
     if (isTabKey(tab)) setActiveTab(tab)
   }
 
-  function handleRetry() {
-    acompQuery.refetch()
-  }
-
   if (!id) return <NotFoundState onBack={handleBack} />
-  if (projectQuery.isLoading || acompQuery.isLoading) return <LoadingState />
+  if (projectQuery.isLoading) return <LoadingState />
   if (projectQuery.isError) return <NotFoundState onBack={handleBack} />
   if (!projectQuery.data) return null
 
@@ -171,13 +150,7 @@ export function ObraSelecionadaPage() {
       </nav>
 
       <main className="py-6">
-        <TabContent
-          tab={activeTab}
-          project={project}
-          acompanhamento={acompQuery.data}
-          acompError={acompQuery.isError}
-          onRetry={handleRetry}
-        />
+        <TabContent tab={activeTab} project={project} />
       </main>
 
       <ProjectStepModal open={editOpen} onClose={() => setEditOpen(false)} project={project} />

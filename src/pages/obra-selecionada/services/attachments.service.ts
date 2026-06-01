@@ -3,6 +3,15 @@ import type { Attachment } from "@/shared/types/attachment"
 
 const BASE_URL = "/api"
 
+export class AttachmentRequestError extends Error {
+  readonly status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.name = "AttachmentRequestError"
+    this.status = status
+  }
+}
+
 function buildAuthHeader(): HeadersInit {
   const token = localStorage.getItem("token")
   if (!token) return {}
@@ -13,7 +22,7 @@ async function handleRawResponse(response: Response): Promise<void> {
   if (response.status === 401) {
     localStorage.removeItem("token")
     window.location.href = "/login"
-    throw new Error("Sessão expirada. Faça login novamente.")
+    throw new AttachmentRequestError(401, "Sessão expirada. Faça login novamente.")
   }
 
   if (!response.ok) {
@@ -27,7 +36,7 @@ async function handleRawResponse(response: Response): Promise<void> {
         message = text
       }
     }
-    throw new Error(message)
+    throw new AttachmentRequestError(response.status, message)
   }
 }
 
@@ -50,25 +59,14 @@ export async function uploadAttachment(projectId: number, file: File): Promise<A
   return response.json() as Promise<Attachment>
 }
 
-export interface DownloadResult {
-  blob: Blob
-  fileName: string
-}
-
-export async function downloadAttachment(projectId: number, id: number): Promise<DownloadResult> {
+export async function downloadAttachment(projectId: number, id: number): Promise<Blob> {
   const response = await fetch(
     `${BASE_URL}/projects/${projectId}/attachments/${id}/download`,
     { headers: buildAuthHeader() },
   )
 
   await handleRawResponse(response)
-
-  const blob = await response.blob()
-  const disposition = response.headers.get("Content-Disposition")
-  const match = disposition?.match(/filename\*?=(?:UTF-8'')?(.+)/i)
-  const fileName = match ? decodeURIComponent(match[1].replace(/['"]/g, "")) : "arquivo"
-
-  return { blob, fileName }
+  return response.blob()
 }
 
 export async function deleteAttachment(projectId: number, id: number): Promise<void> {

@@ -247,18 +247,190 @@
       "empty": "No documents added yet.",
       "download": "Download",
       "downloading": "Downloading...",
-      "downloadError": "Failed to download document"
+      "downloadError": "Failed to download document",
+      "unsupportedType": "Unsupported file type. Upload PDF or DOCX."
     },
     "fotos": {
       "title": "Recent Photos",
       "add": "Add Photo",
       "uploading": "Uploading...",
-      "empty": "No photos added yet."
+      "empty": "No photos added yet.",
+      "unsupportedType": "Unsupported image type. Upload PNG, JPEG, GIF, BMP, TIFF or WEBP."
+    },
+    "attachments": {
+      "fileTooLarge": "File exceeds the {{max}} MB limit.",
+      "mimeMismatch": "File contents do not match the declared extension."
+    },
+    "orcamento": {
+      "title": "Budget",
+      "subtitle": "Track planned, spent and remaining values for the project.",
+      "empty": {
+        "title": "No budget created yet",
+        "description": "Define the planned total to start tracking expenses for this project.",
+        "cta": "Create budget"
+      },
+      "actions": {
+        "addCategory": "New category",
+        "addExpense": "Add expense",
+        "editBudget": "Edit budget",
+        "deleteBudget": "Delete budget",
+        "editCategory": "Edit category",
+        "deleteCategory": "Delete category",
+        "editExpense": "Edit expense",
+        "deleteExpense": "Delete expense",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "kpi": {
+        "planned": "Planned",
+        "spent": "Spent",
+        "remaining": "Remaining",
+        "exceeded": "Overruns",
+        "exceededOne": "{{count}} category",
+        "exceededOther": "{{count}} categories",
+        "used": "{{percent}}% of the budget used"
+      },
+      "charts": {
+        "donutTitle": "Spending by category",
+        "barTitle": "% spent vs planned",
+        "percentOfTotal": "{{percent}}% of total spent",
+        "limitLabel": "Limit",
+        "noData": "Add an expense to see the charts."
+      },
+      "category": {
+        "empty": "No expenses recorded for this category.",
+        "expensesCount_one": "{{count}} expense",
+        "expensesCount_other": "{{count}} expenses",
+        "expand": "Expand",
+        "collapse": "Collapse"
+      },
+      "expense": {
+        "noStage": "No stage",
+        "noSupplier": "No supplier",
+        "receipt": "Receipt"
+      },
+      "status": {
+        "ok": "On track",
+        "warning": "Near limit",
+        "exceeded": "Overrun"
+      },
+      "budgetForm": {
+        "createTitle": "Create budget",
+        "editTitle": "Edit budget",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Downtown Project Budget",
+        "plannedTotal": "Planned total ($)"
+      },
+      "itemForm": {
+        "createTitle": "New category",
+        "editTitle": "Edit category",
+        "category": "Category",
+        "categoryPlaceholder": "e.g. Foundation",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Concrete, rebar and labor",
+        "plannedAmount": "Planned amount ($)"
+      },
+      "expenseForm": {
+        "createTitle": "Add expense",
+        "editTitle": "Edit expense",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Purchase of 5m³ concrete",
+        "amount": "Amount ($)",
+        "spentAt": "Expense date",
+        "stage": "Stage (optional)",
+        "stagePlaceholder": "Select a stage",
+        "stageNone": "No stage linked",
+        "supplier": "Supplier (optional)",
+        "supplierPlaceholder": "e.g. XYZ Concrete Co.",
+        "receiptUrl": "Receipt URL (optional)",
+        "receiptUrlPlaceholder": "https://..."
+      },
+      "toasts": {
+        "budgetCreated": "Budget created successfully!",
+        "budgetUpdated": "Budget updated.",
+        "budgetDeleted": "Budget removed.",
+        "itemCreated": "Category created.",
+        "itemUpdated": "Category updated.",
+        "itemDeleted": "Category removed.",
+        "expenseCreated": "Expense added.",
+        "expenseUpdated": "Expense updated.",
+        "expenseDeleted": "Expense removed.",
+        "categoryExceededWarning": "Warning: this category exceeded its planned amount.",
+        "budgetExceededWarning": "Warning: the total budget was exceeded.",
+        "alreadyExists": "This project already has a budget."
+      },
+      "delete": {
+        "budgetTitle": "Delete budget",
+        "budgetMessage": "Are you sure? All linked categories and expenses will be removed.",
+        "itemTitle": "Delete category",
+        "itemMessage": "Are you sure? All expenses in this category will be removed.",
+        "expenseTitle": "Delete expense",
+        "expenseMessage": "Are you sure? This action cannot be undone."
+      },
+      "errors": {
+        "loadFailed": "Failed to load the budget."
+      }
     },
     "etapas": {
+      "title": "Stages",
       "empty": "No stages registered.",
       "tasksEmpty": "No tasks in this stage.",
       "tasks": "Tasks",
+      "sections": {
+        "inProgress": "In Progress",
+        "pending": "Pending",
+        "done": "Completed",
+        "emptySection": "Drag stages into this section."
+      },
+      "actions": {
+        "create": "New Stage",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "card": {
+        "progress": "Progress",
+        "tasksCount_one": "{{count}} task",
+        "tasksCount_other": "{{count}} tasks",
+        "photosCount_one": "{{count}} photo",
+        "photosCount_other": "{{count}} photos"
+      },
+      "form": {
+        "title": {
+          "create": "New stage",
+          "edit": "Edit stage"
+        },
+        "fields": {
+          "name": "Name",
+          "namePlaceholder": "e.g. Foundation",
+          "description": "Description",
+          "descriptionPlaceholder": "Details about this stage (optional)",
+          "status": "Status",
+          "displayOrder": "Order",
+          "plannedStartDate": "Planned Start",
+          "plannedEndDate": "Planned End"
+        }
+      },
+      "deleteModal": {
+        "title": "Delete stage",
+        "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "createSuccess": "Stage created successfully!",
+        "createError": "Failed to create stage",
+        "updateSuccess": "Stage updated successfully!",
+        "updateError": "Failed to update stage",
+        "deleteSuccess": "Stage deleted successfully!",
+        "deleteError": "Failed to delete stage",
+        "reorderError": "Failed to reorder stages"
+      },
       "etapaStatus": {
         "PLANNED": "Planned",
         "IN_PROGRESS": "In progress",

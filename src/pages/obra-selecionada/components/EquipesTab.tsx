@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/shared/components/ui/button/Button'
 import { Input } from '@/shared/components/ui/input/Input'
 import { Modal } from '@/shared/components/ui/modal/Modal'
-import { CirclePlus, CircleX, Mail, Search, Loader } from 'lucide-react'
+import { CirclePlus, CircleX, Mail, Search, Loader, ShieldCheck } from 'lucide-react'
 import { useEquipes } from '../hooks/useEquipes'
 import type { ConstructionProjectMember, ProjectRoleInRequest, RoleInProject } from '../types/equipes'
 
@@ -21,8 +21,12 @@ function isCollaborator(role: string): boolean {
 export function EquipesTab({ obraId }: EquipesTabProps) {
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
+  const [permsOpen, setPermsOpen] = useState(false)
   const [selectedSection, setSelectedSection] = useState<'client' | 'team'>('team')
   const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>('ENGINEER')
+
+  const { can } = useProjectPermissions(obraId)
+  const canManageMembers = can(ProjectPermission.MANAGE_MEMBERS)
 
   const {
     members,
@@ -41,7 +45,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     loadMoreCollaborators,
     clientsHasMore,
     collaboratorsHasMore,
-  } = useEquipes(obraId)
+  } = useEquipes(obraId, addOpen && canManageMembers)
 
   function openRemoveModal(member: ConstructionProjectMember) {
     setMemberToRemove(member)
@@ -109,6 +113,19 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   return (
     <>
       <div className="p-2">
+        {canManageMembers && (
+          <div className="flex justify-end mb-6">
+            <Button
+              variant="outline"
+              className="w-auto px-4 py-2 text-sm"
+              onClick={() => setPermsOpen(true)}
+            >
+              <ShieldCheck size={16} />
+              Permissões
+            </Button>
+          </div>
+        )}
+
         {/* SEÇÃO CLIENTE */}
         <section className="mb-16">
           <div className="flex items-center justify-between mb-4">
@@ -125,15 +142,17 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                 <div
                   key={member.id}
                   className="border-2 border-outline-variant/60 rounded-xl p-6 group relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4">
-                    <Button
-                      variant="ghost"
-                      className="p-2 text-error hover:bg-error/10 rounded-full transition-all"
-                      disabled={isRemovingMember}
-                      onClick={() => openRemoveModal(member)}>
-                      <CircleX className="text-[18px]" />
-                    </Button>
-                  </div>
+                  {canManageMembers && (
+                    <div className="absolute top-0 right-0 p-4">
+                      <Button
+                        variant="ghost"
+                        className="p-2 text-error hover:bg-error/10 rounded-full transition-all"
+                        disabled={isRemovingMember}
+                        onClick={() => openRemoveModal(member)}>
+                        <CircleX className="text-[18px]" />
+                      </Button>
+                    </div>
+                  )}
 
                   <div className="flex items-center gap-6">
                     <img
@@ -154,16 +173,18 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                 </div>
               ))}
 
-            <button
-              type="button"
-              onClick={() => openAddModal('client')}
-              className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
-            >
-              <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
-              <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
-                Adicionar Cliente
-              </span>
-            </button>
+            {canManageMembers && (
+              <button
+                type="button"
+                onClick={() => openAddModal('client')}
+                className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
+              >
+                <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
+                <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
+                  Adicionar Cliente
+                </span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -224,16 +245,18 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
               </div>
             ))}
 
-          <button
-            type="button"
-            onClick={() => openAddModal('team')}
-            className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
-          >
-            <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
-            <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
-              Adicionar Colaborador
-            </span>
-          </button>
+          {canManageMembers && (
+            <button
+              type="button"
+              onClick={() => openAddModal('team')}
+              className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
+            >
+              <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
+              <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
+                Adicionar Colaborador
+              </span>
+            </button>
+          )}
         </div>
         </section>
       </div>
@@ -397,6 +420,12 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
           </div>
         </div>
       </Modal>
+
+      <RolePermissionsModal
+        open={permsOpen}
+        onClose={() => setPermsOpen(false)}
+        projectId={obraId}
+      />
     </>
   )
 }
