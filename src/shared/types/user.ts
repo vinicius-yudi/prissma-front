@@ -1,4 +1,11 @@
-export type Role = "ENG" | "USER"
+export const GlobalRole = {
+	ADMIN: "ADMIN",
+	ENG: "ENG",
+	ARQ: "ARQ",
+	USER: "USER",
+} as const
+
+export type Role = (typeof GlobalRole)[keyof typeof GlobalRole]
 
 export interface UserProfile {
 	id: number
