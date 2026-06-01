@@ -81,7 +81,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
 
   function handleConfirmAdd() {
     if (selectedSection === 'client') {
-      handleAddMember()
+      handleAddMember('USER')
     } else {
       handleAddMember(selectedRoleInAdd)
     }

@@ -6,8 +6,8 @@ export interface User {
   avatar?: string
 }
 
-export type ProjectRoleInRequest = 'OWNER' | 'ARCHITECT' | 'ENGINEER' | 'FOREMAN'
-export type RoleInProject = ProjectRoleInRequest | 'USER'
+export type ProjectRoleInRequest = 'ENGINEER' | 'ARCHITECT' | 'FOREMAN' | 'USER'
+export type RoleInProject = ProjectRoleInRequest | 'OWNER'
 
 export interface ConstructionProjectMember {
   id: number
