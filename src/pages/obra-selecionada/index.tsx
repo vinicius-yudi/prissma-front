@@ -11,6 +11,7 @@ import { ProjectStepModal } from "@/pages/projetos/components/ProjectStepModal"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 
 import { DocumentosTab } from "./components/DocumentosTab"
+import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { OrcamentoTab } from "./components/OrcamentoTab"
 import { VisaoGeral } from "./components/visaoGeral"
@@ -68,6 +69,9 @@ function TabContent({ tab, project }: TabContentProps) {
   }
   if (tab === "etapas") {
     return <EtapasTab projectId={project.id} />
+  }
+  if (tab === "equipe") {
+    return <EquipesTab obraId={project.id} />
   }
   if (tab === "documentos") {
     return <DocumentosTab projectId={project.id} />
