@@ -1,4 +1,4 @@
-export const TABS = ["visaoGeral", "etapas", "equipe", "orcamento", "documentos", "chat"] as const
+export const TABS = ["visaoGeral", "etapas", "equipe", "orcamento", "documentos", "tarefas", "chat"] as const
 export type TabKey = (typeof TABS)[number]
 
 export const TAB_KEYS: Record<TabKey, string> = {
@@ -7,5 +7,6 @@ export const TAB_KEYS: Record<TabKey, string> = {
   equipe: "obra.tabs.equipe",
   orcamento: "obra.tabs.orcamento",
   documentos: "obra.tabs.documentos",
+  tarefas: "obra.tabs.tarefas",
   chat: "obra.tabs.chat",
 }
