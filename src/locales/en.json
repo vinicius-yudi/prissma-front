@@ -223,6 +223,7 @@
       "equipe": "Team",
       "orcamento": "Budget",
       "documentos": "Documents",
+      "tarefas": "Tasks",
       "chat": "Chat"
     },
     "visaoGeral": {
