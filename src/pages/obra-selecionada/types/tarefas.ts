@@ -23,7 +23,7 @@ export interface CreateTarefaRequest {
   status: TarefaStatus
   plannedStartDate: string
   plannedEndDate: string
-  assigneeUserId?: number | null
+  assigneeUserId: number
 }
 
 export interface UpdateTarefaRequest {
@@ -33,5 +33,5 @@ export interface UpdateTarefaRequest {
   status?: TarefaStatus
   plannedStartDate?: string
   plannedEndDate?: string
-  assigneeUserId?: number | null
+  assigneeUserId?: number
 }

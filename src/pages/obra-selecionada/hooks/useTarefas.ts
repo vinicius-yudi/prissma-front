@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
-import {
-  createTarefa,
+import {createTarefa,
   deleteTarefa,
   getTarefas,
   updateTarefa,
