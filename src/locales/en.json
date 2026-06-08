@@ -25,6 +25,14 @@
     "subtitle": "Manage your projects and track progress",
     "inProgressTitle": "In Progress Projects",
     "inProgressEmpty": "No projects in progress at the moment.",
+    "tasksTitle": "My Tasks",
+    "tasksEmpty": "You have no assigned tasks.",
+    "taskStatus": {
+      "TODO": "Pending",
+      "IN_PROGRESS": "In Progress",
+      "DONE": "Done",
+      "BLOCKED": "Blocked"
+    },
     "stats": {
       "activeProjects": "ACTIVE PROJECTS",
       "activeProjectsDetail": "+2 this month",

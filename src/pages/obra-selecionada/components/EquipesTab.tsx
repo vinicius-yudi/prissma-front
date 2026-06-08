@@ -21,12 +21,38 @@ function isCollaborator(role: string): boolean {
   return role !== 'USER' && role !== 'ADMIN'
 }
 
+// O "cliente proprietário" é apenas visual (badge), não muda o papel no backend,
+// por isso a escolha é persistida localmente por obra.
+function ownerClientStorageKey(obraId: number): string {
+  return `prissma:obra:${obraId}:ownerClient`
+}
+
+function readOwnerClientId(obraId: number): number | null {
+  const raw = localStorage.getItem(ownerClientStorageKey(obraId))
+  if (!raw) {
+    return null
+  }
+  const parsed = Number(raw)
+  return Number.isNaN(parsed) ? null : parsed
+}
+
+function writeOwnerClientId(obraId: number, userId: number | null): void {
+  const key = ownerClientStorageKey(obraId)
+  if (userId === null) {
+    localStorage.removeItem(key)
+    return
+  }
+  localStorage.setItem(key, String(userId))
+}
+
 export function EquipesTab({ obraId }: EquipesTabProps) {
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
   const [permsOpen, setPermsOpen] = useState(false)
   const [selectedSection, setSelectedSection] = useState<'client' | 'team'>('team')
   const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>('ENGINEER')
+  const [markClientAsOwner, setMarkClientAsOwner] = useState(true)
+  const [ownerClientId, setOwnerClientId] = useState<number | null>(() => readOwnerClientId(obraId))
 
   const { can } = useProjectPermissions(obraId)
   const canManageMembers = can(ProjectPermission.MANAGE_MEMBERS)
@@ -63,6 +89,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     setSearchQuery('')
     setSelectedUserId(null)
     setSelectedRoleInAdd('ENGINEER')
+    setMarkClientAsOwner(true)
     setAddOpen(true)
   }
 
@@ -81,6 +108,10 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
 
   function handleConfirmAdd() {
     if (selectedSection === 'client') {
+      if (markClientAsOwner && selectedUserId) {
+        writeOwnerClientId(obraId, selectedUserId)
+        setOwnerClientId(selectedUserId)
+      }
       handleAddMember('USER')
     } else {
       handleAddMember(selectedRoleInAdd)
@@ -97,7 +128,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
       case 'FOREMAN':
         return 'Externo'
       case 'OWNER':
-        return 'Proprietário'
+        return 'Responsável'
       case 'USER':
         return 'Cliente'
       default:
@@ -165,6 +196,13 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                     />
                     <div className="flex-1">
                       <h3 className="text-title-lg font-bold text-on-surface">{member.user.name}</h3>
+                      {member.user.id === ownerClientId && (
+                        <div className="flex items-center gap-2 my-0.5">
+                          <span className="bg-surface-container-highest text-secondary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter">
+                            Proprietário
+                          </span>
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <div className="block gap-1 text-body-md text-on-surface-variant">
                           <Mail className="inline-block h-[1em] w-[1em] shrink-0 mr-1" />
@@ -388,6 +426,19 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
               })()}
             </div>
           </div>
+
+          {/* Definir cliente como proprietário (apenas visual) */}
+          {selectedUserId && selectedSection === 'client' && (
+            <label className="flex items-center gap-2 text-sm text-on-surface cursor-pointer">
+              <input
+                type="checkbox"
+                checked={markClientAsOwner}
+                onChange={(e) => setMarkClientAsOwner(e.target.checked)}
+                className="h-4 w-4 rounded border-outline-variant accent-primary"
+              />
+              Definir como proprietário da obra
+            </label>
+          )}
 
           {/* Seleção de papel (apenas para colaboradores) */}
           {selectedUserId && selectedSection === 'team' && (

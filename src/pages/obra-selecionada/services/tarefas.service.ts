@@ -5,6 +5,10 @@ export async function getTarefas(stageId: number): Promise<Tarefa[]> {
   return api.get<Tarefa[]>(`/stages/${stageId}/tasks`)
 }
 
+export async function getMyTasks(): Promise<Tarefa[]> {
+  return api.get<Tarefa[]>("/users/me/tasks")
+}
+
 export async function getTarefa(stageId: number, tarefaId: number): Promise<Tarefa> {
   return api.get<Tarefa>(`/stages/${stageId}/tasks/${tarefaId}`)
 }

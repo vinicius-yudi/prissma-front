@@ -32,6 +32,10 @@ function App() {
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/projetos" element={<ProjetosPage />} />
+                {/* Tarefas e Equipe são abas dentro de um projeto; a sidebar
+                    encaminha para a lista de projetos para escolher um. */}
+                <Route path="/tarefas" element={<Navigate to="/projetos" replace />} />
+                <Route path="/equipe" element={<Navigate to="/projetos" replace />} />
                 <Route path="/obras/:id" element={<ObraSelecionadaPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

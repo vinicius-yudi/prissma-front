@@ -25,6 +25,14 @@
     "subtitle": "Gestiona tus proyectos y monitorea el progreso",
     "inProgressTitle": "Proyectos en Curso",
     "inProgressEmpty": "No hay proyectos en curso en este momento.",
+    "tasksTitle": "Mis Tareas",
+    "tasksEmpty": "No tienes tareas asignadas.",
+    "taskStatus": {
+      "TODO": "Pendiente",
+      "IN_PROGRESS": "En Progreso",
+      "DONE": "Completada",
+      "BLOCKED": "Bloqueada"
+    },
     "stats": {
       "activeProjects": "PROYECTOS ACTIVOS",
       "activeProjectsDetail": "+2 este mes",

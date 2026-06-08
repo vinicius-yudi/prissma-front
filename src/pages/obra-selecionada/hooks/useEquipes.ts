@@ -62,6 +62,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   const collaboratorUsers = useMemo(() => {
     return baseFilteredUsers.filter((user) => isCollaborator(user.role))
   }, [baseFilteredUsers])
+
   const paginatedClientUsers = clientUsers.slice(0, clientOffset + RESULTS_PER_PAGE)
   const paginatedCollaboratorUsers = collaboratorUsers.slice(0, collaboratorOffset + RESULTS_PER_PAGE)
 

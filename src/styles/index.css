@@ -113,6 +113,14 @@
   --color-surface-tint: #0B6E73;
 }
 
+:root {
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -129,4 +137,9 @@ body {
 #root {
   width: 100%;
   min-height: 100dvh;
+}
+
+.glass-card {
+  background-color: color-mix(in srgb, var(--color-surface-container) 70%, transparent);
+  backdrop-filter: blur(8px);
 }

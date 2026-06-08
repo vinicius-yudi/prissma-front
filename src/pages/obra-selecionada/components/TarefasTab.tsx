@@ -12,6 +12,13 @@ interface TarefasTabProps {
   projectId: number
 }
 
+// As classes `.input`/`.glass-card` não existem no CSS do projeto; campos do
+// filtro precisam das classes de token explícitas (fundo/borda/padding/foco).
+const FILTER_FIELD_CLASS =
+  "w-full bg-surface-container text-on-surface text-sm rounded-lg border border-outline-variant outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all h-9 px-3"
+const FILTER_SEARCH_CLASS =
+  "w-full bg-surface-container text-on-surface placeholder:text-on-surface-variant text-sm rounded-lg border border-outline-variant outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all pl-8 pr-3 py-1.5"
+
 function getPriorityDisplay(priority: TarefaPriority): string {
   const priorityMap: Record<TarefaPriority, string> = {
     LOW: "Baixa",
@@ -126,14 +133,14 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
       const sortOrder = selectedSortOrder[s.stage.id] ?? "ALPHABETICAL"
 
       const bySearch = searchQuery
-        ? s.tasks.filter((t: any) =>
+        ? s.tasks.filter((t: Tarefa) =>
             Object.values(t).some((v) => String(v ?? "").toLowerCase().includes(searchQuery))
           )
         : s.tasks
 
       const byFilter = filterType === "NONE" || !filterValue
         ? bySearch
-        : bySearch.filter((t: any) => {
+        : bySearch.filter((t: Tarefa) => {
             const normalized = String(filterValue).toLowerCase()
             if (filterType === "STATUS") return String(t.status).toLowerCase() === normalized
             if (filterType === "PRIORITY") return String(t.priority).toLowerCase() === normalized
@@ -141,7 +148,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
             return true
           })
 
-      const sorted = [...byFilter].sort((a: any, b: any) => {
+      const sorted = [...byFilter].sort((a: Tarefa, b: Tarefa) => {
         if (sortOrder === "ALPHABETICAL") {
           return String(a.title).localeCompare(String(b.title), "pt-BR", { sensitivity: "base" })
         }
@@ -182,7 +189,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
                 />
                 <input
-                  className="input pl-8 py-1.5 text-sm w-full"
+                  className={FILTER_SEARCH_CLASS}
                   placeholder="Filtrar tarefas..."
                   value={filterMap[stage.id] ?? ""}
                   onChange={(e) =>
@@ -196,16 +203,19 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
               <Button 
                 variant="outline" 
                 className="h-10 px-3 text-sm"
-                onClick={() => setOpenFilterDropdown(openFilterDropdown === stage.id ? null : stage.id)}>
+                onClick={() => {
+                  setOpenSortDropdown(null)
+                  setOpenFilterDropdown(openFilterDropdown === stage.id ? null : stage.id)
+                }}>
                 Filtro
               </Button>
               {openFilterDropdown === stage.id && (
-                <div className="absolute top-full right-0 mb-2 w-64 bg-surface-container-highest border border-outline-variant rounded-lg shadow-lg z-10">
+                <div className="absolute top-full right-0 mt-2 w-64 bg-surface-container-highest border border-outline-variant rounded-lg shadow-lg z-20">
                     <div className="p-3 space-y-3">
                       <div>
                         <label className="block text-xs font-bold text-on-surface-variant mb-1.5">Tipo de filtro</label>
                         <select
-                          className="input h-9 px-3 text-sm w-full"
+                          className={FILTER_FIELD_CLASS}
                           value={selectedFilterType[stage.id] ?? "NONE"}
                           onChange={(e) => {
                             const mode = e.target.value as "NONE" | "STATUS" | "PRIORITY" | "ASSIGNEE"
@@ -223,7 +233,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
                         <div>
                           <label className="block text-xs font-bold text-on-surface-variant mb-1.5">Valor</label>
                           <select
-                            className="input h-9 px-3 text-sm w-full"
+                            className={FILTER_FIELD_CLASS}
                             value={selectedFilterValue[stage.id] ?? ""}
                             onChange={(e) => setSelectedFilterValue((prev) => ({ ...prev, [stage.id]: e.target.value }))}
                           >
@@ -234,7 +244,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
                                 : selectedFilterType[stage.id] === "PRIORITY"
                                 ? ["LOW", "MEDIUM", "HIGH"]
                                 : selectedFilterType[stage.id] === "ASSIGNEE"
-                                ? Array.from(new Set(tasks.map((t: any) => String(t.assigneeName || ""))).values()).filter(Boolean)
+                                ? Array.from(new Set(tasks.map((t: Tarefa) => String(t.assigneeName || ""))).values()).filter(Boolean)
                                 : []
                             ).map((option) => (
                               <option key={option} value={option}>
@@ -264,15 +274,18 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
                 <Button 
                   variant="outline" 
                   className="h-10 px-3 text-sm"
-                  onClick={() => setOpenSortDropdown(openSortDropdown === stage.id ? null : stage.id)}>
+                  onClick={() => {
+                    setOpenFilterDropdown(null)
+                    setOpenSortDropdown(openSortDropdown === stage.id ? null : stage.id)
+                  }}>
                   Ordenar
                 </Button>
                 {openSortDropdown === stage.id && (
-                  <div className="absolute top-full right-0 mb-2 w-56 bg-surface-container-highest border border-outline-variant rounded-lg shadow-lg z-10">
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-surface-container-highest border border-outline-variant rounded-lg shadow-lg z-20">
                     <div className="p-3 space-y-2">
                       <label className="block text-xs font-bold text-on-surface-variant mb-2">Ordenar por</label>
                       <select
-                        className="input h-9 px-3 text-sm w-full"
+                        className={FILTER_FIELD_CLASS}
                         value={selectedSortOrder[stage.id] ?? "ALPHABETICAL"}
                         onChange={(e) => {
                           setSelectedSortOrder((prev) => ({ ...prev, [stage.id]: e.target.value as "ALPHABETICAL" | "START_DATE" | "END_DATE" }))
@@ -319,7 +332,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
                 </td>
               </tr>
             ) : (
-              tasks.map((tarefa: any) => {
+              tasks.map((tarefa: Tarefa) => {
                 const statusDisplay = getStatusDisplay(tarefa.status)
                 const rowOpacity = getRowOpacity(tarefa.status)
                 const titleDecoration = getTitleDecoration(tarefa.status)

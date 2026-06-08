@@ -4,19 +4,22 @@ import { useNavigate } from "react-router-dom"
 
 import { ProjectCard } from "@/pages/projetos/components/ProjectCard"
 
+import { MyTaskItem } from "./components/MyTaskItem"
 import { useDashboard } from "./hooks/useDashboard"
 
 const STATIC_STATS = [
   {
+    id: "pendingTasks",
     icon: ClipboardCheck,
     labelKey: "dashboard.stats.pendingTasks",
     detailKey: "dashboard.stats.pendingTasksDetail",
-    value: 14,
+    value: 0,
     accent: "border-t-secondary bg-secondary/5",
     iconBg: "bg-secondary/15 text-secondary",
     valueColor: "text-secondary",
   },
   {
+    id: "nextVisits",
     icon: CalendarDays,
     labelKey: "dashboard.stats.nextVisits",
     detailKey: "dashboard.stats.nextVisitsDetail",
@@ -30,7 +33,8 @@ const STATIC_STATS = [
 export function DashboardPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { activeCount, inProgressProjects, isLoading } = useDashboard()
+  const { activeCount, inProgressProjects, isLoading, tasks, isLoadingTasks, pendingTasksCount } =
+    useDashboard()
 
   function handleProjectsNav() {
     navigate("/projetos")
@@ -63,9 +67,11 @@ export function DashboardPage() {
 
         {STATIC_STATS.map((card) => {
           const Icon = card.icon
+          const isPending = card.id === "pendingTasks"
+          const value = isPending ? (isLoadingTasks ? "—" : pendingTasksCount) : card.value
           return (
             <div
-              key={card.labelKey}
+              key={card.id}
               className={`rounded-xl border border-outline-variant border-t-3 p-5 ${card.accent}`}
             >
               <div className="flex items-start justify-between">
@@ -76,11 +82,34 @@ export function DashboardPage() {
               <p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
                 {t(card.labelKey)}
               </p>
-              <p className={`mt-1 text-3xl font-bold ${card.valueColor}`}>{card.value}</p>
+              <p className={`mt-1 text-3xl font-bold ${card.valueColor}`}>{value}</p>
               <p className="mt-1 text-xs text-on-surface-variant">{t(card.detailKey)}</p>
             </div>
           )
         })}
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-base font-semibold text-on-surface mb-4">
+          {t("dashboard.tasksTitle")}
+        </h2>
+        {isLoadingTasks && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {[1, 2].map((n) => (
+              <div key={n} className="h-20 rounded-xl bg-surface-container-low animate-pulse" />
+            ))}
+          </div>
+        )}
+        {!isLoadingTasks && tasks.length === 0 && (
+          <p className="text-sm text-on-surface-variant">{t("dashboard.tasksEmpty")}</p>
+        )}
+        {!isLoadingTasks && tasks.length > 0 && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {tasks.map((task) => (
+              <MyTaskItem key={task.id} task={task} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-8">

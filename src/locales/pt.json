@@ -25,6 +25,14 @@
     "subtitle": "Gerencie seus projetos e acompanhe o progresso",
     "inProgressTitle": "Projetos em Andamento",
     "inProgressEmpty": "Nenhum projeto em andamento no momento.",
+    "tasksTitle": "Minhas Tarefas",
+    "tasksEmpty": "Você não tem tarefas vinculadas.",
+    "taskStatus": {
+      "TODO": "Pendente",
+      "IN_PROGRESS": "Em Andamento",
+      "DONE": "Concluída",
+      "BLOCKED": "Bloqueada"
+    },
     "stats": {
       "activeProjects": "PROJETOS ATIVOS",
       "activeProjectsDetail": "+2 este mês",
