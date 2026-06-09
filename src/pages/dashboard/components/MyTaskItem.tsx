@@ -35,7 +35,7 @@ export function MyTaskItem({ task }: MyTaskItemProps) {
 
   return (
     <Link
-      to={`/obras/${task.constructionProjectId}`}
+      to={`/obras/${task.projectId}`}
       className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant/30 bg-surface-container-low p-4 transition-colors hover:border-primary/50 hover:bg-primary/5"
     >
       <div className="min-w-0">

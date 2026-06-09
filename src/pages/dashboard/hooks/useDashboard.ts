@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
 
-import { getMyTasks } from "@/pages/obra-selecionada/services/tarefas.service"
 import { listProjects } from "@/pages/projetos/services/projects.service"
 import { ProjectStatus } from "@/shared/types/project"
 
+import { getMyTasks } from "../services/tasks.service"
 import type { DashboardTask } from "../types"
 
 export function useDashboard() {
@@ -29,7 +29,7 @@ export function useDashboard() {
     const titleById = new Map(allProjects.map((p) => [p.id, p.title]))
     return myTasks.map((task) => ({
       ...task,
-      projectTitle: titleById.get(task.constructionProjectId) ?? null,
+      projectTitle: titleById.get(task.projectId) ?? null,
     }))
   }, [myTasks, allProjects])
 
