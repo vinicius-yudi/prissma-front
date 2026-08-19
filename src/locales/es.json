@@ -1,0 +1,479 @@
+{
+  "header": {
+    "openMenu": "Abrir menú",
+    "themeLight": "Activar modo claro",
+    "themeDark": "Activar modo oscuro"
+  },
+  "sidebar": {
+    "accountType": "Cuenta personal",
+    "user": "Usuario",
+    "nav": {
+      "home": "Inicio",
+      "projects": "Proyectos",
+      "tasks": "Tareas",
+      "team": "Equipo",
+      "reports": "Informes"
+    },
+    "menu": {
+      "profile": "Perfil",
+      "settings": "Configuración",
+      "logout": "Salir"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "subtitle": "Gestiona tus proyectos y monitorea el progreso",
+    "inProgressTitle": "Proyectos en Curso",
+    "inProgressEmpty": "No hay proyectos en curso en este momento.",
+    "stats": {
+      "activeProjects": "PROYECTOS ACTIVOS",
+      "activeProjectsDetail": "+2 este mes",
+      "pendingTasks": "TAREAS PENDIENTES",
+      "pendingTasksDetail": "5 con plazo hoy",
+      "nextVisits": "PRÓXIMAS VISITAS",
+      "nextVisitsDetail": "Próxima: mañana"
+    }
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Gestiona todos tus proyectos",
+    "newProject": "Nuevo Proyecto",
+    "loading": "Cargando proyectos...",
+    "errorTitle": "Error al cargar proyectos",
+    "errorHint": "Intente de nuevo más tarde",
+    "emptyTitle": "Ningún proyecto encontrado",
+    "emptyHint": "Ajusta los filtros o crea un nuevo proyecto",
+    "filter": {
+      "search": "Buscar proyectos...",
+      "all": "Todos",
+      "inProgress": "En Progreso",
+      "completed": "Completados",
+      "overdue": "Atrasados"
+    },
+    "status": {
+      "planning": "Planificación",
+      "inProgress": "En Progreso",
+      "paused": "Pausado",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
+    },
+    "card": {
+      "progress": "Progreso",
+      "daysRemaining": "{{count}} días restantes",
+      "overdue": "Plazo vencido",
+      "dueToday": "Vence hoy",
+      "completed": "Completado",
+      "cancelled": "Cancelado",
+      "built": "{{area}} m² construido",
+      "edit": "Editar proyecto",
+      "delete": "Eliminar proyecto"
+    },
+    "editModal": {
+      "title": "Editar Proyecto",
+      "description": "Actualiza la información del proyecto.",
+      "status": "Estado",
+      "statusPlaceholder": "Selecciona el estado",
+      "save": "Guardar cambios",
+      "saving": "Guardando...",
+      "cancel": "Cancelar"
+    },
+    "deleteModal": {
+      "title": "Eliminar Proyecto",
+      "message": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleting": "Eliminando..."
+    }
+  },
+  "login": {
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Ingresa tus credenciales para acceder a tu cuenta.",
+    "email": "Email *",
+    "emailPlaceholder": "nombre@example.com",
+    "password": "Contraseña *",
+    "passwordPlaceholder": "Escribe tu contraseña",
+    "forgotPassword": "¿Olvidaste?",
+    "submit": "Iniciar sesión",
+    "submitting": "Iniciando sesión...",
+    "noAccount": "¿No tienes una cuenta?",
+    "register": "Regístrate"
+  },
+  "brand": {
+    "name": "PRISSMA",
+    "headline": "Control total",
+    "headlineSuffix": "de tus obras.",
+    "tagline": "Del presupuesto inicial",
+    "taglineSuffix": "a la entrega de llaves."
+  },
+  "register": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Elige el tipo de cuenta que deseas crear",
+    "typeArchitect": "Crear cuenta de Arquitecto",
+    "typeEngineer": "Crear cuenta de Ingeniero",
+    "typeClient": "Crear cuenta de Cliente",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "login": "Inicia sesión",
+    "titleClient": "Crea tu cuenta como cliente",
+    "titleArchitect": "Crea tu cuenta como arquitecto",
+    "titleEngineer": "Crea tu cuenta como ingeniero",
+    "formSubtitle": "Ingresa tus credenciales para continuar",
+    "back": "Volver",
+    "fullName": "Nombre Completo",
+    "fullNamePlaceholder": "Tu nombre completo",
+    "email": "Email",
+    "emailPlaceholder": "nombre@empresa.com",
+    "password": "Contraseña",
+    "confirmPassword": "Confirma tu contraseña",
+    "submit": "Confirmar",
+    "submitting": "Registrando..."
+  },
+  "registerWork": {
+    "title": "Registro de Obra",
+    "subtitle": "Define la información estructural y cronológica de tu nuevo proyecto.",
+    "name": "Nombre de la Obra",
+    "namePlaceholder": "Ej: Residencial Aurora",
+    "address": "Dirección Completa",
+    "addressPlaceholder": "Calle, Número, Colonia, Ciudad - Estado",
+    "type": "Tipo de Obra",
+    "typePlaceholder": "Selecciona el tipo",
+    "typeResidential": "Residencial",
+    "typeCommercial": "Comercial",
+    "typeIndustrial": "Industrial",
+    "category": "Categoría",
+    "categoryPlaceholder": "Selecciona la categoría",
+    "categoryBuilding": "Nueva construcción",
+    "categoryRenovation": "Remodelación",
+    "landArea": "Área del Terreno (m²)",
+    "builtArea": "Área de Construcción (m²)",
+    "startDate": "Fecha Planeada de Inicio",
+    "endDate": "Fecha Planeada de Fin",
+    "save": "Guardar Obra",
+    "saving": "Guardando...",
+    "cancel": "Cancelar"
+  },
+  "projectModal": {
+    "createTitle": "Nueva Obra",
+    "editTitle": "Editar Obra",
+    "createDescription": "Completa la información en 2 pasos.",
+    "editDescription": "Actualiza la información del proyecto.",
+    "steps": {
+      "obra": "Obra",
+      "endereco": "Dirección"
+    },
+    "next": "Siguiente",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cep": "CEP",
+    "cepPlaceholder": "00000-000",
+    "logradouro": "Calle",
+    "logradouroPlaceholder": "Calle, Avenida...",
+    "numero": "Número",
+    "complemento": "Complemento",
+    "complementoPlaceholder": "Apto, Oficina... (opcional)",
+    "bairro": "Colonia",
+    "bairroPlaceholder": "Nombre de la colonia",
+    "cidade": "Ciudad",
+    "cidadePlaceholder": "Nombre de la ciudad",
+    "uf": "Estado",
+    "currentAddress": "Dirección actual"
+  },
+  "forgotPassword": {
+    "title": "¿Olvidaste la contraseña?",
+    "subtitle": "Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.",
+    "email": "Email *",
+    "emailPlaceholder": "nombre@empresa.com",
+    "submit": "Enviar enlace",
+    "submitting": "Enviando...",
+    "backToLogin": "Volver al inicio de sesión",
+    "sentTitle": "Revisa tu correo",
+    "sentBefore": "Si el correo",
+    "sentAfter": "está registrado, recibirás un enlace para restablecer tu contraseña en breve."
+  },
+  "resetPassword": {
+    "title": "Restablecer contraseña",
+    "subtitle": "Crea una nueva contraseña para tu cuenta.",
+    "newPassword": "Nueva contraseña *",
+    "confirmPassword": "Confirmar contraseña *",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Restablecer contraseña",
+    "submitting": "Guardando...",
+    "backToLogin": "Volver al inicio de sesión"
+  },
+  "notFound": {
+    "code": "ERROR 404",
+    "title": "PÁGINA NO ENCONTRADA",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "action": "Ir al Panel"
+  },
+  "obra": {
+    "back": "Volver",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "notFound": "Obra no encontrada",
+    "notFoundDesc": "La obra solicitada no existe o ha sido eliminada.",
+    "backToList": "Volver a la lista",
+    "acompError": "No se pudo cargar el seguimiento de la obra.",
+    "retry": "Intentar de nuevo",
+    "comingSoon": "Próximamente",
+    "tabs": {
+      "visaoGeral": "Resumen",
+      "etapas": "Etapas",
+      "equipe": "Equipo",
+      "orcamento": "Presupuesto",
+      "documentos": "Documentos",
+      "tarefas": "Tareas",
+      "chat": "Chat"
+    },
+    "visaoGeral": {
+      "title": "Resumen del Proyecto",
+      "totalProgress": "Progreso Total",
+      "location": "Ubicación",
+      "deadline": "Plazo",
+      "deadlineOverdue": "Plazo vencido",
+      "areas": "Áreas",
+      "landArea": "Terreno",
+      "builtArea": "Construcción",
+      "stages": "Etapas",
+      "stagesProgress": "Progreso de Etapas",
+      "total": "Total",
+      "inProgress": "En progreso",
+      "completed": "Completadas"
+    },
+    "documentos": {
+      "title": "Documentos",
+      "add": "Agregar Documento",
+      "uploading": "Enviando...",
+      "empty": "No se han añadido documentos.",
+      "download": "Descargar",
+      "downloading": "Descargando...",
+      "downloadError": "Error al descargar documento",
+      "unsupportedType": "Tipo de archivo no admitido. Sube PDF o DOCX."
+    },
+    "fotos": {
+      "title": "Fotos Recientes",
+      "add": "Agregar Foto",
+      "uploading": "Enviando...",
+      "empty": "No se han añadido fotos.",
+      "unsupportedType": "Tipo de imagen no admitido. Sube PNG, JPEG, GIF, BMP, TIFF o WEBP."
+    },
+    "attachments": {
+      "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
+      "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."
+    },
+    "orcamento": {
+      "title": "Presupuesto",
+      "subtitle": "Sigue lo planeado, lo gastado y el saldo de la obra.",
+      "empty": {
+        "title": "Aún no hay presupuesto",
+        "description": "Define el valor total planeado para comenzar a controlar los gastos de la obra.",
+        "cta": "Crear presupuesto"
+      },
+      "actions": {
+        "addCategory": "Nueva categoría",
+        "addExpense": "Registrar gasto",
+        "editBudget": "Editar presupuesto",
+        "deleteBudget": "Eliminar presupuesto",
+        "editCategory": "Editar categoría",
+        "deleteCategory": "Eliminar categoría",
+        "editExpense": "Editar gasto",
+        "deleteExpense": "Eliminar gasto",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "kpi": {
+        "planned": "Planeado",
+        "spent": "Gastado",
+        "remaining": "Restante",
+        "exceeded": "Excesos",
+        "exceededOne": "{{count}} categoría",
+        "exceededOther": "{{count}} categorías",
+        "used": "{{percent}}% del presupuesto utilizado"
+      },
+      "charts": {
+        "donutTitle": "Gasto por categoría",
+        "barTitle": "% gastado vs planeado",
+        "percentOfTotal": "{{percent}}% del gasto total",
+        "limitLabel": "Límite",
+        "noData": "Registra un gasto para ver los gráficos."
+      },
+      "category": {
+        "empty": "Sin gastos registrados en esta categoría.",
+        "expensesCount_one": "{{count}} gasto",
+        "expensesCount_other": "{{count}} gastos",
+        "expand": "Expandir",
+        "collapse": "Contraer"
+      },
+      "expense": {
+        "noStage": "Sin etapa",
+        "noSupplier": "Sin proveedor",
+        "receipt": "Comprobante"
+      },
+      "status": {
+        "ok": "Al día",
+        "warning": "Cerca del límite",
+        "exceeded": "Excedido"
+      },
+      "budgetForm": {
+        "createTitle": "Crear presupuesto",
+        "editTitle": "Editar presupuesto",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Presupuesto de Obra Centro",
+        "plannedTotal": "Valor total planeado ($)"
+      },
+      "itemForm": {
+        "createTitle": "Nueva categoría",
+        "editTitle": "Editar categoría",
+        "category": "Categoría",
+        "categoryPlaceholder": "Ej: Cimentación",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Concreto, hierro y mano de obra",
+        "plannedAmount": "Valor planeado ($)"
+      },
+      "expenseForm": {
+        "createTitle": "Registrar gasto",
+        "editTitle": "Editar gasto",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Compra de 5m³ de concreto",
+        "amount": "Valor ($)",
+        "spentAt": "Fecha del gasto",
+        "stage": "Etapa (opcional)",
+        "stagePlaceholder": "Selecciona una etapa",
+        "stageNone": "Sin etapa vinculada",
+        "supplier": "Proveedor (opcional)",
+        "supplierPlaceholder": "Ej: Concretera XYZ",
+        "receiptUrl": "Enlace del comprobante (opcional)",
+        "receiptUrlPlaceholder": "https://..."
+      },
+      "toasts": {
+        "budgetCreated": "Presupuesto creado con éxito.",
+        "budgetUpdated": "Presupuesto actualizado.",
+        "budgetDeleted": "Presupuesto eliminado.",
+        "itemCreated": "Categoría creada.",
+        "itemUpdated": "Categoría actualizada.",
+        "itemDeleted": "Categoría eliminada.",
+        "expenseCreated": "Gasto registrado.",
+        "expenseUpdated": "Gasto actualizado.",
+        "expenseDeleted": "Gasto eliminado.",
+        "categoryExceededWarning": "Atención: esta categoría superó el valor planeado.",
+        "budgetExceededWarning": "Atención: el presupuesto total fue superado.",
+        "alreadyExists": "Este proyecto ya tiene un presupuesto."
+      },
+      "delete": {
+        "budgetTitle": "Eliminar presupuesto",
+        "budgetMessage": "¿Seguro? Todas las categorías y gastos vinculados serán eliminados.",
+        "itemTitle": "Eliminar categoría",
+        "itemMessage": "¿Seguro? Todos los gastos de esta categoría serán eliminados.",
+        "expenseTitle": "Eliminar gasto",
+        "expenseMessage": "¿Seguro? Esta acción no se puede deshacer."
+      },
+      "errors": {
+        "loadFailed": "No se pudo cargar el presupuesto."
+      }
+    },
+    "etapas": {
+      "title": "Etapas",
+      "empty": "Ninguna etapa registrada.",
+      "tasksEmpty": "Ninguna tarea en esta etapa.",
+      "tasks": "Tareas",
+      "sections": {
+        "inProgress": "En Progreso",
+        "pending": "Pendientes",
+        "done": "Completadas",
+        "emptySection": "Arrastra etapas a esta sección."
+      },
+      "actions": {
+        "create": "Nueva Etapa",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "Guardando..."
+      },
+      "card": {
+        "progress": "Progreso",
+        "tasksCount_one": "{{count}} tarea",
+        "tasksCount_other": "{{count}} tareas",
+        "photosCount_one": "{{count}} foto",
+        "photosCount_other": "{{count}} fotos"
+      },
+      "form": {
+        "title": {
+          "create": "Nueva etapa",
+          "edit": "Editar etapa"
+        },
+        "fields": {
+          "name": "Nombre",
+          "namePlaceholder": "Ej.: Cimentación",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Detalles de esta etapa (opcional)",
+          "status": "Estado",
+          "displayOrder": "Orden",
+          "plannedStartDate": "Inicio Planificado",
+          "plannedEndDate": "Fin Planificado"
+        }
+      },
+      "deleteModal": {
+        "title": "Eliminar etapa",
+        "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "toasts": {
+        "createSuccess": "¡Etapa creada con éxito!",
+        "createError": "Error al crear etapa",
+        "updateSuccess": "¡Etapa actualizada con éxito!",
+        "updateError": "Error al actualizar etapa",
+        "deleteSuccess": "¡Etapa eliminada con éxito!",
+        "deleteError": "Error al eliminar etapa",
+        "reorderError": "Error al reordenar etapas"
+      },
+      "etapaStatus": {
+        "PLANNED": "Planificada",
+        "IN_PROGRESS": "En progreso",
+        "DONE": "Completada",
+        "BLOCKED": "Bloqueada"
+      },
+      "tarefaStatus": {
+        "TODO": "Por hacer",
+        "IN_PROGRESS": "En progreso",
+        "DONE": "Completada",
+        "BLOCKED": "Bloqueada"
+      },
+      "priority": {
+        "HIGH": "Alta",
+        "MEDIUM": "Media",
+        "LOW": "Baja"
+      }
+    }
+  },
+  "profile": {
+    "title": "Edición de Perfil",
+    "subtitle": "Actualiza tu información personal.",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteModal": {
+      "title": "Eliminar Cuenta",
+      "message": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y todos tus datos se perderán permanentemente.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar cuenta",
+      "deleting": "Eliminando..."
+    },
+    "name": "Nombre",
+    "email": "E-mail",
+    "role": "Rol",
+    "newPassword": "Nueva contraseña",
+    "newPasswordPlaceholder": "Déjalo en blanco para no cambiar",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "save": "Guardar cambios",
+    "saving": "Guardando...",
+    "loading": "Cargando perfil...",
+    "roles": {
+      "engineer": "Ingeniero",
+      "user": "Usuario"
+    }
+  }
+}
