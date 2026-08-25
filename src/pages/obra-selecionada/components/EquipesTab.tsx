@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { tv } from 'tailwind-variants'
 import { Button } from '@/shared/components/ui/button/Button'
 import { Input } from '@/shared/components/ui/input/Input'
 import { Modal } from '@/shared/components/ui/modal/Modal'
@@ -10,6 +11,16 @@ import { useProjectPermissions } from '../hooks/useProjectPermissions'
 import { ProjectPermission } from '../services/projectPermissions.service'
 import type { ConstructionProjectMember, ProjectRoleInRequest } from '../types/equipes'
 import { RolePermissionsModal } from './RolePermissionsModal'
+
+const userOption = tv({
+  base: "rounded-2xl border p-4 text-left transition-all",
+  variants: {
+    selected: {
+      true: "border-primary bg-primary/10",
+      false: "border-outline-variant/60 bg-surface-container",
+    },
+  },
+})
 
 interface EquipesTabProps {
   obraId: number
@@ -119,7 +130,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
         <section className="mb-16">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-title-lg font-headline font-bold text-on-surface tracking-tight flex items-center gap-3">
-              <span className="w-1 h-6 bg-secondary rounded-full" />
+              <span className="w-1 h-6 bg-gold-deep rounded-full" />
               Cliente
             </h2>
           </div>
@@ -144,11 +155,17 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                   )}
 
                   <div className="flex items-center gap-6">
-                    <img
-                      className="w-20 h-20 rounded-full object-cover border-2 border-primary/20 p-1"
-                      alt={member.user.name}
-                      src={member.user.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
-                    />
+                    {member.user.avatar ? (
+                      <img
+                        className="w-20 h-20 rounded-full object-cover border-2 border-primary/20 p-1"
+                        alt={member.user.name}
+                        src={member.user.avatar}
+                      />
+                    ) : (
+                      <span className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-surface-container-high text-xl font-bold text-on-surface-variant">
+                        {member.user.name.slice(0, 2).toUpperCase()}
+                      </span>
+                    )}
                     <div className="flex-1">
                       <h3 className="text-title-lg font-bold text-on-surface">{member.user.name}</h3>
                       <div className="space-y-2">
@@ -338,18 +355,20 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                           key={user.id}
                           type="button"
                           onClick={() => setSelectedUserId(user.id)}
-                          className={`rounded-2xl border p-4 text-left transition-all ${
-                            isSelected
-                              ? 'border-primary bg-primary/10'
-                              : 'border-outline-variant/60 bg-surface-container'
-                          }`}
+                          className={userOption({ selected: isSelected })}
                         >
                           <div className="flex items-center gap-4">
-                            <img
-                              className="w-12 h-12 rounded-full object-cover"
-                              alt={user.name}
-                              src={user.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
-                            />
+                            {user.avatar ? (
+                              <img
+                                className="w-12 h-12 rounded-full object-cover"
+                                alt={user.name}
+                                src={user.avatar}
+                              />
+                            ) : (
+                              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-sm font-bold text-on-surface-variant">
+                                {user.name.slice(0, 2).toUpperCase()}
+                              </span>
+                            )}
                             <div>
                               <p className="font-semibold text-on-surface">{user.name}</p>
                               <p className="text-xs text-on-surface-variant">{user.email}</p>

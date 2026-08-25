@@ -56,6 +56,11 @@
     transparent 2px 7px
   );
 
+  /* texturas do painel de marca das telas públicas */
+  --pk-grid: rgba(201, 147, 47, 0.1);
+  --pk-glowTint: rgba(201, 147, 47, 0.1);
+  --pk-fade: rgba(142, 94, 34, 0.15);
+
   /* trena = marcações do preenchimento de toda barra de progresso */
   --pk-trena: repeating-linear-gradient(
     90deg,
@@ -101,6 +106,10 @@
     rgba(36, 27, 12, 0.09) 0 2px,
     transparent 2px 7px
   );
+
+  --pk-grid: rgba(165, 118, 31, 0.12);
+  --pk-glowTint: rgba(165, 118, 31, 0.1);
+  --pk-fade: rgba(122, 82, 26, 0.1);
 }
 
 @theme {
@@ -198,6 +207,26 @@
 
 @utility bg-hatch {
   background-image: var(--pk-hatch);
+}
+
+/* Grade técnica das telas públicas: papel milimetrado em traço ouro fino.
+   Vive aqui, e não como style inline no componente, porque é textura de marca
+   — mesma categoria da hachura — e estava duplicada em dois arquivos. */
+@utility bg-blueprint-grid {
+  background-image:
+    linear-gradient(to right, var(--pk-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--pk-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Brilho difuso do canto superior do painel de marca. */
+@utility bg-brand-glow {
+  background-image: radial-gradient(circle, var(--pk-glowTint) 0%, transparent 70%);
+}
+
+/* Esmaecimento na base do painel, para o conteúdo não encostar na borda. */
+@utility bg-brand-fade {
+  background-image: linear-gradient(to top, var(--pk-fade), transparent);
 }
 
 * {

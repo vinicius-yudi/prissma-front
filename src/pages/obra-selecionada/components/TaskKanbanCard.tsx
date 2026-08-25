@@ -39,6 +39,20 @@ const card = tv({
       true: "opacity-40",
       false: "",
     },
+    draggable: {
+      true: "cursor-grab active:cursor-grabbing",
+      false: "",
+    },
+  },
+})
+
+const deadline = tv({
+  base: "text-[11px]",
+  variants: {
+    late: {
+      true: "text-danger",
+      false: "text-on-surface-variant",
+    },
   },
 })
 
@@ -77,7 +91,7 @@ export function TaskKanbanCard({
     <div
       ref={setNodeRef}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
-      className={`${card({ late: isLate, dragging: isDragging })} ${canMutate ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={card({ late: isLate, dragging: isDragging, draggable: canMutate })}
       {...attributes}
       {...listeners}
     >
@@ -120,7 +134,7 @@ export function TaskKanbanCard({
         </span>
 
         {tarefa.plannedEndDate && (
-          <Num className={`text-[11px] ${isLate ? "text-danger" : "text-on-surface-variant"}`}>
+          <Num className={deadline({ late: isLate })}>
             {formatDate(tarefa.plannedEndDate)}
           </Num>
         )}

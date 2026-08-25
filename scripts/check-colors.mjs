@@ -37,9 +37,17 @@ const BANNED = new RegExp(
   "g",
 )
 
-// Hex cru em componente. Todo hex do produto mora no arquivo de tokens, que é
-// a única exceção — é justamente o papel dele.
+// Cor crua em componente. Todo valor de cor do produto mora no arquivo de
+// tokens, que é a única exceção — é justamente o papel dele.
 const RAW_HEX = /#[0-9a-fA-F]{3,8}\b/g
+
+// rgb()/hsl() com números literais. Esta checagem entrou depois de a trava
+// deixar passar dois `rgba(138,211,214,.1)` — o teal da identidade anterior —
+// escondidos em style inline. Só hex não bastava.
+//
+// `color-mix(in srgb, var(--pk-b1) 10%, transparent)` continua válido: o
+// primeiro argumento não é numérico, então não casa.
+const RAW_COLOR_FN = /\b(?:rgba?|hsla?)\(\s*[\d.]/g
 
 const TOKENS_FILE = join(SRC, "styles", "index.css")
 
@@ -68,6 +76,9 @@ for await (const file of walk(SRC)) {
     }
     for (const match of line.matchAll(RAW_HEX)) {
       findings.push({ file, line: i + 1, found: match[0], why: "hex cru" })
+    }
+    for (const match of line.matchAll(RAW_COLOR_FN)) {
+      findings.push({ file, line: i + 1, found: `${match[0]}…)`, why: "rgb/hsl cru" })
     }
   })
 }

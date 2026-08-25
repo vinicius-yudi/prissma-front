@@ -65,6 +65,28 @@ const navLink = tv({
   },
 })
 
+const railLabel = tv({
+  base: "whitespace-nowrap",
+})
+
+const accountButton = tv({
+  base: "flex w-full cursor-pointer items-center gap-2.5 rounded-xl border transition-colors",
+  variants: {
+    open: {
+      true: "border-outline bg-surface-container-high",
+      false: "border-transparent hover:border-outline-variant hover:bg-surface-container-high",
+    },
+    expanded: {
+      true: "p-2 text-left",
+      false: "justify-center p-1.5",
+    },
+  },
+})
+
+const contextCard = tv({
+  base: "mt-1.5 flex items-center gap-2 rounded-xl border border-outline bg-surface-container-high px-2.5 py-2",
+})
+
 const menuItem = tv({
   base: "flex w-full items-center gap-2.5 px-3 py-2 text-[12.5px] transition-colors",
   variants: {
@@ -88,14 +110,14 @@ const menuItem = tv({
 function Label({
   expanded,
   children,
-  className = "",
+  className,
 }: {
   expanded: boolean
   children: React.ReactNode
   className?: string
 }) {
   if (!expanded) return null
-  return <span className={`whitespace-nowrap ${className}`}>{children}</span>
+  return <span className={railLabel({ className })}>{children}</span>
 }
 
 /**
@@ -124,11 +146,7 @@ function AccountButton({
       onClick={onToggle}
       title={expanded ? undefined : name}
       aria-expanded={menuOpen}
-      className={`flex w-full cursor-pointer items-center gap-2.5 rounded-xl border transition-colors ${
-        menuOpen
-          ? "border-outline bg-surface-container-high"
-          : "border-transparent hover:border-outline-variant hover:bg-surface-container-high"
-      } ${expanded ? "p-2 text-left" : "justify-center p-1.5"}`}
+      className={accountButton({ open: menuOpen, expanded })}
     >
       <img
         src={logoUrl}
@@ -193,7 +211,7 @@ function ObraContextCard({
         {t("sidebar.allObras")}
       </button>
 
-      <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-outline bg-surface-container-high px-2.5 py-2">
+      <div className={contextCard()}>
         <span className="size-2 shrink-0 rounded-full bg-gold" />
         <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-on-surface">
           {project?.title ?? "—"}

@@ -8,6 +8,7 @@ import {
   getAvailableUsers,
 } from "../services/equipes.service"
 import type { AddMemberRequest, ProjectRoleInRequest } from "../types/equipes"
+import { obraMembersKey } from "./useObraMembers"
 
 const RESULTS_PER_PAGE = 5
 
@@ -32,7 +33,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
     isLoading: isLoadingMembers,
     error: membersError,
   } = useQuery({
-    queryKey: ["equipes", obraId],
+    queryKey: obraMembersKey(obraId),
     queryFn: () => getEquipeMembers(obraId),
   })
 
@@ -91,7 +92,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   const addMemberMutation = useMutation({
     mutationFn: (data: AddMemberRequest) => addEquipeMember(obraId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["equipes", obraId] })
+      queryClient.invalidateQueries({ queryKey: obraMembersKey(obraId) })
       toast.success("Membro adicionado à equipe com sucesso!")
       setSelectedUserId(null)
       setSearchQuery("")
@@ -104,7 +105,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   const removeMemberMutation = useMutation({
     mutationFn: (memberId: number) => removeEquipeMember(obraId, memberId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["equipes", obraId] })
+      queryClient.invalidateQueries({ queryKey: obraMembersKey(obraId) })
       toast.success("Membro removido da equipe com sucesso!")
     },
     onError: (error: Error) => {

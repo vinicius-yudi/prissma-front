@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BrandPanel } from "./components/BrandPanel"
+import { BrandPanel } from "@/shared/components/brand/BrandPanel"
 import { CadastroType } from "./components/CadastroType"
 import { CadastroArquiteto } from "./components/CadastroArquiteto"
 import { CadastroCliente } from "./components/CadastroCliente"

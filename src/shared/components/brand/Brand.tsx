@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 import logoUrl from "@/assets/logo.png"
 import wordmarkUrl from "@/assets/logo-wordmark.png"
 
@@ -14,17 +16,21 @@ import wordmarkUrl from "@/assets/logo-wordmark.png"
 
 const WORDMARK_RATIO = 512 / 123
 
+const lockup = tv({
+  base: "flex flex-col items-center gap-3",
+})
+
 interface BrandProps {
   /** Lado do ícone em px. O wordmark acompanha. */
   size?: number
   className?: string
 }
 
-export function Brand({ size = 72, className = "" }: BrandProps) {
+export function Brand({ size = 72, className }: BrandProps) {
   const wordmarkWidth = Math.round(size * 2.4)
 
   return (
-    <div className={`flex flex-col items-center gap-3 ${className}`}>
+    <div className={lockup({ className })}>
       <img
         src={logoUrl}
         alt=""

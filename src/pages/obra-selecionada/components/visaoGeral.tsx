@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { AlertTriangle, Check, Minus } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
@@ -13,11 +12,9 @@ import type { Project } from "@/shared/types/project"
 import { formatCompactCurrency, formatDate } from "@/shared/utils/formatters"
 import { daysLate, deriveStatus } from "@/shared/utils/status"
 
-import { useBudget } from "../hooks/useBudget"
-import { useStagesList } from "../hooks/useStages"
-import { getEquipeMembers } from "../services/equipes.service"
+import { useObraResumo } from "../hooks/useObraResumo"
 import type { Stage } from "../services/stages.service"
-import { calculatePercent } from "../utils/budgetMath"
+import { stageProgress } from "../utils/stageProgress"
 import { FotosRecentes } from "./FotosRecentes"
 
 /**
@@ -31,28 +28,27 @@ import { FotosRecentes } from "./FotosRecentes"
  * backend permite hoje: não há percentual executado por etapa.
  */
 
-const STAGE_PROGRESS: Record<EtapaStatus, number> = {
-  [EtapaStatus.PLANNED]: 0,
-  [EtapaStatus.IN_PROGRESS]: 50,
-  [EtapaStatus.BLOCKED]: 0,
-  [EtapaStatus.DONE]: 100,
-}
-
 const NO_DATE = "—"
 
-function averageProgress(stages: Stage[]): number {
-  if (stages.length === 0) return 0
-  return Math.round(stages.reduce((acc, s) => acc + STAGE_PROGRESS[s.status], 0) / stages.length)
-}
+const metaValue = tv({
+  base: "mt-1.5 block text-[15px] font-bold",
+  variants: {
+    tone: {
+      default: "text-on-surface",
+      danger: "text-danger",
+    },
+  },
+})
 
-/** Etapa atual = a primeira em andamento; se não houver, a primeira não concluída. */
-function currentStage(stages: Stage[]): Stage | null {
-  return (
-    stages.find((s) => s.status === EtapaStatus.IN_PROGRESS) ??
-    stages.find((s) => s.status !== EtapaStatus.DONE) ??
-    null
-  )
-}
+const categoryValue = tv({
+  base: "shrink-0 font-semibold",
+  variants: {
+    exceeded: {
+      true: "text-danger",
+      false: "text-on-surface",
+    },
+  },
+})
 
 const RING_RADIUS = 52
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
@@ -94,9 +90,7 @@ function Meta({ label, value, tone = "default" }: { label: string; value: string
       <div className="text-[10px] font-semibold uppercase tracking-[0.13em] text-on-surface-faint">
         {label}
       </div>
-      <Num
-        className={`mt-1.5 block text-[15px] font-bold ${tone === "danger" ? "text-danger" : "text-on-surface"}`}
-      >
+      <Num className={metaValue({ tone })}>
         {value}
       </Num>
     </div>
@@ -121,7 +115,7 @@ function CicloNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
   const { t } = useTranslation()
   const { state } = deriveStatus({ status: stage.status, plannedEndDate: stage.plannedEndDate })
   const late = daysLate(stage.status === EtapaStatus.DONE ? null : stage.plannedEndDate)
-  const progress = STAGE_PROGRESS[stage.status]
+  const progress = stageProgress(stage)
 
   return (
     <li className="relative flex gap-3.5 pb-5 last:pb-0">
@@ -205,20 +199,11 @@ interface VisaoGeralProps {
 
 export function VisaoGeral({ project }: VisaoGeralProps) {
   const { t } = useTranslation()
-  const { stages } = useStagesList(project.id)
-  const { budget } = useBudget(project.id)
-
-  const membersQuery = useQuery({
-    queryKey: ["equipes", project.id],
-    queryFn: () => getEquipeMembers(project.id),
+  const resumo = useObraResumo({
+    projectId: project.id,
+    plannedEndDate: project.plannedEndDate,
   })
-
-  const ordered = [...stages].sort((a, b) => a.displayOrder - b.displayOrder)
-  const progress = averageProgress(stages)
-  const atual = currentStage(ordered)
-  const projectLate = daysLate(project.plannedEndDate)
-
-  const spentPercent = budget ? calculatePercent(budget.totalSpent, budget.plannedTotal) : 0
+  const { stages: ordered, progress, atual, doneCount, projectLate, budget, spentPercent } = resumo
 
   return (
     <div className="flex flex-col gap-5 lg:flex-row">
@@ -243,7 +228,7 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
               />
               <Meta
                 label={t("obra.visaoGeral.stagesDone")}
-                value={`${stages.filter((s) => s.status === EtapaStatus.DONE).length}/${stages.length}`}
+                value={`${doneCount}/${ordered.length}`}
               />
               <Meta
                 label={t("obra.visaoGeral.builtArea")}
@@ -251,7 +236,7 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
               />
               <Meta
                 label={t("obra.visaoGeral.team")}
-                value={String(membersQuery.data?.length ?? 0)}
+                value={String(resumo.membersCount)}
               />
             </div>
 
@@ -309,9 +294,7 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
                 {budget.items.slice(0, 5).map((item) => (
                   <li key={item.id} className="flex items-center justify-between gap-2 text-[12px]">
                     <span className="min-w-0 truncate text-on-surface-variant">{item.category}</span>
-                    <Num
-                      className={`shrink-0 font-semibold ${item.exceeded ? "text-danger" : "text-on-surface"}`}
-                    >
+                    <Num className={categoryValue({ exceeded: item.exceeded })}>
                       {item.exceeded && "⚠ "}
                       {formatCompactCurrency(item.totalSpent)}
                     </Num>
@@ -326,11 +309,11 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
           title={t("obra.visaoGeral.allocatedTeams")}
           action={<ModuleLink to={`/obras/${project.id}/equipes`}>{t("obra.visaoGeral.seeTeams")}</ModuleLink>}
         >
-          {membersQuery.data?.length === 0 ? (
+          {resumo.membersCount === 0 ? (
             <p className="text-sm text-on-surface-variant">{t("obra.visaoGeral.noTeam")}</p>
           ) : (
             <ul className="space-y-2.5">
-              {membersQuery.data?.slice(0, 6).map((member) => (
+              {resumo.members?.slice(0, 6).map((member) => (
                 <li key={member.id} className="flex items-center gap-2.5">
                   <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[10px] font-bold text-on-surface-variant">
                     {member.user.name.slice(0, 2).toUpperCase()}

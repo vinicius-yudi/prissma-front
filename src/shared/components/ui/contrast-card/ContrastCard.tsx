@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 import { useOncePerPage } from "../page-chrome/PageChrome"
 
 /**
@@ -11,16 +13,20 @@ import { useOncePerPage } from "../page-chrome/PageChrome"
  * StatusBadge — as cores normais não têm contraste sobre esta superfície.
  */
 
+const card = tv({
+  base: "rounded-2xl bg-contrast p-5 text-on-contrast",
+})
+
 interface ContrastCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
 }
 
-export function ContrastCard({ children, className = "", ...props }: ContrastCardProps) {
+export function ContrastCard({ children, className, ...props }: ContrastCardProps) {
   useOncePerPage("contrastCard")
 
   return (
     <div
-      className={`rounded-2xl bg-contrast p-5 text-on-contrast ${className}`}
+      className={card({ className })}
       {...props}
     >
       {children}

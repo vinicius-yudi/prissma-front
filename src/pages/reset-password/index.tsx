@@ -1,4 +1,4 @@
-import { BrandPanel } from "@/pages/login/components/BrandPanel"
+import { BrandPanel } from "@/shared/components/brand/BrandPanel"
 import { ResetPasswordForm } from "./components/ResetPasswordForm"
 
 export function ResetPasswordPage() {

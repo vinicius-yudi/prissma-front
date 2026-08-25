@@ -23,6 +23,10 @@ const deltaPill = tv({
   },
 })
 
+const card = tv({
+  base: "rounded-2xl border border-outline-variant bg-surface-container-low p-5",
+})
+
 interface KpiCardProps {
   label: string
   value: string
@@ -36,11 +40,9 @@ interface KpiCardProps {
   className?: string
 }
 
-export function KpiCard({ label, value, delta, children, className = "" }: KpiCardProps) {
+export function KpiCard({ label, value, delta, children, className }: KpiCardProps) {
   return (
-    <div
-      className={`rounded-2xl border border-outline-variant bg-surface-container-low p-5 ${className}`}
-    >
+    <div className={card({ className })}>
       <div className="text-xs font-medium text-on-surface-variant">{label}</div>
 
       <div className="mt-[7px] flex items-baseline gap-[9px]">

@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Calendar, Image as ImageIcon, Pencil, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { tv } from "tailwind-variants"
 
 import { Num } from "@/shared/components/ui/num/Num"
 import { Progress } from "@/shared/components/ui/progress/Progress"
@@ -10,19 +11,25 @@ import { formatDate } from "@/shared/utils/formatters"
 import { daysLate, deriveStatus } from "@/shared/utils/status"
 
 import type { Stage } from "../services/stages.service"
+import { stageProgress } from "../utils/stageProgress"
 
-function computeProgress(stage: Stage): number {
-  switch (stage.status) {
-    case "DONE":
-      return 100
-    case "IN_PROGRESS":
-      return 50
-    case "BLOCKED":
-    case "PLANNED":
-    default:
-      return 0
-  }
-}
+const card = tv({
+  base: "group relative space-y-3 rounded-xl border bg-surface-container-low p-5 transition-colors hover:bg-surface-container",
+  variants: {
+    late: {
+      true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]",
+      false: "border-outline-variant",
+    },
+    draggable: {
+      true: "cursor-grab active:cursor-grabbing",
+      false: "cursor-pointer",
+    },
+    dragging: {
+      true: "ring-2 ring-primary/40",
+      false: "",
+    },
+  },
+})
 
 interface EtapaCardProps {
   stage: Stage
@@ -45,7 +52,7 @@ export function EtapaCard({
   const sortable = useSortable({ id: stage.id, disabled: disableDrag })
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = sortable
 
-  const progress = computeProgress(stage)
+  const progress = stageProgress(stage)
 
   // O preenchimento segue o estado: ouro no curso normal, verde ao concluir,
   // vermelho em atraso (Style Guide v2 §5).
@@ -80,13 +87,7 @@ export function EtapaCard({
       ref={setNodeRef}
       style={style}
       onClick={handleClick}
-      className={`group relative bg-surface-container-low rounded-xl p-5 space-y-3 ${
-        disableDrag ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
-      } hover:bg-surface-container transition-colors border ${
-        late > 0
-          ? "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]"
-          : "border-outline-variant"
-      } ${isDragging ? "ring-2 ring-primary/40" : ""}`}
+      className={card({ late: late > 0, draggable: !disableDrag, dragging: isDragging })}
       {...attributes}
       {...listeners}
     >

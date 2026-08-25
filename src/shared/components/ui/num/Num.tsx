@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 /**
  * Valor de dado em JetBrains Mono.
  *
@@ -7,13 +9,17 @@
  * valor muda.
  */
 
+const num = tv({
+  base: "font-mono tabular-nums",
+})
+
 interface NumProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode
 }
 
-export function Num({ children, className = "", ...props }: NumProps) {
+export function Num({ children, className, ...props }: NumProps) {
   return (
-    <span className={`font-mono tabular-nums ${className}`} {...props}>
+    <span className={num({ className })} {...props}>
       {children}
     </span>
   )

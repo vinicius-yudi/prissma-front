@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 /**
  * Hachura diagonal — assinatura da marca.
  *
@@ -6,13 +8,17 @@
  * decorativa (Style Guide v2 §4).
  */
 
+const hatch = tv({
+  base: "bg-surface-container-low bg-hatch",
+})
+
 interface HatchProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
 }
 
-export function Hatch({ children, className = "", ...props }: HatchProps) {
+export function Hatch({ children, className, ...props }: HatchProps) {
   return (
-    <div className={`bg-surface-container-low bg-hatch ${className}`} {...props}>
+    <div className={hatch({ className })} {...props}>
       {children}
     </div>
   )

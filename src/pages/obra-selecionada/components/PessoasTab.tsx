@@ -1,14 +1,12 @@
-import { useQuery } from "@tanstack/react-query"
 import { Loader } from "lucide-react"
-import { useState, type ChangeEvent } from "react"
+import type { ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
 
 import { RoleChip } from "@/shared/components/ui/role-chip/RoleChip"
 import { Select } from "@/shared/components/ui/select/Select"
 
-import { useRolePermissions } from "../hooks/useRolePermissions"
-import { getEquipeMembers } from "../services/equipes.service"
-import { EDITABLE_PROJECT_ROLES, ProjectRole } from "../services/projectPermissions.service"
+import { usePessoas } from "../hooks/usePessoas"
+import { EDITABLE_PROJECT_ROLES, type ProjectRole } from "../services/projectPermissions.service"
 import { RolePermissionsEditor } from "./RolePermissionsEditor"
 
 /**
@@ -28,17 +26,10 @@ interface PessoasTabProps {
 
 export function PessoasTab({ projectId }: PessoasTabProps) {
   const { t } = useTranslation()
-  const [role, setRole] = useState<ProjectRole>(ProjectRole.ENGINEER)
-
-  const membersQuery = useQuery({
-    queryKey: ["equipes", projectId],
-    queryFn: () => getEquipeMembers(projectId),
-  })
-
-  const { permissions, isLoading, isError } = useRolePermissions(projectId, role)
+  const pessoas = usePessoas(projectId)
 
   function handleRoleChange(event: ChangeEvent<HTMLSelectElement>) {
-    setRole(event.currentTarget.value as ProjectRole)
+    pessoas.setRole(event.currentTarget.value as ProjectRole)
   }
 
   return (
@@ -47,7 +38,7 @@ export function PessoasTab({ projectId }: PessoasTabProps) {
         <h2 className="text-base font-semibold text-on-surface">{t("pessoas.membersTitle")}</h2>
         <p className="mt-1 text-sm text-on-surface-variant">{t("pessoas.membersHint")}</p>
 
-        {membersQuery.isLoading && (
+        {pessoas.isLoadingMembers && (
           <div className="mt-5 space-y-2">
             {[0, 1, 2].map((i) => (
               <div key={i} className="h-14 animate-pulse rounded-xl bg-surface-container-high" />
@@ -55,16 +46,16 @@ export function PessoasTab({ projectId }: PessoasTabProps) {
           </div>
         )}
 
-        {membersQuery.isError && (
+        {pessoas.isErrorMembers && (
           <p className="mt-6 text-sm text-danger">{t("pessoas.membersError")}</p>
         )}
 
-        {membersQuery.data?.length === 0 && (
+        {pessoas.members?.length === 0 && (
           <p className="mt-6 text-sm text-on-surface-variant">{t("pessoas.membersEmpty")}</p>
         )}
 
         <ul className="mt-4 divide-y divide-outline-variant">
-          {membersQuery.data?.map((member) => (
+          {pessoas.members?.map((member) => (
             <li key={member.id} className="flex items-center gap-3 py-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface-container-high text-xs font-bold text-on-surface-variant">
                 {member.user.name.slice(0, 2).toUpperCase()}
@@ -88,7 +79,7 @@ export function PessoasTab({ projectId }: PessoasTabProps) {
         <p className="mt-1 text-sm text-on-surface-variant">{t("pessoas.permissionsHint")}</p>
 
         <div className="mt-4">
-          <Select value={role} onChange={handleRoleChange}>
+          <Select value={pessoas.role} onChange={handleRoleChange}>
             {EDITABLE_PROJECT_ROLES.map((r) => (
               <option key={r} value={r}>
                 {t(`roles.${r}`)}
@@ -98,20 +89,20 @@ export function PessoasTab({ projectId }: PessoasTabProps) {
         </div>
 
         <div className="mt-4">
-          {isLoading && (
+          {pessoas.isLoadingPermissions && (
             <div className="flex items-center justify-center py-10 text-on-surface-variant">
               <Loader className="animate-spin" size={22} />
             </div>
           )}
 
-          {isError && <p className="py-8 text-center text-sm text-danger">{t("pessoas.permissionsError")}</p>}
+          {pessoas.isErrorPermissions && <p className="py-8 text-center text-sm text-danger">{t("pessoas.permissionsError")}</p>}
 
-          {!isLoading && !isError && (
+          {!pessoas.isLoadingPermissions && !pessoas.isErrorPermissions && (
             <RolePermissionsEditor
-              key={role}
+              key={pessoas.role}
               projectId={projectId}
-              role={role}
-              initialPermissions={permissions}
+              role={pessoas.role}
+              initialPermissions={pessoas.permissions}
             />
           )}
         </div>

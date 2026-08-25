@@ -1,4 +1,4 @@
-import { BrandPanel } from "@/pages/login/components/BrandPanel"
+import { BrandPanel } from "@/shared/components/brand/BrandPanel"
 import { ForgotPasswordForm } from "./components/ForgotPasswordForm"
 
 export function ForgotPasswordPage() {

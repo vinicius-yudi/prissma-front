@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 /**
  * Barra de progresso com trena — assinatura da marca.
  *
@@ -22,6 +24,10 @@ const FILL: Record<ProgressTone, string> = {
   danger: "linear-gradient(90deg, var(--color-danger-solid), var(--color-danger-solid))",
 }
 
+const track = tv({
+  base: "w-full overflow-hidden rounded-full bg-surface-container-highest",
+})
+
 interface ProgressProps {
   /** 0–100. Valores fora da faixa são achatados. */
   value: number
@@ -37,13 +43,13 @@ export function Progress({
   tone = "gold",
   height = 8,
   label,
-  className = "",
+  className,
 }: ProgressProps) {
   const pct = Math.max(0, Math.min(100, Math.round(value)))
 
   return (
     <div
-      className={`w-full overflow-hidden rounded-full bg-surface-container-highest ${className}`}
+      className={track({ className })}
       style={{ height }}
       role="progressbar"
       aria-valuenow={pct}

@@ -1,3 +1,5 @@
+import { tv } from "tailwind-variants"
+
 import { useOncePerPage } from "../page-chrome/PageChrome"
 
 /**
@@ -8,16 +10,20 @@ import { useOncePerPage } from "../page-chrome/PageChrome"
  * Nunca como decoração repetida (Style Guide v2 §4).
  */
 
+const line = tv({
+  base: "flex items-center gap-[9px]",
+})
+
 interface DimensionLineProps {
   children: React.ReactNode
   className?: string
 }
 
-export function DimensionLine({ children, className = "" }: DimensionLineProps) {
+export function DimensionLine({ children, className }: DimensionLineProps) {
   useOncePerPage("dimensionLine")
 
   return (
-    <div className={`flex items-center gap-[9px] ${className}`}>
+    <div className={line({ className })}>
       <span className="h-[9px] w-px flex-none bg-outline" />
       <span className="h-px w-[22px] flex-none bg-outline" />
       <span className="whitespace-nowrap font-mono text-[10.5px] tracking-[0.05em] text-on-surface-faint">
