@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BrandPanel } from "./components/BrandPanel"
+import { BrandPanel } from "@/shared/components/brand/BrandPanel"
 import { CadastroType } from "./components/CadastroType"
 import { CadastroArquiteto } from "./components/CadastroArquiteto"
 import { CadastroCliente } from "./components/CadastroCliente"
@@ -11,7 +11,7 @@ export function CadastroPage() {
   const [selectedType, setSelectedType] = useState<CadastroTypeOption>(null)
 
   return (
-    <main className="flex h-screen overflow-hidden" style={{ backgroundColor: "#041617" }}>
+    <main className="flex h-screen overflow-hidden bg-background">
       <BrandPanel />
       {!selectedType && <CadastroType onTypeSelected={setSelectedType} />}
       {selectedType === "arquiteto" && <CadastroArquiteto />}

@@ -1,149 +1,195 @@
-import type { CSSProperties, ReactNode } from "react"
-import { Calendar, Layers, MapPin } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
+import { AlertTriangle, Check, Minus } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { Link } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
 import { EtapaStatus } from "@/pages/projetos/types"
-import { formatProjectAddress, type Project } from "@/shared/types/project"
+import { Num } from "@/shared/components/ui/num/Num"
+import { Progress } from "@/shared/components/ui/progress/Progress"
+import { RoleChip } from "@/shared/components/ui/role-chip/RoleChip"
+import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
+import type { Project } from "@/shared/types/project"
+import { formatCompactCurrency, formatDate } from "@/shared/utils/formatters"
+import { daysLate, deriveStatus } from "@/shared/utils/status"
 
-import { useStagesList } from "../hooks/useStages"
+import { useObraResumo } from "../hooks/useObraResumo"
 import type { Stage } from "../services/stages.service"
+import { stageProgress } from "../utils/stageProgress"
 import { FotosRecentes } from "./FotosRecentes"
 
+/**
+ * Visão geral da obra — raio-x e porta de entrada do nível 2 (Telas §10).
+ *
+ * Três blocos: as **metas** no topo (prazo, etapa atual, executado), o **ciclo
+ * da obra** como timeline vertical — a peça central da tela — e os resumos
+ * laterais de orçamento e equipe, cada um com atalho para o módulo cheio.
+ *
+ * Andamento por etapa é aproximado pelo status (0/50/100), que é o que o
+ * backend permite hoje: não há percentual executado por etapa.
+ */
+
 const NO_DATE = "—"
-const DATE_SEPARATOR = " → "
-const M2 = "m²"
 
-const STAGE_PROGRESS: Record<EtapaStatus, number> = {
-  [EtapaStatus.PLANNED]: 0,
-  [EtapaStatus.IN_PROGRESS]: 50,
-  [EtapaStatus.BLOCKED]: 0,
-  [EtapaStatus.DONE]: 100,
-}
+const metaValue = tv({
+  base: "mt-1.5 block text-[15px] font-bold",
+  variants: {
+    tone: {
+      default: "text-on-surface",
+      danger: "text-danger",
+    },
+  },
+})
 
-function calcStageProgress(stage: Stage): number {
-  return STAGE_PROGRESS[stage.status]
-}
-
-function calcAverageProgress(stages: Stage[]): number {
-  if (stages.length === 0) return 0
-  const sum = stages.reduce((acc, s) => acc + STAGE_PROGRESS[s.status], 0)
-  return Math.round(sum / stages.length)
-}
-
-function calcEtapasEmAndamento(stages: Stage[]): number {
-  return stages.filter(s => s.status === EtapaStatus.IN_PROGRESS).length
-}
-
-function calcEtapasConcluidas(stages: Stage[]): number {
-  return stages.filter(s => s.status === EtapaStatus.DONE).length
-}
-
-function formatDate(d: string | null): string {
-  if (!d) return NO_DATE
-  return new Date(d).toLocaleDateString("pt-BR")
-}
-
-function isPrazoVencido(end: string | null): boolean {
-  if (!end) return false
-  return new Date(end).getTime() < Date.now()
-}
+const categoryValue = tv({
+  base: "shrink-0 font-semibold",
+  variants: {
+    exceeded: {
+      true: "text-danger",
+      false: "text-on-surface",
+    },
+  },
+})
 
 const RING_RADIUS = 52
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
 
 function ProgressRing({ percent }: { percent: number }) {
-  const offset = RING_CIRCUMFERENCE - (percent / 100) * RING_CIRCUMFERENCE
-  const ringStyle: CSSProperties = { strokeDashoffset: offset }
   return (
     <div className="relative flex items-center justify-center">
       <svg width="130" height="130" viewBox="0 0 130 130" className="-rotate-90">
         <circle
-          cx="65" cy="65" r={RING_RADIUS}
-          strokeWidth="10" fill="none"
+          cx="65"
+          cy="65"
+          r={RING_RADIUS}
+          strokeWidth="10"
+          fill="none"
           stroke="var(--color-surface-container-highest)"
         />
         <circle
-          cx="65" cy="65" r={RING_RADIUS}
-          strokeWidth="10" fill="none"
-          stroke="var(--color-primary)"
+          cx="65"
+          cy="65"
+          r={RING_RADIUS}
+          strokeWidth="10"
+          fill="none"
+          stroke="var(--pk-b1)"
           strokeDasharray={RING_CIRCUMFERENCE}
+          strokeDashoffset={RING_CIRCUMFERENCE - (percent / 100) * RING_CIRCUMFERENCE}
           strokeLinecap="round"
-          style={ringStyle}
           className="transition-all duration-700"
         />
       </svg>
-      <span className="absolute text-2xl font-black text-on-surface">{percent}%</span>
+      <Num className="absolute text-2xl font-bold text-on-surface">{percent}%</Num>
     </div>
   )
 }
 
-interface InfoCardProps {
-  icon: LucideIcon
-  label: string
-  children: ReactNode
-}
-
-function InfoCard({ icon: Icon, label, children }: InfoCardProps) {
+/** Meta do hero: rótulo em caps, valor em mono, tom de perigo quando desviado. */
+function Meta({ label, value, tone = "default" }: { label: string; value: string; tone?: "default" | "danger" }) {
   return (
-    <div className="bg-surface-container rounded-lg p-4 space-y-1.5">
-      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium uppercase tracking-wider">
-        <Icon size={12} />
+    <div className="rounded-xl border border-outline-variant bg-surface-container-high p-3.5">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.13em] text-on-surface-faint">
         {label}
       </div>
-      {children}
+      <Num className={metaValue({ tone })}>
+        {value}
+      </Num>
     </div>
   )
 }
 
-function PrazoContent({ start, end }: { start: string | null; end: string | null }) {
-  const { t } = useTranslation()
-  if (isPrazoVencido(end)) {
-    return <p className="text-sm font-semibold text-error">{t("obra.visaoGeral.deadlineOverdue")}</p>
-  }
-  return (
-    <p className="text-sm text-on-surface">
-      {formatDate(start)}{DATE_SEPARATOR}{formatDate(end)}
-    </p>
-  )
-}
-
-function EtapaRow({ stage }: { stage: Stage }) {
-  const progress = calcStageProgress(stage)
-  const barStyle: CSSProperties = { width: `${progress}%` }
-  return (
-    <div className="flex items-center gap-4">
-      <span className="text-sm text-on-surface flex-1 truncate">{stage.name}</span>
-      <div className="flex items-center gap-2 w-36">
-        <div className="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-          <div className="h-full bg-primary rounded-full transition-all" style={barStyle} />
-        </div>
-        <span className="text-xs text-on-surface-variant w-8 text-right">{progress}%</span>
-      </div>
-    </div>
-  )
-}
-
-const counterCard = tv({
-  base: "rounded-lg p-3 text-center",
+const node = tv({
+  base: "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full",
   variants: {
-    variant: {
-      neutral: "bg-surface-container",
-      primary: "bg-primary/10",
-      secondary: "bg-secondary/10",
+    state: {
+      done: "bg-ok text-on-primary",
+      progress: "bg-gold text-on-primary",
+      late: "bg-danger-solid text-white",
+      paused: "bg-warn text-on-primary",
+      idle: "border border-dashed border-outline bg-surface-container-low text-on-surface-faint",
     },
   },
 })
 
-type CounterVariant = "neutral" | "primary" | "secondary"
+/** Um nó do ciclo da obra. O ícone reforça o status para além da cor. */
+function CicloNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
+  const { t } = useTranslation()
+  const { state } = deriveStatus({ status: stage.status, plannedEndDate: stage.plannedEndDate })
+  const late = daysLate(stage.status === EtapaStatus.DONE ? null : stage.plannedEndDate)
+  const progress = stageProgress(stage)
 
-function CounterCard({ count, label, variant }: { count: number; label: string; variant: CounterVariant }) {
   return (
-    <div className={counterCard({ variant })}>
-      <p className="text-xl font-black text-on-surface">{count}</p>
-      <p className="text-xs text-on-surface-variant">{label}</p>
-    </div>
+    <li className="relative flex gap-3.5 pb-5 last:pb-0">
+      {!isLast && <span className="absolute left-[13px] top-7 h-full w-px bg-outline-variant" />}
+
+      <span className={node({ state })}>
+        {state === "done" ? (
+          <Check size={14} strokeWidth={2.4} />
+        ) : state === "late" ? (
+          <AlertTriangle size={13} strokeWidth={2.2} />
+        ) : (
+          <Minus size={13} strokeWidth={2.2} />
+        )}
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[13.5px] font-semibold text-on-surface">{stage.name}</span>
+          <StatusBadge status={stage.status} plannedEndDate={stage.plannedEndDate} />
+        </div>
+
+        <Num className="mt-1 block text-[11px] text-on-surface-variant">
+          {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : NO_DATE}
+          {" → "}
+          {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : NO_DATE}
+        </Num>
+
+        <div className="mt-2 flex items-center gap-2.5">
+          <Progress
+            value={progress}
+            height={6}
+            tone={state === "late" ? "danger" : state === "done" ? "ok" : "gold"}
+            label={stage.name}
+          />
+          <Num className="w-9 shrink-0 text-right text-[11px] font-semibold text-on-surface-variant">
+            {progress}%
+          </Num>
+        </div>
+
+        {late > 0 && (
+          <p className="mt-1.5 text-[10.5px] font-semibold text-danger">
+            {t("obra.visaoGeral.lateBy", { count: late })}
+          </p>
+        )}
+      </div>
+    </li>
+  )
+}
+
+function SectionCard({
+  title,
+  action,
+  children,
+}: {
+  title: string
+  action?: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="text-base font-semibold text-on-surface">{title}</h2>
+        {action}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+function ModuleLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link to={to} className="text-[12px] font-semibold text-gold-bright hover:underline">
+      {children} ›
+    </Link>
   )
 }
 
@@ -153,70 +199,134 @@ interface VisaoGeralProps {
 
 export function VisaoGeral({ project }: VisaoGeralProps) {
   const { t } = useTranslation()
-  const { stages } = useStagesList(project.id)
-  const orderedStages = [...stages].sort((a, b) => a.displayOrder - b.displayOrder)
-  const stagesProgress = calcAverageProgress(stages)
-  const emAndamento = calcEtapasEmAndamento(stages)
-  const etapasConcluidas = calcEtapasConcluidas(stages)
-  const totalBarStyle: CSSProperties = { width: `${stagesProgress}%` }
+  const resumo = useObraResumo({
+    projectId: project.id,
+    plannedEndDate: project.plannedEndDate,
+  })
+  const { stages: ordered, progress, atual, doneCount, projectLate, budget, spentPercent } = resumo
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
-      <div className="flex-1 flex flex-col gap-6">
-        <div className="bg-surface-container-low rounded-xl p-6 space-y-6">
-          <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.title")}</h2>
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-on-surface-variant">{t("obra.visaoGeral.totalProgress")}</span>
-              <span className="font-semibold text-on-surface">{stagesProgress}%</span>
+    <div className="flex flex-col gap-5 lg:flex-row">
+      <div className="flex min-w-0 flex-1 flex-col gap-5">
+        {/* Metas + ring: prazo, etapa atual e executado sempre à vista. */}
+        <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+            <div className="grid flex-1 grid-cols-2 gap-3 lg:grid-cols-3">
+              <Meta
+                label={t("obra.visaoGeral.deadline")}
+                value={project.plannedEndDate ? formatDate(project.plannedEndDate) : NO_DATE}
+                tone={projectLate > 0 ? "danger" : "default"}
+              />
+              <Meta
+                label={t("obra.visaoGeral.currentStage")}
+                value={atual?.name ?? NO_DATE}
+              />
+              <Meta
+                label={t("obra.visaoGeral.executed")}
+                value={budget ? formatCompactCurrency(budget.totalSpent) : NO_DATE}
+                tone={budget?.exceeded ? "danger" : "default"}
+              />
+              <Meta
+                label={t("obra.visaoGeral.stagesDone")}
+                value={`${doneCount}/${ordered.length}`}
+              />
+              <Meta
+                label={t("obra.visaoGeral.builtArea")}
+                value={`${project.builtArea} m²`}
+              />
+              <Meta
+                label={t("obra.visaoGeral.team")}
+                value={String(resumo.membersCount)}
+              />
             </div>
-            <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full transition-all" style={totalBarStyle} />
+
+            <div className="flex shrink-0 justify-center sm:pl-4">
+              <ProgressRing percent={progress} />
             </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <InfoCard icon={MapPin} label={t("obra.visaoGeral.location")}>
-              <p className="text-sm text-on-surface line-clamp-2">{formatProjectAddress(project)}</p>
-            </InfoCard>
-            <InfoCard icon={Calendar} label={t("obra.visaoGeral.deadline")}>
-              <PrazoContent start={project.plannedStartDate} end={project.plannedEndDate} />
-            </InfoCard>
-            <InfoCard icon={Layers} label={t("obra.visaoGeral.areas")}>
-              <p className="text-sm text-on-surface">
-                {t("obra.visaoGeral.landArea")}: {project.landArea}{M2}
-                {" · "}
-                {t("obra.visaoGeral.builtArea")}: {project.builtArea}{M2}
-              </p>
-            </InfoCard>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stages")}</h3>
-            {orderedStages.length > 0 ? (
-              orderedStages.map(stage => (
-                <EtapaRow key={stage.id} stage={stage} />
-              ))
-            ) : (
-              <p className="text-sm text-on-surface-variant">{t("obra.etapas.empty")}</p>
-            )}
-          </div>
-        </div>
+        <SectionCard
+          title={t("obra.visaoGeral.cycle")}
+          action={<ModuleLink to={`/obras/${project.id}/etapas`}>{t("obra.visaoGeral.manageStages")}</ModuleLink>}
+        >
+          {ordered.length === 0 ? (
+            <p className="py-8 text-center text-sm text-on-surface-variant">{t("obra.etapas.empty")}</p>
+          ) : (
+            <ol>
+              {ordered.map((stage, idx) => (
+                <CicloNode key={stage.id} stage={stage} isLast={idx === ordered.length - 1} />
+              ))}
+            </ol>
+          )}
+        </SectionCard>
 
         <FotosRecentes projectId={project.id} />
       </div>
 
-      <div className="w-full lg:w-72 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
-        <h2 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("obra.visaoGeral.stagesProgress")}</h2>
-        <div className="flex justify-center">
-          <ProgressRing percent={stagesProgress} />
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <CounterCard count={stages.length} label={t("obra.visaoGeral.total")} variant="neutral" />
-          <CounterCard count={emAndamento} label={t("obra.visaoGeral.inProgress")} variant="primary" />
-          <CounterCard count={etapasConcluidas} label={t("obra.visaoGeral.completed")} variant="secondary" />
-        </div>
+      <div className="flex w-full flex-col gap-5 lg:w-80 lg:shrink-0">
+        <SectionCard
+          title={t("obra.visaoGeral.budget")}
+          action={<ModuleLink to={`/obras/${project.id}/orcamento`}>{t("obra.visaoGeral.seeExpenses")}</ModuleLink>}
+        >
+          {!budget ? (
+            <p className="text-sm text-on-surface-variant">{t("obra.visaoGeral.noBudget")}</p>
+          ) : (
+            <div className="space-y-3.5">
+              <div className="flex items-baseline justify-between gap-2">
+                <Num className="text-xl font-bold text-on-surface">
+                  {formatCompactCurrency(budget.totalSpent)}
+                </Num>
+                <Num className="text-[11.5px] text-on-surface-variant">
+                  {t("obra.visaoGeral.ofPlanned", {
+                    planned: formatCompactCurrency(budget.plannedTotal),
+                  })}
+                </Num>
+              </div>
+
+              <Progress
+                value={spentPercent}
+                tone={budget.exceeded ? "danger" : "gold"}
+                label={t("obra.visaoGeral.budget")}
+              />
+
+              <ul className="space-y-2 pt-1">
+                {budget.items.slice(0, 5).map((item) => (
+                  <li key={item.id} className="flex items-center justify-between gap-2 text-[12px]">
+                    <span className="min-w-0 truncate text-on-surface-variant">{item.category}</span>
+                    <Num className={categoryValue({ exceeded: item.exceeded })}>
+                      {item.exceeded && "⚠ "}
+                      {formatCompactCurrency(item.totalSpent)}
+                    </Num>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </SectionCard>
+
+        <SectionCard
+          title={t("obra.visaoGeral.allocatedTeams")}
+          action={<ModuleLink to={`/obras/${project.id}/equipes`}>{t("obra.visaoGeral.seeTeams")}</ModuleLink>}
+        >
+          {resumo.membersCount === 0 ? (
+            <p className="text-sm text-on-surface-variant">{t("obra.visaoGeral.noTeam")}</p>
+          ) : (
+            <ul className="space-y-2.5">
+              {resumo.members?.slice(0, 6).map((member) => (
+                <li key={member.id} className="flex items-center gap-2.5">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[10px] font-bold text-on-surface-variant">
+                    {member.user.name.slice(0, 2).toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-[12.5px] text-on-surface">
+                    {member.user.name}
+                  </span>
+                  <RoleChip role={member.roleInProject} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </SectionCard>
       </div>
     </div>
   )

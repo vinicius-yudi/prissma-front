@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query"
 import { getMyProfile } from "@/shared/services/user.service"
 import { GlobalRole } from "@/shared/types/user"
 
-import { getEquipeMembers } from "../services/equipes.service"
 import {
   ProjectRole,
   type ProjectPermission,
 } from "../services/projectPermissions.service"
 import type { RoleInProject } from "../types/equipes"
+import { useObraMembers } from "./useObraMembers"
 import { useRolePermissions } from "./useRolePermissions"
 
 // Member roles that map 1:1 to a role whose permissions live in the backend.
@@ -35,16 +35,12 @@ export function useProjectPermissions(projectId: number): UseProjectPermissionsR
     queryFn: getMyProfile,
   })
 
-  const membersQuery = useQuery({
-    queryKey: ["equipes", projectId],
-    queryFn: () => getEquipeMembers(projectId),
-    enabled: isValid,
-  })
+  const membersQuery = useObraMembers(projectId, { enabled: isValid })
 
   const isAdmin = meQuery.data?.role === GlobalRole.ADMIN
 
   const roleInProject =
-    membersQuery.data?.find(m => m.user.id === meQuery.data?.id)?.roleInProject ?? null
+    membersQuery.members?.find(m => m.user.id === meQuery.data?.id)?.roleInProject ?? null
 
   const projectRole = roleInProject
     ? PROJECT_ROLE_BY_MEMBER_ROLE.get(roleInProject) ?? null

@@ -1,4 +1,4 @@
-import logo from "@/assets/svg/logo.svg"
+import { Brand } from "@/shared/components/brand/Brand"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
@@ -9,7 +9,6 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { useResetPasswordForm } from "../hooks/useResetPasswordForm"
 
-const LOGO_ALT = "Prissma"
 
 export function ResetPasswordForm() {
 	const {
@@ -34,7 +33,7 @@ export function ResetPasswordForm() {
 			</div>
 			<div className="w-full max-w-md space-y-12">
 				<div className="flex justify-center">
-					<img src={logo} alt={LOGO_ALT} className="h-25" />
+					<Brand />
 				</div>
 
 				<div className="text-center space-y-2">
@@ -98,7 +97,7 @@ export function ResetPasswordForm() {
 				<div className="text-center">
 					<Link
 						to="/login"
-						className="flex items-center justify-center gap-2 text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
+						className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
 					>
 						<ArrowLeft size={16} />
 						{t("resetPassword.backToLogin")}

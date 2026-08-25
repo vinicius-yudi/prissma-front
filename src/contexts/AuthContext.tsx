@@ -1,8 +1,15 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createContext, useCallback, useContext, useMemo, useState } from "react"
+
+import { getMyProfile } from "@/shared/services/user.service"
+import type { UserProfile } from "@/shared/types/user"
 
 interface AuthContextValue {
   token: string | null
   isAuthenticated: boolean
+  /** Usuário logado. `null` enquanto carrega ou quando não há sessão. */
+  user: UserProfile | null
+  isLoadingUser: boolean
   saveToken: (token: string) => void
   logout: () => void
 }
@@ -11,6 +18,17 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"))
+  const queryClient = useQueryClient()
+
+  // O shell inteiro depende de saber quem está logado: a sidebar é gerada do
+  // papel, e o guard de rota decide a partir dele. Guardar só o token não
+  // basta.
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["me"],
+    queryFn: getMyProfile,
+    enabled: !!token,
+    staleTime: 5 * 60 * 1000,
+  })
 
   const saveToken = useCallback((newToken: string) => {
     localStorage.setItem("token", newToken)
@@ -20,16 +38,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem("token")
     setToken(null)
-  }, [])
+    // Sem isto o próximo login herda o perfil e as listas do usuário anterior.
+    queryClient.clear()
+  }, [queryClient])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       token,
       isAuthenticated: !!token,
+      user: user ?? null,
+      isLoadingUser: !!token && isLoadingUser,
       saveToken,
       logout,
     }),
-    [token, saveToken, logout],
+    [token, user, isLoadingUser, saveToken, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

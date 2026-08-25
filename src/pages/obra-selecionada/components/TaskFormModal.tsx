@@ -9,9 +9,7 @@ import { useTarefas } from "../hooks/useTarefas"
 import { taskSchema } from "../schemas/tarefas.shcemas"
 import type { CreateTarefaRequest, TarefaPriority, TarefaStatus, Tarefa } from "../types/tarefas"
 import { useEffect } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { getEquipeMembers } from "../services/equipes.service"
-import type { ConstructionProjectMember } from "../types/equipes"
+import { useObraMembers } from "../hooks/useObraMembers"
 
 interface TaskFormModalProps {
   open: boolean
@@ -41,11 +39,7 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
 
   const { createAsync, isCreating, updateAsync } = useTarefas(stageId)
 
-  const { data: members = [], isLoading: membersLoading } = useQuery<ConstructionProjectMember[]>({
-    queryKey: ["equipes", projectId],
-    queryFn: () => getEquipeMembers(projectId),
-    enabled: projectId !== null && projectId > 0,
-  })
+  const { list: members, isLoading: membersLoading } = useObraMembers(projectId, { enabled: open })
 
   const today = new Date().toISOString().split("T")[0]
 

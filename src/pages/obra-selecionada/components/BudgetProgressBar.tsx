@@ -1,38 +1,30 @@
-import { tv } from "tailwind-variants"
+import { Progress, type ProgressTone } from "@/shared/components/ui/progress/Progress"
 
 import type { BudgetTone } from "../utils/budgetMath"
 import { resolveBudgetTone } from "../utils/budgetMath"
 
-const track = tv({
-  base: "w-full bg-surface-container-highest rounded-full overflow-hidden",
-  variants: {
-    height: {
-      sm: "h-1.5",
-      md: "h-2",
-      lg: "h-3",
-    },
-  },
-  defaultVariants: {
-    height: "md",
-  },
-})
+/**
+ * Barra de orçamento.
+ *
+ * Era uma barra própria, sem a trena — ou seja, a única no sistema que não
+ * carregava a assinatura. Agora é só a tradução do tom de orçamento para o tom
+ * do <Progress>, que é o componente autorizado a desenhar barra.
+ */
 
-const fill = tv({
-  base: "h-full rounded-full transition-all duration-500 ease-out",
-  variants: {
-    tone: {
-      ok: "bg-primary",
-      warning: "bg-tertiary",
-      exceeded: "bg-error",
-    },
-  },
-})
+const TONE: Record<BudgetTone, ProgressTone> = {
+  ok: "gold",
+  warning: "warn",
+  exceeded: "danger",
+}
+
+const HEIGHT = { sm: 6, md: 8, lg: 12 } as const
 
 interface BudgetProgressBarProps {
   percent: number
   tone?: BudgetTone
   exceeded?: boolean
-  height?: "sm" | "md" | "lg"
+  height?: keyof typeof HEIGHT
+  label?: string
   className?: string
 }
 
@@ -41,14 +33,18 @@ export function BudgetProgressBar({
   tone,
   exceeded,
   height = "md",
+  label,
   className,
 }: BudgetProgressBarProps) {
-  const clamped = Math.max(0, Math.min(100, Number.isFinite(percent) ? percent : 0))
-  const resolvedTone = tone ?? resolveBudgetTone(percent, exceeded)
+  const resolved = tone ?? resolveBudgetTone(percent, exceeded)
 
   return (
-    <div className={track({ height, className })}>
-      <div className={fill({ tone: resolvedTone })} style={{ width: `${clamped}%` }} />
-    </div>
+    <Progress
+      value={Number.isFinite(percent) ? percent : 0}
+      tone={TONE[resolved]}
+      height={HEIGHT[height]}
+      label={label}
+      className={className}
+    />
   )
 }

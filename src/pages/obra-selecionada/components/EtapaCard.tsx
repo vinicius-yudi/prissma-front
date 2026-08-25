@@ -4,58 +4,32 @@ import { Calendar, Image as ImageIcon, Pencil, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import type { EtapaStatus } from "@/pages/projetos/types"
+import { Num } from "@/shared/components/ui/num/Num"
+import { Progress } from "@/shared/components/ui/progress/Progress"
+import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
+import { formatDate } from "@/shared/utils/formatters"
+import { daysLate, deriveStatus } from "@/shared/utils/status"
 
 import type { Stage } from "../services/stages.service"
+import { stageProgress } from "../utils/stageProgress"
 
-const ETAPA_STATUS_KEY: Record<EtapaStatus, string> = {
-  PLANNED: "obra.etapas.etapaStatus.PLANNED",
-  IN_PROGRESS: "obra.etapas.etapaStatus.IN_PROGRESS",
-  DONE: "obra.etapas.etapaStatus.DONE",
-  BLOCKED: "obra.etapas.etapaStatus.BLOCKED",
-}
-
-const etapaStatusBadge = tv({
-  base: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border shrink-0",
+const card = tv({
+  base: "group relative space-y-3 rounded-xl border bg-surface-container-low p-5 transition-colors hover:bg-surface-container",
   variants: {
-    status: {
-      PLANNED: "bg-tertiary/10 text-tertiary border-tertiary/20",
-      IN_PROGRESS: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      DONE: "bg-secondary/10 text-secondary border-secondary/20",
-      BLOCKED: "bg-error/10 text-error border-error/20",
+    late: {
+      true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]",
+      false: "border-outline-variant",
+    },
+    draggable: {
+      true: "cursor-grab active:cursor-grabbing",
+      false: "cursor-pointer",
+    },
+    dragging: {
+      true: "ring-2 ring-primary/40",
+      false: "",
     },
   },
 })
-
-const progressBar = tv({
-  base: "h-1.5 rounded-full transition-[width]",
-  variants: {
-    status: {
-      PLANNED: "bg-on-surface-variant",
-      IN_PROGRESS: "bg-primary",
-      DONE: "bg-secondary",
-      BLOCKED: "bg-error",
-    },
-  },
-})
-
-function formatDate(d: string | null): string {
-  if (!d) return "—"
-  return new Date(d).toLocaleDateString("pt-BR")
-}
-
-function computeProgress(stage: Stage): number {
-  switch (stage.status) {
-    case "DONE":
-      return 100
-    case "IN_PROGRESS":
-      return 50
-    case "BLOCKED":
-    case "PLANNED":
-    default:
-      return 0
-  }
-}
 
 interface EtapaCardProps {
   stage: Stage
@@ -78,7 +52,13 @@ export function EtapaCard({
   const sortable = useSortable({ id: stage.id, disabled: disableDrag })
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = sortable
 
-  const progress = computeProgress(stage)
+  const progress = stageProgress(stage)
+
+  // O preenchimento segue o estado: ouro no curso normal, verde ao concluir,
+  // vermelho em atraso (Style Guide v2 §5).
+  const { state } = deriveStatus({ status: stage.status, plannedEndDate: stage.plannedEndDate })
+  const stageTone = state === "late" ? "danger" : state === "done" ? "ok" : "gold"
+  const late = state === "late" ? daysLate(stage.plannedEndDate) : 0
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -107,27 +87,26 @@ export function EtapaCard({
       ref={setNodeRef}
       style={style}
       onClick={handleClick}
-      className={`group relative bg-surface-container-low rounded-xl p-5 space-y-3 ${
-        disableDrag ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
-      } hover:bg-surface-container transition-colors border border-outline-variant/10 ${
-        isDragging ? "ring-2 ring-primary/40" : ""
-      }`}
+      className={card({ late: late > 0, draggable: !disableDrag, dragging: isDragging })}
       {...attributes}
       {...listeners}
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1 min-w-0 pr-2">
+        <div className="flex min-w-0 items-start gap-3 pr-2">
+          <Num className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-outline bg-surface-container-high text-[11px] font-bold text-on-surface-variant">
+            {stage.displayOrder}
+          </Num>
+          <div className="min-w-0 space-y-1">
           <h3 className="font-semibold text-on-surface truncate">{stage.name}</h3>
           {stage.description && (
             <p className="text-sm text-on-surface-variant line-clamp-1">
               {stage.description}
             </p>
           )}
+          </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className={etapaStatusBadge({ status: stage.status })}>
-            {t(ETAPA_STATUS_KEY[stage.status])}
-          </span>
+          <StatusBadge status={stage.status} plannedEndDate={stage.plannedEndDate} />
           {canMutate && (
             <div
               data-no-card-click
@@ -161,22 +140,30 @@ export function EtapaCard({
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs text-on-surface-variant">
           <span>{t("obra.etapas.card.progress")}</span>
-          <span className="font-semibold">{progress}%</span>
+          <Num className="font-semibold">{progress}%</Num>
         </div>
-        <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-          <div
-            className={progressBar({ status: stage.status })}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+        <Progress
+          value={progress}
+          height={6}
+          tone={stageTone}
+          label={t("obra.etapas.card.progress")}
+        />
       </div>
 
       <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
         <Calendar size={12} />
-        {formatDate(stage.plannedStartDate)}
-        {" - "}
-        {formatDate(stage.plannedEndDate)}
+        <Num>
+          {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : "—"}
+          {" → "}
+          {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : "—"}
+        </Num>
       </div>
+
+      {late > 0 && (
+        <p className="text-[10.5px] font-semibold text-danger">
+          {t("obra.visaoGeral.lateBy", { count: late })}
+        </p>
+      )}
 
       <div className="flex items-center justify-end text-xs text-on-surface-variant pt-1">
         <span className="flex items-center gap-1.5">

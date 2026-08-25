@@ -17,6 +17,7 @@ import {
 import { AlertTriangle, Plus, RefreshCw } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
 import { Modal } from "@/shared/components/ui/modal/Modal"
@@ -63,6 +64,20 @@ function groupBySection(stages: Stage[]): Record<SectionKey, Stage[]> {
   return groups
 }
 
+const dropZone = tv({
+  base: "grid min-h-24 grid-cols-1 gap-4 rounded-xl sm:grid-cols-2 lg:grid-cols-3",
+  variants: {
+    over: {
+      true: "bg-primary/5 ring-1 ring-primary/30",
+      false: "",
+    },
+    empty: {
+      true: "border border-dashed border-outline-variant/40 p-4",
+      false: "",
+    },
+  },
+})
+
 interface DroppableSectionProps {
   sectionKey: SectionKey
   stages: Stage[]
@@ -99,9 +114,7 @@ function DroppableSection({
       >
         <div
           ref={setNodeRef}
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-24 rounded-xl ${
-            isOver ? "bg-primary/5 ring-1 ring-primary/30" : ""
-          } ${isEmpty ? "p-4 border border-dashed border-outline-variant/40" : ""}`}
+          className={dropZone({ over: isOver, empty: isEmpty })}
         >
           {stages.length === 0 ? (
             <p className="text-sm text-on-surface-variant col-span-full text-center py-3">
