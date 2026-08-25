@@ -3,21 +3,23 @@ import type { ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
+import { Num } from "@/shared/components/ui/num/Num"
+
 import type { ProjectStats } from "../hooks/useProjects"
 import { ProjectFilter } from "../types"
 
 const filterButton = tv({
-  base: "shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+  base: "shrink-0 flex cursor-pointer items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap",
   variants: {
     active: {
-      true: "bg-primary text-on-primary shadow-sm",
-      false: "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+      true: "bg-gold-grad text-on-primary shadow-glow",
+      false: "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high",
     },
   },
 })
 
 const filterBadge = tv({
-  base: "text-xs px-1.5 py-0.5 rounded-full font-semibold",
+  base: "text-[10.5px] px-1.5 py-0.5 rounded-full font-bold",
   variants: {
     active: {
       true: "bg-on-primary/15 text-on-primary",
@@ -56,7 +58,7 @@ function FilterButton({ option, isActive, count, onSelect }: FilterButtonProps) 
   return (
     <button type="button" onClick={handleClick} className={filterButton({ active: isActive })}>
       {t(option.labelKey)}
-      <span className={filterBadge({ active: isActive })}>{count}</span>
+      <Num className={filterBadge({ active: isActive })}>{count}</Num>
     </button>
   )
 }
@@ -88,10 +90,10 @@ export function ProjectsFilter({ search, onSearch, filter, onFilter, stats }: Pr
           placeholder={t("projects.filter.search")}
           value={search}
           onChange={handleSearchChange}
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="w-full pl-9 pr-4 py-2.5 rounded-full border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-on-surface-faint focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
-      <div className="w-full sm:w-auto overflow-x-auto flex items-center gap-1 bg-surface-container border border-outline-variant p-1 rounded-xl">
+      <div className="w-full sm:w-auto overflow-x-auto flex items-center gap-1 bg-surface-container-low border border-outline-variant p-1 rounded-full">
         {FILTER_OPTIONS.map((option) => (
           <FilterButton
             key={option.value}

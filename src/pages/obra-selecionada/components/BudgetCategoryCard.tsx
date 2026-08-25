@@ -43,7 +43,7 @@ export function BudgetCategoryCard({
   onDeleteExpense,
 }: BudgetCategoryCardProps) {
   return (
-    <div className={card({ exceeded: item.exceeded })}>
+    <div id={`budget-category-${item.id}`} className={card({ exceeded: item.exceeded })}>
       <div className="flex items-stretch">
         <BudgetCategoryHeader item={item} expanded={expanded} onToggle={onToggle} />
         {canMutate && (

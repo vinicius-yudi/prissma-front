@@ -1,116 +1,203 @@
+/* Fontes primeiro: `@import "tailwindcss"` expande em regras, e um @import
+   depois de regras é inválido (o build avisa e o navegador ignora). */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap");
 
-@theme {
-  --color-surface: #080D0E;
-  --color-surface-dim: #060B0C;
-  --color-surface-container-lowest: #030809;
-  --color-surface-container-low: #0C1416;
-  --color-surface-container: #111C1E;
-  --color-surface-container-high: #182426;
-  --color-surface-container-highest: #1F2E30;
-  --color-surface-bright: #253536;
-  --color-surface-variant: #1A2627;
+/* ---------------------------------------------------------------------------
+   PRISSMA — Barroco ouro
+   Primitivas do Style Guide v2 §7. Nomes idênticos aos dos protótipos
+   (`PRISSMA App.dc.html`, `PRISSMA Design System.dc.html`).
 
-  --color-primary: #8ad3d6;
-  --color-primary-container: #01534c;
-  --color-primary-fixed: #a6eff2;
-  --color-primary-fixed-dim: #8ad3d6;
-  --color-on-primary: #003739;
-  --color-on-primary-container: #9ee7ea;
-  --color-on-primary-fixed: #002021;
-  --color-on-primary-fixed-variant: #004f52;
-  --color-inverse-primary: #15696c;
+   Só este arquivo conhece hex. Componentes referenciam os tokens semânticos
+   (--color-*) mapeados mais abaixo; o tema troca apenas os valores das
+   primitivas, e nenhum componente sabe em que modo está.
+--------------------------------------------------------------------------- */
 
-  --color-secondary: #34D399;
-  --color-secondary-container: #064E3B;
-  --color-secondary-fixed: #A7F3D0;
-  --color-secondary-fixed-dim: #6EE7B7;
-  --color-on-secondary: #022C22;
-  --color-on-secondary-container: #D1FAE5;
-  --color-on-secondary-fixed: #011A15;
-  --color-on-secondary-fixed-variant: #065F46;
+:root {
+  /* marca (ouro) */
+  --pk-b1: #c9932f;
+  --pk-b2: #8e5e22;
+  --pk-bl: #e2b457;
+  --pk-grad: linear-gradient(90deg, #c9932f, #8e5e22);
+  --pk-glow: 0 0 24px rgba(201, 147, 47, 0.35);
 
-  --color-tertiary: #FBBF24;
-  --color-tertiary-container: #78350F;
-  --color-tertiary-fixed: #FDE68A;
-  --color-tertiary-fixed-dim: #FCD34D;
-  --color-on-tertiary: #1C0A00;
-  --color-on-tertiary-container: #FEF3C7;
-  --color-on-tertiary-fixed: #160600;
-  --color-on-tertiary-fixed-variant: #92400E;
+  /* superfícies */
+  --pk-bg: #120e08;
+  --pk-sf: #0c0906;
+  --pk-rz: #241b10;
+  --pk-tint: rgba(255, 255, 255, 0.07);
 
-  --color-error: #ffb4ab;
-  --color-error-container: #93000a;
-  --color-on-error: #690005;
-  --color-on-error-container: #ffdad6;
+  /* superfície de contraste (invertida) */
+  --pk-lt: #faf3e4;
+  --pk-ltT: #1b1206;
+  --pk-ltA: #8c5f16;
 
-  --color-background: #041617;
-  --color-on-background: #d2e6e7;
-  --color-on-surface: #d2e6e7;
-  --color-on-surface-variant: #9EAEB0;
-  --color-outline: #2E4042;
-  --color-outline-variant: #1A2C2E;
-  --color-inverse-surface: #d2e6e7;
-  --color-inverse-on-surface: #223334;
-  --color-surface-tint: #8ad3d6;
+  /* texto */
+  --pk-t1: #fbf4e6;
+  --pk-t2: #dccdb0;
+  --pk-t3: #8a7a5f;
 
-  --font-sans: "DM Sans", system-ui, sans-serif;
+  /* bordas */
+  --pk-bs: #2b2114;
+  --pk-bt: #43351f;
+
+  /* semânticas */
+  --pk-ok: #3fbf95;
+  --pk-okBg: rgba(29, 158, 117, 0.16);
+  --pk-wn: #f2c155;
+  --pk-wnBg: rgba(224, 161, 27, 0.16);
+  --pk-dg: #ff8b8a;
+  --pk-dgBg: rgba(226, 75, 74, 0.16);
+
+  /* hachura = previsto / indisponível */
+  --pk-hatch: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.055) 0 2px,
+    transparent 2px 7px
+  );
+
+  /* trena = marcações do preenchimento de toda barra de progresso */
+  --pk-trena: repeating-linear-gradient(
+    90deg,
+    transparent 0 8px,
+    rgba(0, 0, 0, 0.32) 8px 9px
+  );
 }
 
+/* Modo claro "pergaminho". Mesmos nomes, valores recalibrados para AA sobre
+   fundo claro. O danger sólido não muda: é compartilhado entre os modos. */
 [data-theme="light"] {
-  --color-surface: #F4F9F9;
-  --color-surface-dim: #E6F2F2;
-  --color-surface-container-lowest: #FFFFFF;
-  --color-surface-container-low: #EEF7F7;
-  --color-surface-container: #E3F2F2;
-  --color-surface-container-high: #D5EAEA;
-  --color-surface-container-highest: #C4E1E1;
-  --color-surface-bright: #FFFFFF;
-  --color-surface-variant: #D2E9EA;
+  --pk-b1: #a5761f;
+  --pk-b2: #7a521a;
+  --pk-bl: #8c5f16;
+  --pk-grad: linear-gradient(90deg, #a5761f, #7a521a);
+  --pk-glow: 0 8px 22px rgba(165, 118, 31, 0.28);
 
-  --color-primary: #0B6E73;
-  --color-primary-container: #C4EAEB;
-  --color-primary-fixed: #002B2D;
-  --color-primary-fixed-dim: #004F52;
-  --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #002B2D;
-  --color-on-primary-fixed: #8AD3D6;
-  --color-on-primary-fixed-variant: #A6EFF2;
-  --color-inverse-primary: #8AD3D6;
+  --pk-bg: #f2ebdb;
+  --pk-sf: #fbf7ec;
+  --pk-rz: #ede3cc;
+  --pk-tint: rgba(36, 27, 12, 0.07);
 
-  --color-secondary: #047857;
-  --color-secondary-container: #D1FAE5;
-  --color-secondary-fixed: #022C22;
-  --color-secondary-fixed-dim: #065F46;
-  --color-on-secondary: #FFFFFF;
-  --color-on-secondary-container: #022C22;
-  --color-on-secondary-fixed: #A7F3D0;
-  --color-on-secondary-fixed-variant: #6EE7B7;
+  --pk-lt: #ffffff;
+  --pk-ltT: #241b0c;
+  --pk-ltA: #8c5f16;
 
-  --color-tertiary: #B45309;
-  --color-tertiary-container: #FEF3C7;
-  --color-tertiary-fixed: #1C0A00;
-  --color-tertiary-fixed-dim: #92400E;
-  --color-on-tertiary: #FFFFFF;
-  --color-on-tertiary-container: #1C0A00;
-  --color-on-tertiary-fixed: #FDE68A;
-  --color-on-tertiary-fixed-variant: #FCD34D;
+  --pk-t1: #241b0c;
+  --pk-t2: #5a4c33;
+  --pk-t3: #8b7c60;
 
-  --color-error: #C0152A;
-  --color-error-container: #FFE4E1;
-  --color-on-error: #FFFFFF;
-  --color-on-error-container: #5C0A12;
+  --pk-bs: #e1d5b8;
+  --pk-bt: #c8b389;
 
-  --color-background: #F4F9F9;
-  --color-on-background: #0A1F21;
-  --color-on-surface: #0A1F21;
-  --color-on-surface-variant: #3D6467;
-  --color-outline: #6B9092;
-  --color-outline-variant: #B5D5D7;
-  --color-inverse-surface: #0A1F21;
-  --color-inverse-on-surface: #D2E6E7;
-  --color-surface-tint: #0B6E73;
+  --pk-ok: #166b4c;
+  --pk-okBg: rgba(22, 107, 76, 0.13);
+  --pk-wn: #7e5e0c;
+  --pk-wnBg: rgba(126, 94, 12, 0.14);
+  --pk-dg: #a62b29;
+  --pk-dgBg: rgba(166, 43, 41, 0.1);
+
+  --pk-hatch: repeating-linear-gradient(
+    45deg,
+    rgba(36, 27, 12, 0.09) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+@theme {
+  /* Apaga o palette default do Tailwind. `bg-blue-500`, `text-slate-400` e
+     companhia deixam de compilar — a cor genérica fica inalcançável em vez de
+     desaconselhada. Só voltam branco e preto, que o design usa de fato: texto
+     sobre o gradiente ouro e o scrim dos modais. */
+  --color-*: initial;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* superfícies */
+  --color-background: var(--pk-bg);
+  --color-surface: var(--pk-bg);
+  --color-surface-dim: var(--pk-bg);
+  --color-surface-container-lowest: var(--pk-sf);
+  --color-surface-container-low: var(--pk-sf);
+  --color-surface-container: var(--pk-sf);
+  --color-surface-container-high: var(--pk-rz);
+  --color-surface-container-highest: var(--pk-rz);
+  --color-surface-bright: var(--pk-rz);
+  --color-surface-variant: var(--pk-rz);
+  --color-tint: var(--pk-tint);
+
+  /* superfície de contraste — no máximo uma por tela (ver ContrastCard) */
+  --color-contrast: var(--pk-lt);
+  --color-on-contrast: var(--pk-ltT);
+  --color-contrast-action: var(--pk-ltA);
+  --color-inverse-surface: var(--pk-lt);
+  --color-inverse-on-surface: var(--pk-ltT);
+
+  /* texto */
+  --color-on-background: var(--pk-t1);
+  --color-on-surface: var(--pk-t1);
+  --color-on-surface-variant: var(--pk-t2);
+  --color-on-surface-faint: var(--pk-t3);
+
+  /* bordas */
+  --color-outline-variant: var(--pk-bs);
+  --color-outline: var(--pk-bt);
+
+  /* marca */
+  --color-primary: var(--pk-b1);
+  --color-on-primary: #ffffff;
+  --color-primary-container: var(--pk-rz);
+  --color-on-primary-container: var(--pk-bl);
+  --color-gold: var(--pk-b1);
+  --color-gold-deep: var(--pk-b2);
+  --color-gold-bright: var(--pk-bl);
+  --color-surface-tint: var(--pk-b1);
+  --color-inverse-primary: var(--pk-bl);
+
+  /* semânticas — os nomes ok/warn/danger são os do design; secondary e
+     tertiary permanecem como aliases porque o código atual os usa. */
+  --color-ok: var(--pk-ok);
+  --color-ok-bg: var(--pk-okBg);
+  --color-warn: var(--pk-wn);
+  --color-warn-bg: var(--pk-wnBg);
+  --color-danger: var(--pk-dg);
+  --color-danger-bg: var(--pk-dgBg);
+  --color-danger-solid: #e24b4a;
+
+  --color-secondary: var(--pk-ok);
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: var(--pk-okBg);
+  --color-on-secondary-container: var(--pk-ok);
+
+  --color-tertiary: var(--pk-wn);
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: var(--pk-wnBg);
+  --color-on-tertiary-container: var(--pk-wn);
+
+  --color-error: var(--pk-dg);
+  --color-on-error: #ffffff;
+  --color-error-container: var(--pk-dgBg);
+  --color-on-error-container: var(--pk-dg);
+
+  /* tipografia — Bricolage é a voz do produto; mono é obrigatória para todo
+     valor de dado (ver o componente <Num>). Texto corrido nunca usa mono. */
+  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Assinaturas da marca como utilitários, para não vazarem gradiente cru pelo
+   código. A trena mora no componente <Progress>, que é o único lugar
+   autorizado a desenhar barra de progresso. */
+@utility bg-gold-grad {
+  background-image: var(--pk-grad);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--pk-glow);
+}
+
+@utility bg-hatch {
+  background-image: var(--pk-hatch);
 }
 
 * {
@@ -120,10 +207,75 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: var(--color-surface);
+  background-color: var(--color-background);
   color: var(--color-on-surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Acessibilidade §6: foco sempre visível, com anel na cor da marca. */
+:focus-visible {
+  outline: 2px solid var(--pk-b1);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Scrollbar.
+   A barra nativa do Windows entra branca e larga, e era o único elemento da
+   interface que ignorava o tema — destoava especialmente na sidebar escura.
+   Fina, trilha transparente, polegar na cor de borda e ouro no hover.
+--------------------------------------------------------------------------- */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pk-bt) transparent;
+}
+
+/* WebKit / Chromium */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--pk-bt);
+  border-radius: 999px;
+  /* A borda transparente afina o polegar sem estreitar a área de clique. */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--pk-b1);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   Autofill.
+   O Chrome repinta o fundo do campo preenchido com um creme próprio e ignora o
+   tema — nos formulários escuros o campo com valor salvo ficava claro ao lado
+   de um campo vazio escuro. A sombra interna é a única forma de recobrir esse
+   fundo, e a transição longa impede o flash claro no primeiro paint.
+--------------------------------------------------------------------------- */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-container) inset;
+  -webkit-text-fill-color: var(--pk-t1);
+  caret-color: var(--pk-t1);
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 #root {

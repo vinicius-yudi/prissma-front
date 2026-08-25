@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run lint:colors && tsc -b && vite build",
     "lint": "eslint .",
+    "lint:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

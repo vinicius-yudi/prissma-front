@@ -1,6 +1,8 @@
 import type { ReactNode } from "react"
 import { tv } from "tailwind-variants"
 
+import { Num } from "@/shared/components/ui/num/Num"
+
 const iconWrap = tv({
   base: "p-2 rounded-lg",
   variants: {
@@ -40,7 +42,7 @@ export function BudgetKpiCard({
           {label}
         </span>
       </div>
-      <div className="text-xl font-black text-on-surface tabular-nums">{value}</div>
+      <Num className="text-xl font-bold text-on-surface">{value}</Num>
       {hint && <div className="text-xs text-on-surface-variant">{hint}</div>}
     </div>
   )

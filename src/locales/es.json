@@ -2,7 +2,8 @@
   "header": {
     "openMenu": "Abrir menú",
     "themeLight": "Activar modo claro",
-    "themeDark": "Activar modo oscuro"
+    "themeDark": "Activar modo oscuro",
+    "readOnly": "Solo lectura en tu perfil"
   },
   "sidebar": {
     "accountType": "Cuenta personal",
@@ -12,13 +13,32 @@
       "projects": "Proyectos",
       "tasks": "Tareas",
       "team": "Equipo",
-      "reports": "Informes"
+      "reports": "Informes",
+      "obras": "Obras",
+      "agenda": "Mi agenda",
+      "relatorios": "Informes",
+      "visaoGeral": "Vista general",
+      "indicadores": "Indicadores",
+      "etapas": "Etapas",
+      "tarefas": "Tareas",
+      "equipes": "Equipos",
+      "orcamento": "Presupuesto",
+      "diario": "Diario",
+      "documentos": "Documentos",
+      "propostas": "Propuestas",
+      "pessoas": "Personas y roles"
     },
     "menu": {
       "profile": "Perfil",
       "settings": "Configuración",
-      "logout": "Salir"
-    }
+      "logout": "Salir",
+      "help": "Ayuda"
+    },
+    "allObras": "Todas las obras",
+    "groupWorkspace": "Workspace",
+    "groupObra": "En esta obra",
+    "accountsLabel": "Cuentas",
+    "unavailable": "No disponible"
   },
   "dashboard": {
     "title": "Panel de Control",
@@ -83,7 +103,9 @@
       "cancel": "Cancelar",
       "confirm": "Eliminar",
       "deleting": "Eliminando..."
-    }
+    },
+    "dimension": "{{total}} obras · {{inProgress}} en curso",
+    "groupAll": "Todas las obras"
   },
   "login": {
     "title": "Bienvenido de nuevo",
@@ -230,16 +252,31 @@
       "title": "Resumen del Proyecto",
       "totalProgress": "Progreso Total",
       "location": "Ubicación",
-      "deadline": "Plazo",
+      "deadline": "Plazo final",
       "deadlineOverdue": "Plazo vencido",
       "areas": "Áreas",
       "landArea": "Terreno",
-      "builtArea": "Construcción",
+      "builtArea": "Área construida",
       "stages": "Etapas",
       "stagesProgress": "Progreso de Etapas",
       "total": "Total",
       "inProgress": "En progreso",
-      "completed": "Completadas"
+      "completed": "Completadas",
+      "currentStage": "Frente actual",
+      "executed": "Ejecutado",
+      "stagesDone": "Etapas concluidas",
+      "team": "Personal vinculado",
+      "cycle": "Ciclo de la obra",
+      "manageStages": "Gestionar etapas",
+      "budget": "Presupuesto",
+      "seeExpenses": "Ver movimientos",
+      "noBudget": "Ningún presupuesto registrado.",
+      "ofPlanned": "de {{planned}} previsto",
+      "allocatedTeams": "Equipo asignado",
+      "seeTeams": "Ver equipos",
+      "noTeam": "Ningún integrante vinculado.",
+      "lateBy_one": "⚠ plazo vencido hace {{count}} día",
+      "lateBy_other": "⚠ plazo vencido hace {{count}} días"
     },
     "documentos": {
       "title": "Documentos",
@@ -249,7 +286,13 @@
       "download": "Descargar",
       "downloading": "Descargando...",
       "downloadError": "Error al descargar documento",
-      "unsupportedType": "Tipo de archivo no admitido. Sube PDF o DOCX."
+      "unsupportedType": "Tipo de archivo no admitido. Sube PDF o DOCX.",
+      "dropzone": {
+        "title": "Arrastra archivos o haz clic para subir",
+        "maxSize": "hasta {{max}} MB"
+      },
+      "count_one": "{{count}} archivo",
+      "count_other": "{{count}} archivos"
     },
     "fotos": {
       "title": "Fotos Recientes",
@@ -373,6 +416,13 @@
       },
       "errors": {
         "loadFailed": "No se pudo cargar el presupuesto."
+      },
+      "exceededBanner": {
+        "title": "\"{{category}}\" excedió lo previsto",
+        "deviation": "Desvío",
+        "action": "Revisar categoría",
+        "others_one": "y {{count}} categoría más excedida",
+        "others_other": "y {{count}} categorías más excedidas"
       }
     },
     "etapas": {
@@ -449,6 +499,43 @@
         "MEDIUM": "Media",
         "LOW": "Baja"
       }
+    },
+    "startedAt": "inicio {{date}}",
+    "tarefas": {
+      "columns": {
+        "TODO": "No iniciada",
+        "IN_PROGRESS": "En curso",
+        "DONE": "Concluida",
+        "BLOCKED": "Bloqueada"
+      },
+      "priority": {
+        "HIGH": "Alta",
+        "MEDIUM": "Media",
+        "LOW": "Baja"
+      },
+      "actions": {
+        "edit": "Editar tarea",
+        "delete": "Eliminar tarea"
+      },
+      "toasts": {
+        "deleted": "Tarea eliminada.",
+        "errorDeleting": "No se pudo eliminar la tarea.",
+        "errorMoving": "No se pudo mover la tarea."
+      },
+      "emptyColumn": "Sin tareas aquí",
+      "allStages": "Todas las etapas",
+      "count_one": "{{count}} tarea",
+      "count_other": "{{count}} tareas",
+      "newTask": "Nueva tarea",
+      "unassigned": "Sin responsable",
+      "lateBy_one": "⚠ plazo vencido hace {{count}} día",
+      "lateBy_other": "⚠ plazo vencido hace {{count}} días",
+      "noStagesTitle": "Ninguna etapa registrada",
+      "noStagesHint": "Las tareas dependen de las etapas de la obra. Registra el primer frente de trabajo para empezar.",
+      "deleteTitle": "Eliminar tarea",
+      "deleteDescription": "¿Seguro que quieres eliminar la tarea \"{{title}}\"?",
+      "cancel": "Cancelar",
+      "confirmDelete": "Eliminar"
     }
   },
   "profile": {
@@ -475,5 +562,38 @@
       "engineer": "Ingeniero",
       "user": "Usuario"
     }
+  },
+  "status": {
+    "PLANNING": "No iniciada",
+    "PLANNED": "No iniciada",
+    "TODO": "No iniciada",
+    "IN_PROGRESS": "En curso",
+    "PAUSED": "Pausada",
+    "BLOCKED": "Impedida",
+    "DONE": "Concluida",
+    "COMPLETED": "Concluida",
+    "CANCELLED": "Cancelada",
+    "LATE": "Atrasada"
+  },
+  "roles": {
+    "OWNER": "Propietario",
+    "ENGINEER": "Ingeniero",
+    "ARCHITECT": "Arquitecto",
+    "FOREMAN": "Maestro de obra",
+    "USER": "Cliente"
+  },
+  "accessDenied": {
+    "title": "Acceso denegado",
+    "description": "Tu rol en esta obra no alcanza este módulo. Habla con el responsable si necesitas acceso.",
+    "action": "Volver a las obras"
+  },
+  "pessoas": {
+    "membersTitle": "Vinculados a la obra",
+    "membersHint": "Quién tiene acceso a este frente de trabajo y con qué rol.",
+    "membersEmpty": "Todavía no hay integrantes vinculados.",
+    "membersError": "No se pudieron cargar los vinculados.",
+    "permissionsTitle": "Permisos del rol",
+    "permissionsHint": "Se aplica a todos los vinculados que ejercen el rol seleccionado.",
+    "permissionsError": "No se pudieron cargar los permisos de este rol."
   }
 }

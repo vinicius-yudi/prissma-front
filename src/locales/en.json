@@ -2,7 +2,8 @@
   "header": {
     "openMenu": "Open menu",
     "themeLight": "Switch to light mode",
-    "themeDark": "Switch to dark mode"
+    "themeDark": "Switch to dark mode",
+    "readOnly": "Read-only for your role"
   },
   "sidebar": {
     "accountType": "Personal account",
@@ -12,13 +13,32 @@
       "projects": "Projects",
       "tasks": "Tasks",
       "team": "Team",
-      "reports": "Reports"
+      "reports": "Reports",
+      "obras": "Projects",
+      "agenda": "My schedule",
+      "relatorios": "Reports",
+      "visaoGeral": "Overview",
+      "indicadores": "Metrics",
+      "etapas": "Stages",
+      "tarefas": "Tasks",
+      "equipes": "Teams",
+      "orcamento": "Budget",
+      "diario": "Site log",
+      "documentos": "Documents",
+      "propostas": "Proposals",
+      "pessoas": "People & roles"
     },
     "menu": {
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Logout"
-    }
+      "logout": "Logout",
+      "help": "Help"
+    },
+    "allObras": "All projects",
+    "groupWorkspace": "Workspace",
+    "groupObra": "In this project",
+    "accountsLabel": "Accounts",
+    "unavailable": "Unavailable"
   },
   "dashboard": {
     "title": "Control Panel",
@@ -83,7 +103,9 @@
       "cancel": "Cancel",
       "confirm": "Delete",
       "deleting": "Deleting..."
-    }
+    },
+    "dimension": "{{total}} projects · {{inProgress}} in progress",
+    "groupAll": "All projects"
   },
   "login": {
     "title": "Welcome back",
@@ -230,16 +252,31 @@
       "title": "Project Summary",
       "totalProgress": "Total Progress",
       "location": "Location",
-      "deadline": "Deadline",
+      "deadline": "Final deadline",
       "deadlineOverdue": "Overdue",
       "areas": "Areas",
       "landArea": "Land",
-      "builtArea": "Built",
+      "builtArea": "Built area",
       "stages": "Stages",
       "stagesProgress": "Stage Progress",
       "total": "Total",
       "inProgress": "In progress",
-      "completed": "Completed"
+      "completed": "Completed",
+      "currentStage": "Current work front",
+      "executed": "Executed",
+      "stagesDone": "Stages completed",
+      "team": "Members linked",
+      "cycle": "Project cycle",
+      "manageStages": "Manage stages",
+      "budget": "Budget",
+      "seeExpenses": "See expenses",
+      "noBudget": "No budget registered.",
+      "ofPlanned": "of {{planned}} planned",
+      "allocatedTeams": "Allocated team",
+      "seeTeams": "See teams",
+      "noTeam": "No members linked.",
+      "lateBy_one": "⚠ {{count}} day past due",
+      "lateBy_other": "⚠ {{count}} days past due"
     },
     "documentos": {
       "title": "Documents",
@@ -249,7 +286,13 @@
       "download": "Download",
       "downloading": "Downloading...",
       "downloadError": "Failed to download document",
-      "unsupportedType": "Unsupported file type. Upload PDF or DOCX."
+      "unsupportedType": "Unsupported file type. Upload PDF or DOCX.",
+      "dropzone": {
+        "title": "Drag files here or click to upload",
+        "maxSize": "up to {{max}} MB"
+      },
+      "count_one": "{{count}} file",
+      "count_other": "{{count}} files"
     },
     "fotos": {
       "title": "Recent Photos",
@@ -373,6 +416,13 @@
       },
       "errors": {
         "loadFailed": "Failed to load the budget."
+      },
+      "exceededBanner": {
+        "title": "\"{{category}}\" exceeded the plan",
+        "deviation": "Deviation",
+        "action": "Review category",
+        "others_one": "and {{count}} more category over budget",
+        "others_other": "and {{count}} more categories over budget"
       }
     },
     "etapas": {
@@ -449,6 +499,43 @@
         "MEDIUM": "Medium",
         "LOW": "Low"
       }
+    },
+    "startedAt": "started {{date}}",
+    "tarefas": {
+      "columns": {
+        "TODO": "Not started",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Completed",
+        "BLOCKED": "Blocked"
+      },
+      "priority": {
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low"
+      },
+      "actions": {
+        "edit": "Edit task",
+        "delete": "Delete task"
+      },
+      "toasts": {
+        "deleted": "Task deleted.",
+        "errorDeleting": "Could not delete the task.",
+        "errorMoving": "Could not move the task."
+      },
+      "emptyColumn": "No tasks here",
+      "allStages": "All stages",
+      "count_one": "{{count}} task",
+      "count_other": "{{count}} tasks",
+      "newTask": "New task",
+      "unassigned": "Unassigned",
+      "lateBy_one": "⚠ {{count}} day past due",
+      "lateBy_other": "⚠ {{count}} days past due",
+      "noStagesTitle": "No stages yet",
+      "noStagesHint": "Tasks hang off the project stages. Create the first work front to start logging tasks.",
+      "deleteTitle": "Delete task",
+      "deleteDescription": "Are you sure you want to delete the task \"{{title}}\"?",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete"
     }
   },
   "profile": {
@@ -475,5 +562,38 @@
       "engineer": "Engineer",
       "user": "User"
     }
+  },
+  "status": {
+    "PLANNING": "Not started",
+    "PLANNED": "Not started",
+    "TODO": "Not started",
+    "IN_PROGRESS": "In progress",
+    "PAUSED": "Paused",
+    "BLOCKED": "Blocked",
+    "DONE": "Completed",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "LATE": "Overdue"
+  },
+  "roles": {
+    "OWNER": "Owner",
+    "ENGINEER": "Engineer",
+    "ARCHITECT": "Architect",
+    "FOREMAN": "Site foreman",
+    "USER": "Client"
+  },
+  "accessDenied": {
+    "title": "Access denied",
+    "description": "Your role in this project does not reach this module. Ask the project owner if you need access.",
+    "action": "Back to projects"
+  },
+  "pessoas": {
+    "membersTitle": "Project members",
+    "membersHint": "Who has access to this work front, and with which role.",
+    "membersEmpty": "No members linked yet.",
+    "membersError": "Could not load members.",
+    "permissionsTitle": "Role permissions",
+    "permissionsHint": "Applies to every member holding the selected role.",
+    "permissionsError": "Could not load permissions for this role."
   }
 }

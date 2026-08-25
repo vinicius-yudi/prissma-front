@@ -33,7 +33,7 @@ export function DashboardPage() {
   const { activeCount, inProgressProjects, isLoading } = useDashboard()
 
   function handleProjectsNav() {
-    navigate("/projetos")
+    navigate("/obras")
   }
 
   return (

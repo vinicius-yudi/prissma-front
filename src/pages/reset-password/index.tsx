@@ -3,7 +3,7 @@ import { ResetPasswordForm } from "./components/ResetPasswordForm"
 
 export function ResetPasswordPage() {
 	return (
-		<main className="flex h-screen overflow-hidden" style={{ backgroundColor: "#041617" }}>
+		<main className="flex h-screen overflow-hidden bg-background">
 			<BrandPanel />
 			<ResetPasswordForm />
 		</main>

@@ -1,4 +1,4 @@
-import logo from "@/assets/svg/logo.svg"
+import { Brand } from "@/shared/components/brand/Brand"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
@@ -27,7 +27,7 @@ export function CadastroEngenheiro() {
       </div>
       <div className="w-full max-w-md space-y-6 sm:space-y-8 my-auto">
         <div className="flex justify-center">
-          <img src={logo} alt="Prissma" className="h-25" />
+          <Brand />
         </div>
 
         <div className="text-center space-y-2">
@@ -118,7 +118,7 @@ export function CadastroEngenheiro() {
             {t("register.hasAccount")}{" "}
             <Link
               to="/login"
-              className="font-bold text-secondary underline-offset-4 hover:underline ml-1"
+              className="font-bold text-gold-bright underline-offset-4 hover:underline ml-1"
             >
               {t("register.login")}
             </Link>

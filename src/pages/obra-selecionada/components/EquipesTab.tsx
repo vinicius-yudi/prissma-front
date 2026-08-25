@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/components/ui/button/Button'
 import { Input } from '@/shared/components/ui/input/Input'
 import { Modal } from '@/shared/components/ui/modal/Modal'
+import { RoleChip } from '@/shared/components/ui/role-chip/RoleChip'
 import { CirclePlus, CircleX, Mail, Search, Loader, ShieldCheck } from 'lucide-react'
 import { useEquipes } from '../hooks/useEquipes'
 import { useProjectPermissions } from '../hooks/useProjectPermissions'
 import { ProjectPermission } from '../services/projectPermissions.service'
-import type { ConstructionProjectMember, ProjectRoleInRequest, RoleInProject } from '../types/equipes'
+import type { ConstructionProjectMember, ProjectRoleInRequest } from '../types/equipes'
 import { RolePermissionsModal } from './RolePermissionsModal'
 
 interface EquipesTabProps {
@@ -22,6 +24,7 @@ function isCollaborator(role: string): boolean {
 }
 
 export function EquipesTab({ obraId }: EquipesTabProps) {
+  const { t } = useTranslation()
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
   const [permsOpen, setPermsOpen] = useState(false)
@@ -86,23 +89,6 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
       handleAddMember(selectedRoleInAdd)
     }
     closeAddModal()
-  }
-
-  function mapRoleLabel(role: RoleInProject | string) {
-    switch (role) {
-      case 'ENGINEER':
-        return 'Engenheiro'
-      case 'ARCHITECT':
-        return 'Arquiteto'
-      case 'FOREMAN':
-        return 'Externo'
-      case 'OWNER':
-        return 'Proprietário'
-      case 'USER':
-        return 'Cliente'
-      default:
-        return role
-    }
   }
 
   if (isLoadingMembers) {
@@ -225,17 +211,21 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                 )}
 
                 <div className="flex items-center gap-6">
-                  <img
-                    className="w-16 h-16 rounded-full object-cover border border-outline-variant/30"
-                    alt={member.user.name}
-                    src={member.user.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
-                  />
+                  {member.user.avatar ? (
+                    <img
+                      className="w-16 h-16 rounded-full object-cover border border-outline"
+                      alt={member.user.name}
+                      src={member.user.avatar}
+                    />
+                  ) : (
+                    <span className="flex size-16 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-lg font-bold text-on-surface-variant">
+                      {member.user.name.slice(0, 2).toUpperCase()}
+                    </span>
+                  )}
                   <div className="flex-1">
                     <h3 className="text-title-lg font-bold text-on-surface">{member.user.name}</h3>
                     <div className="flex items-center gap-2 my-0.5">
-                      <span className="bg-surface-container-highest text-secondary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter">
-                        {mapRoleLabel(member.roleInProject)}
-                      </span>
+                      <RoleChip role={member.roleInProject} />
                     </div>
                     <div className="space-y-2">
                       <div className="block gap-1 text-body-md text-on-surface-variant">
@@ -398,9 +388,10 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                 onChange={(e) => setSelectedRoleInAdd(e.target.value as ProjectRoleInRequest)}
                 className="w-full px-4 py-2 rounded-lg border border-outline-variant/60 bg-surface-container text-on-surface"
               >
-                <option value="ENGINEER">Engenheiro</option>
-                <option value="ARCHITECT">Arquiteto</option>
-                <option value="FOREMAN">Externo</option>
+                <option value="ENGINEER">{t("roles.ENGINEER")}</option>
+                <option value="ARCHITECT">{t("roles.ARCHITECT")}</option>
+                <option value="FOREMAN">{t("roles.FOREMAN")}</option>
+                <option value="USER">{t("roles.USER")}</option>
               </select>
             </div>
           )}

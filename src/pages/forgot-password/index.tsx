@@ -3,7 +3,7 @@ import { ForgotPasswordForm } from "./components/ForgotPasswordForm"
 
 export function ForgotPasswordPage() {
 	return (
-		<main className="flex h-screen overflow-hidden" style={{ backgroundColor: "#041617" }}>
+		<main className="flex h-screen overflow-hidden bg-background">
 			<BrandPanel />
 			<ForgotPasswordForm />
 		</main>

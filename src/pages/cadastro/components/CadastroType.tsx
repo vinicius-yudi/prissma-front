@@ -1,4 +1,4 @@
-import logo from "@/assets/svg/logo.svg"
+import { Brand } from "@/shared/components/brand/Brand"
 import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { HardHat, DraftingCompass, User } from "lucide-react"
@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { SelectionButton } from "./SelectionButton"
 
-const LOGO_ALT = "Prissma"
 
 interface CadastroTypeProps {
   onTypeSelected: (type: "arquiteto" | "engenheiro" | "cliente") => void
@@ -27,7 +26,7 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
       </div>
       <div className="w-full max-w-md space-y-8 sm:space-y-12 my-auto">
         <div className="flex justify-center">
-          <img src={logo} alt={LOGO_ALT} className="h-25" />
+          <Brand />
         </div>
 
         <div className="text-center space-y-2">
@@ -58,7 +57,7 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
             {t("register.hasAccount")}{" "}
             <Link
               to="/login"
-              className="font-bold text-secondary underline-offset-4 hover:underline ml-1"
+              className="font-bold text-gold-bright underline-offset-4 hover:underline ml-1"
             >
               {t("register.login")}
             </Link>

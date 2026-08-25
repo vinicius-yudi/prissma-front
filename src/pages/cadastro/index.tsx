@@ -11,7 +11,7 @@ export function CadastroPage() {
   const [selectedType, setSelectedType] = useState<CadastroTypeOption>(null)
 
   return (
-    <main className="flex h-screen overflow-hidden" style={{ backgroundColor: "#041617" }}>
+    <main className="flex h-screen overflow-hidden bg-background">
       <BrandPanel />
       {!selectedType && <CadastroType onTypeSelected={setSelectedType} />}
       {selectedType === "arquiteto" && <CadastroArquiteto />}

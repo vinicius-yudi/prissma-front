@@ -12,6 +12,7 @@ import { BudgetCharts } from "./BudgetCharts"
 import { BudgetDeleteConfirmModal } from "./BudgetDeleteConfirmModal"
 import { BudgetEmptyState } from "./BudgetEmptyState"
 import { BudgetErrorState } from "./BudgetErrorState"
+import { BudgetExceededBanner } from "./BudgetExceededBanner"
 import { BudgetFormModal } from "./BudgetFormModal"
 import { BudgetItemFormModal } from "./BudgetItemFormModal"
 import { BudgetLoadingState } from "./BudgetLoadingState"
@@ -55,6 +56,15 @@ export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
   } = useBudgetModals()
   const { toggle, isExpanded } = useExpandedCategories()
 
+  /** O banner leva à categoria estourada abrindo-a na lista. */
+  function handleReviewCategory(itemId: number) {
+    if (!isExpanded(itemId)) toggle(itemId)
+    document.getElementById(`budget-category-${itemId}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    })
+  }
+
   async function handleConfirmDelete() {
     if (!deleteTarget) return
     try {
@@ -89,6 +99,8 @@ export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
   return (
     <>
       <div className="space-y-6">
+        <BudgetExceededBanner budget={budget} onReview={handleReviewCategory} />
+
         <BudgetMainPanel
           budget={budget}
           canMutate={canMutate}

@@ -1,4 +1,4 @@
-import logo from "@/assets/svg/logo.svg"
+import { Brand } from "@/shared/components/brand/Brand"
 import { ArrowRight, Eye, EyeOff, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
@@ -9,7 +9,6 @@ import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageS
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { useLoginForm } from "../hooks/useLoginForm"
 
-const LOGO_ALT = "Prissma"
 
 export function LoginForm() {
   const { formData, showPassword, handleChange, handleSubmit, togglePassword, isPending } = useLoginForm()
@@ -33,7 +32,7 @@ export function LoginForm() {
       </div>
       <div className="w-full max-w-md space-y-12">
         <div className="flex justify-center">
-          <img src={logo} alt={LOGO_ALT} className="h-25" />
+          <Brand />
         </div>
 
         <div className="text-center space-y-2">
@@ -60,7 +59,7 @@ export function LoginForm() {
               <Label htmlFor="password">{t("login.password")}</Label>
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-secondary hover:underline underline-offset-4 transition-colors"
+                className="text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
               >
                 {t("login.forgotPassword")}
               </Link>
@@ -89,7 +88,7 @@ export function LoginForm() {
             {t("login.noAccount")}{" "}
             <Link
               to="/cadastro"
-              className="font-bold text-secondary underline-offset-4 hover:underline ml-1"
+              className="font-bold text-gold-bright underline-offset-4 hover:underline ml-1"
             >
               {t("login.register")}
             </Link>

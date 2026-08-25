@@ -7,15 +7,14 @@ export function BrandPanel() {
 
   return (
     <section
-      className="hidden lg:flex lg:w-[55%] h-full relative flex-col justify-between p-16 overflow-hidden"
-      style={{ backgroundColor: "#041617" }}
+      className="hidden lg:flex lg:w-[55%] h-full relative flex-col justify-between p-16 overflow-hidden bg-background"
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(138, 211, 214, 0.06) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(138, 211, 214, 0.06) 1px, transparent 1px)
+            linear-gradient(to right, color-mix(in srgb, var(--pk-b1) 10%, transparent) 1px, transparent 1px),
+            linear-gradient(to bottom, color-mix(in srgb, var(--pk-b1) 10%, transparent) 1px, transparent 1px)
           `,
           backgroundSize: "48px 48px",
         }}

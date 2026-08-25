@@ -36,7 +36,8 @@ interface RolePermissionsEditorProps {
   projectId: number
   role: ProjectRole
   initialPermissions: ProjectPermission[]
-  onSaved: () => void
+  /** Opcional: em página não há modal para fechar. */
+  onSaved?: () => void
 }
 
 export function RolePermissionsEditor({
@@ -66,7 +67,7 @@ export function RolePermissionsEditor({
   function handleSave() {
     updatePermissions(
       { role, permissions: [...selected] },
-      { onSuccess: onSaved },
+      { onSuccess: () => onSaved?.() },
     )
   }
 
