@@ -43,7 +43,8 @@ export function VisaoGeralModule() {
 }
 
 export function EtapasModule() {
-  return <EtapasTab projectId={useObra().id} />
+  const project = useObra()
+  return <EtapasTab projectId={project.id} projectStartDate={project.plannedStartDate} />
 }
 
 export function TarefasModule() {

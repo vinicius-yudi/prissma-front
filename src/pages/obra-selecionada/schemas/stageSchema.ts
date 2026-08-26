@@ -13,12 +13,11 @@ export const stageSchema = z
       EtapaStatus.BLOCKED,
       EtapaStatus.DONE,
     ]),
-    plannedStartDate: z.string().optional(),
-    plannedEndDate: z.string().optional(),
+    plannedStartDate: z.string().min(1, "Data de início planejada é obrigatória"),
+    plannedEndDate: z.string().min(1, "Data de término planejada é obrigatória"),
   })
   .refine(
     (d) => {
-      if (!d.plannedStartDate || !d.plannedEndDate) return true
       return new Date(d.plannedEndDate) >= new Date(d.plannedStartDate)
     },
     { message: "Data final deve ser igual ou posterior à inicial", path: ["plannedEndDate"] },

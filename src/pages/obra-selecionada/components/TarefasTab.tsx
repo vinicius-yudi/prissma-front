@@ -110,7 +110,6 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const canCreate = kanban.canMutate && kanban.firstStageId !== null
-
   function openCreate() {
     setCreateForStage(
       kanban.stageFilter === ALL_STAGES ? kanban.firstStageId : Number(kanban.stageFilter),
@@ -198,6 +197,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
         open={createForStage !== null}
         onClose={() => setCreateForStage(null)}
         stageId={createForStage}
+        stages={kanban.stages.map(({ stage }) => stage)}
         projectId={projectId}
         canMutate={kanban.canMutate}
       />
@@ -206,6 +206,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
         open={editing !== null}
         onClose={() => setEditing(null)}
         stageId={editing?.stageId ?? null}
+        stages={kanban.stages.map(({ stage }) => stage)}
         projectId={projectId}
         canMutate={kanban.canMutate}
         tarefaToEdit={editing?.tarefa ?? null}

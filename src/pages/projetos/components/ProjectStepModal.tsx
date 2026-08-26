@@ -3,6 +3,7 @@ import { Building2, MapPin, Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -12,6 +13,7 @@ import { Modal } from "@/shared/components/ui/modal/Modal"
 import { StepIndicator } from "@/shared/components/ui/modal/StepIndicator"
 import { Select } from "@/shared/components/ui/select/Select"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
 import { useCreateProject } from "../hooks/useCreateProject"
 import { useEditProject } from "../hooks/useEditProject"
@@ -45,7 +47,6 @@ interface ProjectStepModalProps {
 export function ProjectStepModal({ open, onClose, project }: ProjectStepModalProps) {
   const { t } = useTranslation()
   const [step, setStep] = useState(1)
-  const [step2Attempted, setStep2Attempted] = useState(false)
   const numeroRef = useRef<HTMLInputElement | null>(null)
   const cepUserEditedRef = useRef(false)
   const isEdit = !!project
@@ -62,7 +63,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
   useEffect(() => {
     if (!open) return
     setStep(1)
-    setStep2Attempted(false)
     cepUserEditedRef.current = false
     if (project) {
       form.reset({
@@ -92,6 +92,10 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
   const { cepData, isLookingUp, cepError } = useCepLookup(cepValue)
 
   useEffect(() => {
+    if (cepError) toast.error(cepError)
+  }, [cepError])
+
+  useEffect(() => {
     if (!cepData || !cepUserEditedRef.current) return
     form.setValue("logradouro", cepData.logradouro, { shouldDirty: true })
     form.setValue("bairro", cepData.bairro, { shouldDirty: true })
@@ -102,20 +106,27 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
 
   async function handleNext() {
     const valid = await form.trigger(STEP1_FIELDS)
-    if (!valid) return
+    if (!valid) {
+      const message = STEP1_FIELDS.map((field) => form.getFieldState(field).error?.message)
+        .find((errorMessage): errorMessage is string => Boolean(errorMessage))
+      if (message) toast.error(message)
+      return
+    }
     form.clearErrors()
-    setStep2Attempted(false)
     setStep(2)
   }
 
   function handleBack() {
-    setStep2Attempted(false)
     setStep(1)
   }
 
   function handleSave() {
-    setStep2Attempted(true)
-    form.handleSubmit(onSubmit)()
+    form.handleSubmit(onSubmit, onInvalid)()
+  }
+
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
   }
 
   function onSubmit(data: ProjectFormData) {
@@ -178,9 +189,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                 placeholder={t("registerWork.namePlaceholder")}
                 {...form.register("title")}
               />
-              {errors.title && (
-                <p className="text-xs text-error mt-1">{errors.title.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
@@ -191,9 +199,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                 <option value="COMMERCIAL">{t("registerWork.typeCommercial")}</option>
                 <option value="INDUSTRIAL">{t("registerWork.typeIndustrial")}</option>
               </Select>
-              {errors.projectType && (
-                <p className="text-xs text-error mt-1">{errors.projectType.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
@@ -203,9 +208,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                 <option value="BUILDING">{t("registerWork.categoryBuilding")}</option>
                 <option value="RENOVATION">{t("registerWork.categoryRenovation")}</option>
               </Select>
-              {errors.category && (
-                <p className="text-xs text-error mt-1">{errors.category.message}</p>
-              )}
             </div>
 
             {isEdit && (
@@ -231,9 +233,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                 placeholder="0.00"
                 {...form.register("landArea", { valueAsNumber: true })}
               />
-              {errors.landArea && (
-                <p className="text-xs text-error mt-1">{errors.landArea.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
@@ -246,25 +245,16 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                 placeholder="0.00"
                 {...form.register("builtArea", { valueAsNumber: true })}
               />
-              {errors.builtArea && (
-                <p className="text-xs text-error mt-1">{errors.builtArea.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
               <Label className={formLabel()}>{t("registerWork.startDate")}</Label>
               <Input className={formInput()} type="date" {...form.register("plannedStartDate")} />
-              {errors.plannedStartDate && (
-                <p className="text-xs text-error mt-1">{errors.plannedStartDate.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
               <Label className={formLabel()}>{t("registerWork.endDate")}</Label>
               <Input className={formInput()} type="date" {...form.register("plannedEndDate")} />
-              {errors.plannedEndDate && (
-                <p className="text-xs text-error mt-1">{errors.plannedEndDate.message}</p>
-              )}
             </div>
           </div>
         )}
@@ -306,10 +296,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                     />
                   )}
                 />
-                {cepError && <p className="text-xs text-error mt-1">{cepError}</p>}
-                {step2Attempted && errors.cep && (
-                  <p className="text-xs text-error mt-1">{errors.cep.message}</p>
-                )}
               </div>
 
               {/* UF */}
@@ -320,9 +306,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   placeholder="SP"
                   {...form.register("uf")}
                 />
-                {step2Attempted && errors.uf && (
-                  <p className="text-xs text-error mt-1">{errors.uf.message}</p>
-                )}
               </div>
 
               {/* Logradouro */}
@@ -333,9 +316,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   placeholder={t("projectModal.logradouroPlaceholder")}
                   {...form.register("logradouro")}
                 />
-                {step2Attempted && errors.logradouro && (
-                  <p className="text-xs text-error mt-1">{errors.logradouro.message}</p>
-                )}
               </div>
 
               {/* Número */}
@@ -347,9 +327,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   placeholder="123"
                   {...numeroRegisterProps}
                 />
-                {step2Attempted && errors.numero && (
-                  <p className="text-xs text-error mt-1">{errors.numero.message}</p>
-                )}
               </div>
 
               {/* Complemento */}
@@ -370,9 +347,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   placeholder={t("projectModal.bairroPlaceholder")}
                   {...form.register("bairro")}
                 />
-                {step2Attempted && errors.bairro && (
-                  <p className="text-xs text-error mt-1">{errors.bairro.message}</p>
-                )}
               </div>
 
               {/* Cidade */}
@@ -383,9 +357,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                   placeholder={t("projectModal.cidadePlaceholder")}
                   {...form.register("cidade")}
                 />
-                {step2Attempted && errors.cidade && (
-                  <p className="text-xs text-error mt-1">{errors.cidade.message}</p>
-                )}
               </div>
             </div>
           </div>

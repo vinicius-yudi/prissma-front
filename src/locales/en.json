@@ -384,7 +384,7 @@
         "descriptionPlaceholder": "e.g. Purchase of 5m³ concrete",
         "amount": "Amount ($)",
         "spentAt": "Expense date",
-        "stage": "Stage (optional)",
+        "stage": "Stage",
         "stagePlaceholder": "Select a stage",
         "stageNone": "No stage linked",
         "supplier": "Supplier (optional)",
@@ -476,7 +476,10 @@
         "updateError": "Failed to update stage",
         "deleteSuccess": "Stage deleted successfully!",
         "deleteError": "Failed to delete stage",
-        "reorderError": "Failed to reorder stages"
+        "reorderError": "Failed to reorder stages",
+        "startBeforeProject": "The stage cannot start before the project start date.",
+        "previousStartRequired": "The previous stage must have a start date before this stage.",
+        "startBeforePrevious": "The stage cannot start before the previous stage."
       },
       "etapaStatus": {
         "PLANNED": "Planned",
@@ -551,6 +554,8 @@
         "priority": "Priority",
         "startDate": "Planned start",
         "endDate": "Planned end",
+        "stage": "Stage",
+        "stagePlaceholder": "Select a stage",
         "assignee": "Assignee",
         "assigneePlaceholder": "— Select —",
         "save": "Save",
@@ -566,6 +571,9 @@
         "plannedEndDateRequired": "Planned end date is required",
         "plannedEndDatePast": "End date cannot be in the past",
         "plannedEndDateBeforeStart": "End date cannot be before the start date",
+        "stageStartDateRequired": "The linked stage must have a start date.",
+        "plannedStartDateBeforeStage": "The task cannot start before its linked stage.",
+        "stageRequired": "Select a stage to link to the task.",
         "assigneeRequired": "An assignee is required"
       }
     },

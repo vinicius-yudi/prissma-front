@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Input } from "@/shared/components/ui/input/Input"
@@ -10,21 +11,25 @@ import { Textarea } from "@/shared/components/ui/textarea/Textarea"
 import { useTarefas } from "../hooks/useTarefas"
 import { taskSchema } from "../schemas/tarefas.shcemas"
 import type { CreateTarefaRequest, TarefaPriority, TarefaStatus, Tarefa } from "../types/tarefas"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useObraMembers } from "../hooks/useObraMembers"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
+import type { Stage } from "../services/stages.service"
 
 interface TaskFormModalProps {
   open: boolean
   onClose: () => void
   stageId: number | null
+  stages: Stage[]
   projectId: number
   canMutate?: boolean
   tarefaToEdit?: Tarefa | null
   onSaved?: () => void
 }
 
-export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = true, tarefaToEdit, onSaved }: TaskFormModalProps) {
+export function TaskFormModal({ open, onClose, stageId, stages, projectId, canMutate = true, tarefaToEdit, onSaved }: TaskFormModalProps) {
   const { t } = useTranslation()
+  const [selectedStageId, setSelectedStageId] = useState<number | null>(stageId)
   const form = useForm<CreateTarefaRequest>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -38,19 +43,19 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
     },
   })
 
-  const { errors } = form.formState
-
-  const { createAsync, isCreating, updateAsync } = useTarefas(stageId)
+  const { createAsync, isCreating, updateAsync } = useTarefas(selectedStageId)
 
   const { list: members, isLoading: membersLoading } = useObraMembers(projectId, { enabled: open })
-
-  const today = new Date().toISOString().split("T")[0]
+  const stageStartDate = stages.find((stage) => stage.id === selectedStageId)?.plannedStartDate
 
   useEffect(() => {
     if (!open) {
       form.reset()
+      setSelectedStageId(null)
       return
     }
+
+    setSelectedStageId(stageId)
 
     if (tarefaToEdit) {
       form.reset({
@@ -63,10 +68,24 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
         assigneeUserId: tarefaToEdit.assigneeUserId ?? undefined,
       })
     }
-  }, [open, tarefaToEdit])
+  }, [open, stageId, tarefaToEdit])
 
   async function onSubmit(data: CreateTarefaRequest) {
-    if (!stageId) return
+    if (!selectedStageId) {
+      toast.error(t("obra.tarefas.validation.stageRequired"))
+      return
+    }
+
+    if (!stageStartDate) {
+      toast.error(t("obra.tarefas.validation.stageStartDateRequired"))
+      return
+    }
+
+    if (data.plannedStartDate < stageStartDate.slice(0, 10)) {
+      toast.error(t("obra.tarefas.validation.plannedStartDateBeforeStage"))
+      return
+    }
+
     try {
       if (tarefaToEdit && tarefaToEdit.id) {
         await updateAsync({ id: tarefaToEdit.id, data })
@@ -79,24 +98,43 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
     }
   }
 
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
+  }
+
   const readOnly = !canMutate
 
   const title = t(tarefaToEdit ? "obra.tarefas.form.editTitle" : "obra.tarefas.form.createTitle")
 
   return (
     <Modal open={open} onClose={onClose} title={title} size="lg">
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         <div className="px-6 pt-5 pb-2 grid grid-cols-1 gap-4">
           <div>
             <Label>{t("obra.tarefas.form.title")}</Label>
             <Input {...form.register("title")} disabled={readOnly} />
-            {errors.title && <p className="mt-1 text-xs text-danger">{errors.title.message}</p>}
           </div>
 
           <div>
             <Label>{t("obra.tarefas.form.description")}</Label>
             <Textarea {...form.register("description")} disabled={readOnly} />
-            {errors.description && <p className="mt-1 text-xs text-danger">{errors.description.message}</p>}
+          </div>
+
+          <div>
+            <Label>{t("obra.tarefas.form.stage")}</Label>
+            <Select
+              value={selectedStageId ?? ""}
+              onChange={(event) => setSelectedStageId(Number(event.target.value))}
+              disabled={readOnly || Boolean(tarefaToEdit)}
+            >
+              <option value="" disabled>{t("obra.tarefas.form.stagePlaceholder")}</option>
+              {stages.map((stage) => (
+                <option key={stage.id} value={stage.id}>
+                  {stage.displayOrder}. {stage.name}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -108,7 +146,6 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
                 <option value="BLOCKED">{t("obra.tarefas.columns.BLOCKED")}</option>
                 <option value="DONE">{t("obra.tarefas.columns.DONE")}</option>
               </Select>
-              {errors.status && <p className="mt-1 text-xs text-danger">{errors.status.message}</p>}
             </div>
             <div>
               <Label>{t("obra.tarefas.form.priority")}</Label>
@@ -117,20 +154,22 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
                 <option value="MEDIUM">{t("obra.tarefas.priority.MEDIUM")}</option>
                 <option value="HIGH">{t("obra.tarefas.priority.HIGH")}</option>
               </Select>
-              {errors.priority && <p className="mt-1 text-xs text-danger">{errors.priority.message}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>{t("obra.tarefas.form.startDate")}</Label>
-              <Input type="date" min={today} {...form.register("plannedStartDate")} disabled={readOnly} />
-              {errors.plannedStartDate && <p className="mt-1 text-xs text-danger">{errors.plannedStartDate.message}</p>}
+              <Input
+                type="date"
+                min={stageStartDate?.slice(0, 10)}
+                {...form.register("plannedStartDate")}
+                disabled={readOnly}
+              />
             </div>
             <div>
               <Label>{t("obra.tarefas.form.endDate")}</Label>
-              <Input type="date" min={today} {...form.register("plannedEndDate")} disabled={readOnly} />
-              {errors.plannedEndDate && <p className="mt-1 text-xs text-danger">{errors.plannedEndDate.message}</p>}
+              <Input type="date" {...form.register("plannedEndDate")} disabled={readOnly} />
             </div>
           </div>
 
@@ -146,7 +185,6 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
                   </option>
                 ))}
             </Select>
-            {errors.assigneeUserId && <p className="mt-1 text-xs text-danger">{errors.assigneeUserId.message}</p>}
           </div>
         </div>
 

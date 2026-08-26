@@ -384,7 +384,7 @@
         "descriptionPlaceholder": "Ex: Compra de 5m³ de concreto",
         "amount": "Valor (R$)",
         "spentAt": "Data do gasto",
-        "stage": "Etapa (opcional)",
+        "stage": "Etapa",
         "stagePlaceholder": "Selecione uma etapa",
         "stageNone": "Sem etapa vinculada",
         "supplier": "Fornecedor (opcional)",
@@ -476,7 +476,10 @@
         "updateError": "Erro ao atualizar etapa",
         "deleteSuccess": "Etapa excluída com sucesso!",
         "deleteError": "Erro ao excluir etapa",
-        "reorderError": "Erro ao reordenar etapas"
+        "reorderError": "Erro ao reordenar etapas",
+        "startBeforeProject": "A etapa não pode começar antes do início da obra.",
+        "previousStartRequired": "A etapa anterior precisa ter uma data de início antes desta etapa.",
+        "startBeforePrevious": "A etapa não pode começar antes da etapa anterior."
       },
       "etapaStatus": {
         "PLANNED": "Planejada",
@@ -551,6 +554,8 @@
         "priority": "Prioridade",
         "startDate": "Início planejado",
         "endDate": "Término planejado",
+        "stage": "Etapa",
+        "stagePlaceholder": "Selecione uma etapa",
         "assignee": "Responsável",
         "assigneePlaceholder": "— Selecionar —",
         "save": "Salvar",
@@ -566,6 +571,9 @@
         "plannedEndDateRequired": "Data de término planejada é obrigatória",
         "plannedEndDatePast": "Data de término não pode ser no passado",
         "plannedEndDateBeforeStart": "Data de término não pode ser antes da data de início",
+        "stageStartDateRequired": "A etapa vinculada precisa ter uma data de início.",
+        "plannedStartDateBeforeStage": "A tarefa não pode começar antes da etapa vinculada.",
+        "stageRequired": "Selecione uma etapa para vincular à tarefa.",
         "assigneeRequired": "Selecionar o responsável é obrigatório"
       }
     },
