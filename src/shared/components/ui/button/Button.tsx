@@ -13,8 +13,7 @@ import type { InterfaceButtonProps } from "./ButtonInterface"
  */
 
 const button = tv({
-  // Altura 38–44px e raio 12px são do design; o resto é comportamento comum.
-  base: "inline-flex min-h-[38px] cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50",
+  base: "inline-flex cursor-pointer items-center justify-center font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50",
   variants: {
     variant: {
       primary: "bg-gold-grad text-on-primary hover:shadow-glow hover:brightness-110",
@@ -24,6 +23,11 @@ const button = tv({
       menu: "text-on-surface-variant hover:bg-tint hover:text-on-surface",
       menuSelected: "bg-tint text-on-surface",
     },
+    size: {
+      // Altura 38–44px e raio 12px são do design.
+      md: "min-h-[38px] gap-2 rounded-xl px-4 py-2.5",
+      sm: "min-h-[30px] gap-1.5 rounded-lg px-3 py-1.5 text-xs",
+    },
     fullWidth: {
       true: "w-full",
       false: "w-auto",
@@ -31,12 +35,14 @@ const button = tv({
   },
   defaultVariants: {
     variant: "primary",
+    size: "md",
     fullWidth: true,
   },
 })
 
 export function Button({
   variant = "primary",
+  size = "md",
   fullWidth = true,
   className,
   children,
@@ -45,7 +51,7 @@ export function Button({
   useOncePerPage("primaryButton", variant === "primary")
 
   return (
-    <button className={button({ variant, fullWidth, className })} {...props}>
+    <button className={button({ variant, size, fullWidth, className })} {...props}>
       {children}
     </button>
   )

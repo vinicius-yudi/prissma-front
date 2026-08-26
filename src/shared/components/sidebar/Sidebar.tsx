@@ -19,15 +19,20 @@ import { DeleteAccountModal } from "@/pages/perfil/components/DeleteAccountModal
 import { PerfilModal } from "@/pages/perfil/components/PerfilModal"
 import { useObraSelecionada } from "@/pages/obra-selecionada/hooks/useObraSelecionada"
 import type { AppModule } from "@/shared/constants/access"
+import { UnavailableBadge } from "@/shared/components/ui/unavailable-badge/UnavailableBadge"
 import { OBRA_NAV, WORKSPACE_NAV, type NavItem } from "@/shared/constants/nav"
 import { useAccess, useObraIdFromPath } from "@/shared/hooks/useAccess"
 
 /**
  * Sidebar de dois níveis (Fluxos v2 §1), recolhida em trilho de ícones.
  *
- * No desktop fica recolhida e **expande no hover**, voltando a recolher quando
- * o mouse sai. Um espaçador acompanha a largura do painel, então o conteúdo da
- * página é empurrado para o lado em vez de ficar coberto.
+ * **Só existe a partir de `lg`.** Abaixo disso a navegação é a barra de abas
+ * com FAB (<BottomTabBar>) mais o trilho de módulos da obra; a gaveta que esta
+ * sidebar era no celular saiu junto com o hambúrguer.
+ *
+ * Fica recolhida e **expande no hover**, voltando a recolher quando o mouse
+ * sai. Um espaçador acompanha a largura do painel, então o conteúdo da página é
+ * empurrado para o lado em vez de ficar coberto.
  *
  * A lista sai da interseção entre os itens que existem (`constants/nav.ts`) e o
  * que o papel alcança (`constants/access.ts`) — a mesma matriz que alimenta o
@@ -38,12 +43,8 @@ const RAIL = 68
 const PANEL = 248
 
 const aside = tv({
-  base: "fixed inset-y-0 left-0 z-30 flex h-screen flex-col gap-5 overflow-hidden border-r border-outline-variant bg-surface-container-low py-5 transition-[width,transform,padding] duration-200 ease-out",
+  base: "fixed inset-y-0 left-0 z-30 hidden h-dvh flex-col gap-5 overflow-hidden border-r border-outline-variant bg-surface-container-low py-5 transition-[width,padding] duration-200 ease-out lg:flex",
   variants: {
-    open: {
-      true: "translate-x-0",
-      false: "-translate-x-full lg:translate-x-0",
-    },
     expanded: {
       true: "px-3.5",
       false: "px-3",
@@ -172,15 +173,7 @@ function AccountButton({
  * própria Visão geral já mostra com muito mais espaço. Recolhido, sobra o
  * ponto — que já responde "estou dentro de uma obra".
  */
-function ObraContextCard({
-  obraId,
-  expanded,
-  onNavigate,
-}: {
-  obraId: number
-  expanded: boolean
-  onNavigate: () => void
-}) {
+function ObraContextCard({ obraId, expanded }: { obraId: number; expanded: boolean }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { projectQuery } = useObraSelecionada(obraId)
@@ -201,10 +194,7 @@ function ObraContextCard({
     <div>
       <button
         type="button"
-        onClick={() => {
-          onNavigate()
-          navigate("/obras")
-        }}
+        onClick={() => navigate("/obras")}
         className="flex cursor-pointer items-center gap-1.5 px-1.5 text-[11.5px] font-semibold text-gold-bright hover:underline"
       >
         <ChevronLeft size={13} />
@@ -219,15 +209,6 @@ function ObraContextCard({
         <ChevronsUpDown size={12} className="shrink-0 text-on-surface-faint" />
       </div>
     </div>
-  )
-}
-
-function UnavailableBadge() {
-  const { t } = useTranslation()
-  return (
-    <span className="rounded-full bg-warn-bg px-1.5 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.06em] text-warn">
-      {t("sidebar.unavailable")}
-    </span>
   )
 }
 
@@ -302,12 +283,7 @@ function AccountMenu({
   )
 }
 
-interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
-}
-
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar() {
   const { logout, user } = useAuth()
   const { t } = useTranslation()
   const location = useLocation()
@@ -320,10 +296,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
   const footerRef = useRef<HTMLDivElement>(null)
 
-  // No mobile a sidebar é gaveta e vem sempre aberta. No desktop manda o hover
-  // — mas o menu de conta aberto segura a expansão, senão o painel
-  // desapareceria debaixo do cursor ao sair do trilho.
-  const expanded = isOpen || hovered || menuOpen
+  // Manda o hover — mas o menu de conta aberto segura a expansão, senão o
+  // painel desapareceria debaixo do cursor ao sair do trilho.
+  const expanded = hovered || menuOpen
 
   useEffect(() => {
     if (!menuOpen) return
@@ -359,7 +334,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       />
 
       <aside
-        className={aside({ open: isOpen, expanded })}
+        className={aside({ expanded })}
         style={{ width: expanded ? PANEL : RAIL }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => {
@@ -387,7 +362,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {inObra && (
           <div className="shrink-0">
-            <ObraContextCard obraId={obraId} expanded={expanded} onNavigate={onClose} />
+            <ObraContextCard obraId={obraId} expanded={expanded} />
           </div>
         )}
 
@@ -410,7 +385,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <NavLink
                 key={item.module}
                 to={href}
-                onClick={onClose}
                 title={expanded ? undefined : t(item.labelKey)}
                 className={navLink({ active, expanded })}
               >

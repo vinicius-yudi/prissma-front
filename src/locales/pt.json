@@ -1,6 +1,7 @@
 {
   "header": {
-    "openMenu": "Abrir menu",
+    "search": "Buscar obras...",
+    "searchClear": "Limpar busca",
     "themeLight": "Ativar modo claro",
     "themeDark": "Ativar modo escuro",
     "readOnly": "Somente leitura no seu perfil"
@@ -64,7 +65,6 @@
     "emptyTitle": "Nenhum projeto encontrado",
     "emptyHint": "Ajuste os filtros ou crie um novo projeto",
     "filter": {
-      "search": "Buscar projetos...",
       "all": "Todos",
       "inProgress": "Em Andamento",
       "completed": "Concluídos",
@@ -84,9 +84,7 @@
       "dueToday": "Vence hoje",
       "completed": "Concluído",
       "cancelled": "Cancelado",
-      "built": "{{area}} m² construído",
-      "edit": "Editar obra",
-      "delete": "Excluir obra"
+      "built": "{{area}} m² construído"
     },
     "editModal": {
       "title": "Editar Obra",
@@ -256,7 +254,6 @@
       "deadlineOverdue": "Prazo vencido",
       "areas": "Áreas",
       "landArea": "Terreno",
-      "builtArea": "Área construída",
       "stages": "Etapas",
       "stagesProgress": "Progresso das Etapas",
       "total": "Total",
@@ -264,7 +261,6 @@
       "completed": "Concluídas",
       "currentStage": "Frente atual",
       "executed": "Executado",
-      "stagesDone": "Etapas concluídas",
       "team": "Efetivo vinculado",
       "cycle": "Ciclo da obra",
       "manageStages": "Gerenciar etapas",
@@ -276,7 +272,17 @@
       "seeTeams": "Ver equipes",
       "noTeam": "Nenhum integrante vinculado.",
       "lateBy_one": "⚠ prazo expirado há {{count}} dia",
-      "lateBy_other": "⚠ prazo expirado há {{count}} dias"
+      "lateBy_other": "⚠ prazo expirado há {{count}} dias",
+      "completedLabel": "concluído",
+      "deadlineDeviation_one": "{{count}} dia de desvio previsto",
+      "deadlineDeviation_other": "{{count}} dias de desvio previsto",
+      "stageOf": "etapa {{index}} de {{total}}",
+      "ofBudget": "{{percent}}% do orçamento",
+      "headcount_one": "{{count}} pessoa na obra",
+      "headcount_other": "{{count}} pessoas na obra",
+      "recentDocs": "Documentos recentes",
+      "seeAllDocs": "Ver todos",
+      "noDocs": "Nenhum arquivo enviado ainda."
     },
     "documentos": {
       "title": "Documentos",
@@ -293,13 +299,6 @@
       },
       "count_one": "{{count}} arquivo",
       "count_other": "{{count}} arquivos"
-    },
-    "fotos": {
-      "title": "Fotos Recentes",
-      "add": "Adicionar Foto",
-      "uploading": "Enviando...",
-      "empty": "Nenhuma foto adicionada.",
-      "unsupportedType": "Tipo de imagem não suportado. Envie PNG, JPEG, GIF, BMP, TIFF ou WEBP."
     },
     "attachments": {
       "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
@@ -326,7 +325,8 @@
         "saving": "Salvando...",
         "cancel": "Cancelar",
         "delete": "Excluir",
-        "deleting": "Excluindo..."
+        "deleting": "Excluindo...",
+        "addCategoryShort": "Categoria"
       },
       "kpi": {
         "planned": "Planejado",
@@ -430,19 +430,15 @@
       "empty": "Nenhuma etapa cadastrada.",
       "tasksEmpty": "Nenhuma tarefa nesta etapa.",
       "tasks": "Tarefas",
-      "sections": {
-        "inProgress": "Em Andamento",
-        "pending": "Pendentes",
-        "done": "Concluídas",
-        "emptySection": "Arraste etapas para esta seção."
-      },
       "actions": {
         "create": "Nova Etapa",
         "edit": "Editar",
         "delete": "Excluir",
         "cancel": "Cancelar",
         "save": "Salvar",
-        "saving": "Salvando..."
+        "saving": "Salvando...",
+        "menu": "Ações da etapa",
+        "reorder": "Reordenar etapa"
       },
       "card": {
         "progress": "Progresso",
@@ -498,7 +494,11 @@
         "HIGH": "Alta",
         "MEDIUM": "Média",
         "LOW": "Baixa"
-      }
+      },
+      "emptyTitle": "Nenhuma etapa cadastrada",
+      "emptyHint": "Crie as etapas do ciclo da obra para acompanhar prazos, progresso e atrasos.",
+      "emptyCta": "Criar primeira etapa",
+      "reorderHint": "Arraste as etapas para reordenar"
     },
     "startedAt": "início {{date}}",
     "tarefas": {
@@ -535,7 +535,89 @@
       "deleteTitle": "Excluir tarefa",
       "deleteDescription": "Tem certeza que deseja excluir a tarefa \"{{title}}\"?",
       "cancel": "Cancelar",
-      "confirmDelete": "Excluir"
+      "confirmDelete": "Excluir",
+      "filters": {
+        "ALL": "Todas",
+        "IN_PROGRESS": "Em andamento",
+        "DONE": "Concluídas",
+        "LATE": "Em atraso"
+      },
+      "form": {
+        "createTitle": "Criar tarefa",
+        "editTitle": "Editar tarefa",
+        "title": "Título",
+        "description": "Descrição",
+        "status": "Status",
+        "priority": "Prioridade",
+        "startDate": "Início planejado",
+        "endDate": "Término planejado",
+        "assignee": "Responsável",
+        "assigneePlaceholder": "— Selecionar —",
+        "save": "Salvar",
+        "saving": "Salvando..."
+      },
+      "validation": {
+        "titleRequired": "Título é obrigatório",
+        "descriptionRequired": "Descrição é obrigatória",
+        "priorityRequired": "Selecionar o nível de prioridade é obrigatório",
+        "statusRequired": "Selecionar o status é obrigatório",
+        "plannedStartDateRequired": "Data de início planejada é obrigatória",
+        "plannedStartDatePast": "Data de início não pode ser no passado",
+        "plannedEndDateRequired": "Data de término planejada é obrigatória",
+        "plannedEndDatePast": "Data de término não pode ser no passado",
+        "plannedEndDateBeforeStart": "Data de término não pode ser antes da data de início",
+        "assigneeRequired": "Selecionar o responsável é obrigatório"
+      }
+    },
+    "equipes": {
+      "rolesLink": "Papéis e permissões",
+      "empty": "Ninguém vinculado ainda.",
+      "memberCount_one": "{{count}} pessoa",
+      "memberCount_other": "{{count}} pessoas",
+      "sections": {
+        "team": {
+          "title": "Equipe da obra",
+          "hint": "Engenheiros, arquitetos e mestres de obras",
+          "add": "adicionar integrante"
+        },
+        "client": {
+          "title": "Clientes",
+          "hint": "Quem acompanha a obra pelo lado do contratante",
+          "add": "adicionar cliente"
+        }
+      },
+      "actions": {
+        "addMember": "Adicionar integrante",
+        "cancel": "Cancelar",
+        "remove": "Remover {{name}} da obra",
+        "addMemberShort": "Integrante"
+      },
+      "removeModal": {
+        "title": "Remover pessoa",
+        "message": "Tem certeza que deseja remover {{name}} desta obra?",
+        "confirm": "Remover",
+        "removing": "Removendo..."
+      },
+      "addModal": {
+        "searchPlaceholder": "Pesquise por nome ou e-mail...",
+        "available": "Usuários disponíveis",
+        "loadMore": "Carregar mais resultados",
+        "roleLabel": "Papel na obra",
+        "confirm": "Adicionar",
+        "adding": "Adicionando...",
+        "team": {
+          "title": "Adicionar integrante",
+          "hint": "Procure e selecione quem entra na equipe da obra.",
+          "noResults": "Nenhum colaborador encontrado com este critério.",
+          "noneAvailable": "Nenhum colaborador disponível para adicionar."
+        },
+        "client": {
+          "title": "Adicionar cliente",
+          "hint": "Procure e selecione o cliente que acompanha a obra.",
+          "noResults": "Nenhum cliente encontrado com este critério.",
+          "noneAvailable": "Nenhum cliente disponível para adicionar."
+        }
+      }
     }
   },
   "profile": {
@@ -561,6 +643,13 @@
     "roles": {
       "engineer": "Engenheiro",
       "user": "Usuário"
+    },
+    "page": {
+      "title": "Conta",
+      "preferences": "Preferências",
+      "theme": "Tema",
+      "language": "Idioma",
+      "session": "Sessão"
     }
   },
   "status": {
@@ -595,5 +684,10 @@
     "permissionsTitle": "Permissões do papel",
     "permissionsHint": "Vale para todos os vinculados que exercem o papel selecionado.",
     "permissionsError": "Não foi possível carregar as permissões deste papel."
+  },
+  "mobile": {
+    "backTo": "Voltar para {{target}}",
+    "menu": "Menu",
+    "menuTitle": "Todas as seções"
   }
 }

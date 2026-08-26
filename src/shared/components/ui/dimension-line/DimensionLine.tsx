@@ -3,15 +3,17 @@ import { tv } from "tailwind-variants"
 import { useOncePerPage } from "../page-chrome/PageChrome"
 
 /**
- * Linha de cota — assinatura da marca.
+ * Legenda técnica sob o H1 — **uma por tela**.
  *
- * Tirada do desenho técnico: traços verticais de 9px nas pontas, linha de 1px
- * e o valor em mono sobre ela. Vai como subtítulo do H1, **uma por tela**.
- * Nunca como decoração repetida (Style Guide v2 §4).
+ * Nasceu como cota de desenho técnico (traços verticais nas pontas e linha de
+ * 1px atravessando o texto). Os traços saíram: repetidos em toda página viravam
+ * moldura, e o que carrega a informação — código da obra, endereço, início — é
+ * o texto em mono. A regra de uma ocorrência por tela continua valendo
+ * (Style Guide v2 §4), por isso o registro no <PageChrome> ficou.
  */
 
-const line = tv({
-  base: "flex items-center gap-[9px]",
+const caption = tv({
+  base: "font-mono text-[10.5px] tracking-[0.05em] text-on-surface-faint",
 })
 
 interface DimensionLineProps {
@@ -22,15 +24,5 @@ interface DimensionLineProps {
 export function DimensionLine({ children, className }: DimensionLineProps) {
   useOncePerPage("dimensionLine")
 
-  return (
-    <div className={line({ className })}>
-      <span className="h-[9px] w-px flex-none bg-outline" />
-      <span className="h-px w-[22px] flex-none bg-outline" />
-      <span className="whitespace-nowrap font-mono text-[10.5px] tracking-[0.05em] text-on-surface-faint">
-        {children}
-      </span>
-      <span className="h-px max-w-[110px] flex-1 bg-outline" />
-      <span className="h-[9px] w-px flex-none bg-outline" />
-    </div>
-  )
+  return <p className={caption({ className })}>{children}</p>
 }

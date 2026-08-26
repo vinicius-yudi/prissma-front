@@ -1,6 +1,7 @@
 {
   "header": {
-    "openMenu": "Open menu",
+    "search": "Search projects...",
+    "searchClear": "Clear search",
     "themeLight": "Switch to light mode",
     "themeDark": "Switch to dark mode",
     "readOnly": "Read-only for your role"
@@ -64,7 +65,6 @@
     "emptyTitle": "No projects found",
     "emptyHint": "Adjust filters or create a new project",
     "filter": {
-      "search": "Search projects...",
       "all": "All",
       "inProgress": "In Progress",
       "completed": "Completed",
@@ -84,9 +84,7 @@
       "dueToday": "Due today",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "built": "{{area}} m² built",
-      "edit": "Edit project",
-      "delete": "Delete project"
+      "built": "{{area}} m² built"
     },
     "editModal": {
       "title": "Edit Project",
@@ -256,7 +254,6 @@
       "deadlineOverdue": "Overdue",
       "areas": "Areas",
       "landArea": "Land",
-      "builtArea": "Built area",
       "stages": "Stages",
       "stagesProgress": "Stage Progress",
       "total": "Total",
@@ -264,7 +261,6 @@
       "completed": "Completed",
       "currentStage": "Current work front",
       "executed": "Executed",
-      "stagesDone": "Stages completed",
       "team": "Members linked",
       "cycle": "Project cycle",
       "manageStages": "Manage stages",
@@ -276,7 +272,17 @@
       "seeTeams": "See teams",
       "noTeam": "No members linked.",
       "lateBy_one": "⚠ {{count}} day past due",
-      "lateBy_other": "⚠ {{count}} days past due"
+      "lateBy_other": "⚠ {{count}} days past due",
+      "completedLabel": "completed",
+      "deadlineDeviation_one": "{{count}} day of projected slippage",
+      "deadlineDeviation_other": "{{count}} days of projected slippage",
+      "stageOf": "stage {{index}} of {{total}}",
+      "ofBudget": "{{percent}}% of the budget",
+      "headcount_one": "{{count}} person on site",
+      "headcount_other": "{{count}} people on site",
+      "recentDocs": "Recent documents",
+      "seeAllDocs": "See all",
+      "noDocs": "No files uploaded yet."
     },
     "documentos": {
       "title": "Documents",
@@ -293,13 +299,6 @@
       },
       "count_one": "{{count}} file",
       "count_other": "{{count}} files"
-    },
-    "fotos": {
-      "title": "Recent Photos",
-      "add": "Add Photo",
-      "uploading": "Uploading...",
-      "empty": "No photos added yet.",
-      "unsupportedType": "Unsupported image type. Upload PNG, JPEG, GIF, BMP, TIFF or WEBP."
     },
     "attachments": {
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
@@ -326,7 +325,8 @@
         "saving": "Saving...",
         "cancel": "Cancel",
         "delete": "Delete",
-        "deleting": "Deleting..."
+        "deleting": "Deleting...",
+        "addCategoryShort": "Category"
       },
       "kpi": {
         "planned": "Planned",
@@ -430,19 +430,15 @@
       "empty": "No stages registered.",
       "tasksEmpty": "No tasks in this stage.",
       "tasks": "Tasks",
-      "sections": {
-        "inProgress": "In Progress",
-        "pending": "Pending",
-        "done": "Completed",
-        "emptySection": "Drag stages into this section."
-      },
       "actions": {
         "create": "New Stage",
         "edit": "Edit",
         "delete": "Delete",
         "cancel": "Cancel",
         "save": "Save",
-        "saving": "Saving..."
+        "saving": "Saving...",
+        "menu": "Stage actions",
+        "reorder": "Reorder stage"
       },
       "card": {
         "progress": "Progress",
@@ -498,7 +494,11 @@
         "HIGH": "High",
         "MEDIUM": "Medium",
         "LOW": "Low"
-      }
+      },
+      "emptyTitle": "No stages yet",
+      "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
+      "emptyCta": "Create first stage",
+      "reorderHint": "Drag the stages to reorder"
     },
     "startedAt": "started {{date}}",
     "tarefas": {
@@ -535,7 +535,89 @@
       "deleteTitle": "Delete task",
       "deleteDescription": "Are you sure you want to delete the task \"{{title}}\"?",
       "cancel": "Cancel",
-      "confirmDelete": "Delete"
+      "confirmDelete": "Delete",
+      "filters": {
+        "ALL": "All",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Done",
+        "LATE": "Overdue"
+      },
+      "form": {
+        "createTitle": "New task",
+        "editTitle": "Edit task",
+        "title": "Title",
+        "description": "Description",
+        "status": "Status",
+        "priority": "Priority",
+        "startDate": "Planned start",
+        "endDate": "Planned end",
+        "assignee": "Assignee",
+        "assigneePlaceholder": "— Select —",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "validation": {
+        "titleRequired": "Title is required",
+        "descriptionRequired": "Description is required",
+        "priorityRequired": "Priority is required",
+        "statusRequired": "Status is required",
+        "plannedStartDateRequired": "Planned start date is required",
+        "plannedStartDatePast": "Start date cannot be in the past",
+        "plannedEndDateRequired": "Planned end date is required",
+        "plannedEndDatePast": "End date cannot be in the past",
+        "plannedEndDateBeforeStart": "End date cannot be before the start date",
+        "assigneeRequired": "An assignee is required"
+      }
+    },
+    "equipes": {
+      "rolesLink": "Roles and permissions",
+      "empty": "Nobody linked yet.",
+      "memberCount_one": "{{count}} person",
+      "memberCount_other": "{{count}} people",
+      "sections": {
+        "team": {
+          "title": "Project team",
+          "hint": "Engineers, architects and site foremen",
+          "add": "add member"
+        },
+        "client": {
+          "title": "Clients",
+          "hint": "Who follows the project on the client side",
+          "add": "add client"
+        }
+      },
+      "actions": {
+        "addMember": "Add member",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}} from the project",
+        "addMemberShort": "Member"
+      },
+      "removeModal": {
+        "title": "Remove person",
+        "message": "Are you sure you want to remove {{name}} from this project?",
+        "confirm": "Remove",
+        "removing": "Removing..."
+      },
+      "addModal": {
+        "searchPlaceholder": "Search by name or e-mail...",
+        "available": "Available users",
+        "loadMore": "Load more results",
+        "roleLabel": "Role on the project",
+        "confirm": "Add",
+        "adding": "Adding...",
+        "team": {
+          "title": "Add member",
+          "hint": "Find and select who joins the project team.",
+          "noResults": "No collaborator matches this search.",
+          "noneAvailable": "No collaborator available to add."
+        },
+        "client": {
+          "title": "Add client",
+          "hint": "Find and select the client following this project.",
+          "noResults": "No client matches this search.",
+          "noneAvailable": "No client available to add."
+        }
+      }
     }
   },
   "profile": {
@@ -561,6 +643,13 @@
     "roles": {
       "engineer": "Engineer",
       "user": "User"
+    },
+    "page": {
+      "title": "Account",
+      "preferences": "Preferences",
+      "theme": "Theme",
+      "language": "Language",
+      "session": "Session"
     }
   },
   "status": {
@@ -595,5 +684,10 @@
     "permissionsTitle": "Role permissions",
     "permissionsHint": "Applies to every member holding the selected role.",
     "permissionsError": "Could not load permissions for this role."
+  },
+  "mobile": {
+    "backTo": "Back to {{target}}",
+    "menu": "Menu",
+    "menuTitle": "All sections"
   }
 }

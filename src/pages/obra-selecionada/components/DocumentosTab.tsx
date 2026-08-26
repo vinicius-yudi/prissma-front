@@ -1,4 +1,5 @@
-import { FileText } from "lucide-react"
+import { FileText, UploadCloud } from "lucide-react"
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 
 import {
@@ -6,6 +7,8 @@ import {
   MAX_ATTACHMENT_SIZE_MB,
 } from "@/shared/constants/attachments"
 import { Num } from "@/shared/components/ui/num/Num"
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+import { useAccess } from "@/shared/hooks/useAccess"
 
 import { useDocumentos } from "../hooks/useDocumentos"
 import { AttachmentDropzone } from "./AttachmentDropzone"
@@ -23,7 +26,22 @@ interface DocumentosTabProps {
  */
 export function DocumentosTab({ projectId }: DocumentosTabProps) {
   const { t } = useTranslation()
+  const { isReadOnly } = useAccess()
   const docs = useDocumentos(projectId)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // O FAB do celular abre o mesmo seletor da dropzone. `.click()` a partir do
+  // toque conta como gesto do usuário, então o navegador permite.
+  usePrimaryAction(
+    isReadOnly("documentos")
+      ? null
+      : {
+          label: t("obra.documentos.add"),
+          icon: UploadCloud,
+          disabled: docs.isUploading,
+          onClick: () => fileInputRef.current?.click(),
+        },
+  )
 
   if (docs.isLoading) {
     return (
@@ -43,6 +61,7 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
         maxSizeMb={MAX_ATTACHMENT_SIZE_MB}
         isUploading={docs.isUploading}
         onFile={docs.submitFile}
+        inputRef={fileInputRef}
       />
 
       <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5">

@@ -229,6 +229,30 @@
   background-image: linear-gradient(to top, var(--pk-fade), transparent);
 }
 
+/* ---------------------------------------------------------------------------
+   Utilitários do shell mobile.
+
+   `pb-safe` reserva a faixa do indicador de home do iOS sob a barra de abas —
+   sem ela os rótulos ficam por baixo do gesto do sistema. Depende do
+   `viewport-fit=cover` no index.html; fora do iOS o inset é 0 e não custa nada.
+
+   `scrollbar-none` é para trilhos que rolam na horizontal (módulos da obra,
+   filtros): a barra do WebKit aparece por cima dos chips e não há o que rolar
+   verticalmente ali.
+--------------------------------------------------------------------------- */
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -310,4 +334,47 @@ select:-webkit-autofill {
 #root {
   width: 100%;
   min-height: 100dvh;
+}
+
+/* ---------------------------------------------------------------------------
+   Transição de tema.
+
+   Trocar `data-theme` reescreve todas as primitivas de uma vez, e sem
+   transição a tela dá um salto seco de escuro para pergaminho. A classe é
+   posta pelo <ThemeProvider> só durante a troca e removida em seguida: manter
+   `transition` no CSS base deixaria hover e foco moles e faria o primeiro
+   paint entrar desbotando.
+
+   O `!important` é o que garante o esmaecimento em elementos que já declaram
+   uma `transition` própria (quase todo componente usa `transition-*` do
+   Tailwind). Como ele substitui — e não soma — a transição do elemento,
+   `transform` precisa entrar na lista: sem isso o botão do próprio toggle
+   saltaria de lado no clique em vez de deslizar.
+--------------------------------------------------------------------------- */
+
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 350ms ease,
+    background-image 350ms ease,
+    border-color 350ms ease,
+    color 350ms ease,
+    fill 350ms ease,
+    stroke 350ms ease,
+    box-shadow 350ms ease,
+    outline-color 350ms ease,
+    opacity 350ms ease,
+    transform 350ms ease !important;
+  transition-delay: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition: none !important;
+  }
 }

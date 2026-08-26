@@ -1,27 +1,26 @@
 import {
   DndContext,
-  DragOverlay,
+  KeyboardSensor,
   PointerSensor,
-  closestCorners,
-  useDroppable,
+  TouchSensor,
+  closestCenter,
   useSensor,
   useSensors,
   type DragEndEvent,
-  type DragStartEvent,
 } from "@dnd-kit/core"
 import {
   SortableContext,
   arrayMove,
-  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
-import { AlertTriangle, Plus, RefreshCw } from "lucide-react"
+import { AlertTriangle, ArrowUpDown, Plus, RefreshCw } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
 import { Modal } from "@/shared/components/ui/modal/Modal"
-import type { EtapaStatus } from "@/pages/projetos/types"
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 
 import { useAttachments } from "../hooks/useAttachments"
 import { useProjectRole } from "../hooks/useProjectRole"
@@ -30,111 +29,49 @@ import type { Stage } from "../services/stages.service"
 import { EtapaCard } from "./EtapaCard"
 import { StageFormModal } from "./StageFormModal"
 
-type SectionKey = "IN_PROGRESS" | "PENDING" | "DONE"
+/**
+ * Etapas da obra (Telas §12) — lista vertical ordenável.
+ *
+ * Uma lista só, na ordem do ciclo. Antes eram três seções por status e o
+ * arraste servia a duas coisas ao mesmo tempo (reordenar dentro da seção,
+ * mudar status entre seções); o gesto ficava ambíguo e a ordem global —
+ * `displayOrder`, que é o que a Visão geral e o backend usam — se perdia entre
+ * os grupos. Aqui arrastar só reordena; o status se muda no formulário.
+ *
+ * `localStages` espelha a query para o arraste ser imediato: esperar o
+ * round-trip faria a linha voltar ao lugar antigo antes de assentar.
+ */
 
-const SECTION_ORDER: SectionKey[] = ["IN_PROGRESS", "PENDING", "DONE"]
-
-const SECTION_TITLE_KEY: Record<SectionKey, string> = {
-  IN_PROGRESS: "obra.etapas.sections.inProgress",
-  PENDING: "obra.etapas.sections.pending",
-  DONE: "obra.etapas.sections.done",
-}
-
-const SECTION_STATUS: Record<SectionKey, EtapaStatus> = {
-  IN_PROGRESS: "IN_PROGRESS",
-  PENDING: "PLANNED",
-  DONE: "DONE",
-}
-
-function statusToSection(status: EtapaStatus): SectionKey {
-  if (status === "IN_PROGRESS") return "IN_PROGRESS"
-  if (status === "DONE") return "DONE"
-  return "PENDING"
-}
-
-function groupBySection(stages: Stage[]): Record<SectionKey, Stage[]> {
-  const groups: Record<SectionKey, Stage[]> = {
-    IN_PROGRESS: [],
-    PENDING: [],
-    DONE: [],
-  }
-  for (const stage of [...stages].sort((a, b) => a.displayOrder - b.displayOrder)) {
-    groups[statusToSection(stage.status)].push(stage)
-  }
-  return groups
-}
-
-const dropZone = tv({
-  base: "grid min-h-24 grid-cols-1 gap-4 rounded-xl sm:grid-cols-2 lg:grid-cols-3",
-  variants: {
-    over: {
-      true: "bg-primary/5 ring-1 ring-primary/30",
-      false: "",
-    },
-    empty: {
-      true: "border border-dashed border-outline-variant/40 p-4",
-      false: "",
-    },
-  },
-})
-
-interface DroppableSectionProps {
-  sectionKey: SectionKey
-  stages: Stage[]
-  photoCountByStage: Map<number, number>
-  onCardClick?: (stage: Stage) => void
-  onCardDelete?: (stage: Stage) => void
-  canDrag: boolean
-  canMutate: boolean
-  isEmpty: boolean
-}
-
-function DroppableSection({
-  sectionKey,
-  stages,
-  photoCountByStage,
-  onCardClick,
-  onCardDelete,
-  canDrag,
-  canMutate,
-  isEmpty,
-}: DroppableSectionProps) {
+function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () => void }) {
   const { t } = useTranslation()
-  const { setNodeRef, isOver } = useDroppable({ id: `section:${sectionKey}` })
-
   return (
-    <section className="space-y-3">
-      <h2 className="font-semibold text-on-surface text-base">
-        {t(SECTION_TITLE_KEY[sectionKey])}
-      </h2>
-      <SortableContext
-        id={`section:${sectionKey}`}
-        items={stages.map(s => s.id)}
-        strategy={rectSortingStrategy}
+    <section className="flex flex-col items-center gap-3.5 rounded-2xl border border-outline-variant bg-surface-container-low px-5 py-14 text-center">
+      {/* Wireframe de construção em traço ouro — a ilustração de vazio do
+          Style Guide v2 §4. */}
+      <svg
+        width="112"
+        height="82"
+        viewBox="0 0 96 72"
+        fill="none"
+        stroke="var(--color-gold)"
+        strokeWidth="1.2"
+        aria-hidden
       >
-        <div
-          ref={setNodeRef}
-          className={dropZone({ over: isOver, empty: isEmpty })}
-        >
-          {stages.length === 0 ? (
-            <p className="text-sm text-on-surface-variant col-span-full text-center py-3">
-              {t("obra.etapas.sections.emptySection")}
-            </p>
-          ) : (
-            stages.map(stage => (
-              <EtapaCard
-                key={stage.id}
-                stage={stage}
-                photoCount={photoCountByStage.get(stage.id) ?? 0}
-                onClick={onCardClick}
-                onDelete={onCardDelete}
-                disableDrag={!canDrag}
-                canMutate={canMutate}
-              />
-            ))
-          )}
-        </div>
-      </SortableContext>
+        <path d="M8 64h80M20 64V26l28-14 28 14v38M34 64V44h12v20M56 40h12v10H56z" />
+        <path d="M20 26h56" strokeDasharray="3 4" />
+      </svg>
+
+      <p className="text-base font-semibold text-on-surface">{t("obra.etapas.emptyTitle")}</p>
+      <p className="max-w-[330px] text-[13px] text-on-surface-variant">
+        {t("obra.etapas.emptyHint")}
+      </p>
+
+      {canMutate && (
+        <Button variant="primary" fullWidth={false} onClick={onCreate} className="mt-1">
+          <Plus size={15} />
+          {t("obra.etapas.emptyCta")}
+        </Button>
+      )}
     </section>
   )
 }
@@ -148,24 +85,25 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
   const { canMutate } = useProjectRole(projectId)
   const { attachments } = useAttachments(projectId)
   const { stages, isLoading, isError, refetch } = useStagesList(projectId)
-  const { reorder, update, remove, isDeleting } = useStages(projectId)
+  const { reorder, remove, isDeleting } = useStages(projectId)
 
   const [localStages, setLocalStages] = useState<Stage[]>([])
   const [modalState, setModalState] = useState<
     { mode: "create" } | { mode: "edit"; stage: Stage } | { mode: "closed" }
   >({ mode: "closed" })
   const [pendingDelete, setPendingDelete] = useState<Stage | null>(null)
-  const [activeDragId, setActiveDragId] = useState<number | null>(null)
 
   useEffect(() => {
-    setLocalStages(stages)
+    setLocalStages([...stages].sort((a, b) => a.displayOrder - b.displayOrder))
   }, [stages])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    // No toque o arraste só começa após uma pressão longa, senão o gesto de
+    // rolar a página seria capturado pela alça.
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
-
-  const grouped = useMemo(() => groupBySection(localStages), [localStages])
 
   const photoCountByStage = useMemo(() => {
     const map = new Map<number, number>()
@@ -182,93 +120,27 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
     [localStages],
   )
 
-  const activeDragStage = useMemo(
-    () => (activeDragId != null ? localStages.find(s => s.id === activeDragId) ?? null : null),
-    [activeDragId, localStages],
-  )
-
-  function findSectionOfId(id: number): SectionKey | null {
-    for (const key of SECTION_ORDER) {
-      if (grouped[key].some(s => s.id === id)) return key
-    }
-    return null
-  }
-
-  function parseContainerId(raw: string | number | null | undefined): SectionKey | null {
-    if (typeof raw !== "string") return null
-    if (!raw.startsWith("section:")) return null
-    const key = raw.slice("section:".length) as SectionKey
-    return SECTION_ORDER.includes(key) ? key : null
-  }
-
-  function handleDragStart(event: DragStartEvent) {
-    setActiveDragId(typeof event.active.id === "number" ? event.active.id : Number(event.active.id))
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    setActiveDragId(null)
-    const { active, over } = event
-    if (!over) return
-
-    const activeId = Number(active.id)
-    const fromSection = findSectionOfId(activeId)
-    if (!fromSection) return
-
-    const toSection =
-      parseContainerId(over.id) ?? findSectionOfId(Number(over.id))
-    if (!toSection) return
-
-    const activeStage = localStages.find(s => s.id === activeId)
-    if (!activeStage) return
-
-    if (fromSection === toSection) {
-      const items = grouped[fromSection]
-      const oldIndex = items.findIndex(s => s.id === activeId)
-      const overIdNum = Number(over.id)
-      const newIndex = items.findIndex(s => s.id === overIdNum)
-      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return
-
-      const reordered = arrayMove(items, oldIndex, newIndex)
-
-      const orderMap = new Map<number, number>()
-      reordered.forEach((s, idx) => orderMap.set(s.id, idx + 1))
-
-      setLocalStages(prev =>
-        prev.map(s =>
-          orderMap.has(s.id) ? { ...s, displayOrder: orderMap.get(s.id)! } : s,
-        ),
-      )
-
-      const globalOrder: number[] = []
-      for (const key of SECTION_ORDER) {
-        const list = key === fromSection ? reordered : grouped[key]
-        for (const s of list) globalOrder.push(s.id)
-      }
-
-      reorder(globalOrder)
-      return
-    }
-
-    const newStatus = SECTION_STATUS[toSection]
-    update({
-      id: activeId,
-      payload: {
-        name: activeStage.name,
-        description: activeStage.description,
-        displayOrder: activeStage.displayOrder,
-        status: newStatus,
-        plannedStartDate: activeStage.plannedStartDate,
-        plannedEndDate: activeStage.plannedEndDate,
-      },
-    })
-
-    setLocalStages(prev =>
-      prev.map(s => (s.id === activeId ? { ...s, status: newStatus } : s)),
-    )
-  }
-
   function openCreate() {
     setModalState({ mode: "create" })
+  }
+
+  // Precisa vir antes de qualquer early return: é o que alimenta o FAB da
+  // barra de abas no celular.
+  usePrimaryAction(
+    canMutate ? { label: t("obra.etapas.actions.create"), onClick: openCreate } : null,
+  )
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const oldIndex = localStages.findIndex((s) => s.id === Number(active.id))
+    const newIndex = localStages.findIndex((s) => s.id === Number(over.id))
+    if (oldIndex === -1 || newIndex === -1) return
+
+    const reordered = arrayMove(localStages, oldIndex, newIndex)
+    setLocalStages(reordered.map((s, idx) => ({ ...s, displayOrder: idx + 1 })))
+    reorder(reordered.map((s) => s.id))
   }
 
   function openEdit(stage: Stage) {
@@ -279,39 +151,27 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
     setModalState({ mode: "closed" })
   }
 
-  function requestDelete(stage: Stage) {
-    setPendingDelete(stage)
-  }
-
-  function cancelDelete() {
-    setPendingDelete(null)
-  }
-
   function confirmDelete() {
     if (!pendingDelete) return
-    remove(pendingDelete.id, {
-      onSuccess: () => setPendingDelete(null),
-    })
+    remove(pendingDelete.id, { onSuccess: () => setPendingDelete(null) })
   }
 
   function renderBody() {
     if (isLoading) {
       return (
-        <div className="animate-pulse space-y-4 py-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="h-40 bg-surface-container-low rounded-xl" />
-            <div className="h-40 bg-surface-container-low rounded-xl" />
-            <div className="h-40 bg-surface-container-low rounded-xl" />
-          </div>
-        </div>
+        <ul className="space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <li key={i} className="h-[76px] animate-pulse rounded-2xl bg-surface-container-low" />
+          ))}
+        </ul>
       )
     }
 
     if (isError) {
       return (
-        <div className="flex flex-col items-center justify-center gap-4 p-12 bg-surface-container-low rounded-xl border border-error/20">
-          <p className="text-on-surface-variant text-sm">{t("obra.acompError")}</p>
-          <Button variant="outline" onClick={() => refetch()}>
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-outline-variant bg-surface-container-low p-12">
+          <p className="text-sm text-on-surface-variant">{t("obra.acompError")}</p>
+          <Button variant="outline" fullWidth={false} onClick={() => refetch()}>
             <RefreshCw size={14} />
             {t("obra.retry")}
           </Button>
@@ -319,56 +179,54 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
       )
     }
 
-    if (localStages.length > 0) {
-      return (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="space-y-8">
-            {SECTION_ORDER.map(section => (
-              <DroppableSection
-                key={section}
-                sectionKey={section}
-                stages={grouped[section]}
-                photoCountByStage={photoCountByStage}
-                onCardClick={openEdit}
-                onCardDelete={requestDelete}
-                canDrag={canMutate}
-                canMutate={canMutate}
-                isEmpty={grouped[section].length === 0}
-              />
-            ))}
-          </div>
-          <DragOverlay>
-            {activeDragStage && (
-              <EtapaCard
-                stage={activeDragStage}
-                photoCount={photoCountByStage.get(activeDragStage.id) ?? 0}
-                disableDrag
-              />
-            )}
-          </DragOverlay>
-        </DndContext>
-      )
+    if (localStages.length === 0) {
+      return <EmptyState canMutate={canMutate} onCreate={openCreate} />
     }
 
     return (
-      <div className="flex items-center justify-center py-20 text-on-surface-variant text-sm">
-        {t("obra.etapas.empty")}
-      </div>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={localStages.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+          <ul className="space-y-3">
+            {localStages.map((stage) => (
+              <EtapaCard
+                key={stage.id}
+                stage={stage}
+                photoCount={photoCountByStage.get(stage.id) ?? 0}
+                onClick={openEdit}
+                onDelete={setPendingDelete}
+                disableDrag={!canMutate}
+                canMutate={canMutate}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-on-surface">{t("obra.etapas.title")}</h1>
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {canMutate && localStages.length > 1 ? (
+          <p className="hidden items-center gap-2 text-[12px] text-on-surface-faint lg:flex">
+            <ArrowUpDown size={14} />
+            {t("obra.etapas.reorderHint")}
+          </p>
+        ) : (
+          <span />
+        )}
+
         {canMutate && (
-          <Button onClick={openCreate} variant="primary" className="w-auto px-4 py-2 text-sm">
-            <Plus size={16} />
+          <Button
+            variant="primary"
+            size="sm"
+            fullWidth={false}
+            onClick={openCreate}
+            // No celular quem cria é o FAB da barra de abas — dois botões de
+            // criação na mesma vista competiriam entre si.
+            className="ml-auto hidden lg:inline-flex"
+          >
+            <Plus size={15} />
             {t("obra.etapas.actions.create")}
           </Button>
         )}
@@ -387,25 +245,21 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
 
       <Modal
         open={!!pendingDelete}
-        onClose={cancelDelete}
+        onClose={() => setPendingDelete(null)}
         title={t("obra.etapas.deleteModal.title")}
         icon={<AlertTriangle size={20} />}
         variant="danger"
         size="sm"
       >
-        <div className="px-6 pb-6 space-y-5">
-          <p className="text-sm text-on-surface-variant leading-relaxed">
+        <div className="space-y-5 px-6 pb-6">
+          <p className="text-sm leading-relaxed text-on-surface-variant">
             {t("obra.etapas.deleteModal.message", { name: pendingDelete?.name ?? "" })}
           </p>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={cancelDelete} disabled={isDeleting}>
+            <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={isDeleting}>
               {t("obra.etapas.actions.cancel")}
             </Button>
-            <Button
-              onClick={confirmDelete}
-              disabled={isDeleting}
-              className="bg-error text-on-error border-0 hover:brightness-[0.92]"
-            >
+            <Button variant="destructive" onClick={confirmDelete} disabled={isDeleting}>
               {isDeleting
                 ? t("obra.etapas.deleteModal.deleting")
                 : t("obra.etapas.deleteModal.confirm")}

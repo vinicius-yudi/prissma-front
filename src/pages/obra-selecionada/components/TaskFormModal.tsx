@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Select } from "@/shared/components/ui/select/Select"
+import { Textarea } from "@/shared/components/ui/textarea/Textarea"
 import { useTarefas } from "../hooks/useTarefas"
 import { taskSchema } from "../schemas/tarefas.shcemas"
 import type { CreateTarefaRequest, TarefaPriority, TarefaStatus, Tarefa } from "../types/tarefas"
@@ -22,6 +24,7 @@ interface TaskFormModalProps {
 }
 
 export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = true, tarefaToEdit, onSaved }: TaskFormModalProps) {
+  const { t } = useTranslation()
   const form = useForm<CreateTarefaRequest>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -78,67 +81,63 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
 
   const readOnly = !canMutate
 
-  const title = tarefaToEdit ? "Editar tarefa" : "Criar tarefa"
+  const title = t(tarefaToEdit ? "obra.tarefas.form.editTitle" : "obra.tarefas.form.createTitle")
 
   return (
     <Modal open={open} onClose={onClose} title={title} size="lg">
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="px-6 pt-5 pb-2 grid grid-cols-1 gap-4">
           <div>
-            <Label>Titulo</Label>
+            <Label>{t("obra.tarefas.form.title")}</Label>
             <Input {...form.register("title")} disabled={readOnly} />
-            {errors.title && <p className="text-xs text-error mt-1">{errors.title.message}</p>}
+            {errors.title && <p className="mt-1 text-xs text-danger">{errors.title.message}</p>}
           </div>
 
           <div>
-            <Label>Descrição</Label>
-            <textarea
-              className="w-full rounded-xl px-4 py-3 bg-surface-container-highest text-on-surface text-sm border border-outline-variant"
-              {...form.register("description")}
-              disabled={readOnly}
-            />
-            {errors.description && <p className="text-xs text-error mt-1">{errors.description.message}</p>}
+            <Label>{t("obra.tarefas.form.description")}</Label>
+            <Textarea {...form.register("description")} disabled={readOnly} />
+            {errors.description && <p className="mt-1 text-xs text-danger">{errors.description.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Status</Label>
+              <Label>{t("obra.tarefas.form.status")}</Label>
               <Select {...form.register("status")} disabled={readOnly}>
-                <option value="TODO">Pendente</option>
-                <option value="IN_PROGRESS">Em andamento</option>
-                <option value="BLOCKED">Bloqueada</option>
-                <option value="DONE">Concluída</option>
+                <option value="TODO">{t("obra.tarefas.columns.TODO")}</option>
+                <option value="IN_PROGRESS">{t("obra.tarefas.columns.IN_PROGRESS")}</option>
+                <option value="BLOCKED">{t("obra.tarefas.columns.BLOCKED")}</option>
+                <option value="DONE">{t("obra.tarefas.columns.DONE")}</option>
               </Select>
-              {errors.status && <p className="text-xs text-error mt-1">{errors.status.message}</p>}
+              {errors.status && <p className="mt-1 text-xs text-danger">{errors.status.message}</p>}
             </div>
             <div>
-              <Label>Prioridade</Label>
+              <Label>{t("obra.tarefas.form.priority")}</Label>
               <Select {...form.register("priority")} disabled={readOnly}>
-                <option value="LOW">Baixa</option>
-                <option value="MEDIUM">Média</option>
-                <option value="HIGH">Alta</option>
+                <option value="LOW">{t("obra.tarefas.priority.LOW")}</option>
+                <option value="MEDIUM">{t("obra.tarefas.priority.MEDIUM")}</option>
+                <option value="HIGH">{t("obra.tarefas.priority.HIGH")}</option>
               </Select>
-              {errors.priority && <p className="text-xs text-error mt-1">{errors.priority.message}</p>}
+              {errors.priority && <p className="mt-1 text-xs text-danger">{errors.priority.message}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Data de Início Planejada</Label>
+              <Label>{t("obra.tarefas.form.startDate")}</Label>
               <Input type="date" min={today} {...form.register("plannedStartDate")} disabled={readOnly} />
-              {errors.plannedStartDate && <p className="text-xs text-error mt-1">{errors.plannedStartDate.message}</p>}
+              {errors.plannedStartDate && <p className="mt-1 text-xs text-danger">{errors.plannedStartDate.message}</p>}
             </div>
             <div>
-              <Label>Data de Término Planejada</Label>
+              <Label>{t("obra.tarefas.form.endDate")}</Label>
               <Input type="date" min={today} {...form.register("plannedEndDate")} disabled={readOnly} />
-              {errors.plannedEndDate && <p className="text-xs text-error mt-1">{errors.plannedEndDate.message}</p>}
+              {errors.plannedEndDate && <p className="mt-1 text-xs text-danger">{errors.plannedEndDate.message}</p>}
             </div>
           </div>
 
           <div>
-            <Label>Responsável</Label>
+            <Label>{t("obra.tarefas.form.assignee")}</Label>
             <Select defaultValue="" {...form.register("assigneeUserId", { valueAsNumber: true })} disabled={membersLoading || readOnly}>
-              <option value="" disabled>-- Selecionar --</option>
+              <option value="" disabled>{t("obra.tarefas.form.assigneePlaceholder")}</option>
               {members
                 .filter((m) => m.user.role !== "USER" && m.user.role !== "ADMIN")
                 .map((m) => (
@@ -147,13 +146,19 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
                   </option>
                 ))}
             </Select>
-            {errors.assigneeUserId && <p className="text-xs text-error mt-1">{errors.assigneeUserId.message}</p>}
+            {errors.assigneeUserId && <p className="mt-1 text-xs text-danger">{errors.assigneeUserId.message}</p>}
           </div>
         </div>
 
         <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
-          <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>Cancelar</Button>
-          {canMutate && <Button type="submit" disabled={isCreating}>{isCreating ? "Salvando..." : "Salvar"}</Button>}
+          <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>
+            {t("obra.tarefas.cancel")}
+          </Button>
+          {canMutate && (
+            <Button type="submit" disabled={isCreating}>
+              {isCreating ? t("obra.tarefas.form.saving") : t("obra.tarefas.form.save")}
+            </Button>
+          )}
         </div>
       </form>
     </Modal>
