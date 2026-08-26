@@ -1,5 +1,5 @@
 import { UploadCloud } from "lucide-react"
-import { useRef, useState, type ChangeEvent, type DragEvent } from "react"
+import { useRef, useState, type ChangeEvent, type DragEvent, type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
@@ -39,6 +39,11 @@ interface AttachmentDropzoneProps {
   maxSizeMb: number
   isUploading: boolean
   onFile: (file: File) => void
+  /**
+   * Deixa a tela abrir o seletor de arquivos de fora — é como o FAB do celular
+   * dispara o upload sem duplicar o input.
+   */
+  inputRef?: RefObject<HTMLInputElement | null>
 }
 
 export function AttachmentDropzone({
@@ -47,9 +52,11 @@ export function AttachmentDropzone({
   maxSizeMb,
   isUploading,
   onFile,
+  inputRef: externalRef,
 }: AttachmentDropzoneProps) {
   const { t } = useTranslation()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const localRef = useRef<HTMLInputElement>(null)
+  const inputRef = externalRef ?? localRef
   const [isOver, setIsOver] = useState(false)
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {

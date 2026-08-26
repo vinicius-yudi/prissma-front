@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
+import { SEARCH_PARAM } from "@/shared/constants/search"
 import { ProjectStatus, type Project } from "@/shared/types/project"
 
 import { listProjects } from "../services/projects.service"
@@ -20,8 +22,13 @@ function isProjectOverdue(project: Project): boolean {
 }
 
 export function useProjects() {
-  const [search, setSearch] = useState("")
   const [filter, setFilter] = useState<ProjectFilter>(ProjectFilter.ALL)
+
+  // O campo de busca vive no header, acima desta página. A URL é o meio-termo:
+  // quem escreve é o <HeaderSearch>, quem lê é aqui, e nenhum dos dois precisa
+  // conhecer o outro nem existir um contexto só para carregar uma string.
+  const [searchParams] = useSearchParams()
+  const search = searchParams.get(SEARCH_PARAM) ?? ""
 
   const query = useQuery({
     queryKey: ["projects"],
@@ -62,7 +69,6 @@ export function useProjects() {
     isLoading: query.isLoading,
     isError: query.isError,
     search,
-    setSearch,
     filter,
     setFilter,
     stats,

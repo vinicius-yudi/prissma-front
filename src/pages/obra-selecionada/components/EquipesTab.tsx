@@ -1,49 +1,224 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { tv } from 'tailwind-variants'
-import { Button } from '@/shared/components/ui/button/Button'
-import { Input } from '@/shared/components/ui/input/Input'
-import { Modal } from '@/shared/components/ui/modal/Modal'
-import { RoleChip } from '@/shared/components/ui/role-chip/RoleChip'
-import { CirclePlus, CircleX, Mail, Search, Loader, ShieldCheck } from 'lucide-react'
-import { useEquipes } from '../hooks/useEquipes'
-import { useProjectPermissions } from '../hooks/useProjectPermissions'
-import { ProjectPermission } from '../services/projectPermissions.service'
-import type { ConstructionProjectMember, ProjectRoleInRequest } from '../types/equipes'
-import { RolePermissionsModal } from './RolePermissionsModal'
+import {
+  ChevronDown,
+  ChevronRight,
+  Loader,
+  Plus,
+  Search,
+  ShieldCheck,
+  UserRound,
+  Users,
+  X,
+} from "lucide-react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { Link } from "react-router-dom"
+import { tv } from "tailwind-variants"
+
+import { Button } from "@/shared/components/ui/button/Button"
+import { Input } from "@/shared/components/ui/input/Input"
+import { Modal } from "@/shared/components/ui/modal/Modal"
+import { Num } from "@/shared/components/ui/num/Num"
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+import { RoleChip } from "@/shared/components/ui/role-chip/RoleChip"
+import { Select } from "@/shared/components/ui/select/Select"
+import { useAccess } from "@/shared/hooks/useAccess"
+
+import { useEquipes } from "../hooks/useEquipes"
+import { useProjectPermissions } from "../hooks/useProjectPermissions"
+import { ProjectPermission } from "../services/projectPermissions.service"
+import type { ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
+
+/**
+ * Equipes da obra (Telas §14).
+ *
+ * Dois grupos recolhíveis — a equipe de execução, aberta por padrão, e os
+ * clientes. As frentes nomeadas do protótipo ("Elétrica", "Alvenaria") não
+ * existem no backend, que só guarda vínculo + papel; inventar frentes daria
+ * uma tela bonita e mentirosa.
+ *
+ * Integrante é chip, não card: o que importa da pessoa aqui é quem ela é e o
+ * papel dela — cards de 80px de avatar cabiam quatro por tela e transformavam
+ * uma equipe de dez em rolagem.
+ *
+ * Permissões **não** ficam aqui. Editar a matriz de papéis é o assunto de
+ * "Pessoas & papéis"; ter os dois caminhos era o que fazia os rótulos de papel
+ * divergirem entre as telas. Sobra o atalho.
+ */
+
+const SECTIONS = ["team", "client"] as const
+type SectionKey = (typeof SECTIONS)[number]
 
 const userOption = tv({
-  base: "rounded-2xl border p-4 text-left transition-all",
+  base: "rounded-2xl border p-4 text-left transition-colors",
   variants: {
     selected: {
-      true: "border-primary bg-primary/10",
-      false: "border-outline-variant/60 bg-surface-container",
+      true: "border-gold bg-tint",
+      false: "border-outline-variant bg-surface-container hover:border-outline",
     },
   },
 })
+
+const sectionIcon = tv({
+  base: "flex size-9 shrink-0 items-center justify-center rounded-[10px]",
+  variants: {
+    section: {
+      team: "bg-gold text-on-primary",
+      client: "bg-surface-container-high text-on-surface-variant",
+    },
+  },
+})
+
+function isClient(role: string): boolean {
+  return role === "USER"
+}
+
+function isCollaborator(role: string): boolean {
+  return role !== "USER" && role !== "ADMIN"
+}
+
+interface MemberChipProps {
+  member: ConstructionProjectMember
+  canRemove: boolean
+  onRemove: (member: ConstructionProjectMember) => void
+}
+
+function MemberChip({ member, canRemove, onRemove }: MemberChipProps) {
+  const { t } = useTranslation()
+
+  return (
+    <span className="group flex max-w-full items-center gap-2 rounded-full border border-outline-variant bg-surface-container-high py-1.5 pl-1.5 pr-3">
+      {member.user.avatar ? (
+        <img
+          src={member.user.avatar}
+          alt=""
+          className="size-7 shrink-0 rounded-full object-cover"
+        />
+      ) : (
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container text-[9.5px] font-bold text-on-surface-variant">
+          {member.user.name.slice(0, 2).toUpperCase()}
+        </span>
+      )}
+
+      <span className="min-w-0 truncate text-[12.5px] text-on-surface">{member.user.name}</span>
+      <RoleChip role={member.roleInProject} />
+
+      {canRemove && (
+        <button
+          type="button"
+          onClick={() => onRemove(member)}
+          aria-label={t("obra.equipes.actions.remove", { name: member.user.name })}
+          // Sempre visível no toque, onde não existe hover; no desktop aparece
+          // ao passar o mouse para o chip não virar uma fileira de ✕.
+          className="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+        >
+          <X size={13} />
+        </button>
+      )}
+    </span>
+  )
+}
+
+interface SectionProps {
+  section: SectionKey
+  members: ConstructionProjectMember[]
+  canManage: boolean
+  expanded: boolean
+  onToggle: () => void
+  onAdd: () => void
+  onRemove: (member: ConstructionProjectMember) => void
+}
+
+function MemberSection({
+  section,
+  members,
+  canManage,
+  expanded,
+  onToggle,
+  onAdd,
+  onRemove,
+}: SectionProps) {
+  const { t } = useTranslation()
+  const Icon = section === "team" ? Users : UserRound
+  const Chevron = expanded ? ChevronDown : ChevronRight
+
+  return (
+    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-4 sm:p-5">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        className="flex w-full cursor-pointer items-center gap-3 text-left"
+      >
+        <Chevron size={14} className="shrink-0 text-on-surface-faint" />
+        <span className={sectionIcon({ section })}>
+          <Icon size={17} strokeWidth={1.8} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-semibold text-on-surface">
+            {t(`obra.equipes.sections.${section}.title`)}
+          </span>
+          <span className="block truncate text-[11.5px] text-on-surface-faint">
+            {t(`obra.equipes.sections.${section}.hint`)}
+          </span>
+        </span>
+        <Num className="shrink-0 text-[11.5px] text-on-surface-variant">
+          {t("obra.equipes.memberCount", { count: members.length })}
+        </Num>
+      </button>
+
+      {expanded && (
+        <div className="mt-4 flex flex-wrap gap-2 sm:pl-[62px]">
+          {members.map((member) => (
+            <MemberChip
+              key={member.id}
+              member={member}
+              // O dono da obra não se remove da própria obra.
+              canRemove={canManage && member.roleInProject !== "OWNER"}
+              onRemove={onRemove}
+            />
+          ))}
+
+          {canManage && (
+            <button
+              type="button"
+              onClick={onAdd}
+              className="flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-outline px-4 text-[12.5px] font-semibold text-gold-bright transition-colors hover:bg-tint"
+            >
+              <Plus size={14} />
+              {t(`obra.equipes.sections.${section}.add`)}
+            </button>
+          )}
+
+          {members.length === 0 && !canManage && (
+            <p className="text-[13px] text-on-surface-variant">{t("obra.equipes.empty")}</p>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
 
 interface EquipesTabProps {
   obraId: number
 }
 
-function isClient(role: string): boolean {
-  return role === 'USER'
-}
-
-function isCollaborator(role: string): boolean {
-  return role !== 'USER' && role !== 'ADMIN'
-}
-
 export function EquipesTab({ obraId }: EquipesTabProps) {
   const { t } = useTranslation()
+  const { levelOf } = useAccess()
+
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
-  const [permsOpen, setPermsOpen] = useState(false)
-  const [selectedSection, setSelectedSection] = useState<'client' | 'team'>('team')
-  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>('ENGINEER')
+  const [selectedSection, setSelectedSection] = useState<SectionKey>("team")
+  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>("ENGINEER")
+  const [expanded, setExpanded] = useState<Record<SectionKey, boolean>>({
+    team: true,
+    client: false,
+  })
 
-  const { can } = useProjectPermissions(obraId)
-  const canManageMembers = can(ProjectPermission.MANAGE_MEMBERS)
+  const { can, isAdmin } = useProjectPermissions(obraId)
+  // O `isAdmin` alinha esta tela com o kanban: sem ele um ADMIN global que não
+  // é membro da obra ficava sem nenhuma ação.
+  const canManageMembers = isAdmin || can(ProjectPermission.MANAGE_MEMBERS)
 
   const {
     members,
@@ -64,382 +239,224 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     collaboratorsHasMore,
   } = useEquipes(obraId, addOpen && canManageMembers)
 
-  function openRemoveModal(member: ConstructionProjectMember) {
-    setMemberToRemove(member)
-  }
-
-  function closeRemoveModal() {
-    setMemberToRemove(null)
-  }
-
-  function openAddModal(section: 'client' | 'team') {
+  function openAddModal(section: SectionKey) {
     setSelectedSection(section)
-    setSearchQuery('')
+    setSearchQuery("")
     setSelectedUserId(null)
-    setSelectedRoleInAdd('ENGINEER')
+    setSelectedRoleInAdd("ENGINEER")
+    setExpanded((prev) => ({ ...prev, [section]: true }))
     setAddOpen(true)
   }
 
+  // Antes do early return de loading: alimenta o FAB da barra de abas.
+  usePrimaryAction(
+    canManageMembers
+      ? {
+          label: t("obra.equipes.actions.addMember"),
+          shortLabel: t("obra.equipes.actions.addMemberShort"),
+          onClick: () => openAddModal("team"),
+        }
+      : null,
+  )
+
   function closeAddModal() {
     setAddOpen(false)
-    setSearchQuery('')
+    setSearchQuery("")
     setSelectedUserId(null)
   }
 
   function handleConfirmRemove() {
-    if (memberToRemove) {
-      handleRemoveMember(memberToRemove.id)
-      closeRemoveModal()
-    }
+    if (!memberToRemove) return
+    handleRemoveMember(memberToRemove.id)
+    setMemberToRemove(null)
   }
 
   function handleConfirmAdd() {
-    if (selectedSection === 'client') {
-      handleAddMember('USER')
-    } else {
-      handleAddMember(selectedRoleInAdd)
-    }
+    handleAddMember(selectedSection === "client" ? "USER" : selectedRoleInAdd)
     closeAddModal()
   }
 
   if (isLoadingMembers) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader className="animate-spin" size={24} />
+      <div className="space-y-4">
+        {[0, 1].map((i) => (
+          <div key={i} className="h-28 animate-pulse rounded-2xl bg-surface-container-low" />
+        ))}
       </div>
     )
   }
 
+  const bySection: Record<SectionKey, ConstructionProjectMember[]> = {
+    team: members.filter((m) => isCollaborator(m.user.role)),
+    client: members.filter((m) => isClient(m.user.role)),
+  }
+
+  const userList =
+    selectedSection === "client"
+      ? filteredAvailableUsers.clients
+      : filteredAvailableUsers.collaborators
+  const hasMore = selectedSection === "client" ? clientsHasMore : collaboratorsHasMore
+  const loadMore = selectedSection === "client" ? loadMoreClients : loadMoreCollaborators
+
   return (
-    <>
-      <div className="p-2">
-        {canManageMembers && (
-          <div className="flex justify-end mb-6">
-            <Button
-              variant="outline"
-              className="w-auto px-4 py-2 text-sm"
-              onClick={() => setPermsOpen(true)}
-            >
-              <ShieldCheck size={16} />
-              Permissões
-            </Button>
-          </div>
-        )}
-
-        {/* SEÇÃO CLIENTE */}
-        <section className="mb-16">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-title-lg font-headline font-bold text-on-surface tracking-tight flex items-center gap-3">
-              <span className="w-1 h-6 bg-gold-deep rounded-full" />
-              Cliente
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {members
-              .filter((m) => isClient(m.user.role))
-              .map((member) => (
-                <div
-                  key={member.id}
-                  className="border-2 border-outline-variant/60 rounded-xl p-6 group relative overflow-hidden">
-                  {canManageMembers && (
-                    <div className="absolute top-0 right-0 p-4">
-                      <Button
-                        variant="ghost"
-                        className="p-2 text-error hover:bg-error/10 rounded-full transition-all"
-                        disabled={isRemovingMember}
-                        onClick={() => openRemoveModal(member)}>
-                        <CircleX className="text-[18px]" />
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-6">
-                    {member.user.avatar ? (
-                      <img
-                        className="w-20 h-20 rounded-full object-cover border-2 border-primary/20 p-1"
-                        alt={member.user.name}
-                        src={member.user.avatar}
-                      />
-                    ) : (
-                      <span className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-surface-container-high text-xl font-bold text-on-surface-variant">
-                        {member.user.name.slice(0, 2).toUpperCase()}
-                      </span>
-                    )}
-                    <div className="flex-1">
-                      <h3 className="text-title-lg font-bold text-on-surface">{member.user.name}</h3>
-                      <div className="space-y-2">
-                        <div className="block gap-1 text-body-md text-on-surface-variant">
-                          <Mail className="inline-block h-[1em] w-[1em] shrink-0 mr-1" />
-                          <span>{member.user.email}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-            {canManageMembers && (
-              <button
-                type="button"
-                onClick={() => openAddModal('client')}
-                className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
-              >
-                <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
-                <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
-                  Adicionar Cliente
-                </span>
-              </button>
-            )}
-          </div>
-        </section>
-
-        {/* SEÇÃO EQUIPE */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-title-lg font-headline font-bold text-on-surface tracking-tight flex items-center gap-3">
-              <span className="w-1 h-6 bg-primary rounded-full" />
-              Equipe
-            </h2>
-            <span className="text-sm text-on-surface-variant">
-              {(() => {
-                const collaborators = members.filter((m) => isCollaborator(m.user.role))
-                return `${collaborators.length} ${collaborators.length === 1 ? 'membro' : 'membros'}`
-              })()}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {members.filter((m) => isCollaborator(m.user.role))
-            .map((member) => (
-              <div
-                key={member.id}
-                className="border-2 border-outline-variant/60 rounded-xl p-6 group relative overflow-hidden">
-                {member.roleInProject !== 'OWNER' && (
-                  <div className="absolute top-0 right-0 p-4">
-                    <Button
-                      variant="ghost"
-                      className="p-2 text-error hover:bg-error/10 rounded-full transition-all"
-                      disabled={isRemovingMember}
-                      onClick={() => openRemoveModal(member)}>
-                      <CircleX className="text-[18px]" />
-                    </Button>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-6">
-                  {member.user.avatar ? (
-                    <img
-                      className="w-16 h-16 rounded-full object-cover border border-outline"
-                      alt={member.user.name}
-                      src={member.user.avatar}
-                    />
-                  ) : (
-                    <span className="flex size-16 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-lg font-bold text-on-surface-variant">
-                      {member.user.name.slice(0, 2).toUpperCase()}
-                    </span>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="text-title-lg font-bold text-on-surface">{member.user.name}</h3>
-                    <div className="flex items-center gap-2 my-0.5">
-                      <RoleChip role={member.roleInProject} />
-                    </div>
-                    <div className="space-y-2">
-                      <div className="block gap-1 text-body-md text-on-surface-variant">
-                        <Mail className="inline-block h-[1em] w-[1em] shrink-0 mr-1" />
-                        <span>{member.user.email}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-          {canManageMembers && (
-            <button
-              type="button"
-              onClick={() => openAddModal('team')}
-              className="border-2 border-dashed border-outline-variant/60 rounded-xl p-6 flex flex-col items-center justify-center text-on-surface-variant/50 hover:border-primary/50 hover:text-primary transition-all cursor-pointer group"
-            >
-              <CirclePlus className="w-6 h-6 sm:w-8 sm:h-8 mb-2 shrink-0" />
-              <span className="text-[10px] sm:text-label-sm font-bold uppercase tracking-widest text-center">
-                Adicionar Colaborador
-              </span>
-            </button>
-          )}
+    <div className="space-y-4">
+      {levelOf("pessoas") !== "" && (
+        <div className="flex justify-end">
+          <Link
+            to={`/obras/${obraId}/pessoas`}
+            className="flex min-h-9 items-center gap-1.5 text-[12.5px] font-semibold text-gold-bright hover:underline"
+          >
+            <ShieldCheck size={15} />
+            {t("obra.equipes.rolesLink")} ›
+          </Link>
         </div>
-        </section>
-      </div>
+      )}
 
-      {/* Modal para remover membro */}
+      {SECTIONS.map((section) => (
+        <MemberSection
+          key={section}
+          section={section}
+          members={bySection[section]}
+          canManage={canManageMembers}
+          expanded={expanded[section]}
+          onToggle={() => setExpanded((prev) => ({ ...prev, [section]: !prev[section] }))}
+          onAdd={() => openAddModal(section)}
+          onRemove={setMemberToRemove}
+        />
+      ))}
+
       <Modal
         open={!!memberToRemove}
-        onClose={closeRemoveModal}
-        title="Remover pessoa"
-        description={`Tem certeza que deseja remover ${memberToRemove?.user.name}?`}
-        icon={<CircleX size={20} />}
+        onClose={() => setMemberToRemove(null)}
+        title={t("obra.equipes.removeModal.title")}
+        description={t("obra.equipes.removeModal.message", {
+          name: memberToRemove?.user.name ?? "",
+        })}
+        icon={<X size={20} />}
         variant="danger"
         size="sm"
       >
-        <div className="px-6 pb-6 space-y-5">
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={closeRemoveModal} disabled={isRemovingMember}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-error text-on-error border-0 hover:brightness-[0.92]"
-              onClick={handleConfirmRemove}
-              disabled={isRemovingMember}
-            >
-              {isRemovingMember ? (
-                <>
-                  <Loader size={16} className="animate-spin mr-2" />
-                  Removendo...
-                </>
-              ) : (
-                'Remover'
-              )}
-            </Button>
-          </div>
+        <div className="flex gap-3 px-6 pb-6">
+          <Button variant="outline" onClick={() => setMemberToRemove(null)} disabled={isRemovingMember}>
+            {t("obra.equipes.actions.cancel")}
+          </Button>
+          <Button variant="destructive" onClick={handleConfirmRemove} disabled={isRemovingMember}>
+            {isRemovingMember && <Loader size={16} className="animate-spin" />}
+            {isRemovingMember
+              ? t("obra.equipes.removeModal.removing")
+              : t("obra.equipes.removeModal.confirm")}
+          </Button>
         </div>
       </Modal>
 
-      {/* Modal para adicionar membro */}
       <Modal
         open={addOpen}
         onClose={closeAddModal}
-        title={selectedSection === 'client' ? 'Adicionar cliente' : 'Adicionar colaborador'}
-        description={selectedSection === 'client' 
-          ? "Procure e selecione um cliente para adicionar." 
-          : "Procure e selecione um colaborador para adicionar."}
+        title={t(`obra.equipes.addModal.${selectedSection}.title`)}
+        description={t(`obra.equipes.addModal.${selectedSection}.hint`)}
         icon={<Search size={20} />}
-        variant="default"
         size="lg"
       >
-        <div className="px-6 pb-6 space-y-6">
-          <div className="space-y-3">
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Pesquise por nome ou e-mail..."
-              prefix={<Search size={16} />}
-              disabled={isLoadingUsers}
-            />
-          </div>
+        <div className="space-y-6 px-6 pb-6">
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("obra.equipes.addModal.searchPlaceholder")}
+            prefix={<Search size={16} />}
+            disabled={isLoadingUsers}
+          />
 
-          {/* Lista de usuários disponíveis filtrados por tipo */}
           <div className="space-y-3">
-            <label className="block text-sm font-semibold text-on-surface">Usuários disponíveis</label>
-            <div className="grid gap-3 max-h-72 overflow-y-auto" id="user-list-container">
+            <p className="text-sm font-semibold text-on-surface">
+              {t("obra.equipes.addModal.available")}
+            </p>
+
+            <div className="grid max-h-72 gap-3 overflow-y-auto">
               {isLoadingUsers ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader className="animate-spin" size={20} />
                 </div>
-              ) : (() => {
-                const userList = selectedSection === 'client' 
-                  ? filteredAvailableUsers.clients 
-                  : filteredAvailableUsers.collaborators
-                const hasMore = selectedSection === 'client' 
-                  ? clientsHasMore 
-                  : collaboratorsHasMore
-                const loadMore = selectedSection === 'client'
-                  ? loadMoreClients
-                  : loadMoreCollaborators
-                
-                return userList.length > 0 ? (
-                  <>
-                    {userList.map((user) => {
-                      const isSelected = selectedUserId === user.id
-                      return (
-                        <button
-                          key={user.id}
-                          type="button"
-                          onClick={() => setSelectedUserId(user.id)}
-                          className={userOption({ selected: isSelected })}
-                        >
-                          <div className="flex items-center gap-4">
-                            {user.avatar ? (
-                              <img
-                                className="w-12 h-12 rounded-full object-cover"
-                                alt={user.name}
-                                src={user.avatar}
-                              />
-                            ) : (
-                              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-sm font-bold text-on-surface-variant">
-                                {user.name.slice(0, 2).toUpperCase()}
-                              </span>
-                            )}
-                            <div>
-                              <p className="font-semibold text-on-surface">{user.name}</p>
-                              <p className="text-xs text-on-surface-variant">{user.email}</p>
-                            </div>
-                          </div>
-                        </button>
-                      )
-                    })}
-                    {hasMore && (
-                      <button
-                        type="button"
-                        onClick={loadMore}
-                        className="rounded-2xl border border-outline-variant/60 bg-surface-container p-4 text-center text-sm font-semibold text-primary hover:bg-surface-container/80 transition-all"
-                      >
-                        Carregar mais resultados
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div className="rounded-2xl border border-outline-variant/60 bg-surface-container p-6 text-sm text-on-surface-variant text-center">
-                    {searchQuery 
-                      ? `Nenhum ${selectedSection === 'client' ? 'cliente' : 'colaborador'} encontrado com este critério.` 
-                      : `Nenhum ${selectedSection === 'client' ? 'cliente' : 'colaborador'} disponível para adicionar.`}
-                  </div>
-                )
-              })()}
+              ) : userList.length === 0 ? (
+                <p className="rounded-2xl border border-outline-variant bg-surface-container p-6 text-center text-sm text-on-surface-variant">
+                  {searchQuery
+                    ? t(`obra.equipes.addModal.${selectedSection}.noResults`)
+                    : t(`obra.equipes.addModal.${selectedSection}.noneAvailable`)}
+                </p>
+              ) : (
+                <>
+                  {userList.map((user) => (
+                    <button
+                      key={user.id}
+                      type="button"
+                      onClick={() => setSelectedUserId(user.id)}
+                      className={userOption({ selected: selectedUserId === user.id })}
+                    >
+                      <div className="flex items-center gap-3">
+                        {user.avatar ? (
+                          <img
+                            src={user.avatar}
+                            alt=""
+                            className="size-10 shrink-0 rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[12px] font-bold text-on-surface-variant">
+                            {user.name.slice(0, 2).toUpperCase()}
+                          </span>
+                        )}
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-on-surface">
+                            {user.name}
+                          </p>
+                          <p className="truncate text-xs text-on-surface-variant">{user.email}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+
+                  {hasMore && (
+                    <button
+                      type="button"
+                      onClick={loadMore}
+                      className="rounded-2xl border border-outline-variant bg-surface-container p-4 text-center text-sm font-semibold text-gold-bright transition-colors hover:bg-surface-container-high"
+                    >
+                      {t("obra.equipes.addModal.loadMore")}
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           </div>
 
-          {/* Seleção de papel (apenas para colaboradores) */}
-          {selectedUserId && selectedSection === 'team' && (
-            <div className="space-y-3">
-              <label className="block text-sm font-semibold text-on-surface">Papel na obra</label>
-              <select
+          {selectedUserId && selectedSection === "team" && (
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-on-surface">
+                {t("obra.equipes.addModal.roleLabel")}
+              </p>
+              <Select
                 value={selectedRoleInAdd}
-                onChange={(e) => setSelectedRoleInAdd(e.target.value as ProjectRoleInRequest)}
-                className="w-full px-4 py-2 rounded-lg border border-outline-variant/60 bg-surface-container text-on-surface"
+                onChange={(e) => setSelectedRoleInAdd(e.currentTarget.value as ProjectRoleInRequest)}
               >
                 <option value="ENGINEER">{t("roles.ENGINEER")}</option>
                 <option value="ARCHITECT">{t("roles.ARCHITECT")}</option>
                 <option value="FOREMAN">{t("roles.FOREMAN")}</option>
                 <option value="USER">{t("roles.USER")}</option>
-              </select>
+              </Select>
             </div>
           )}
 
-          {/* Botões de ação */}
           <div className="flex gap-3">
             <Button variant="outline" onClick={closeAddModal} disabled={isAddingMember}>
-              Cancelar
+              {t("obra.equipes.actions.cancel")}
             </Button>
             <Button onClick={handleConfirmAdd} disabled={!selectedUserId || isAddingMember}>
-              {isAddingMember ? (
-                <>
-                  <Loader size={16} className="animate-spin mr-2" />
-                  Adicionando...
-                </>
-              ) : (
-                'Adicionar'
-              )}
+              {isAddingMember && <Loader size={16} className="animate-spin" />}
+              {isAddingMember
+                ? t("obra.equipes.addModal.adding")
+                : t("obra.equipes.addModal.confirm")}
             </Button>
           </div>
         </div>
       </Modal>
-
-      <RolePermissionsModal
-        open={permsOpen}
-        onClose={() => setPermsOpen(false)}
-        projectId={obraId}
-      />
-    </>
+    </div>
   )
 }
-

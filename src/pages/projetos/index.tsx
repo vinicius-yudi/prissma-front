@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/ui/button/Button"
 import { DimensionLine } from "@/shared/components/ui/dimension-line/DimensionLine"
 import { Num } from "@/shared/components/ui/num/Num"
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 
 import { ProjectCard } from "./components/ProjectCard"
 import { ProjectStepModal } from "./components/ProjectStepModal"
@@ -74,9 +75,12 @@ function GroupHeader({ label, count }: { label: string; count: number }) {
 }
 
 export function ProjetosPage() {
-  const { projects, isLoading, isError, search, setSearch, filter, setFilter, stats } = useProjects()
+  const { projects, isLoading, isError, filter, setFilter, stats } = useProjects()
   const { t } = useTranslation()
   const [createOpen, setCreateOpen] = useState(false)
+
+  // Antes do early return: é o que alimenta o FAB da barra de abas no celular.
+  usePrimaryAction({ label: t("projects.newProject"), onClick: () => setCreateOpen(true) })
 
   if (isError) return <ErrorState />
 
@@ -92,19 +96,19 @@ export function ProjetosPage() {
           </DimensionLine>
         </div>
 
-        <Button variant="primary" fullWidth={false} onClick={() => setCreateOpen(true)}>
+        <Button
+          variant="primary"
+          fullWidth={false}
+          onClick={() => setCreateOpen(true)}
+          // No celular quem cria é o FAB da barra de abas.
+          className="hidden lg:inline-flex"
+        >
           <Plus size={15} />
           {t("projects.newProject")}
         </Button>
       </div>
 
-      <ProjectsFilter
-        search={search}
-        onSearch={setSearch}
-        filter={filter}
-        onFilter={setFilter}
-        stats={stats}
-      />
+      <ProjectsFilter filter={filter} onFilter={setFilter} stats={stats} />
 
       {isLoading ? (
         <LoadingState />

@@ -29,7 +29,7 @@ const priorityPill = tv({
 })
 
 const card = tv({
-  base: "group relative rounded-xl border bg-surface-container-low p-3 transition-colors",
+  base: "group relative rounded-xl border bg-surface-container-high p-3.5 transition-colors",
   variants: {
     late: {
       true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]",
@@ -96,10 +96,17 @@ export function TaskKanbanCard({
       {...listeners}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="min-w-0 flex-1 text-[13px] font-semibold leading-snug text-on-surface">
-          {isLate && <span aria-hidden="true">⚠ </span>}
+        <p className="min-w-0 flex-1 text-[13.5px] font-semibold leading-snug text-on-surface">
           {tarefa.title}
         </p>
+
+        {/* O ⚠ fecha a linha do título em vez de prefixá-lo: como prefixo ele
+            empurrava a primeira palavra e desalinhava os cards entre si. */}
+        {isLate && (
+          <span aria-hidden className="shrink-0 text-[12px] text-danger group-hover:hidden">
+            ⚠
+          </span>
+        )}
 
         {canMutate && (
           <div
@@ -141,7 +148,7 @@ export function TaskKanbanCard({
 
         <span
           title={assignee ?? t("obra.tarefas.unassigned")}
-          className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[9.5px] font-bold text-on-surface-variant"
+          className="ml-auto flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container text-[9.5px] font-bold text-on-surface-variant"
         >
           {initials}
         </span>

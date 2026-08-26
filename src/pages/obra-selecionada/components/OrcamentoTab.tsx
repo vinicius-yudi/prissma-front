@@ -1,3 +1,7 @@
+import { useTranslation } from "react-i18next"
+
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+
 import { useBudget } from "../hooks/useBudget"
 import { useBudgetModals } from "../hooks/useBudgetModals"
 import { useExpandedCategories } from "../hooks/useExpandedCategories"
@@ -24,6 +28,7 @@ interface OrcamentoTabProps {
 }
 
 export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
+  const { t } = useTranslation()
   const {
     budget,
     isLoading,
@@ -55,6 +60,21 @@ export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
     requestDeleteExpense,
   } = useBudgetModals()
   const { toggle, isExpanded } = useExpandedCategories()
+
+  // A ação primária do celular muda com o estado da tela: sem orçamento, criar
+  // o orçamento; com ele, a próxima categoria. Precisa vir antes dos returns de
+  // loading/erro.
+  usePrimaryAction(
+    !canMutate
+      ? null
+      : budget
+        ? {
+            label: t("obra.orcamento.actions.addCategory"),
+            shortLabel: t("obra.orcamento.actions.addCategoryShort"),
+            onClick: () => openItemForm(null),
+          }
+        : { label: t("obra.orcamento.empty.cta"), onClick: openBudgetForm },
+  )
 
   /** O banner leva à categoria estourada abrindo-a na lista. */
   function handleReviewCategory(itemId: number) {

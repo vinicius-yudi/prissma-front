@@ -11,6 +11,7 @@ import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { LoginPage } from "@/pages/login"
 import { NotFoundPage } from "@/pages/not-found"
+import { PerfilPage } from "@/pages/perfil"
 import { ObraLayout } from "@/pages/obra-selecionada/ObraLayout"
 import {
   DiarioModule,
@@ -75,6 +76,10 @@ function App() {
                       </ModuleGuard>
                     }
                   />
+
+                  {/* Conta e preferências. Não é módulo da matriz de acesso —
+                      todo usuário autenticado alcança a própria conta. */}
+                  <Route path="perfil" element={<PerfilPage />} />
 
                   {/* Nível 2 — contexto de obra */}
                   <Route path="obras/:obraId" element={<ObraLayout />}>

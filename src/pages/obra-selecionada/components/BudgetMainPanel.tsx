@@ -42,7 +42,8 @@ export function BudgetMainPanel({
             <Button
               onClick={onAddItem}
               variant="primary"
-              className="w-auto px-3 py-2 text-xs sm:text-sm"
+              // No celular quem cria é o FAB da barra de abas.
+              className="hidden w-auto px-3 py-2 text-xs sm:text-sm lg:inline-flex"
             >
               <Plus size={14} />
               {t("obra.orcamento.actions.addCategory")}

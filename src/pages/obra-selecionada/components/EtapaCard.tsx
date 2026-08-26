@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Calendar, Image as ImageIcon, Pencil, Trash2 } from "lucide-react"
+import { GripVertical, MoreVertical, Pencil, Trash2 } from "lucide-react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
@@ -13,16 +14,26 @@ import { daysLate, deriveStatus } from "@/shared/utils/status"
 import type { Stage } from "../services/stages.service"
 import { stageProgress } from "../utils/stageProgress"
 
+/**
+ * Uma etapa, como linha da lista ordenável.
+ *
+ * Era um card em grade agrupada por status; virou linha porque a ordem **é** a
+ * informação — o ciclo da obra é uma sequência, e uma grade de três colunas
+ * embaralhava a leitura de "o que vem antes do quê". A ordem se muda arrastando
+ * pela alça; o status, pelo formulário.
+ *
+ * A alça é o único ponto de arraste (`listeners` só nela): com a linha inteira
+ * arrastável, no celular qualquer rolagem virava um drag.
+ */
+
+const NO_DATE = "—"
+
 const card = tv({
-  base: "group relative space-y-3 rounded-xl border bg-surface-container-low p-5 transition-colors hover:bg-surface-container",
+  base: "group relative rounded-2xl border bg-surface-container-low p-4 transition-colors hover:border-outline",
   variants: {
     late: {
       true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]",
       false: "border-outline-variant",
-    },
-    draggable: {
-      true: "cursor-grab active:cursor-grabbing",
-      false: "cursor-pointer",
     },
     dragging: {
       true: "ring-2 ring-primary/40",
@@ -30,6 +41,56 @@ const card = tv({
     },
   },
 })
+
+function RowMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative" data-no-card-click>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={t("obra.etapas.actions.menu")}
+        className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+      >
+        <MoreVertical size={16} />
+      </button>
+
+      {open && (
+        <>
+          {/* Camada de captura: fecha ao clicar fora sem precisar de listener
+              global no documento. */}
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full z-20 mt-1 min-w-[180px] rounded-lg border border-outline-variant bg-surface-container-highest py-1 shadow-xl">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                onEdit()
+              }}
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-on-surface hover:bg-tint"
+            >
+              <Pencil size={14} />
+              {t("obra.etapas.actions.edit")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                onDelete()
+              }}
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger-bg"
+            >
+              <Trash2 size={14} />
+              {t("obra.etapas.actions.delete")}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
 
 interface EtapaCardProps {
   stage: Stage
@@ -49,8 +110,10 @@ export function EtapaCard({
   canMutate,
 }: EtapaCardProps) {
   const { t } = useTranslation()
-  const sortable = useSortable({ id: stage.id, disabled: disableDrag })
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = sortable
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: stage.id,
+    disabled: disableDrag,
+  })
 
   const progress = stageProgress(stage)
 
@@ -67,110 +130,85 @@ export function EtapaCard({
   }
 
   function handleClick(e: React.MouseEvent) {
-    if (isDragging) return
     if ((e.target as HTMLElement).closest("[data-no-card-click]")) return
     onClick?.(stage)
   }
 
-  function handleDelete(e: React.MouseEvent) {
-    e.stopPropagation()
-    onDelete?.(stage)
-  }
-
-  function handleEdit(e: React.MouseEvent) {
-    e.stopPropagation()
-    onClick?.(stage)
-  }
-
   return (
-    <div
+    <li
       ref={setNodeRef}
       style={style}
       onClick={handleClick}
-      className={card({ late: late > 0, draggable: !disableDrag, dragging: isDragging })}
-      {...attributes}
-      {...listeners}
+      className={card({ late: late > 0, dragging: isDragging })}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-start gap-3 pr-2">
-          <Num className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-outline bg-surface-container-high text-[11px] font-bold text-on-surface-variant">
+      <div className="grid grid-cols-[24px_1fr_36px] items-center gap-x-3 gap-y-3 lg:grid-cols-[24px_1.4fr_1fr_1.3fr_130px_36px] lg:gap-4">
+        {!disableDrag ? (
+          <button
+            type="button"
+            data-no-card-click
+            aria-label={t("obra.etapas.actions.reorder")}
+            className="flex size-6 cursor-grab touch-none items-center justify-center rounded text-on-surface-faint active:cursor-grabbing"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical size={16} />
+          </button>
+        ) : (
+          <span aria-hidden />
+        )}
+
+        <div className="flex min-w-0 items-center gap-3">
+          <Num className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-outline-variant bg-surface-container-high text-[12px] font-bold text-on-surface-variant">
             {stage.displayOrder}
           </Num>
-          <div className="min-w-0 space-y-1">
-          <h3 className="font-semibold text-on-surface truncate">{stage.name}</h3>
-          {stage.description && (
-            <p className="text-sm text-on-surface-variant line-clamp-1">
-              {stage.description}
+          <div className="min-w-0">
+            <h3 className="truncate text-[14.5px] font-semibold text-on-surface">{stage.name}</h3>
+            <p className="truncate text-[11.5px] text-on-surface-faint">
+              {stage.description || t("obra.etapas.card.photosCount", { count: photoCount })}
             </p>
-          )}
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+
+        {/* No celular badge, progresso e datas descem para uma faixa própria
+            abaixo do nome; no desktop viram colunas da mesma linha. */}
+        <div className="col-start-2 lg:col-start-auto">
           <StatusBadge status={stage.status} plannedEndDate={stage.plannedEndDate} />
+          {late > 0 && (
+            <p className="mt-1.5 text-[10.5px] font-semibold text-danger">
+              ⚠ {t("obra.visaoGeral.lateBy", { count: late })}
+            </p>
+          )}
+        </div>
+
+        <div className="col-start-2 lg:col-start-auto">
+          <div className="flex items-center justify-between text-[11px] text-on-surface-faint">
+            <span>{t("obra.etapas.card.progress")}</span>
+            <Num className={late > 0 ? "font-semibold text-danger" : "font-semibold"}>
+              {progress}%
+            </Num>
+          </div>
+          <div className="mt-1.5">
+            <Progress
+              value={progress}
+              height={6}
+              tone={stageTone}
+              label={t("obra.etapas.card.progress")}
+            />
+          </div>
+        </div>
+
+        <Num className="col-start-2 text-[11.5px] text-on-surface-variant lg:col-start-auto lg:text-right">
+          {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : NO_DATE}
+          {" – "}
+          {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : NO_DATE}
+        </Num>
+
+        <div className="col-start-3 row-start-1 flex justify-end lg:col-start-auto lg:row-start-auto">
           {canMutate && (
-            <div
-              data-no-card-click
-              className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={handleEdit}
-                aria-label={t("obra.etapas.actions.edit")}
-                title={t("obra.etapas.actions.edit")}
-                className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
-              >
-                <Pencil size={14} />
-              </button>
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={handleDelete}
-                aria-label={t("obra.etapas.actions.delete")}
-                title={t("obra.etapas.actions.delete")}
-                className="p-1.5 rounded-lg text-error/80 hover:text-error hover:bg-error/10 transition-colors cursor-pointer"
-              >
-                <Trash2 size={14} />
-              </button>
-            </div>
+            <RowMenu onEdit={() => onClick?.(stage)} onDelete={() => onDelete?.(stage)} />
           )}
         </div>
       </div>
-
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-on-surface-variant">
-          <span>{t("obra.etapas.card.progress")}</span>
-          <Num className="font-semibold">{progress}%</Num>
-        </div>
-        <Progress
-          value={progress}
-          height={6}
-          tone={stageTone}
-          label={t("obra.etapas.card.progress")}
-        />
-      </div>
-
-      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-        <Calendar size={12} />
-        <Num>
-          {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : "—"}
-          {" → "}
-          {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : "—"}
-        </Num>
-      </div>
-
-      {late > 0 && (
-        <p className="text-[10.5px] font-semibold text-danger">
-          {t("obra.visaoGeral.lateBy", { count: late })}
-        </p>
-      )}
-
-      <div className="flex items-center justify-end text-xs text-on-surface-variant pt-1">
-        <span className="flex items-center gap-1.5">
-          <ImageIcon size={12} />
-          {t("obra.etapas.card.photosCount", { count: photoCount })}
-        </span>
-      </div>
-    </div>
+    </li>
   )
 }

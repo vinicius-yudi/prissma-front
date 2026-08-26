@@ -1,5 +1,3 @@
-import { Search } from "lucide-react"
-import type { ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
@@ -64,46 +62,27 @@ function FilterButton({ option, isActive, count, onSelect }: FilterButtonProps) 
 }
 
 interface ProjectsFilterProps {
-  search: string
-  onSearch: (value: string) => void
   filter: ProjectFilter
   onFilter: (value: ProjectFilter) => void
   stats: ProjectStats
 }
 
-export function ProjectsFilter({ search, onSearch, filter, onFilter, stats }: ProjectsFilterProps) {
-  const { t } = useTranslation()
-
-  function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
-    onSearch(e.target.value)
-  }
-
+/**
+ * Pílulas de recorte da lista. A busca por texto saiu daqui para o header —
+ * ver <HeaderSearch>.
+ */
+export function ProjectsFilter({ filter, onFilter, stats }: ProjectsFilterProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-      <div className="relative flex-1">
-        <Search
-          size={15}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+    <div className="flex w-full items-center gap-1 overflow-x-auto rounded-full border border-outline-variant bg-surface-container-low p-1 sm:w-auto">
+      {FILTER_OPTIONS.map((option) => (
+        <FilterButton
+          key={option.value}
+          option={option}
+          isActive={filter === option.value}
+          count={stats[option.countKey]}
+          onSelect={onFilter}
         />
-        <input
-          type="text"
-          placeholder={t("projects.filter.search")}
-          value={search}
-          onChange={handleSearchChange}
-          className="w-full pl-9 pr-4 py-2.5 rounded-full border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-on-surface-faint focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-      <div className="w-full sm:w-auto overflow-x-auto flex items-center gap-1 bg-surface-container-low border border-outline-variant p-1 rounded-full">
-        {FILTER_OPTIONS.map((option) => (
-          <FilterButton
-            key={option.value}
-            option={option}
-            isActive={filter === option.value}
-            count={stats[option.countKey]}
-            onSelect={onFilter}
-          />
-        ))}
-      </div>
+      ))}
     </div>
   )
 }

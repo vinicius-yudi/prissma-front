@@ -13,8 +13,16 @@ type ButtonVariant =
   | "menu"
   | "menuSelected"
 
+type ButtonSize =
+  // Altura 38–44px do design. Padrão: é o botão de formulário e de ação de tela.
+  | "md"
+  // Compacto, para ações que acompanham um título. Na altura cheia elas
+  // competiam com o H1 ao lado.
+  | "sm"
+
 interface InterfaceButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
+  size?: ButtonSize
   /**
    * Largura total. O padrão `true` preserva os formulários existentes, que
    * nasceram com botão em bloco. Botões de ação inline do design novo
@@ -23,4 +31,4 @@ interface InterfaceButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean
 }
 
-export type { ButtonVariant, InterfaceButtonProps }
+export type { ButtonSize, ButtonVariant, InterfaceButtonProps }
