@@ -22,7 +22,8 @@ import {
   updateBudgetItem,
   updateExpense,
 } from "../services/budget.service"
-import { useProjectRole } from "./useProjectRole"
+import { ProjectPermission } from "../services/projectPermissions.service"
+import { useProjectPermissions } from "./useProjectPermissions"
 
 export function useBudget(projectId: number) {
   const { t } = useTranslation()
@@ -30,14 +31,9 @@ export function useBudget(projectId: number) {
   const queryKey = ["budget", projectId]
   const isValid = projectId > 0
 
-  const { role, isLoading: roleLoading } = useProjectRole(projectId)
+  const { can } = useProjectPermissions(projectId)
 
-  const canMutate = roleLoading
-    ? true
-    : role === null ||
-      role === "OWNER" ||
-      role === "ENGINEER" ||
-      role === "FOREMAN"
+  const canMutate = can(ProjectPermission.MANAGE_BUDGET)
 
   const query = useQuery({
     queryKey,

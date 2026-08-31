@@ -47,12 +47,23 @@ export function useProjectPermissions(projectId: number): UseProjectPermissionsR
     : null
 
   // Admins bypass everything, so skip the per-role lookup for them.
-  const { permissions } = useRolePermissions(projectId, isAdmin ? null : projectRole)
+  const { permissions, isLoading: isLoadingPermissions } = useRolePermissions(
+    projectId,
+    isAdmin ? null : projectRole,
+  )
 
-  const isLoading = meQuery.isLoading || membersQuery.isLoading
+  const isLoading = meQuery.isLoading || membersQuery.isLoading || isLoadingPermissions
 
   function can(permission: ProjectPermission): boolean {
     if (isAdmin) return true
+    // Fail-open enquanto carrega: esconder o botão e reexibi-lo meio segundo
+    // depois faz a barra de ações piscar em toda entrada de tela. O gate real
+    // é o backend, que recusa a ação com 403 mesmo se o botão aparecer.
+    //
+    // Não vaza permissão para quem não tem: membro sem papel gerenciável
+    // (cliente) e não-membro resolvem `projectRole` como null, o que desliga a
+    // query — `isLoading` fica false e `permissions` fica vazio.
+    if (isLoading) return true
     return permissions.includes(permission)
   }
 
