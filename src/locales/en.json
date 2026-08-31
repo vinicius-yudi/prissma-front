@@ -476,6 +476,9 @@
         "updateError": "Failed to update stage",
         "deleteSuccess": "Stage deleted successfully!",
         "deleteError": "Failed to delete stage",
+        "reorderSuccess": "Stages reordered successfully!",
+        "moveSuccess": "Stage moved to {{status}}",
+        "moveError": "Failed to move stage",
         "reorderError": "Failed to reorder stages"
       },
       "etapaStatus": {
@@ -498,7 +501,8 @@
       "emptyTitle": "No stages yet",
       "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
       "emptyCta": "Create first stage",
-      "reorderHint": "Drag the stages to reorder"
+      "reorderHint": "Drag to reorder or drop in another section to change status",
+      "emptySection": "No stages here"
     },
     "startedAt": "started {{date}}",
     "tarefas": {

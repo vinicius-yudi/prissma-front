@@ -476,6 +476,9 @@
         "updateError": "Error al actualizar etapa",
         "deleteSuccess": "¡Etapa eliminada con éxito!",
         "deleteError": "Error al eliminar etapa",
+        "reorderSuccess": "¡Etapas reordenadas con éxito!",
+        "moveSuccess": "Etapa movida a {{status}}",
+        "moveError": "Error al mover etapa",
         "reorderError": "Error al reordenar etapas"
       },
       "etapaStatus": {
@@ -498,7 +501,8 @@
       "emptyTitle": "Ninguna etapa registrada",
       "emptyHint": "Crea las etapas del ciclo de la obra para seguir plazos, progreso y retrasos.",
       "emptyCta": "Crear primera etapa",
-      "reorderHint": "Arrastra las etapas para reordenar"
+      "reorderHint": "Arrastra para reordenar o suelta en otra sección para cambiar el estado",
+      "emptySection": "Sin etapas aquí"
     },
     "startedAt": "inicio {{date}}",
     "tarefas": {
