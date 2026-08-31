@@ -17,6 +17,8 @@ import { formatCompactCurrency, formatDate } from "@/shared/utils/formatters"
 import { daysLate, deriveStatus } from "@/shared/utils/status"
 
 import { useObraResumo } from "../hooks/useObraResumo"
+import { useProjectPermissions } from "../hooks/useProjectPermissions"
+import { ProjectPermission } from "../services/projectPermissions.service"
 import type { Stage } from "../services/stages.service"
 import { stageProgress } from "../utils/stageProgress"
 import { DocumentosRecentes } from "./DocumentosRecentes"
@@ -247,6 +249,12 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
 
+  // Editar e excluir a obra exigem MANAGE_PROJECT no backend. Sem este gate os
+  // botões apareciam para todo membro — inclusive para o cliente, que só
+  // acompanha — e a ação morria num toast de 403.
+  const { can } = useProjectPermissions(project.id)
+  const canManageProject = can(ProjectPermission.MANAGE_PROJECT)
+
   const resumo = useObraResumo({
     projectId: project.id,
     plannedEndDate: project.plannedEndDate,
@@ -299,19 +307,26 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
           <div className="order-1 flex shrink-0 flex-col items-center gap-4 sm:order-2 sm:pl-4">
             <ProgressRing percent={progress} />
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="destructive"
-                size="sm"
-                fullWidth={false}
-                onClick={() => setDeleteOpen(true)}
-              >
-                {t("obra.delete")}
-              </Button>
-              <Button variant="outline" size="sm" fullWidth={false} onClick={() => setEditOpen(true)}>
-                {t("obra.edit")}
-              </Button>
-            </div>
+            {canManageProject && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  fullWidth={false}
+                  onClick={() => setDeleteOpen(true)}
+                >
+                  {t("obra.delete")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  fullWidth={false}
+                  onClick={() => setEditOpen(true)}
+                >
+                  {t("obra.edit")}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </section>

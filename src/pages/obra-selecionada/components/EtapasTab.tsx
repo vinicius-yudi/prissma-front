@@ -30,8 +30,9 @@ import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryActi
 
 import { STAGE_SECTIONS, sectionDroppableId, sectionStatusFromId } from "../constants/stageSections"
 import { useAttachments } from "../hooks/useAttachments"
-import { useProjectRole } from "../hooks/useProjectRole"
+import { useProjectPermissions } from "../hooks/useProjectPermissions"
 import { useStages, useStagesList } from "../hooks/useStages"
+import { ProjectPermission } from "../services/projectPermissions.service"
 import type { Stage } from "../services/stages.service"
 import { EtapaCard } from "./EtapaCard"
 import { StageFormModal } from "./StageFormModal"
@@ -200,7 +201,8 @@ interface EtapasTabProps {
 
 export function EtapasTab({ projectId }: EtapasTabProps) {
   const { t } = useTranslation()
-  const { canMutate } = useProjectRole(projectId)
+  const { can } = useProjectPermissions(projectId)
+  const canMutate = can(ProjectPermission.MANAGE_STAGES)
   const { attachments } = useAttachments(projectId)
   const { stages, isLoading, isError, refetch } = useStagesList(projectId)
   const { move, remove, isDeleting } = useStages(projectId)
