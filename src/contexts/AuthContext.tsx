@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createContext, useCallback, useContext, useMemo, useState } from "react"
 
+import { decodeWorkspaceClaims, type WorkspaceClaims } from "@/lib/jwt"
 import { getMyProfile } from "@/shared/services/user.service"
 import type { UserProfile } from "@/shared/types/user"
 
@@ -9,6 +10,13 @@ interface AuthContextValue {
   isAuthenticated: boolean
   /** Usuário logado. `null` enquanto carrega ou quando não há sessão. */
   user: UserProfile | null
+  /**
+   * Workspace ativo, decodificado DO PRÓPRIO token (claims). Não é estado
+   * paralelo: muda somente quando um token novo é gravado (login/switch), e
+   * é o mesmo valor que o api.ts manda no X-Workspace-Id. `null` para token
+   * antigo (rollout) ou membro puro sem conta.
+   */
+  activeWorkspace: WorkspaceClaims | null
   isLoadingUser: boolean
   saveToken: (token: string) => void
   logout: () => void
@@ -47,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       token,
       isAuthenticated: !!token,
       user: user ?? null,
+      activeWorkspace: decodeWorkspaceClaims(token),
       isLoadingUser: !!token && isLoadingUser,
       saveToken,
       logout,
