@@ -5,6 +5,7 @@ import {
   ChevronsUpDown,
   HelpCircle,
   LogOut,
+  Plus,
   Settings,
   User,
 } from "lucide-react"
@@ -22,6 +23,10 @@ import type { AppModule } from "@/shared/constants/access"
 import { UnavailableBadge } from "@/shared/components/ui/unavailable-badge/UnavailableBadge"
 import { OBRA_NAV, WORKSPACE_NAV, type NavItem } from "@/shared/constants/nav"
 import { useAccess, useObraIdFromPath } from "@/shared/hooks/useAccess"
+import { useWorkspaces } from "@/shared/hooks/useWorkspaces"
+import type { Workspace } from "@/shared/types/workspace"
+
+import { NewWorkspaceModal } from "./NewWorkspaceModal"
 
 /**
  * Sidebar de dois níveis (Fluxos v2 §1), recolhida em trilho de ícones.
@@ -130,17 +135,18 @@ function Label({
  */
 function AccountButton({
   name,
+  subtitle,
   expanded,
   menuOpen,
   onToggle,
 }: {
   name: string
+  /** Nome do workspace ativo — ou o fallback "Conta pessoal" no rollout. */
+  subtitle: string
   expanded: boolean
   menuOpen: boolean
   onToggle: () => void
 }) {
-  const { t } = useTranslation()
-
   return (
     <button
       type="button"
@@ -156,9 +162,7 @@ function AccountButton({
       />
       <Label expanded={expanded} className="min-w-0 flex-1">
         <span className="block truncate text-[12.5px] font-semibold text-on-surface">{name}</span>
-        <span className="block text-[10px] text-on-surface-faint">
-          {t("sidebar.accountType")}
-        </span>
+        <span className="block truncate text-[10px] text-on-surface-faint">{subtitle}</span>
       </Label>
       {expanded && <ChevronDown size={14} className="shrink-0 text-on-surface-faint" />}
     </button>
@@ -215,18 +219,28 @@ function ObraContextCard({ obraId, expanded }: { obraId: number; expanded: boole
 /**
  * Menu de conta, ancorado no bloco do topo e aberto para baixo.
  *
- * A seção "Contas" traz a conta atual marcada. A troca entre várias contas é a
- * feature Workspace, que ainda não existe: quando ela chegar, os demais
- * workspaces entram nesta lista junto com "Nova conta". Listar contas
- * fictícias agora produziria um menu que não faz nada.
+ * A seção "Contas" lista os workspaces do usuário (próprios + convites
+ * aceitos), com a ativa marcada. Clicar em outra conta troca o token
+ * (POST /switch) e recarrega a página — nenhum dado da conta anterior
+ * sobrevive no cache. "Nova conta" cria um workspace adicional.
  */
 function AccountMenu({
   name,
+  workspaces,
+  activeWorkspaceId,
+  isSwitching,
+  onSwitch,
+  onNewAccount,
   onProfile,
   onLogout,
   onClose,
 }: {
   name: string
+  workspaces: Workspace[]
+  activeWorkspaceId: number | null
+  isSwitching: boolean
+  onSwitch: (id: number) => void
+  onNewAccount: () => void
   onProfile: () => void
   onLogout: () => void
   onClose: () => void
@@ -239,13 +253,42 @@ function AccountMenu({
         {t("sidebar.accountsLabel")}
       </div>
 
-      <div className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-on-surface">
-        <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-primary">
-          {name[0]?.toUpperCase() ?? "U"}
-        </span>
-        <span className="min-w-0 flex-1 truncate font-medium">{name}</span>
-        <Check size={14} className="shrink-0 text-gold-bright" />
-      </div>
+      {workspaces.length === 0 ? (
+        // Rollout/carregando: mostra ao menos a identidade atual marcada.
+        <div className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-on-surface">
+          <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-primary">
+            {name[0]?.toUpperCase() ?? "U"}
+          </span>
+          <span className="min-w-0 flex-1 truncate font-medium">{name}</span>
+          <Check size={14} className="shrink-0 text-gold-bright" />
+        </div>
+      ) : (
+        workspaces.map((workspace) => {
+          const active = workspace.id === activeWorkspaceId
+          return (
+            <button
+              key={workspace.id}
+              type="button"
+              disabled={active || isSwitching}
+              onClick={() => onSwitch(workspace.id)}
+              className={menuItem({ variant: "default" })}
+            >
+              <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-primary">
+                {workspace.name[0]?.toUpperCase() ?? "W"}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-left font-medium text-on-surface">
+                {workspace.name}
+              </span>
+              {active && <Check size={14} className="shrink-0 text-gold-bright" />}
+            </button>
+          )
+        })
+      )}
+
+      <button type="button" className={menuItem({ variant: "default" })} onClick={onNewAccount}>
+        <Plus size={15} strokeWidth={1.8} />
+        {t("sidebar.accountsNew")}
+      </button>
 
       <div className="my-1.5 h-px bg-outline-variant" />
 
@@ -284,16 +327,18 @@ function AccountMenu({
 }
 
 export function Sidebar() {
-  const { logout, user } = useAuth()
+  const { logout, user, activeWorkspace } = useAuth()
   const { t } = useTranslation()
   const location = useLocation()
   const obraId = useObraIdFromPath()
   const { levelOf, isReadOnly } = useAccess()
+  const { workspaces, switchTo, isSwitching } = useWorkspaces()
 
   const [hovered, setHovered] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [perfilOpen, setPerfilOpen] = useState(false)
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
+  const [newAccountOpen, setNewAccountOpen] = useState(false)
   const footerRef = useRef<HTMLDivElement>(null)
 
   // Manda o hover — mas o menu de conta aberto segura a expansão, senão o
@@ -320,6 +365,9 @@ export function Sidebar() {
   }
 
   const name = user?.name ?? t("sidebar.user")
+  const activeWorkspaceName =
+    workspaces.find((w) => w.id === activeWorkspace?.workspaceId)?.name ??
+    t("sidebar.accountType")
 
   return (
     <>
@@ -345,6 +393,7 @@ export function Sidebar() {
         <div ref={footerRef} className="relative shrink-0">
           <AccountButton
             name={name}
+            subtitle={activeWorkspaceName}
             expanded={expanded}
             menuOpen={menuOpen}
             onToggle={() => setMenuOpen((prev) => !prev)}
@@ -353,6 +402,14 @@ export function Sidebar() {
           {menuOpen && (
             <AccountMenu
               name={name}
+              workspaces={workspaces}
+              activeWorkspaceId={activeWorkspace?.workspaceId ?? null}
+              isSwitching={isSwitching}
+              onSwitch={switchTo}
+              onNewAccount={() => {
+                setMenuOpen(false)
+                setNewAccountOpen(true)
+              }}
               onProfile={() => setPerfilOpen(true)}
               onLogout={logout}
               onClose={() => setMenuOpen(false)}
@@ -407,6 +464,8 @@ export function Sidebar() {
         </nav>
 
       </aside>
+
+      <NewWorkspaceModal open={newAccountOpen} onClose={() => setNewAccountOpen(false)} />
 
       <PerfilModal
         open={perfilOpen}

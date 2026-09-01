@@ -1,4 +1,26 @@
+import { decodeWorkspaceClaims } from "./jwt"
+
 const BASE_URL = "/api"
+
+/**
+ * Headers de autenticação + tenant, num lugar só.
+ *
+ * O `X-Workspace-Id` é DERIVADO do claim do próprio token — não existe estado
+ * paralelo de "workspace ativo", então header e token nunca divergem (nem
+ * entre abas: quem manda é o token gravado no localStorage).
+ *
+ * Exportado porque budget.service e attachments.service fazem fetch cru
+ * (download/upload binário) fora do `request()` — eles PRECISAM dos mesmos
+ * headers, senão vazam para o workspace errado após um switch.
+ */
+export function buildHeaders(): Record<string, string> {
+  const token = localStorage.getItem("token")
+  const workspace = decodeWorkspaceClaims(token)
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(workspace ? { "X-Workspace-Id": String(workspace.workspaceId) } : {}),
+  }
+}
 
 type RequestOptions = Omit<RequestInit, "body"> & {
   body?: unknown
@@ -10,11 +32,10 @@ type RequestOptions = Omit<RequestInit, "body"> & {
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { skipAuthRedirect, body, ...rest } = options
-  const token = localStorage.getItem("token")
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...buildHeaders(),
     ...(rest.headers as Record<string, string>),
   }
 
