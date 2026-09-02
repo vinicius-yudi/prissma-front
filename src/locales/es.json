@@ -39,7 +39,8 @@
     "groupWorkspace": "Workspace",
     "groupObra": "En esta obra",
     "accountsLabel": "Cuentas",
-    "unavailable": "No disponible"
+    "unavailable": "No disponible",
+    "accountsNew": "Cuenta nueva"
   },
   "dashboard": {
     "title": "Panel de Control",
@@ -479,7 +480,10 @@
         "reorderError": "Error al reordenar etapas",
         "startBeforeProject": "La etapa no puede comenzar antes del inicio de la obra.",
         "previousStartRequired": "La etapa anterior debe tener una fecha de inicio antes de esta etapa.",
-        "startBeforePrevious": "La etapa no puede comenzar antes de la etapa anterior."
+        "startBeforePrevious": "La etapa no puede comenzar antes de la etapa anterior.",
+        "reorderSuccess": "¡Etapas reordenadas con éxito!",
+        "moveSuccess": "Etapa movida a {{status}}",
+        "moveError": "Error al mover etapa"
       },
       "etapaStatus": {
         "PLANNED": "Planificada",
@@ -501,7 +505,8 @@
       "emptyTitle": "Ninguna etapa registrada",
       "emptyHint": "Crea las etapas del ciclo de la obra para seguir plazos, progreso y retrasos.",
       "emptyCta": "Crear primera etapa",
-      "reorderHint": "Arrastra las etapas para reordenar"
+      "reorderHint": "Arrastra para reordenar o suelta en otra sección para cambiar el estado",
+      "emptySection": "Sin etapas aquí"
     },
     "startedAt": "inicio {{date}}",
     "tarefas": {
@@ -697,5 +702,57 @@
     "backTo": "Volver a {{target}}",
     "menu": "Menú",
     "menuTitle": "Todas las secciones"
+  },
+  "workspace": {
+    "newAccount": "Cuenta nueva",
+    "createTitle": "Crear cuenta nueva",
+    "createHint": "Una cuenta separa las obras, el equipo y los clientes de otra constructora.",
+    "nameLabel": "Nombre de la constructora",
+    "namePlaceholder": "Ej.: Constructora Silva",
+    "create": "Crear cuenta",
+    "creating": "Creando…",
+    "createError": "No fue posible crear la cuenta.",
+    "switchError": "No fue posible cambiar de cuenta.",
+    "roles": {
+      "OWNER": "Propietario",
+      "ADMIN": "Administrador",
+      "MEMBER": "Miembro",
+      "CLIENT": "Cliente"
+    },
+    "team": {
+      "title": "Equipo de la cuenta",
+      "hint": "Quién forma parte de esta constructora y con qué rol en la cuenta.",
+      "empty": "Aún no hay miembros. Invita a alguien para empezar.",
+      "error": "No fue posible cargar el equipo.",
+      "invite": "Invitar",
+      "inviteTitle": "Invitar a la cuenta",
+      "inviteEmail": "Correo",
+      "inviteName": "Nombre (opcional)",
+      "inviteRole": "Rol en la cuenta",
+      "inviteSend": "Enviar invitación",
+      "inviteSending": "Enviando…",
+      "inviteSent": "Invitación enviada a {{email}}.",
+      "inviteError": "No fue posible enviar la invitación.",
+      "changeRole": "Cambiar rol",
+      "deactivate": "Desactivar",
+      "remove": "Quitar",
+      "removeConfirm": "¿Quitar a {{name}} de la cuenta? Perderá el acceso a todas las obras de esta constructora.",
+      "inactive": "Inactivo",
+      "pending": "Pendiente",
+      "actionError": "No fue posible completar la acción."
+    }
+  },
+  "invitePage": {
+    "title": "Invitación a PRISSMA",
+    "hint": "Te invitaron a una constructora. Completa tus datos para aceptar.",
+    "nameLabel": "Tu nombre",
+    "passwordLabel": "Crea una contraseña",
+    "passwordHint": "Mínimo: 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.",
+    "accept": "Aceptar invitación",
+    "accepting": "Aceptando…",
+    "success": "¡Invitación aceptada! Inicia sesión con tu correo y contraseña para continuar.",
+    "goLogin": "Ir al login",
+    "error": "Invitación inválida o expirada.",
+    "missingToken": "Enlace de invitación inválido."
   }
 }

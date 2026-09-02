@@ -39,7 +39,8 @@
     "groupWorkspace": "Workspace",
     "groupObra": "In this project",
     "accountsLabel": "Accounts",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "accountsNew": "New account"
   },
   "dashboard": {
     "title": "Control Panel",
@@ -479,7 +480,10 @@
         "reorderError": "Failed to reorder stages",
         "startBeforeProject": "The stage cannot start before the project start date.",
         "previousStartRequired": "The previous stage must have a start date before this stage.",
-        "startBeforePrevious": "The stage cannot start before the previous stage."
+        "startBeforePrevious": "The stage cannot start before the previous stage.",
+        "reorderSuccess": "Stages reordered successfully!",
+        "moveSuccess": "Stage moved to {{status}}",
+        "moveError": "Failed to move stage"
       },
       "etapaStatus": {
         "PLANNED": "Planned",
@@ -501,7 +505,8 @@
       "emptyTitle": "No stages yet",
       "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
       "emptyCta": "Create first stage",
-      "reorderHint": "Drag the stages to reorder"
+      "reorderHint": "Drag to reorder or drop in another section to change status",
+      "emptySection": "No stages here"
     },
     "startedAt": "started {{date}}",
     "tarefas": {
@@ -697,5 +702,57 @@
     "backTo": "Back to {{target}}",
     "menu": "Menu",
     "menuTitle": "All sections"
+  },
+  "workspace": {
+    "newAccount": "New account",
+    "createTitle": "Create new account",
+    "createHint": "An account keeps projects, team and clients separate from other companies.",
+    "nameLabel": "Company name",
+    "namePlaceholder": "E.g.: Silva Construction",
+    "create": "Create account",
+    "creating": "Creating…",
+    "createError": "Could not create the account.",
+    "switchError": "Could not switch accounts.",
+    "roles": {
+      "OWNER": "Owner",
+      "ADMIN": "Administrator",
+      "MEMBER": "Member",
+      "CLIENT": "Client"
+    },
+    "team": {
+      "title": "Account team",
+      "hint": "Who belongs to this company and their account role.",
+      "empty": "No members yet. Invite someone to get started.",
+      "error": "Could not load the team.",
+      "invite": "Invite",
+      "inviteTitle": "Invite to the account",
+      "inviteEmail": "Email",
+      "inviteName": "Name (optional)",
+      "inviteRole": "Account role",
+      "inviteSend": "Send invite",
+      "inviteSending": "Sending…",
+      "inviteSent": "Invite sent to {{email}}.",
+      "inviteError": "Could not send the invite.",
+      "changeRole": "Change role",
+      "deactivate": "Deactivate",
+      "remove": "Remove",
+      "removeConfirm": "Remove {{name}} from the account? They will lose access to every project of this company.",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "actionError": "Could not complete the action."
+    }
+  },
+  "invitePage": {
+    "title": "PRISSMA invitation",
+    "hint": "You were invited to a company. Fill in your details to accept.",
+    "nameLabel": "Your name",
+    "passwordLabel": "Create a password",
+    "passwordHint": "At least: 1 uppercase, 1 lowercase, 1 digit and 1 special character.",
+    "accept": "Accept invite",
+    "accepting": "Accepting…",
+    "success": "Invite accepted! Sign in with your email and password to continue.",
+    "goLogin": "Go to login",
+    "error": "Invalid or expired invite.",
+    "missingToken": "Invalid invite link."
   }
 }

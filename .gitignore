@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+AGENTS.md
 CLAUDE.md
 .claude/
 .agents/

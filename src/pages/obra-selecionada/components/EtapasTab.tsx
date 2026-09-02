@@ -4,8 +4,11 @@ import {
   PointerSensor,
   TouchSensor,
   closestCenter,
+  pointerWithin,
+  useDroppable,
   useSensor,
   useSensors,
+  type CollisionDetection,
   type DragEndEvent,
 } from "@dnd-kit/core"
 import {
@@ -15,32 +18,88 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { AlertTriangle, ArrowUpDown, Plus, RefreshCw } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { tv } from "tailwind-variants"
 
+import type { EtapaStatus } from "@/pages/projetos/types"
 import { Button } from "@/shared/components/ui/button/Button"
 import { Modal } from "@/shared/components/ui/modal/Modal"
+import { Num } from "@/shared/components/ui/num/Num"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 
+import { STAGE_SECTIONS, sectionDroppableId, sectionStatusFromId } from "../constants/stageSections"
 import { useAttachments } from "../hooks/useAttachments"
-import { useProjectRole } from "../hooks/useProjectRole"
+import { useProjectPermissions } from "../hooks/useProjectPermissions"
 import { useStages, useStagesList } from "../hooks/useStages"
+import { ProjectPermission } from "../services/projectPermissions.service"
 import type { Stage } from "../services/stages.service"
 import { EtapaCard } from "./EtapaCard"
 import { StageFormModal } from "./StageFormModal"
 
 /**
- * Etapas da obra (Telas §12) — lista vertical ordenável.
+ * Etapas da obra (Telas §12) — lista vertical em seções por status.
  *
- * Uma lista só, na ordem do ciclo. Antes eram três seções por status e o
- * arraste servia a duas coisas ao mesmo tempo (reordenar dentro da seção,
- * mudar status entre seções); o gesto ficava ambíguo e a ordem global —
- * `displayOrder`, que é o que a Visão geral e o backend usam — se perdia entre
- * os grupos. Aqui arrastar só reordena; o status se muda no formulário.
+ * É um kanban deitado: cada seção é um status (Planejada · Em andamento ·
+ * Concluída · Bloqueada) e as etapas continuam em linhas, na ordem do ciclo.
+ * Arrastar faz duas coisas — reordenar, quando o card fica na mesma seção, e
+ * mudar o status, quando cai em outra. A ordem global (`displayOrder`, que a
+ * Visão geral e o backend usam) é única para a lista toda: um único
+ * `SortableContext` cobre todas as seções, e as seções em si são só droppables
+ * para receber cards quando estão vazias.
  *
  * `localStages` espelha a query para o arraste ser imediato: esperar o
- * round-trip faria a linha voltar ao lugar antigo antes de assentar.
+ * round-trip faria a linha voltar ao lugar antigo antes de assentar. O
+ * otimista é um *override* amarrado à referência da lista do servidor: quando
+ * o refetch chega, a referência muda e o override é descartado sozinho — sem
+ * `useEffect` sincronizando estado.
  */
+
+const sectionDot = tv({
+  base: "size-2 shrink-0 rounded-full",
+  variants: {
+    status: {
+      PLANNED: "bg-on-surface-faint",
+      IN_PROGRESS: "bg-gold-bright",
+      DONE: "bg-ok",
+      BLOCKED: "bg-warn",
+    },
+  },
+})
+
+const section = tv({
+  base: "rounded-2xl border p-3 transition-colors lg:p-4",
+  variants: {
+    over: {
+      true: "border-gold bg-surface-container-high",
+      false: "border-transparent",
+    },
+  },
+})
+
+/**
+ * Cards têm prioridade sobre a seção: quando o ponteiro está sobre um card,
+ * o destino é a posição dele (e o status da seção dele); quando está só sobre a
+ * área da seção — vazia ou nas bordas — o destino é a seção. `closestCenter`
+ * puro escolheria a seção com frequência, porque o centro dela costuma estar
+ * mais perto do ponteiro que o de qualquer card.
+ */
+const collisionDetection: CollisionDetection = (args) => {
+  const within = pointerWithin(args)
+  const cards = within.filter((c) => sectionStatusFromId(c.id) === null)
+  if (cards.length > 0) {
+    return closestCenter({
+      ...args,
+      droppableContainers: args.droppableContainers.filter((c) =>
+        cards.some((hit) => hit.id === c.id),
+      ),
+    })
+  }
+  const sections = within.filter((c) => sectionStatusFromId(c.id) !== null)
+  if (sections.length > 0) return sections
+  // Teclado não tem ponteiro: cai no cálculo por distância entre todos.
+  return closestCenter(args)
+}
 
 function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () => void }) {
   const { t } = useTranslation()
@@ -76,6 +135,66 @@ function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () 
   )
 }
 
+interface StageSectionProps {
+  status: EtapaStatus
+  stages: Stage[]
+  canMutate: boolean
+  photoCountByStage: Map<number, number>
+  onEdit: (stage: Stage) => void
+  onDelete: (stage: Stage) => void
+}
+
+function StageSection({
+  status,
+  stages,
+  canMutate,
+  photoCountByStage,
+  onEdit,
+  onDelete,
+}: StageSectionProps) {
+  const { t } = useTranslation()
+  const { setNodeRef, isOver } = useDroppable({
+    id: sectionDroppableId(status),
+    disabled: !canMutate,
+  })
+
+  return (
+    <section
+      ref={setNodeRef}
+      className={section({ over: isOver })}
+      aria-label={t(`obra.etapas.etapaStatus.${status}`)}
+    >
+      <header className="mb-3 flex items-center gap-2 px-1">
+        <span className={sectionDot({ status })} />
+        <h2 className="text-[13.5px] font-semibold text-on-surface">
+          {t(`obra.etapas.etapaStatus.${status}`)}
+        </h2>
+        <Num className="ml-auto text-[11px] font-bold text-on-surface-faint">{stages.length}</Num>
+      </header>
+
+      {stages.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-outline p-4 text-center text-[11.5px] text-on-surface-faint">
+          {t("obra.etapas.emptySection")}
+        </div>
+      ) : (
+        <ul className="space-y-3">
+          {stages.map((stage) => (
+            <EtapaCard
+              key={stage.id}
+              stage={stage}
+              photoCount={photoCountByStage.get(stage.id) ?? 0}
+              onClick={onEdit}
+              onDelete={onDelete}
+              disableDrag={!canMutate}
+              canMutate={canMutate}
+            />
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
 interface EtapasTabProps {
   projectId: number
   projectStartDate: string | null
@@ -83,20 +202,23 @@ interface EtapasTabProps {
 
 export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
   const { t } = useTranslation()
-  const { canMutate } = useProjectRole(projectId)
+  const { can } = useProjectPermissions(projectId)
+  const canMutate = can(ProjectPermission.MANAGE_STAGES)
   const { attachments } = useAttachments(projectId)
   const { stages, isLoading, isError, refetch } = useStagesList(projectId)
-  const { reorder, remove, isDeleting } = useStages(projectId)
+  const { move, remove, isDeleting } = useStages(projectId)
 
-  const [localStages, setLocalStages] = useState<Stage[]>([])
+  const sortedStages = useMemo(
+    () => [...stages].sort((a, b) => a.displayOrder - b.displayOrder),
+    [stages],
+  )
+  const [optimistic, setOptimistic] = useState<{ base: Stage[]; list: Stage[] } | null>(null)
+  const localStages = optimistic?.base === sortedStages ? optimistic.list : sortedStages
+
   const [modalState, setModalState] = useState<
     { mode: "create" } | { mode: "edit"; stage: Stage } | { mode: "closed" }
   >({ mode: "closed" })
   const [pendingDelete, setPendingDelete] = useState<Stage | null>(null)
-
-  useEffect(() => {
-    setLocalStages([...stages].sort((a, b) => a.displayOrder - b.displayOrder))
-  }, [stages])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -121,6 +243,16 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
     [localStages],
   )
 
+  const byStatus = useMemo(() => {
+    const map = new Map<EtapaStatus, Stage[]>(STAGE_SECTIONS.map((s) => [s, []]))
+    for (const stage of localStages) {
+      // Status fora do mapa (dado legado) cai na primeira seção em vez de sumir.
+      const bucket = map.get(stage.status) ?? map.get(STAGE_SECTIONS[0])
+      bucket?.push(stage)
+    }
+    return map
+  }, [localStages])
+
   function openCreate() {
     setModalState({ mode: "create" })
   }
@@ -136,12 +268,49 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
     if (!over || active.id === over.id) return
 
     const oldIndex = localStages.findIndex((s) => s.id === Number(active.id))
-    const newIndex = localStages.findIndex((s) => s.id === Number(over.id))
-    if (oldIndex === -1 || newIndex === -1) return
+    if (oldIndex === -1) return
+    const moved = localStages[oldIndex]
 
-    const reordered = arrayMove(localStages, oldIndex, newIndex)
-    setLocalStages(reordered.map((s, idx) => ({ ...s, displayOrder: idx + 1 })))
-    reorder(reordered.map((s) => s.id))
+    // Soltou sobre um card: assume a posição e a seção dele. Soltou sobre a
+    // área de uma seção (vazia ou nas bordas): só muda de seção, mantendo a
+    // posição na ordem global.
+    const sectionStatus = sectionStatusFromId(over.id)
+    let targetStatus: EtapaStatus
+    let reordered: Stage[]
+
+    if (sectionStatus !== null) {
+      targetStatus = sectionStatus
+      reordered = localStages
+    } else {
+      const newIndex = localStages.findIndex((s) => s.id === Number(over.id))
+      if (newIndex === -1) return
+      targetStatus = localStages[newIndex].status
+      reordered = arrayMove(localStages, oldIndex, newIndex)
+    }
+
+    const statusChanged = targetStatus !== moved.status
+    const orderChanged = reordered.some((s, idx) => s.id !== localStages[idx].id)
+    if (!statusChanged && !orderChanged) return
+
+    setOptimistic({
+      base: sortedStages,
+      list: reordered.map((s, idx) => ({
+        ...s,
+        displayOrder: idx + 1,
+        status: s.id === moved.id ? targetStatus : s.status,
+      })),
+    })
+
+    move(
+      {
+        stage: moved,
+        status: statusChanged ? targetStatus : undefined,
+        orderedIds: orderChanged ? reordered.map((s) => s.id) : undefined,
+      },
+      // Em erro o refetch pode voltar idêntico ao cache (mesma referência), e
+      // aí o override não cairia sozinho: solta-se aqui para a lista voltar.
+      { onError: () => setOptimistic(null) },
+    )
   }
 
   function openEdit(stage: Stage) {
@@ -185,21 +354,28 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
     }
 
     return (
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={localStages.map((s) => s.id)} strategy={verticalListSortingStrategy}>
-          <ul className="space-y-3">
-            {localStages.map((stage) => (
-              <EtapaCard
-                key={stage.id}
-                stage={stage}
-                photoCount={photoCountByStage.get(stage.id) ?? 0}
-                onClick={openEdit}
-                onDelete={setPendingDelete}
-                disableDrag={!canMutate}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={collisionDetection}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={localStages.map((s) => s.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-4">
+            {STAGE_SECTIONS.map((status) => (
+              <StageSection
+                key={status}
+                status={status}
+                stages={byStatus.get(status) ?? []}
                 canMutate={canMutate}
+                photoCountByStage={photoCountByStage}
+                onEdit={openEdit}
+                onDelete={setPendingDelete}
               />
             ))}
-          </ul>
+          </div>
         </SortableContext>
       </DndContext>
     )
@@ -208,7 +384,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        {canMutate && localStages.length > 1 ? (
+        {canMutate && localStages.length > 0 ? (
           <p className="hidden items-center gap-2 text-[12px] text-on-surface-faint lg:flex">
             <ArrowUpDown size={14} />
             {t("obra.etapas.reorderHint")}

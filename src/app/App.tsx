@@ -9,9 +9,11 @@ import { MainLayout } from "@/layouts/MainLayout"
 import { CadastroPage } from "@/pages/cadastro"
 import { DashboardPage } from "@/pages/dashboard"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
+import { InvitePage } from "@/pages/invite"
 import { LoginPage } from "@/pages/login"
 import { NotFoundPage } from "@/pages/not-found"
 import { PerfilPage } from "@/pages/perfil"
+import { PessoasPage } from "@/pages/pessoas"
 import { ObraLayout } from "@/pages/obra-selecionada/ObraLayout"
 import {
   DiarioModule,
@@ -20,7 +22,6 @@ import {
   EtapasModule,
   IndicadoresModule,
   OrcamentoModule,
-  PessoasModule,
   PropostasModule,
   TarefasModule,
   VisaoGeralModule,
@@ -54,6 +55,9 @@ function App() {
               <Route path="/cadastro" element={<CadastroPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              {/* Aceite de convite de workspace: público — o convidado pode
+                  ainda não ter conta. */}
+              <Route path="/invite" element={<InvitePage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
@@ -80,6 +84,17 @@ function App() {
                   {/* Conta e preferências. Não é módulo da matriz de acesso —
                       todo usuário autenticado alcança a própria conta. */}
                   <Route path="perfil" element={<PerfilPage />} />
+
+                  {/* Equipe da CONSTRUTORA (workspace_members) — nível 1,
+                      como o design sempre previu. */}
+                  <Route
+                    path="pessoas"
+                    element={
+                      <ModuleGuard module="pessoas">
+                        <PessoasPage />
+                      </ModuleGuard>
+                    }
+                  />
 
                   {/* Nível 2 — contexto de obra */}
                   <Route path="obras/:obraId" element={<ObraLayout />}>
@@ -153,14 +168,6 @@ function App() {
                       element={
                         <ModuleGuard module="propostas">
                           <PropostasModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="pessoas"
-                      element={
-                        <ModuleGuard module="pessoas">
-                          <PessoasModule />
                         </ModuleGuard>
                       }
                     />

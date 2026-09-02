@@ -7,7 +7,6 @@ import { DocumentosTab } from "./components/DocumentosTab"
 import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { OrcamentoTab } from "./components/OrcamentoTab"
-import { PessoasTab } from "./components/PessoasTab"
 import { TarefasTab } from "./components/TarefasTab"
 import { VisaoGeral } from "./components/visaoGeral"
 
@@ -61,10 +60,6 @@ export function OrcamentoModule() {
 
 export function DocumentosModule() {
   return <DocumentosTab projectId={useObra().id} />
-}
-
-export function PessoasModule() {
-  return <PessoasTab projectId={useObra().id} />
 }
 
 export function IndicadoresModule() {
