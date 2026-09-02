@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router-dom"
 import type { Project } from "@/shared/types/project"
 
 import { DocumentosTab } from "./components/DocumentosTab"
+import DiarioDaObra from "./components/DiarioDaObra"
 import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { OrcamentoTab } from "./components/OrcamentoTab"
@@ -67,7 +68,7 @@ export function IndicadoresModule() {
 }
 
 export function DiarioModule() {
-  return <ComingSoon module="diario" />
+  return <DiarioDaObra projectId={useObra().id} />
 }
 
 export function PropostasModule() {
