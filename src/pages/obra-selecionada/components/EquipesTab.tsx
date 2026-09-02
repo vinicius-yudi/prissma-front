@@ -4,14 +4,12 @@ import {
   Loader,
   Plus,
   Search,
-  ShieldCheck,
   UserRound,
   Users,
   X,
 } from "lucide-react"
-import { useState } from "react"
+import { useState, type ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -21,12 +19,17 @@ import { Num } from "@/shared/components/ui/num/Num"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 import { RoleChip } from "@/shared/components/ui/role-chip/RoleChip"
 import { Select } from "@/shared/components/ui/select/Select"
-import { useAccess } from "@/shared/hooks/useAccess"
 
 import { useEquipes } from "../hooks/useEquipes"
 import { useProjectPermissions } from "../hooks/useProjectPermissions"
-import { ProjectPermission } from "../services/projectPermissions.service"
+import { useRolePermissions } from "../hooks/useRolePermissions"
+import {
+  EDITABLE_PROJECT_ROLES,
+  ProjectPermission,
+  ProjectRole,
+} from "../services/projectPermissions.service"
 import type { ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
+import { RolePermissionsEditor } from "./RolePermissionsEditor"
 
 /**
  * Equipes da obra (Telas §14).
@@ -202,9 +205,62 @@ interface EquipesTabProps {
   obraId: number
 }
 
+/**
+ * Permissões por papel DESTA OBRA. Morava na tela "Pessoas & papéis" do nível
+ * 2; com o Workspace, Pessoas subiu para o nível 1 (equipe da construtora) e
+ * o editor por obra veio para cá, junto do resto da gestão de equipe.
+ */
+function RolePermissionsPanel({ projectId }: { projectId: number }) {
+  const { t } = useTranslation()
+  const [role, setRole] = useState<ProjectRole>(ProjectRole.ENGINEER)
+  const { permissions, isLoading, isError } = useRolePermissions(projectId, role)
+
+  return (
+    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-4 sm:p-5">
+      <h2 className="text-base font-semibold text-on-surface">{t("pessoas.permissionsTitle")}</h2>
+      <p className="mt-1 text-sm text-on-surface-variant">{t("pessoas.permissionsHint")}</p>
+
+      <div className="mt-4 max-w-xs">
+        <Select
+          value={role}
+          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+            setRole(event.currentTarget.value as ProjectRole)
+          }
+        >
+          {EDITABLE_PROJECT_ROLES.map((r) => (
+            <option key={r} value={r}>
+              {t(`roles.${r}`)}
+            </option>
+          ))}
+        </Select>
+      </div>
+
+      <div className="mt-4">
+        {isLoading && (
+          <div className="flex items-center justify-center py-10 text-on-surface-variant">
+            <Loader className="animate-spin" size={22} />
+          </div>
+        )}
+
+        {isError && (
+          <p className="py-8 text-center text-sm text-danger">{t("pessoas.permissionsError")}</p>
+        )}
+
+        {!isLoading && !isError && (
+          <RolePermissionsEditor
+            key={role}
+            projectId={projectId}
+            role={role}
+            initialPermissions={permissions}
+          />
+        )}
+      </div>
+    </section>
+  )
+}
+
 export function EquipesTab({ obraId }: EquipesTabProps) {
   const { t } = useTranslation()
-  const { levelOf } = useAccess()
 
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
@@ -300,18 +356,6 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
 
   return (
     <div className="space-y-4">
-      {levelOf("pessoas") !== "" && (
-        <div className="flex justify-end">
-          <Link
-            to={`/obras/${obraId}/pessoas`}
-            className="flex min-h-9 items-center gap-1.5 text-[12.5px] font-semibold text-gold-bright hover:underline"
-          >
-            <ShieldCheck size={15} />
-            {t("obra.equipes.rolesLink")} ›
-          </Link>
-        </div>
-      )}
-
       {SECTIONS.map((section) => (
         <MemberSection
           key={section}
@@ -324,6 +368,10 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
           onRemove={setMemberToRemove}
         />
       ))}
+
+      {/* Editar a matriz de papéis desta obra exige gerir membros — mesma
+          permissão que o backend cobra no PUT. */}
+      {canManageMembers && <RolePermissionsPanel projectId={obraId} />}
 
       <Modal
         open={!!memberToRemove}

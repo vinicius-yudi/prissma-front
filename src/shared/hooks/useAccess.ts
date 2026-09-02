@@ -7,6 +7,7 @@ import {
   isObraModule,
   profileFromGlobalRole,
   profileFromProjectRole,
+  profileFromWorkspaceRole,
   type AccessLevel,
   type AppModule,
   type Profile,
@@ -67,7 +68,7 @@ export function useCurrentModule(): AppModule | null {
 }
 
 export function useAccess(): UseAccessResult {
-  const { user, isLoadingUser } = useAuth()
+  const { user, activeWorkspace, isLoadingUser } = useAuth()
   const obraId = useObraIdFromPath()
 
   const { roleInProject, isAdmin, isLoading: isLoadingRole } = useProjectPermissions(obraId ?? 0)
@@ -77,7 +78,12 @@ export function useAccess(): UseAccessResult {
   // exatamente o oposto do que o papel significa no backend.
   const obraProfile = isAdmin ? "engenheiro" : profileFromProjectRole(roleInProject)
 
-  const profile: Profile | null = obraId ? obraProfile : profileFromGlobalRole(user?.role)
+  // Nível 1: o perfil vem do papel NA CONTA (claim do token). O papel global
+  // fica de fallback para staff e para tokens antigos do rollout.
+  const workspaceProfile =
+    profileFromWorkspaceRole(activeWorkspace?.workspaceRole) ?? profileFromGlobalRole(user?.role)
+
+  const profile: Profile | null = obraId ? obraProfile : workspaceProfile
 
   const isLoading = isLoadingUser || (obraId !== null && isLoadingRole)
 

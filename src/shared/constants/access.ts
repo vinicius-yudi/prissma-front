@@ -1,5 +1,6 @@
 import type { RoleInProject } from "@/pages/obra-selecionada/types/equipes"
 import { GlobalRole, type Role } from "@/shared/types/user"
+import type { WorkspaceRole } from "@/shared/types/workspace"
 
 /**
  * Matriz Papel × Módulo — fonte única de acesso da interface.
@@ -14,14 +15,14 @@ import { GlobalRole, type Role } from "@/shared/types/user"
  * - acesso direto a módulo sem permissão → tela "Acesso negado"
  */
 
-export const WORKSPACE_MODULES = ["home", "obras", "agenda", "relatorios"] as const
-
 /**
- * "Pessoas & papéis" aparece no nível de workspace no design, porque o design
- * pressupõe a entidade Workspace. Enquanto ela não existe, o vínculo é por
- * obra (`construction_project_members`) — então o módulo vive no nível 2, onde
- * os dados realmente estão. Volta para o nível 1 junto com o Workspace.
+ * "Pessoas & papéis" vive no nível 1, como o design sempre previu: com a
+ * entidade Workspace no backend, a tela lista `workspace_members` (a equipe
+ * da construtora). O editor de permissões POR OBRA continua no nível 2,
+ * dentro de Equipes.
  */
+export const WORKSPACE_MODULES = ["home", "obras", "agenda", "relatorios", "pessoas"] as const
+
 export const OBRA_MODULES = [
   "visao-geral",
   "indicadores",
@@ -32,7 +33,6 @@ export const OBRA_MODULES = [
   "diario",
   "documentos",
   "propostas",
-  "pessoas",
 ] as const
 
 export type WorkspaceModule = (typeof WORKSPACE_MODULES)[number]
@@ -82,12 +82,28 @@ const PROFILE_BY_PROJECT_ROLE: Record<RoleInProject, Profile> = {
   USER: "cliente",
 }
 
-/** Papel global da conta → perfil, para os módulos de workspace. */
+/**
+ * Papel global da conta → perfil. Com o Workspace, isto virou FALLBACK: cobre
+ * o staff da plataforma e a janela de rollout em que o token ainda não traz
+ * os claims de workspace.
+ */
 const PROFILE_BY_GLOBAL_ROLE: Record<Role, Profile> = {
   [GlobalRole.ADMIN]: "engenheiro",
   [GlobalRole.ENG]: "engenheiro",
   [GlobalRole.ARQ]: "arquiteto",
   [GlobalRole.USER]: "cliente",
+}
+
+/**
+ * Papel NA CONTA (workspace) → perfil, para os módulos do nível 1.
+ * OWNER/ADMIN mandam na conta; MEMBER age via papéis de obra (perfil "mestre"
+ * dá home/obras sem Pessoas); CLIENT é o só-leitura do domínio.
+ */
+const PROFILE_BY_WORKSPACE_ROLE: Record<WorkspaceRole, Profile> = {
+  OWNER: "engenheiro",
+  ADMIN: "engenheiro",
+  MEMBER: "mestre",
+  CLIENT: "cliente",
 }
 
 export function profileFromProjectRole(role: RoleInProject | null | undefined): Profile | null {
@@ -96,6 +112,10 @@ export function profileFromProjectRole(role: RoleInProject | null | undefined): 
 
 export function profileFromGlobalRole(role: Role | null | undefined): Profile {
   return role ? PROFILE_BY_GLOBAL_ROLE[role] : "cliente"
+}
+
+export function profileFromWorkspaceRole(role: WorkspaceRole | null | undefined): Profile | null {
+  return role ? PROFILE_BY_WORKSPACE_ROLE[role] : null
 }
 
 export function accessTo(profile: Profile | null, module: AppModule): AccessLevel {
