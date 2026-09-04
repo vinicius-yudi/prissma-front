@@ -7,25 +7,27 @@ import {
   removeEquipeMember,
   getAvailableUsers,
 } from "../services/equipes.service"
-import type { AddMemberRequest, ProjectRoleInRequest } from "../types/equipes"
+import { WorkspaceRole } from "@/shared/types/workspace"
+
+import { RoleInProject, type AddMemberRequest, type ProjectRoleInRequest } from "../types/equipes"
 import { obraMembersKey } from "./useObraMembers"
 
 const RESULTS_PER_PAGE = 5
 
 // Papéis de WORKSPACE (a lista de disponíveis vem de /workspaces/members).
-function isClient(role: string): boolean {
-  return role === 'CLIENT'
+function isClient(role: WorkspaceRole): boolean {
+  return role === WorkspaceRole.CLIENT
 }
 
-function isCollaborator(role: string): boolean {
-  return role === 'MEMBER'
+function isCollaborator(role: WorkspaceRole): boolean {
+  return role === WorkspaceRole.MEMBER
 }
 
 export function useEquipes(obraId: number, usersEnabled = false) {
   const queryClient = useQueryClient()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
-  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>("ENGINEER")
+  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>(RoleInProject.ENGINEER)
   const [clientOffset, setClientOffset] = useState(0)
   const [collaboratorOffset, setCollaboratorOffset] = useState(0)
 

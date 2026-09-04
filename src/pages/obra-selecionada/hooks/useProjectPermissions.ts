@@ -7,17 +7,17 @@ import {
   ProjectRole,
   type ProjectPermission,
 } from "../services/projectPermissions.service"
-import type { RoleInProject } from "../types/equipes"
+import { RoleInProject } from "../types/equipes"
 import { useObraMembers } from "./useObraMembers"
 import { useRolePermissions } from "./useRolePermissions"
 
 // Member roles that map 1:1 to a role whose permissions live in the backend.
 // CLIENT/USER members have no manageable role, so they resolve to null.
 const PROJECT_ROLE_BY_MEMBER_ROLE = new Map<RoleInProject, ProjectRole>([
-  ["OWNER", ProjectRole.OWNER],
-  ["ENGINEER", ProjectRole.ENGINEER],
-  ["ARCHITECT", ProjectRole.ARCHITECT],
-  ["FOREMAN", ProjectRole.FOREMAN],
+  [RoleInProject.OWNER, ProjectRole.OWNER],
+  [RoleInProject.ENGINEER, ProjectRole.ENGINEER],
+  [RoleInProject.ARCHITECT, ProjectRole.ARCHITECT],
+  [RoleInProject.FOREMAN, ProjectRole.FOREMAN],
 ])
 
 export interface UseProjectPermissionsResult {

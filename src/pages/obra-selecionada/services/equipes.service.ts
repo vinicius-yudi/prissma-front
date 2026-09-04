@@ -1,6 +1,7 @@
 import { api } from "@/lib/api"
 import { getWorkspaceMembers } from "@/shared/services/workspace.service"
-import type { AddMemberRequest, AddMemberResponse, ConstructionProjectMember, User } from "../types/equipes"
+import { isWorkspaceManager } from "@/shared/types/workspace"
+import type { AddMemberRequest, AddMemberResponse, AvailableUser, ConstructionProjectMember } from "../types/equipes"
 
 export async function getEquipeMembers(obraId: number): Promise<ConstructionProjectMember[]> {
   return api.get<ConstructionProjectMember[]>(`/projects/${obraId}/members`)
@@ -17,13 +18,13 @@ export async function removeEquipeMember(obraId: number, memberId: number): Prom
   return api.delete<void>(`/projects/${obraId}/members/${memberId}`)
 }
 
-export async function getAvailableUsers(): Promise<User[]> {
+export async function getAvailableUsers(): Promise<AvailableUser[]> {
   // Quem pode entrar numa obra é quem já pertence à conta ativa
   // (/workspaces/members). OWNER/ADMIN ficam de fora: já alcançam todas as
   // obras do workspace, adicioná-los à equipe seria redundante.
   const members = await getWorkspaceMembers()
   return members
-    .filter((m) => m.active && (m.role === "MEMBER" || m.role === "CLIENT"))
+    .filter((m) => m.active && !isWorkspaceManager(m.role))
     .map((m) => ({
       id: m.userId,
       name: m.name ?? m.email ?? "",

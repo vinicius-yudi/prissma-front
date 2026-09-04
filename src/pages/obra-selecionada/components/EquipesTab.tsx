@@ -19,6 +19,7 @@ import { Num } from "@/shared/components/ui/num/Num"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 import { RoleChip } from "@/shared/components/ui/role-chip/RoleChip"
 import { Select } from "@/shared/components/ui/select/Select"
+import { isClientRole, isCollaboratorRole } from "@/shared/types/user"
 
 import { useEquipes } from "../hooks/useEquipes"
 import { useProjectPermissions } from "../hooks/useProjectPermissions"
@@ -28,7 +29,7 @@ import {
   ProjectPermission,
   ProjectRole,
 } from "../services/projectPermissions.service"
-import type { ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
+import { RoleInProject, type ConstructionProjectMember, type ProjectRoleInRequest } from "../types/equipes"
 import { RolePermissionsEditor } from "./RolePermissionsEditor"
 
 /**
@@ -70,14 +71,6 @@ const sectionIcon = tv({
     },
   },
 })
-
-function isClient(role: string): boolean {
-  return role === "USER"
-}
-
-function isCollaborator(role: string): boolean {
-  return role !== "USER" && role !== "ADMIN"
-}
 
 interface MemberChipProps {
   member: ConstructionProjectMember
@@ -176,7 +169,7 @@ function MemberSection({
               key={member.id}
               member={member}
               // O dono da obra não se remove da própria obra.
-              canRemove={canManage && member.roleInProject !== "OWNER"}
+              canRemove={canManage && member.roleInProject !== RoleInProject.OWNER}
               onRemove={onRemove}
             />
           ))}
@@ -265,7 +258,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   const [memberToRemove, setMemberToRemove] = useState<ConstructionProjectMember | null>(null)
   const [addOpen, setAddOpen] = useState(false)
   const [selectedSection, setSelectedSection] = useState<SectionKey>("team")
-  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>("ENGINEER")
+  const [selectedRoleInAdd, setSelectedRoleInAdd] = useState<ProjectRoleInRequest>(RoleInProject.ENGINEER)
   const [expanded, setExpanded] = useState<Record<SectionKey, boolean>>({
     team: true,
     client: false,
@@ -299,7 +292,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     setSelectedSection(section)
     setSearchQuery("")
     setSelectedUserId(null)
-    setSelectedRoleInAdd("ENGINEER")
+    setSelectedRoleInAdd(RoleInProject.ENGINEER)
     setExpanded((prev) => ({ ...prev, [section]: true }))
     setAddOpen(true)
   }
@@ -328,7 +321,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   }
 
   function handleConfirmAdd() {
-    handleAddMember(selectedSection === "client" ? "USER" : selectedRoleInAdd)
+    handleAddMember(selectedSection === "client" ? RoleInProject.USER : selectedRoleInAdd)
     closeAddModal()
   }
 
@@ -343,8 +336,8 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   }
 
   const bySection: Record<SectionKey, ConstructionProjectMember[]> = {
-    team: members.filter((m) => isCollaborator(m.user.role)),
-    client: members.filter((m) => isClient(m.user.role)),
+    team: members.filter((m) => isCollaboratorRole(m.user.role)),
+    client: members.filter((m) => isClientRole(m.user.role)),
   }
 
   const userList =
@@ -484,10 +477,10 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                 value={selectedRoleInAdd}
                 onChange={(e) => setSelectedRoleInAdd(e.currentTarget.value as ProjectRoleInRequest)}
               >
-                <option value="ENGINEER">{t("roles.ENGINEER")}</option>
-                <option value="ARCHITECT">{t("roles.ARCHITECT")}</option>
-                <option value="FOREMAN">{t("roles.FOREMAN")}</option>
-                <option value="USER">{t("roles.USER")}</option>
+                <option value={RoleInProject.ENGINEER}>{t("roles.ENGINEER")}</option>
+                <option value={RoleInProject.ARCHITECT}>{t("roles.ARCHITECT")}</option>
+                <option value={RoleInProject.FOREMAN}>{t("roles.FOREMAN")}</option>
+                <option value={RoleInProject.USER}>{t("roles.USER")}</option>
               </Select>
             </div>
           )}
