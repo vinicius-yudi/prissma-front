@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import logoUrl from "@/assets/logo.png"
+import logoUrl from "@/assets/svg/logo.svg"
 import { useAuth } from "@/contexts/AuthContext"
 import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"

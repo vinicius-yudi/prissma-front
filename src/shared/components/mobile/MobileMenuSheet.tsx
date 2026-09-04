@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
-import logoUrl from "@/assets/logo.png"
+import logoUrl from "@/assets/svg/logo.svg"
 import { useAuth } from "@/contexts/AuthContext"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { useRegisteredPrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
