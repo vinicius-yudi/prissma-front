@@ -1,4 +1,5 @@
 import { api } from "@/lib/api"
+import { getWorkspaceMembers } from "@/shared/services/workspace.service"
 import type { AddMemberRequest, AddMemberResponse, ConstructionProjectMember, User } from "../types/equipes"
 
 export async function getEquipeMembers(obraId: number): Promise<ConstructionProjectMember[]> {
@@ -17,8 +18,16 @@ export async function removeEquipeMember(obraId: number, memberId: number): Prom
 }
 
 export async function getAvailableUsers(): Promise<User[]> {
-  // /users is admin-only on the backend and returns 401 for other roles.
-  // skipAuthRedirect prevents that authorization 401 from logging the user out;
-  // the query just errors and the picker shows an empty/error state instead.
-  return api.get<User[]>("/users", { skipAuthRedirect: true })
+  // Quem pode entrar numa obra é quem já pertence à conta ativa
+  // (/workspaces/members). OWNER/ADMIN ficam de fora: já alcançam todas as
+  // obras do workspace, adicioná-los à equipe seria redundante.
+  const members = await getWorkspaceMembers()
+  return members
+    .filter((m) => m.active && (m.role === "MEMBER" || m.role === "CLIENT"))
+    .map((m) => ({
+      id: m.userId,
+      name: m.name ?? m.email ?? "",
+      email: m.email ?? "",
+      role: m.role,
+    }))
 }

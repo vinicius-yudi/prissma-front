@@ -12,12 +12,13 @@ import { obraMembersKey } from "./useObraMembers"
 
 const RESULTS_PER_PAGE = 5
 
+// Papéis de WORKSPACE (a lista de disponíveis vem de /workspaces/members).
 function isClient(role: string): boolean {
-  return role === 'USER'
+  return role === 'CLIENT'
 }
 
 function isCollaborator(role: string): boolean {
-  return role !== 'USER' && role !== 'ADMIN'
+  return role === 'MEMBER'
 }
 
 export function useEquipes(obraId: number, usersEnabled = false) {
@@ -43,9 +44,8 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   } = useQuery({
     queryKey: ["availableUsers"],
     queryFn: getAvailableUsers,
-    // GET /users is admin-gated on the backend; fetching it for users who
-    // can't manage members returns 401 and the global handler would log them
-    // out. Only fetch when the caller explicitly opts in (modal open + permission).
+    // /workspaces/members é vetado a CLIENT no backend; só busca quando o
+    // modal abre e o usuário pode gerenciar membros (opt-in do chamador).
     enabled: usersEnabled,
   })
 
