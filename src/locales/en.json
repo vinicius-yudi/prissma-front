@@ -698,8 +698,8 @@
   "workspace": {
     "newAccount": "New account",
     "createTitle": "Create new account",
-    "createHint": "An account keeps projects, team and clients separate from other companies.",
-    "nameLabel": "Company name",
+    "createHint": "An account keeps projects, team and clients separate from other workspaces.",
+    "nameLabel": "Workspace name",
     "namePlaceholder": "E.g.: Silva Construction",
     "create": "Create account",
     "creating": "Creating…",
@@ -713,7 +713,7 @@
     },
     "team": {
       "title": "Account team",
-      "hint": "Who belongs to this company and their account role.",
+      "hint": "Who belongs to this workspace and their account role.",
       "empty": "No members yet. Invite someone to get started.",
       "error": "Could not load the team.",
       "invite": "Invite",
@@ -728,7 +728,7 @@
       "changeRole": "Change role",
       "deactivate": "Deactivate",
       "remove": "Remove",
-      "removeConfirm": "Remove {{name}} from the account? They will lose access to every project of this company.",
+      "removeConfirm": "Remove {{name}} from the account? They will lose access to every project of this workspace.",
       "inactive": "Inactive",
       "pending": "Pending",
       "actionError": "Could not complete the action."
@@ -736,7 +736,7 @@
   },
   "invitePage": {
     "title": "PRISSMA invitation",
-    "hint": "You were invited to a company. Fill in your details to accept.",
+    "hint": "You were invited to a workspace. Fill in your details to accept.",
     "nameLabel": "Your name",
     "passwordLabel": "Create a password",
     "passwordHint": "At least: 1 uppercase, 1 lowercase, 1 digit and 1 special character.",

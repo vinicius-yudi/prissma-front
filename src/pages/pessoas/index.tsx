@@ -7,7 +7,12 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Select } from "@/shared/components/ui/select/Select"
-import type { WorkspaceMember, WorkspaceRole } from "@/shared/types/workspace"
+import {
+  WorkspaceRole,
+  isWorkspaceManager,
+  type InvitableWorkspaceRole,
+  type WorkspaceMember,
+} from "@/shared/types/workspace"
 
 import { useWorkspaceTeam } from "./hooks/useWorkspaceTeam"
 
@@ -23,7 +28,11 @@ import { useWorkspaceTeam } from "./hooks/useWorkspaceTeam"
  * ADMIN não gerencia ADMIN/OWNER, ninguém se auto-remove).
  */
 
-const INVITABLE_ROLES: Exclude<WorkspaceRole, "OWNER">[] = ["MEMBER", "ADMIN", "CLIENT"]
+const INVITABLE_ROLES: InvitableWorkspaceRole[] = [
+  WorkspaceRole.MEMBER,
+  WorkspaceRole.ADMIN,
+  WorkspaceRole.CLIENT,
+]
 
 export function PessoasPage() {
   const { t } = useTranslation()
@@ -33,15 +42,14 @@ export function PessoasPage() {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [inviteName, setInviteName] = useState("")
-  const [inviteRole, setInviteRole] = useState<Exclude<WorkspaceRole, "OWNER">>("MEMBER")
+  const [inviteRole, setInviteRole] = useState<InvitableWorkspaceRole>(WorkspaceRole.MEMBER)
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMember | null>(null)
 
-  const canManage =
-    activeWorkspace?.workspaceRole === "OWNER" || activeWorkspace?.workspaceRole === "ADMIN"
+  const canManage = isWorkspaceManager(activeWorkspace?.workspaceRole)
 
   // D1: a tela de equipe filtra os clientes — eles pertencem à conta, mas não
   // são "equipe"; aparecem em cada obra da qual participam.
-  const visibleMembers = team.members.filter((member) => member.role !== "CLIENT")
+  const visibleMembers = team.members.filter((member) => member.role !== WorkspaceRole.CLIENT)
 
   async function handleInviteSubmit(event: FormEvent) {
     event.preventDefault()
@@ -54,7 +62,7 @@ export function PessoasPage() {
     setInviteOpen(false)
     setInviteEmail("")
     setInviteName("")
-    setInviteRole("MEMBER")
+    setInviteRole(WorkspaceRole.MEMBER)
   }
 
   function handleConfirmRemove() {
@@ -67,8 +75,8 @@ export function PessoasPage() {
   function canManageTarget(member: WorkspaceMember): boolean {
     if (!canManage) return false
     if (member.userId === user?.id) return false
-    if (member.role === "OWNER") return false
-    if (activeWorkspace?.workspaceRole === "ADMIN" && member.role === "ADMIN") return false
+    if (member.role === WorkspaceRole.OWNER) return false
+    if (activeWorkspace?.workspaceRole === WorkspaceRole.ADMIN && member.role === WorkspaceRole.ADMIN) return false
     return true
   }
 
@@ -208,7 +216,7 @@ export function PessoasPage() {
             value={inviteRole}
             aria-label={t("workspace.team.inviteRole")}
             onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-              setInviteRole(event.currentTarget.value as Exclude<WorkspaceRole, "OWNER">)
+              setInviteRole(event.currentTarget.value as InvitableWorkspaceRole)
             }
           >
             {INVITABLE_ROLES.map((role) => (

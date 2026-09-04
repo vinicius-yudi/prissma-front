@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
 import { useRegisteredPrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+import type { WorkspaceModule } from "@/shared/constants/access"
 import { WORKSPACE_NAV } from "@/shared/constants/nav"
 import { useAccess } from "@/shared/hooks/useAccess"
 
@@ -19,13 +20,20 @@ import { MobileMenuSheet } from "./MobileMenuSheet"
  * altura.
  *
  * Cinco colunas — Início · Obras · FAB · Perfil · Menu. A barra leva aos
- * destinos frequentes; o resto da navegação (os módulos da obra, que são nove)
- * abre na folha "Todas as seções", porque nenhum deles cabe numa aba fixa e
- * empilhá-los aqui daria uma barra que rola.
+ * destinos frequentes; o resto da navegação (os módulos da obra, que são nove,
+ * e "Pessoas & papéis") abre na folha "Todas as seções", porque nenhum deles
+ * cabe numa aba fixa e empilhá-los aqui daria uma barra que rola.
  *
  * A coluna do FAB existe mesmo sem ação registrada, senão as abas dançariam de
  * posição a cada navegação.
  */
+
+/**
+ * Só estes módulos do nível 1 ganham aba. `WORKSPACE_NAV` cresce junto com o
+ * produto (Pessoas entrou com o Workspace), mas a grade tem cinco colunas
+ * fixas — um sexto filho quebra a linha. O que não está aqui fica na folha.
+ */
+const TAB_MODULES: ReadonlySet<WorkspaceModule> = new Set(["home", "obras"])
 
 const tab = tv({
   base: "flex min-h-14 flex-col items-center justify-center gap-1 text-[9px] font-semibold transition-colors",
@@ -72,7 +80,9 @@ export function BottomTabBar() {
   const { levelOf } = useAccess()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const visible = WORKSPACE_NAV.filter((item) => levelOf(item.module) !== "")
+  const visible = WORKSPACE_NAV.filter(
+    (item) => TAB_MODULES.has(item.module) && levelOf(item.module) !== "",
+  )
 
   return (
     <>

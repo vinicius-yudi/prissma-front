@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
-import logoUrl from "@/assets/logo.png"
+import logoUrl from "@/assets/svg/logo.svg"
 import { useAuth } from "@/contexts/AuthContext"
 import { DeleteAccountModal } from "@/pages/perfil/components/DeleteAccountModal"
 import { PerfilModal } from "@/pages/perfil/components/PerfilModal"

@@ -698,8 +698,8 @@
   "workspace": {
     "newAccount": "Cuenta nueva",
     "createTitle": "Crear cuenta nueva",
-    "createHint": "Una cuenta separa las obras, el equipo y los clientes de otra constructora.",
-    "nameLabel": "Nombre de la constructora",
+    "createHint": "Una cuenta separa las obras, el equipo y los clientes de otro workspace.",
+    "nameLabel": "Nombre del workspace",
     "namePlaceholder": "Ej.: Constructora Silva",
     "create": "Crear cuenta",
     "creating": "Creando…",
@@ -713,7 +713,7 @@
     },
     "team": {
       "title": "Equipo de la cuenta",
-      "hint": "Quién forma parte de esta constructora y con qué rol en la cuenta.",
+      "hint": "Quién forma parte de este workspace y con qué rol en la cuenta.",
       "empty": "Aún no hay miembros. Invita a alguien para empezar.",
       "error": "No fue posible cargar el equipo.",
       "invite": "Invitar",
@@ -728,7 +728,7 @@
       "changeRole": "Cambiar rol",
       "deactivate": "Desactivar",
       "remove": "Quitar",
-      "removeConfirm": "¿Quitar a {{name}} de la cuenta? Perderá el acceso a todas las obras de esta constructora.",
+      "removeConfirm": "¿Quitar a {{name}} de la cuenta? Perderá el acceso a todas las obras de este workspace.",
       "inactive": "Inactivo",
       "pending": "Pendiente",
       "actionError": "No fue posible completar la acción."
@@ -736,7 +736,7 @@
   },
   "invitePage": {
     "title": "Invitación a PRISSMA",
-    "hint": "Te invitaron a una constructora. Completa tus datos para aceptar.",
+    "hint": "Te invitaron a un workspace. Completa tus datos para aceptar.",
     "nameLabel": "Tu nombre",
     "passwordLabel": "Crea una contraseña",
     "passwordHint": "Mínimo: 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.",

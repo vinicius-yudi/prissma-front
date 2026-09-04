@@ -12,6 +12,7 @@ import { taskSchema } from "../schemas/tarefas.shcemas"
 import type { CreateTarefaRequest, TarefaPriority, TarefaStatus, Tarefa } from "../types/tarefas"
 import { useEffect } from "react"
 import { useObraMembers } from "../hooks/useObraMembers"
+import { isCollaboratorRole } from "@/shared/types/user"
 
 interface TaskFormModalProps {
   open: boolean
@@ -139,7 +140,7 @@ export function TaskFormModal({ open, onClose, stageId, projectId, canMutate = t
             <Select defaultValue="" {...form.register("assigneeUserId", { valueAsNumber: true })} disabled={membersLoading || readOnly}>
               <option value="" disabled>{t("obra.tarefas.form.assigneePlaceholder")}</option>
               {members
-                .filter((m) => m.user.role !== "USER" && m.user.role !== "ADMIN")
+                .filter((m) => isCollaboratorRole(m.user.role))
                 .map((m) => (
                   <option key={m.id} value={m.user.id}>
                     {m.user.name}

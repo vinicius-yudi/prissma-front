@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
 
 import { getMyProfile } from "@/shared/services/user.service"
-import type { Role, UserProfile } from "@/shared/types/user"
+import { GlobalRole, type Role, type UserProfile } from "@/shared/types/user"
 
 import { updateProfile } from "../services/perfil.service"
 import type { UpdateProfilePayload } from "../types"
@@ -19,7 +19,7 @@ interface PerfilFormState {
 const INITIAL_STATE: PerfilFormState = {
   name: "",
   email: "",
-  role: "USER",
+  role: GlobalRole.USER,
   newPassword: "",
   confirmPassword: "",
 }
