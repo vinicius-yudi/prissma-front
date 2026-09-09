@@ -24,7 +24,12 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.test.{ts,tsx}"],
+    // Convenção: o teste mora em `__tests__/` DENTRO da pasta do que ele
+    // testa — `hooks/__tests__/useBudget.test.ts` para `hooks/useBudget.ts`.
+    // Perto o bastante para o import ser `../useBudget` e para a falta de um
+    // teste saltar aos olhos; separado o bastante para a listagem da pasta de
+    // código continuar sendo só código.
+    include: ["src/**/__tests__/**/*.test.{ts,tsx}"],
     css: false,
     restoreMocks: true,
     coverage: {
@@ -35,7 +40,7 @@ export default defineConfig({
       exclude: [
         "src/test/**",
         "src/main.tsx",
-        "src/**/*.test.{ts,tsx}",
+        "src/**/__tests__/**",
         // Só declaração de tipo: sem statement para cobrir, e contá-los como
         // 0% arrastaria a média para baixo sem significar nada.
         "src/**/types.ts",
@@ -65,7 +70,7 @@ export default defineConfig({
       //   GLOBAL               75%   ← exigência do projeto
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 15.5, branches: 11, functions: 15.5, lines: 15.9 },
+        global: { statements: 26.4, branches: 18.5, functions: 25, lines: 26.5 },
       },
     },
   },
