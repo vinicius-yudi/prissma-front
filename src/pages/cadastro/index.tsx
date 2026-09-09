@@ -1,22 +1,28 @@
 import { useState } from "react"
+
 import { BrandPanel } from "@/shared/components/brand/BrandPanel"
-import { CadastroType } from "./components/CadastroType"
+
 import { CadastroArquiteto } from "./components/CadastroArquiteto"
 import { CadastroCliente } from "./components/CadastroCliente"
 import { CadastroEngenheiro } from "./components/CadastroEngenheiro"
+import { CadastroType } from "./components/CadastroType"
 
 type CadastroTypeOption = "arquiteto" | "engenheiro" | "cliente" | null
 
 export function CadastroPage() {
   const [selectedType, setSelectedType] = useState<CadastroTypeOption>(null)
 
+  function handleBack() {
+    setSelectedType(null)
+  }
+
   return (
     <main className="flex h-screen overflow-hidden bg-background">
       <BrandPanel />
       {!selectedType && <CadastroType onTypeSelected={setSelectedType} />}
-      {selectedType === "arquiteto" && <CadastroArquiteto />}
-      {selectedType === "engenheiro" && <CadastroEngenheiro />}
-      {selectedType === "cliente" && <CadastroCliente />}
+      {selectedType === "arquiteto" && <CadastroArquiteto onBack={handleBack} />}
+      {selectedType === "engenheiro" && <CadastroEngenheiro onBack={handleBack} />}
+      {selectedType === "cliente" && <CadastroCliente onBack={handleBack} />}
     </main>
   )
 }
