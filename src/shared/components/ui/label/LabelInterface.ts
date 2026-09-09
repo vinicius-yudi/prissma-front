@@ -1,5 +1,5 @@
 import type { LabelHTMLAttributes } from "react"
 
-interface InterfaceLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
+type InterfaceLabelProps = LabelHTMLAttributes<HTMLLabelElement>
 
 export type { InterfaceLabelProps }

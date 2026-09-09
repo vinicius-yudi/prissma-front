@@ -17,9 +17,8 @@ export function useCreateProject({ onSuccess }: UseCreateProjectOptions = {}) {
       toast.success("Obra criada com sucesso!")
       onSuccess?.()
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.message || error.message || "Erro ao criar obra"
-      toast.error(message)
+    onError: (error: Error) => {
+      toast.error(error.message || "Erro ao criar obra")
     },
   })
 
