@@ -8,9 +8,11 @@
  * a request, então os dois nunca divergem e a escolha sobrevive a reload.
  */
 
+import { WorkspaceRole } from "@/shared/types/workspace"
+
 export interface WorkspaceClaims {
   workspaceId: number
-  workspaceRole: "OWNER" | "ADMIN" | "MEMBER" | "CLIENT"
+  workspaceRole: WorkspaceRole
   isOwner: boolean
 }
 
@@ -34,7 +36,7 @@ export function decodeWorkspaceClaims(token: string | null): WorkspaceClaims | n
   if (!payload || typeof payload.workspaceId !== "number") return null
   return {
     workspaceId: payload.workspaceId,
-    workspaceRole: (payload.workspaceRole as WorkspaceClaims["workspaceRole"]) ?? "MEMBER",
+    workspaceRole: (payload.workspaceRole as WorkspaceRole) ?? WorkspaceRole.MEMBER,
     isOwner: payload.isOwner === true,
   }
 }

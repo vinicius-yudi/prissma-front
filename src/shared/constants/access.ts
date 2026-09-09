@@ -1,6 +1,6 @@
-import type { RoleInProject } from "@/pages/obra-selecionada/types/equipes"
+import { RoleInProject } from "@/pages/obra-selecionada/types/equipes"
 import { GlobalRole, type Role } from "@/shared/types/user"
-import type { WorkspaceRole } from "@/shared/types/workspace"
+import { WorkspaceRole } from "@/shared/types/workspace"
 
 /**
  * Matriz Papel × Módulo — fonte única de acesso da interface.
@@ -75,11 +75,11 @@ export const ACCESS: Record<Profile, ModuleAccess> = {
 
 /** Papel dentro de uma obra → perfil do design. OWNER manda como engenheiro. */
 const PROFILE_BY_PROJECT_ROLE: Record<RoleInProject, Profile> = {
-  OWNER: "engenheiro",
-  ENGINEER: "engenheiro",
-  ARCHITECT: "arquiteto",
-  FOREMAN: "mestre",
-  USER: "cliente",
+  [RoleInProject.OWNER]: "engenheiro",
+  [RoleInProject.ENGINEER]: "engenheiro",
+  [RoleInProject.ARCHITECT]: "arquiteto",
+  [RoleInProject.FOREMAN]: "mestre",
+  [RoleInProject.USER]: "cliente",
 }
 
 /**
@@ -100,10 +100,10 @@ const PROFILE_BY_GLOBAL_ROLE: Record<Role, Profile> = {
  * dá home/obras sem Pessoas); CLIENT é o só-leitura do domínio.
  */
 const PROFILE_BY_WORKSPACE_ROLE: Record<WorkspaceRole, Profile> = {
-  OWNER: "engenheiro",
-  ADMIN: "engenheiro",
-  MEMBER: "mestre",
-  CLIENT: "cliente",
+  [WorkspaceRole.OWNER]: "engenheiro",
+  [WorkspaceRole.ADMIN]: "engenheiro",
+  [WorkspaceRole.MEMBER]: "mestre",
+  [WorkspaceRole.CLIENT]: "cliente",
 }
 
 export function profileFromProjectRole(role: RoleInProject | null | undefined): Profile | null {

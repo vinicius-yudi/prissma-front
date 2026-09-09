@@ -1,4 +1,5 @@
 import { api } from "@/lib/api"
+import { GlobalRole } from "@/shared/types/user"
 import type { CadastroFormDataArquiteto } from "../types"
 
 interface CadastroResponse {
@@ -7,6 +8,6 @@ interface CadastroResponse {
 
 export async function cadastroArquiteto(data: CadastroFormDataArquiteto): Promise<CadastroResponse> {
   const { confirmPassword, ...dataToSend } = data
-  const cadastroData = { ...dataToSend, role: 'ARQ' as const }
+  const cadastroData = { ...dataToSend, role: GlobalRole.ARQ }
   return api.post<CadastroResponse>("/users", cadastroData)
 }

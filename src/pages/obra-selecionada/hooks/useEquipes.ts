@@ -7,24 +7,27 @@ import {
   removeEquipeMember,
   getAvailableUsers,
 } from "../services/equipes.service"
-import type { AddMemberRequest, ProjectRoleInRequest } from "../types/equipes"
+import { WorkspaceRole } from "@/shared/types/workspace"
+
+import { RoleInProject, type AddMemberRequest, type ProjectRoleInRequest } from "../types/equipes"
 import { obraMembersKey } from "./useObraMembers"
 
 const RESULTS_PER_PAGE = 5
 
-function isClient(role: string): boolean {
-  return role === 'USER'
+// Papéis de WORKSPACE (a lista de disponíveis vem de /workspaces/members).
+function isClient(role: WorkspaceRole): boolean {
+  return role === WorkspaceRole.CLIENT
 }
 
-function isCollaborator(role: string): boolean {
-  return role !== 'USER' && role !== 'ADMIN'
+function isCollaborator(role: WorkspaceRole): boolean {
+  return role === WorkspaceRole.MEMBER
 }
 
 export function useEquipes(obraId: number, usersEnabled = false) {
   const queryClient = useQueryClient()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
-  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>("ENGINEER")
+  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>(RoleInProject.ENGINEER)
   const [clientOffset, setClientOffset] = useState(0)
   const [collaboratorOffset, setCollaboratorOffset] = useState(0)
 
@@ -43,9 +46,8 @@ export function useEquipes(obraId: number, usersEnabled = false) {
   } = useQuery({
     queryKey: ["availableUsers"],
     queryFn: getAvailableUsers,
-    // GET /users is admin-gated on the backend; fetching it for users who
-    // can't manage members returns 401 and the global handler would log them
-    // out. Only fetch when the caller explicitly opts in (modal open + permission).
+    // /workspaces/members é vetado a CLIENT no backend; só busca quando o
+    // modal abre e o usuário pode gerenciar membros (opt-in do chamador).
     enabled: usersEnabled,
   })
 

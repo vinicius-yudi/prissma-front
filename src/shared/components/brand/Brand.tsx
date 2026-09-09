@@ -1,48 +1,27 @@
 import { tv } from "tailwind-variants"
 
-import logoUrl from "@/assets/logo.png"
-import wordmarkUrl from "@/assets/logo-wordmark.png"
+import logoUrl from "@/assets/svg/logo.svg"
 
-/**
- * Lockup da marca: ícone + wordmark.
- *
- * A logo antiga era um SVG em teal com o wordmark embutido — sobrou da
- * identidade anterior e era a única peça das telas públicas ainda fora da
- * paleta Barroco ouro.
- *
- * O wordmark tem proporção fixa de ~4,16:1, então a largura sai do tamanho do
- * ícone em vez de ser fixada à mão: mudar `size` mantém o lockup proporcional.
- */
-
-const WORDMARK_RATIO = 512 / 123
+/** Marca das telas públicas: só o ícone — o nome já está no símbolo. */
 
 const lockup = tv({
-  base: "flex flex-col items-center gap-3",
+  base: "flex flex-col items-center",
 })
 
 interface BrandProps {
-  /** Lado do ícone em px. O wordmark acompanha. */
+  /** Lado do ícone em px. */
   size?: number
   className?: string
 }
 
-export function Brand({ size = 72, className }: BrandProps) {
-  const wordmarkWidth = Math.round(size * 2.4)
-
+export function Brand({ size = 140, className }: BrandProps) {
   return (
     <div className={lockup({ className })}>
       <img
         src={logoUrl}
-        alt=""
-        aria-hidden
-        className="rounded-2xl object-contain"
-        style={{ width: size, height: size }}
-      />
-      <img
-        src={wordmarkUrl}
         alt="PRISSMA"
         className="object-contain"
-        style={{ width: wordmarkWidth, height: Math.round(wordmarkWidth / WORDMARK_RATIO) }}
+        style={{ width: size, height: size }}
       />
     </div>
   )
