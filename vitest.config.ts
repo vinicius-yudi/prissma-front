@@ -60,17 +60,24 @@ export default defineConfig({
       // Regra: ao terminar uma camada, rode `bun run test:coverage` e suba
       // estes valores para o novo medido. Eles nunca descem.
       //
-      // Metas por camada, na ordem de ataque:
-      //   schemas (zod)        90%   — lógica pura, sem desculpa
-      //   shared/utils         90%   — idem
-      //   services             85%   — mock do @/lib/api, mecânico
-      //   hooks                85%   — renderHook + wrapper
-      //   shared/components/ui 80%   — render + variantes
-      //   pages                60%   — cauda longa
-      //   GLOBAL               75%   ← exigência do projeto
+      // Metas por camada, na ordem de ataque ([x] = feito):
+      //   [x] schemas (zod)        90%   — lógica pura, sem desculpa
+      //   [x] shared/utils         90%   — idem
+      //   [x] services             85%   — mock do @/lib/api, mecânico
+      //   [~] hooks                85%   — renderHook + wrapper
+      //   [ ] shared/components/ui 80%   — render + variantes
+      //   [ ] pages                60%   — cauda longa
+      //       GLOBAL               75%   ← exigência do projeto
+      //
+      // Hooks que faltam (os maiores primeiro, com o peso em statements):
+      //   usePerfilForm 72 · useBudget 66 · useEquipes 55 · useTarefasKanban 38
+      //   useAttachments 26 · useTarefas 25 · useDiario 22 · useWorkspaceTeam 19
+      //   useDocumentos 18 · useTarefasByProject 13 · useObraResumo 7
+      //   useDashboard 7 · useDeleteAccount 8 · useCategoryExpenses 3
+      //   useObraSelecionada 4
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 26.4, branches: 18.5, functions: 25, lines: 26.5 },
+        global: { statements: 31.3, branches: 22, functions: 29.2, lines: 31.4 },
       },
     },
   },
