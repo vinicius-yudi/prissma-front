@@ -3,6 +3,7 @@ import { Folder } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -10,6 +11,7 @@ import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import type { BudgetItem } from "@/shared/types/budget"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
 import {
   BUDGET_ITEM_FORM_DEFAULTS,
@@ -76,7 +78,10 @@ export function BudgetItemFormModal({
     }
   }
 
-  const errors = form.formState.errors
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
+  }
 
   return (
     <Modal
@@ -91,7 +96,7 @@ export function BudgetItemFormModal({
       variant="default"
       size="lg"
     >
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         <div className="px-6 pt-5 pb-2 space-y-5">
           <div className="space-y-1.5">
             <Label className={formLabel()}>
@@ -102,9 +107,6 @@ export function BudgetItemFormModal({
               placeholder={t("obra.orcamento.itemForm.categoryPlaceholder")}
               {...form.register("category")}
             />
-            {errors.category && (
-              <p className="text-xs text-error mt-1">{errors.category.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -117,9 +119,6 @@ export function BudgetItemFormModal({
               placeholder={t("obra.orcamento.itemForm.descriptionPlaceholder")}
               {...form.register("description")}
             />
-            {errors.description && (
-              <p className="text-xs text-error mt-1">{errors.description.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -133,9 +132,6 @@ export function BudgetItemFormModal({
               min={0}
               {...form.register("plannedAmount", { valueAsNumber: true })}
             />
-            {errors.plannedAmount && (
-              <p className="text-xs text-error mt-1">{errors.plannedAmount.message}</p>
-            )}
           </div>
         </div>
 

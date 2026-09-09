@@ -197,9 +197,10 @@ function StageSection({
 
 interface EtapasTabProps {
   projectId: number
+  projectStartDate: string | null
 }
 
-export function EtapasTab({ projectId }: EtapasTabProps) {
+export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
   const { t } = useTranslation()
   const { can } = useProjectPermissions(projectId)
   const canMutate = can(ProjectPermission.MANAGE_STAGES)
@@ -414,6 +415,8 @@ export function EtapasTab({ projectId }: EtapasTabProps) {
         open={modalState.mode !== "closed"}
         onClose={closeModal}
         projectId={projectId}
+        projectStartDate={projectStartDate}
+        stages={localStages}
         stage={modalState.mode === "edit" ? modalState.stage : null}
         suggestedDisplayOrder={maxDisplayOrder + 1}
         canMutate={canMutate}

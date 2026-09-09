@@ -305,6 +305,39 @@
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
       "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."
     },
+    "diario": {
+      "title": "Diario de la obra",
+      "count_one": "{{count}} registro",
+      "count_other": "{{count}} registros",
+      "timeline": "Línea de tiempo",
+      "newEntry": "Nuevo registro",
+      "loading": "Cargando registros...",
+      "loadingMore": "Cargando...",
+      "loadMore": "Cargar más",
+      "error": "No se pudo cargar el diario de la obra.",
+      "empty": "No se encontraron registros.",
+      "types": {
+        "OCCURRENCE": "Ocurrencia",
+        "DELIVERY": "Entrega",
+        "WORKFORCE": "Personal",
+        "IMPEDIMENT": "Impedimento"
+      },
+      "form": {
+        "title": "Agregar registro",
+        "date": "Fecha y hora",
+        "descriptionPlaceholder": "Describe ocurrencias, entregas e impedimentos del día...",
+        "attach": "Adjuntar foto o archivo",
+        "uploading": "Enviando archivo...",
+        "saving": "Guardando...",
+        "save": "Guardar registro"
+      },
+      "toasts": {
+        "created": "¡Registro guardado correctamente!",
+        "errorCreating": "No se pudo guardar el registro",
+        "deleted": "¡Registro eliminado correctamente!",
+        "errorDeleting": "No se pudo eliminar el registro"
+      }
+    },
     "orcamento": {
       "title": "Presupuesto",
       "subtitle": "Sigue lo planeado, lo gastado y el saldo de la obra.",
@@ -385,7 +418,7 @@
         "descriptionPlaceholder": "Ej: Compra de 5m³ de concreto",
         "amount": "Valor ($)",
         "spentAt": "Fecha del gasto",
-        "stage": "Etapa (opcional)",
+        "stage": "Etapa",
         "stagePlaceholder": "Selecciona una etapa",
         "stageNone": "Sin etapa vinculada",
         "supplier": "Proveedor (opcional)",
@@ -477,10 +510,13 @@
         "updateError": "Error al actualizar etapa",
         "deleteSuccess": "¡Etapa eliminada con éxito!",
         "deleteError": "Error al eliminar etapa",
+        "reorderError": "Error al reordenar etapas",
+        "startBeforeProject": "La etapa no puede comenzar antes del inicio de la obra.",
+        "previousStartRequired": "La etapa anterior debe tener una fecha de inicio antes de esta etapa.",
+        "startBeforePrevious": "La etapa no puede comenzar antes de la etapa anterior.",
         "reorderSuccess": "¡Etapas reordenadas con éxito!",
         "moveSuccess": "Etapa movida a {{status}}",
-        "moveError": "Error al mover etapa",
-        "reorderError": "Error al reordenar etapas"
+        "moveError": "Error al mover etapa"
       },
       "etapaStatus": {
         "PLANNED": "Planificada",
@@ -556,6 +592,8 @@
         "priority": "Prioridad",
         "startDate": "Inicio planificado",
         "endDate": "Término planificado",
+        "stage": "Etapa",
+        "stagePlaceholder": "Selecciona una etapa",
         "assignee": "Responsable",
         "assigneePlaceholder": "— Seleccionar —",
         "save": "Guardar",
@@ -571,6 +609,9 @@
         "plannedEndDateRequired": "La fecha de término planificada es obligatoria",
         "plannedEndDatePast": "La fecha de término no puede estar en el pasado",
         "plannedEndDateBeforeStart": "La fecha de término no puede ser anterior a la de inicio",
+        "stageStartDateRequired": "La etapa vinculada debe tener una fecha de inicio.",
+        "plannedStartDateBeforeStage": "La tarea no puede comenzar antes de su etapa vinculada.",
+        "stageRequired": "Selecciona una etapa para vincularla a la tarea.",
         "assigneeRequired": "Seleccionar el responsable es obligatorio"
       }
     },

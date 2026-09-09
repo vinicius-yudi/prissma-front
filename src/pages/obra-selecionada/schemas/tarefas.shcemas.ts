@@ -15,15 +15,9 @@ export const taskSchema = z.object({
         message: t("obra.tarefas.validation.statusRequired", "Selecionar o status é obrigatório")
     }),
     plannedStartDate: z.string()
-        .min(1, { message: t("obra.tarefas.validation.plannedStartDateRequired", "Data de início planejada é obrigatória") })
-        .refine((val) => val >= new Date().toISOString().split("T")[0], {
-            message: t("obra.tarefas.validation.plannedStartDatePast", "Data de início não pode ser no passado")
-        }),
+        .min(1, { message: t("obra.tarefas.validation.plannedStartDateRequired", "Data de início planejada é obrigatória") }),
     plannedEndDate: z.string()
-        .min(1, { message: t("obra.tarefas.validation.plannedEndDateRequired", "Data de término planejada é obrigatória") })
-        .refine((val) => val >= new Date().toISOString().split("T")[0], {
-            message: t("obra.tarefas.validation.plannedEndDatePast", "Data de término não pode ser no passado")
-        }),
+        .min(1, { message: t("obra.tarefas.validation.plannedEndDateRequired", "Data de término planejada é obrigatória") }),
     assigneeUserId: z.number({
         message: t("obra.tarefas.validation.assigneeRequired", "Selecionar o funcionário responsável é obrigatório")
     }).positive({
