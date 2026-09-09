@@ -107,16 +107,18 @@
     "groupAll": "All projects"
   },
   "login": {
-    "title": "Welcome back",
-    "subtitle": "Sign in with your credentials to access your account.",
-    "email": "Email *",
-    "emailPlaceholder": "name@example.com",
-    "password": "Password *",
+    "title": "Welcome back!",
+    "subtitle": "Sign in to access your account and manage your projects and sites.",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "password": "Password",
     "passwordPlaceholder": "Enter your password",
-    "forgotPassword": "Forgot?",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "forgotPassword": "Forgot password",
     "submit": "Sign in",
     "submitting": "Signing in...",
-    "noAccount": "Don't have an account?",
+    "noAccount": "Don't have an account yet?",
     "register": "Sign up"
   },
   "brand": {

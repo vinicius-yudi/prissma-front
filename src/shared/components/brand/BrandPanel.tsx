@@ -1,7 +1,6 @@
-import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import { useTranslation } from "react-i18next"
 
-import homeLottie from "@/assets/lotties/Home.lottie?url"
+import { ConstructionHero } from "./ConstructionHero"
 
 /**
  * Painel de marca das telas públicas (login, cadastro, recuperação, redefinição).
@@ -20,6 +19,7 @@ export function BrandPanel() {
 
   return (
     <section className="relative hidden h-full flex-col justify-between overflow-hidden bg-background p-16 lg:flex lg:w-[55%]">
+      <ConstructionHero />
       <div className="pointer-events-none absolute inset-0 bg-blueprint-grid" />
       <div className="pointer-events-none absolute left-0 top-0 size-[480px] bg-brand-glow" />
 
@@ -34,18 +34,10 @@ export function BrandPanel() {
         </h1>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center">
-        <div className="relative z-10 size-full">
-          <DotLottieReact src={homeLottie} loop autoplay className="size-full" />
-        </div>
-      </div>
-
-      <div className="z-10">
-        <p className="text-lg font-medium leading-snug text-on-surface-variant">
-          {t("brand.tagline")}
-        </p>
-        <p className="text-2xl font-bold text-on-surface">{t("brand.taglineSuffix")}</p>
-      </div>
+      {/* A torre holográfica é desenhada pelo <ConstructionHero>, em camada
+          absoluta sobre todo o painel; aqui fica só a folga que ela ocupa
+          abaixo da headline. */}
+      <div className="flex-1" />
 
       <div className="pointer-events-none absolute bottom-0 left-0 h-1/3 w-full bg-brand-fade" />
     </section>

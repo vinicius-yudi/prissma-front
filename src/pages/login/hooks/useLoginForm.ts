@@ -19,8 +19,11 @@ export function useLoginForm() {
 			saveToken(token)
 			navigate("/dashboard")
 		},
-		onError: (error: any) => {
-            const serverMessage = error.response?.data?.message || error.message || ""
+		onError: (error: Error) => {
+            const serverMessage =
+                (error as { response?: { data?: { message?: string } } }).response?.data?.message ??
+                error.message ??
+                ""
             if (serverMessage.includes("Invalid credentials")) {
                 toast.error("E-mail ou senha incorretos.")
             } else {

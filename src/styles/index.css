@@ -230,6 +230,230 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Cena da obra das telas públicas (<ConstructionHero>).
+
+   As quatro camadas de fundo do painel — céu, brilho do horizonte, silhueta e
+   o esmaecimento que funde a cena com o formulário ao lado. Vive aqui, e não
+   num `login.css` por página, pela mesma razão das texturas do <BrandPanel>
+   logo acima: é textura de marca, e §16 não admite CSS solto fora do Tailwind.
+
+   Os translúcidos saem de `color-mix` sobre as primitivas em vez de `rgba()`
+   fixo — assim a cena acompanha a troca de tema sem uma segunda tabela de
+   valores para o modo claro.
+--------------------------------------------------------------------------- */
+
+@utility bg-hero-sky {
+  background-image: radial-gradient(
+    120% 80% at 30% 15%,
+    var(--pk-rz) 0%,
+    var(--pk-sf) 38%,
+    var(--pk-bg) 72%
+  );
+}
+
+/* Poente atrás da torre: o ouro da marca no lugar do laranja da referência. */
+@utility bg-hero-horizon {
+  background-image: radial-gradient(
+    60% 100% at 18% 100%,
+    color-mix(in srgb, var(--pk-b1) 28%, transparent) 0%,
+    color-mix(in srgb, var(--pk-b2) 10%, transparent) 35%,
+    transparent 70%
+  );
+}
+
+@utility bg-hero-ground {
+  background-image: linear-gradient(to top, var(--pk-bg) 15%, transparent);
+}
+
+@utility bg-hero-fuse {
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--pk-bg) 85%, transparent) 0%,
+    color-mix(in srgb, var(--pk-bg) 25%, transparent) 55%,
+    color-mix(in srgb, var(--pk-bg) 65%, transparent) 100%
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Animações das telas públicas.
+
+   Traço que se desenha, painéis que pulsam, varredura BIM subindo a fachada e
+   a entrada escalonada do formulário. São keyframes e `stroke-dashoffset` —
+   nada disso se exprime como utilitário de composição, então é a exceção
+   legítima do §16, e por isso mora no arquivo de tokens junto do resto.
+--------------------------------------------------------------------------- */
+
+@keyframes pk-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pk-hero-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pk-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes pk-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes pk-win-pulse {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pk-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pk-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pk-scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-430px);
+    opacity: 0;
+  }
+}
+
+/* Os traços declaram `pathLength={1}`, então um único comprimento de tracejado
+   serve para qualquer geometria — reta curta e polilinha longa se desenham no
+   mesmo tempo. */
+@utility draw-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pk-draw 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@utility glow-line {
+  animation: pk-glow-pulse 4.5s ease-in-out infinite;
+}
+
+@utility pulse-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pk-dot-pulse 2.8s ease-in-out infinite;
+}
+
+@utility pulse-pane {
+  animation: pk-win-pulse 5s ease-in-out infinite;
+}
+
+@utility orbit-slow {
+  transform-origin: center;
+  animation: pk-orbit 28s linear infinite;
+}
+
+@utility float-slow {
+  animation: pk-float 7s ease-in-out infinite;
+}
+
+@utility scan-sweep {
+  transform-box: view-box;
+  animation: pk-scan 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@utility enter-up {
+  opacity: 0;
+  animation: pk-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility enter-hero {
+  opacity: 0;
+  animation: pk-hero-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Acessibilidade §13: nada disso é informação, então some por inteiro para
+   quem pediu menos movimento — inclusive o traço, que precisa terminar
+   desenhado em vez de invisível. */
+@media (prefers-reduced-motion: reduce) {
+  .draw-line,
+  .glow-line,
+  .pulse-dot,
+  .pulse-pane,
+  .orbit-slow,
+  .float-slow,
+  .scan-sweep,
+  .enter-up,
+  .enter-hero {
+    animation: none !important;
+  }
+
+  .draw-line {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .enter-up,
+  .enter-hero {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Utilitários do shell mobile.
 
    `pb-safe` reserva a faixa do indicador de home do iOS sob a barra de abas —
