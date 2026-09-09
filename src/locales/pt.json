@@ -305,6 +305,39 @@
       "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
       "mimeMismatch": "O conteúdo do arquivo não corresponde à extensão informada."
     },
+    "diario": {
+      "title": "Diário da obra",
+      "count_one": "{{count}} registro",
+      "count_other": "{{count}} registros",
+      "timeline": "Linha do tempo",
+      "newEntry": "Novo registro",
+      "loading": "Carregando registros...",
+      "loadingMore": "Carregando...",
+      "loadMore": "Carregar mais",
+      "error": "Não foi possível carregar o diário.",
+      "empty": "Nenhum registro encontrado.",
+      "types": {
+        "OCCURRENCE": "Ocorrência",
+        "DELIVERY": "Entrega",
+        "WORKFORCE": "Efetivo",
+        "IMPEDIMENT": "Impedimento"
+      },
+      "form": {
+        "title": "Adicionar registro",
+        "date": "Data e hora",
+        "descriptionPlaceholder": "Descreva ocorrências, entregas e impedimentos do dia...",
+        "attach": "Anexar foto ou arquivo",
+        "uploading": "Enviando arquivo...",
+        "saving": "Salvando...",
+        "save": "Salvar registro"
+      },
+      "toasts": {
+        "created": "Registro salvo com sucesso!",
+        "errorCreating": "Erro ao salvar registro",
+        "deleted": "Registro excluído com sucesso!",
+        "errorDeleting": "Erro ao excluir registro"
+      }
+    },
     "orcamento": {
       "title": "Orçamento",
       "subtitle": "Acompanhe o planejado, o gasto e o saldo da obra.",

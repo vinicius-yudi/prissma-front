@@ -1,15 +1,30 @@
-export type DiarioTag = "Ocorrência" | "Entrega" | "Impedimento"
+export type DiarioEntryType = "OCCURRENCE" | "DELIVERY" | "WORKFORCE" | "IMPEDIMENT"
 
 export interface DiarioEntry {
   id: number
   constructionProjectId: number
-  tag: DiarioTag
-  text: string
-  authorName: string
+  entryDate: string
+  entryType: DiarioEntryType
+  responsibleUserId: number | null
+  responsibleName: string
+  description: string
+  attachmentId: number | null
   createdAt: string
+  updatedAt: string
 }
 
 export interface CreateDiarioEntryRequest {
-  tag: DiarioTag
-  text: string
+  entryDate: string
+  entryType: DiarioEntryType
+  description: string
+  attachmentId?: number | null
+}
+
+export interface DiarioPage {
+  content: DiarioEntry[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+  last: boolean
 }

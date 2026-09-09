@@ -305,6 +305,39 @@
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
       "mimeMismatch": "File contents do not match the declared extension."
     },
+    "diario": {
+      "title": "Site diary",
+      "count_one": "{{count}} entry",
+      "count_other": "{{count}} entries",
+      "timeline": "Timeline",
+      "newEntry": "New entry",
+      "loading": "Loading entries...",
+      "loadingMore": "Loading...",
+      "loadMore": "Load more",
+      "error": "Could not load the site diary.",
+      "empty": "No entries found.",
+      "types": {
+        "OCCURRENCE": "Occurrence",
+        "DELIVERY": "Delivery",
+        "WORKFORCE": "Workforce",
+        "IMPEDIMENT": "Impediment"
+      },
+      "form": {
+        "title": "Add register",
+        "date": "Date and time",
+        "descriptionPlaceholder": "Describe occurrences, deliveries and impediments of the day...",
+        "attach": "Attach photo or file",
+        "uploading": "Uploading file...",
+        "saving": "Saving...",
+        "save": "Save entry"
+      },
+      "toasts": {
+        "created": "Entry saved successfully!",
+        "errorCreating": "Could not save entry",
+        "deleted": "Entry deleted successfully!",
+        "errorDeleting": "Could not delete entry"
+      }
+    },
     "orcamento": {
       "title": "Budget",
       "subtitle": "Track planned, spent and remaining values for the project.",

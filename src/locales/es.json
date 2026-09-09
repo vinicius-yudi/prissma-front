@@ -305,6 +305,39 @@
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
       "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."
     },
+    "diario": {
+      "title": "Diario de la obra",
+      "count_one": "{{count}} registro",
+      "count_other": "{{count}} registros",
+      "timeline": "Línea de tiempo",
+      "newEntry": "Nuevo registro",
+      "loading": "Cargando registros...",
+      "loadingMore": "Cargando...",
+      "loadMore": "Cargar más",
+      "error": "No se pudo cargar el diario de la obra.",
+      "empty": "No se encontraron registros.",
+      "types": {
+        "OCCURRENCE": "Ocurrencia",
+        "DELIVERY": "Entrega",
+        "WORKFORCE": "Personal",
+        "IMPEDIMENT": "Impedimento"
+      },
+      "form": {
+        "title": "Agregar registro",
+        "date": "Fecha y hora",
+        "descriptionPlaceholder": "Describe ocurrencias, entregas e impedimentos del día...",
+        "attach": "Adjuntar foto o archivo",
+        "uploading": "Enviando archivo...",
+        "saving": "Guardando...",
+        "save": "Guardar registro"
+      },
+      "toasts": {
+        "created": "¡Registro guardado correctamente!",
+        "errorCreating": "No se pudo guardar el registro",
+        "deleted": "¡Registro eliminado correctamente!",
+        "errorDeleting": "No se pudo eliminar el registro"
+      }
+    },
     "orcamento": {
       "title": "Presupuesto",
       "subtitle": "Sigue lo planeado, lo gastado y el saldo de la obra.",
