@@ -65,7 +65,7 @@ export default defineConfig({
       //   GLOBAL               75%   ← exigência do projeto
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 4, branches: 2.5, functions: 3.5, lines: 4 },
+        global: { statements: 11, branches: 9.5, functions: 8.8, lines: 10.9 },
       },
     },
   },
