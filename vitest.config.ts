@@ -52,10 +52,10 @@ export default defineConfig({
       // ---------------------------------------------------------------------
       // RATCHET. Estes números são o PISO atual, não a meta.
       //
-      // O requisito do projeto é 75%, mas a suíte está começando: travar em 75
-      // agora deixaria todo PR vermelho antes de existir teste, e o gate viraria
-      // algo para desligar em vez de algo para respeitar. Então o CI trava a
-      // REGRESSÃO desde já, e o piso sobe junto com a suíte.
+      // A meta acordada é 95%, mas travar em 95 antes de a suíte existir
+      // deixaria todo PR vermelho, e o gate viraria algo para desligar em vez
+      // de algo para respeitar. Então o CI trava a REGRESSÃO desde já, e o piso
+      // sobe junto com a suíte.
       //
       // Regra: ao terminar uma camada, rode `bun run test:coverage` e suba
       // estes valores para o novo medido. Eles nunca descem.
@@ -64,20 +64,21 @@ export default defineConfig({
       //   [x] schemas (zod)        90%   — lógica pura, sem desculpa
       //   [x] shared/utils         90%   — idem
       //   [x] services             85%   — mock do @/lib/api, mecânico
-      //   [~] hooks                85%   — renderHook + wrapper
-      //   [ ] shared/components/ui 80%   — render + variantes
+      //   [x] hooks                85%   — renderHook + wrapper
+      //   [~] shared/components/ui 80%   — render + variantes
       //   [ ] pages                60%   — cauda longa
-      //       GLOBAL               75%   ← exigência do projeto
+      //       GLOBAL               95%   ← meta acordada
       //
-      // Hooks que faltam (os maiores primeiro, com o peso em statements):
-      //   usePerfilForm 72 · useBudget 66 · useEquipes 55 · useTarefasKanban 38
-      //   useAttachments 26 · useTarefas 25 · useDiario 22 · useWorkspaceTeam 19
-      //   useDocumentos 18 · useTarefasByProject 13 · useObraResumo 7
-      //   useDashboard 7 · useDeleteAccount 8 · useCategoryExpenses 3
-      //   useObraSelecionada 4
+      // O que falta, pelo peso em statements não cobertos:
+      //   EtapasTab 101 · Sidebar 75 · EquipesTab 64 · ProjectStepModal 63
+      //   StageFormModal 52 · DiarioDaObra 50 · pessoas/index 48
+      //   HolographicBuildingOverlay 43 · OrcamentoTab 42 · TaskFormModal 40
+      //   visaoGeral 38 · TarefasTab 30 · TarefasLista 29 · ProjectCard 28
+      //   HeaderSearch 28 · MobileMenuSheet 26 · EtapaCard 25 · e a cauda de
+      //   componentes de UI e telas menores.
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 31.3, branches: 22, functions: 29.2, lines: 31.4 },
+        global: { statements: 46.1, branches: 30.8, functions: 45.9, lines: 46.5 },
       },
     },
   },
