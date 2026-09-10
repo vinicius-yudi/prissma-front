@@ -65,20 +65,18 @@ export default defineConfig({
       //   [x] shared/utils         90%   — idem
       //   [x] services             85%   — mock do @/lib/api, mecânico
       //   [x] hooks                85%   — renderHook + wrapper
-      //   [~] shared/components/ui 80%   — render + variantes
-      //   [ ] pages                60%   — cauda longa
+      //   [x] shared/components    80%   — design system + shell
+      //   [~] pages                60%   — cauda longa
       //       GLOBAL               95%   ← meta acordada
       //
       // O que falta, pelo peso em statements não cobertos:
-      //   EtapasTab 101 · Sidebar 75 · EquipesTab 64 · ProjectStepModal 63
-      //   StageFormModal 52 · DiarioDaObra 50 · pessoas/index 48
-      //   HolographicBuildingOverlay 43 · OrcamentoTab 42 · TaskFormModal 40
+      //   EtapasTab 101 · EquipesTab 64 · ProjectStepModal 63 · StageFormModal 52
+      //   DiarioDaObra 50 · pessoas/index 48 · OrcamentoTab 42 · TaskFormModal 40
       //   visaoGeral 38 · TarefasTab 30 · TarefasLista 29 · ProjectCard 28
-      //   HeaderSearch 28 · MobileMenuSheet 26 · EtapaCard 25 · e a cauda de
-      //   componentes de UI e telas menores.
+      //   EtapaCard 25 · ObraLayout 23 · e a cauda de telas menores.
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 46.1, branches: 30.8, functions: 45.9, lines: 46.5 },
+        global: { statements: 57.6, branches: 41.8, functions: 56.9, lines: 58.1 },
       },
     },
   },
