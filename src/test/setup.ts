@@ -42,3 +42,8 @@ class ResizeObserverStub {
 }
 
 globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver
+
+// jsdom não implementa `scrollIntoView`, e chamá-lo estoura. O trilho de
+// módulos da obra e o banner de estouro do orçamento rolam até o item ativo no
+// mount — sem o stub, o componente quebra antes da primeira asserção.
+Element.prototype.scrollIntoView ??= function scrollIntoView() {}
