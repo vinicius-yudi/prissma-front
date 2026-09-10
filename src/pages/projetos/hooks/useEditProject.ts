@@ -19,9 +19,8 @@ export function useEditProject({ onSuccess }: UseEditProjectOptions = {}) {
       toast.success("Obra atualizada com sucesso!")
       onSuccess?.()
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.message || error.message || "Erro ao atualizar obra"
-      toast.error(message)
+    onError: (error: Error) => {
+      toast.error(error.message || "Erro ao atualizar obra")
     },
   })
 

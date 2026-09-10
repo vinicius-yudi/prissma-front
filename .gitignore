@@ -27,3 +27,4 @@ CLAUDE.md
 *.njsproj
 *.sln
 *.sw?
+coverage

@@ -162,7 +162,6 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
     numeroRef.current = el
   }
 
-  const errors = form.formState.errors
 
   return (
     <Modal

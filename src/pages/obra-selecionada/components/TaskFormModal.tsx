@@ -96,6 +96,8 @@ export function TaskFormModal({ open, onClose, stageId, stages, projectId, canMu
       onSaved?.()
       onClose()
     } catch {
+      // Silencioso de propósito: o toast do erro já sai no onError da mutation.
+      // Este catch existe só para a promise não subir como não tratada.
     }
   }
 
