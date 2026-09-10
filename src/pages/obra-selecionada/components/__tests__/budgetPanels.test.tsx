@@ -7,6 +7,7 @@ import type { BudgetItem, ProjectBudget } from "@/shared/types/budget"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 import { BudgetChartPanel } from "../BudgetChartPanel"
+import { BudgetHeaderMenu } from "../BudgetHeaderMenu"
 import { BudgetEmptyState } from "../BudgetEmptyState"
 import { BudgetErrorState } from "../BudgetErrorState"
 import { BudgetExceededBanner } from "../BudgetExceededBanner"
@@ -322,5 +323,56 @@ describe("<BudgetMainPanel />", () => {
     await userEvent.click(screen.getByRole("button", { name: "Nova categoria" }))
 
     expect(acoes.onAddItem).toHaveBeenCalled()
+  })
+})
+
+/**
+ * Editar e excluir o orçamento inteiro ficam atrás do menu, não como botões
+ * soltos: são ações raras, e uma delas é destrutiva ao lado do "Nova
+ * categoria", que é a ação do dia a dia.
+ */
+describe("<BudgetHeaderMenu />", () => {
+  const onEdit = vi.fn()
+  const onDelete = vi.fn()
+
+  it("começa fechado", () => {
+    renderWithProviders(<BudgetHeaderMenu onEdit={onEdit} onDelete={onDelete} />)
+
+    expect(screen.queryByText("Editar orçamento")).not.toBeInTheDocument()
+  })
+
+  it("abre e fecha no próprio botão", async () => {
+    renderWithProviders(<BudgetHeaderMenu onEdit={onEdit} onDelete={onDelete} />)
+
+    await userEvent.click(screen.getByLabelText("menu"))
+    expect(screen.getByText("Editar orçamento")).toBeInTheDocument()
+
+    await userEvent.click(screen.getByLabelText("menu"))
+    expect(screen.queryByText("Editar orçamento")).not.toBeInTheDocument()
+  })
+
+  // O menu fecha ao escolher: deixá-lo aberto sobre o modal que acabou de
+  // abrir empilharia duas camadas de UI.
+  it.each([
+    ["Editar orçamento", onEdit],
+    ["Excluir orçamento", onDelete],
+  ])("dispara %s e fecha o menu", async (rotulo, handler) => {
+    renderWithProviders(<BudgetHeaderMenu onEdit={onEdit} onDelete={onDelete} />)
+    await userEvent.click(screen.getByLabelText("menu"))
+
+    await userEvent.click(screen.getByText(rotulo))
+
+    expect(handler).toHaveBeenCalled()
+    expect(screen.queryByText(rotulo)).not.toBeInTheDocument()
+  })
+
+  // A camada de captura fecha o menu sem listener global no documento.
+  it("fecha ao clicar fora", async () => {
+    renderWithProviders(<BudgetHeaderMenu onEdit={onEdit} onDelete={onDelete} />)
+    await userEvent.click(screen.getByLabelText("menu"))
+
+    await userEvent.click(document.querySelector(".fixed.inset-0") as HTMLElement)
+
+    expect(screen.queryByText("Editar orçamento")).not.toBeInTheDocument()
   })
 })

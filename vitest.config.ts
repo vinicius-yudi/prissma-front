@@ -52,31 +52,26 @@ export default defineConfig({
       // ---------------------------------------------------------------------
       // RATCHET. Estes números são o PISO atual, não a meta.
       //
-      // A meta acordada é 95%, mas travar em 95 antes de a suíte existir
-      // deixaria todo PR vermelho, e o gate viraria algo para desligar em vez
-      // de algo para respeitar. Então o CI trava a REGRESSÃO desde já, e o piso
-      // sobe junto com a suíte.
+      // A meta de 95% foi atingida; o piso fica logo abaixo do medido para o
+      // CI travar a REGRESSÃO sem reprovar um PR por uma linha de diferença
+      // de arredondamento.
       //
-      // Regra: ao terminar uma camada, rode `bun run test:coverage` e suba
+      // Regra: ao subir a cobertura, rode `bun run test:coverage` e ajuste
       // estes valores para o novo medido. Eles nunca descem.
       //
-      // Metas por camada, na ordem de ataque ([x] = feito):
-      //   [x] schemas (zod)        90%   — lógica pura, sem desculpa
-      //   [x] shared/utils         90%   — idem
-      //   [x] services             85%   — mock do @/lib/api, mecânico
-      //   [x] hooks                85%   — renderHook + wrapper
-      //   [x] shared/components    80%   — design system + shell
-      //   [~] pages                60%   — cauda longa
-      //       GLOBAL               95%   ← meta acordada
+      // Cobertura por camada ([x] = fechada):
+      //   [x] schemas (zod) · shared/utils · services
+      //   [x] hooks
+      //   [x] shared/components (design system + shell)
+      //   [x] pages (obra, projetos, painel, perfil, pessoas, públicas)
       //
-      // O que falta, pelo peso em statements não cobertos:
-      //   EtapasTab 101 · EquipesTab 64 · ProjectStepModal 63 · StageFormModal 52
-      //   DiarioDaObra 50 · pessoas/index 48 · OrcamentoTab 42 · TaskFormModal 40
-      //   visaoGeral 38 · TarefasTab 30 · TarefasLista 29 · ProjectCard 28
-      //   EtapaCard 25 · ObraLayout 23 · e a cauda de telas menores.
+      // O que sobra sem cobrir são ramos que o jsdom não alcança: medição do
+      // Recharts (o SVG sai vazio sem layout), gestos reais de arraste do
+      // @dnd-kit e alguns caminhos barrados antes pela validação nativa do
+      // formulário. Estão documentados no teste de cada um.
       // ---------------------------------------------------------------------
       thresholds: {
-        global: { statements: 57.6, branches: 41.8, functions: 56.9, lines: 58.1 },
+        global: { statements: 95.5, branches: 89.8, functions: 93.2, lines: 96.5 },
       },
     },
   },
