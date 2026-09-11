@@ -303,6 +303,158 @@
       "count_one": "{{count}} archivo",
       "count_other": "{{count}} archivos"
     },
+    "propostas": {
+      "title": "Propuestas",
+      "count_one": "{{count}} propuesta",
+      "count_other": "{{count}} propuestas",
+      "emptyTitle": "Aún no hay propuestas",
+      "emptyDescription": "Crea una propuesta para el ambiente y genera vistas previas con IA a partir de una foto del lugar.",
+      "thumbAlt": "Vista previa de la propuesta {{title}}",
+      "loadingImage": "Cargando imagen...",
+      "noImage": "Todavía sin imagen",
+      "aiBadge": "Generada por IA",
+      "generate": "Vista previa IA",
+      "generating": "Generando vista previa...",
+      "unsupportedType": "Tipo de archivo no admitido. Envía PNG, JPG o WEBP.",
+      "status": {
+        "DRAFT": "Borrador",
+        "PENDING_REVIEW": "En revisión",
+        "APPROVED": "Aprobada",
+        "REJECTED": "Ajustes solicitados"
+      },
+      "environments": {
+        "LIVING_ROOM": "Sala de estar",
+        "BEDROOM": "Dormitorio",
+        "KITCHEN": "Cocina",
+        "BATHROOM": "Baño",
+        "DINING_ROOM": "Comedor",
+        "OFFICE": "Oficina",
+        "BALCONY": "Balcón",
+        "GARAGE": "Garaje",
+        "OTHER": "Otro"
+      },
+      "styles": {
+        "MODERN": "Moderno",
+        "MINIMALIST": "Minimalista",
+        "CONTEMPORARY": "Contemporáneo",
+        "INDUSTRIAL": "Industrial",
+        "CLASSIC": "Clásico",
+        "RUSTIC": "Rústico"
+      },
+      "colors": {
+        "WHITE": "Blanco",
+        "OFF_WHITE": "Blanco roto",
+        "BEIGE": "Beige",
+        "LIGHT_GRAY": "Gris claro",
+        "DARK_GRAY": "Gris oscuro",
+        "BLACK": "Negro",
+        "NATURAL_WOOD": "Madera natural",
+        "DARK_WOOD": "Madera oscura",
+        "GREEN": "Verde",
+        "BLUE": "Azul"
+      },
+      "lighting": {
+        "NATURAL": "Natural",
+        "WARM": "Cálida",
+        "COOL": "Fría",
+        "NEUTRAL": "Neutra",
+        "WARM_INDIRECT": "Cálida indirecta",
+        "COOL_INDIRECT": "Fría indirecta"
+      },
+      "flooring": {
+        "LIGHT_PORCELAIN": "Porcelanato claro",
+        "DARK_PORCELAIN": "Porcelanato oscuro",
+        "WOOD": "Madera",
+        "LAMINATE": "Laminado",
+        "MARBLE": "Mármol",
+        "POLISHED_CONCRETE": "Hormigón pulido",
+        "CERAMIC": "Cerámica"
+      },
+      "modes": {
+        "PREVIEW": "Vista previa (más rápida)",
+        "FINAL": "Final (más detallada)"
+      },
+      "actions": {
+        "create": "Nueva propuesta",
+        "submit": "Crear propuesta",
+        "cancel": "Cancelar",
+        "close": "Cerrar",
+        "saving": "Guardando...",
+        "delete": "Eliminar propuesta"
+      },
+      "form": {
+        "title": "Nueva propuesta",
+        "description": "El ambiente define lo que la IA va a dibujar en las vistas previas.",
+        "fields": {
+          "title": "Nombre de la propuesta",
+          "environment": "Ambiente",
+          "description": "Descripción",
+          "file": "Imagen inicial (opcional)"
+        },
+        "placeholders": {
+          "title": "Ej.: Sala de estar — propuesta cliente",
+          "description": "Qué resuelve esta propuesta en el ambiente."
+        },
+        "fileHint": "PNG, JPG o WEBP. Sin imagen, la propuesta nace solo con los datos y recibe la primera vista previa después."
+      },
+      "previa": {
+        "title": "Vista previa IA",
+        "warning": "La vista previa usa IA y puede tardar hasta 40s por ambiente.",
+        "submit": "Generar vista previa",
+        "generating": "Generando...",
+        "processing": "La IA está dibujando el ambiente. Puedes dejar la pantalla abierta.",
+        "maxColors": "Como máximo {{max}} colores por vista previa.",
+        "rawImageRequired": "Envía una foto del ambiente para que la IA trabaje sobre ella.",
+        "rawImageAlt": "Foto del ambiente enviada",
+        "changeFile": "Cambiar foto",
+        "removeFile": "Quitar",
+        "floorPlanHint": "Opcional. Con el plano la IA respeta mejor las dimensiones del ambiente.",
+        "colorsCount": "{{selected}} de {{max}} colores",
+        "fields": {
+          "rawImage": "Foto del ambiente",
+          "floorPlan": "Plano",
+          "style": "Estilo",
+          "lighting": "Iluminación",
+          "flooring": "Piso",
+          "mode": "Modo de generación",
+          "colors": "Paleta de colores",
+          "instructions": "Instrucciones adicionales"
+        },
+        "placeholders": {
+          "instructions": "Ej.: mantener la ventana existente y no alterar el techo."
+        }
+      },
+      "versions": {
+        "title": "Historial de versiones",
+        "history": "Ver versiones",
+        "count_one": "{{count}} versión",
+        "count_other": "{{count}} versiones",
+        "empty": "Ninguna versión registrada.",
+        "approve": "Aprobar",
+        "requestChanges": "Pedir ajustes",
+        "thumbAlt": "Imagen de la versión {{version}}"
+      },
+      "deleteModal": {
+        "title": "Eliminar propuesta",
+        "message": "La propuesta \"{{title}}\" y todas sus versiones serán eliminadas. Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "toasts": {
+        "createSuccess": "Propuesta creada.",
+        "createError": "No fue posible crear la propuesta.",
+        "updateSuccess": "Propuesta actualizada.",
+        "updateError": "No fue posible actualizar la propuesta.",
+        "deleteSuccess": "Propuesta eliminada.",
+        "deleteError": "No fue posible eliminar la propuesta.",
+        "versionSuccess": "Nueva versión añadida.",
+        "versionError": "No fue posible añadir la versión.",
+        "statusSuccess": "Estado de la versión actualizado.",
+        "statusError": "No fue posible actualizar el estado.",
+        "previewSuccess": "Vista previa lista — nueva versión creada.",
+        "previewError": "La generación de la vista previa falló."
+      }
+    },
     "attachments": {
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
       "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."

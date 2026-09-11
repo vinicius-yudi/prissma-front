@@ -303,6 +303,158 @@
       "count_one": "{{count}} arquivo",
       "count_other": "{{count}} arquivos"
     },
+    "propostas": {
+      "title": "Propostas",
+      "count_one": "{{count}} proposta",
+      "count_other": "{{count}} propostas",
+      "emptyTitle": "Nenhuma proposta ainda",
+      "emptyDescription": "Crie uma proposta para o ambiente e gere prévias visuais com IA a partir de uma foto do local.",
+      "thumbAlt": "Prévia da proposta {{title}}",
+      "loadingImage": "Carregando imagem...",
+      "noImage": "Sem imagem ainda",
+      "aiBadge": "Gerada por IA",
+      "generate": "Prévia visual IA",
+      "generating": "Gerando prévia...",
+      "unsupportedType": "Tipo de arquivo não suportado. Envie PNG, JPG ou WEBP.",
+      "status": {
+        "DRAFT": "Rascunho",
+        "PENDING_REVIEW": "Em análise",
+        "APPROVED": "Aprovada",
+        "REJECTED": "Ajustes pedidos"
+      },
+      "environments": {
+        "LIVING_ROOM": "Sala de estar",
+        "BEDROOM": "Quarto",
+        "KITCHEN": "Cozinha",
+        "BATHROOM": "Banheiro",
+        "DINING_ROOM": "Sala de jantar",
+        "OFFICE": "Escritório",
+        "BALCONY": "Varanda",
+        "GARAGE": "Garagem",
+        "OTHER": "Outro"
+      },
+      "styles": {
+        "MODERN": "Moderno",
+        "MINIMALIST": "Minimalista",
+        "CONTEMPORARY": "Contemporâneo",
+        "INDUSTRIAL": "Industrial",
+        "CLASSIC": "Clássico",
+        "RUSTIC": "Rústico"
+      },
+      "colors": {
+        "WHITE": "Branco",
+        "OFF_WHITE": "Branco off",
+        "BEIGE": "Bege",
+        "LIGHT_GRAY": "Cinza claro",
+        "DARK_GRAY": "Cinza escuro",
+        "BLACK": "Preto",
+        "NATURAL_WOOD": "Madeira natural",
+        "DARK_WOOD": "Madeira escura",
+        "GREEN": "Verde",
+        "BLUE": "Azul"
+      },
+      "lighting": {
+        "NATURAL": "Natural",
+        "WARM": "Quente",
+        "COOL": "Fria",
+        "NEUTRAL": "Neutra",
+        "WARM_INDIRECT": "Quente indireta",
+        "COOL_INDIRECT": "Fria indireta"
+      },
+      "flooring": {
+        "LIGHT_PORCELAIN": "Porcelanato claro",
+        "DARK_PORCELAIN": "Porcelanato escuro",
+        "WOOD": "Madeira",
+        "LAMINATE": "Laminado",
+        "MARBLE": "Mármore",
+        "POLISHED_CONCRETE": "Concreto polido",
+        "CERAMIC": "Cerâmica"
+      },
+      "modes": {
+        "PREVIEW": "Prévia (mais rápida)",
+        "FINAL": "Final (mais detalhada)"
+      },
+      "actions": {
+        "create": "Nova proposta",
+        "submit": "Criar proposta",
+        "cancel": "Cancelar",
+        "close": "Fechar",
+        "saving": "Salvando...",
+        "delete": "Excluir proposta"
+      },
+      "form": {
+        "title": "Nova proposta",
+        "description": "O ambiente define o que a IA vai desenhar nas prévias.",
+        "fields": {
+          "title": "Nome da proposta",
+          "environment": "Ambiente",
+          "description": "Descrição",
+          "file": "Imagem inicial (opcional)"
+        },
+        "placeholders": {
+          "title": "Ex.: Sala de estar — proposta cliente",
+          "description": "O que esta proposta resolve no ambiente."
+        },
+        "fileHint": "PNG, JPG ou WEBP. Sem imagem, a proposta nasce só com os dados e recebe a primeira prévia depois."
+      },
+      "previa": {
+        "title": "Prévia visual IA",
+        "warning": "A prévia visual usa IA e pode levar até 40s por ambiente.",
+        "submit": "Gerar prévia",
+        "generating": "Gerando...",
+        "processing": "A IA está desenhando o ambiente. Pode deixar a tela aberta.",
+        "maxColors": "No máximo {{max}} cores por prévia.",
+        "rawImageRequired": "Envie uma foto do ambiente para a IA trabalhar em cima.",
+        "rawImageAlt": "Foto do ambiente enviada",
+        "changeFile": "Trocar foto",
+        "removeFile": "Remover",
+        "floorPlanHint": "Opcional. Com a planta a IA respeita melhor as dimensões do ambiente.",
+        "colorsCount": "{{selected}} de {{max}} cores",
+        "fields": {
+          "rawImage": "Foto do ambiente",
+          "floorPlan": "Planta baixa",
+          "style": "Estilo",
+          "lighting": "Iluminação",
+          "flooring": "Piso",
+          "mode": "Modo de geração",
+          "colors": "Paleta de cores",
+          "instructions": "Instruções adicionais"
+        },
+        "placeholders": {
+          "instructions": "Ex.: manter a janela existente e não alterar o teto."
+        }
+      },
+      "versions": {
+        "title": "Histórico de versões",
+        "history": "Ver versões",
+        "count_one": "{{count}} versão",
+        "count_other": "{{count}} versões",
+        "empty": "Nenhuma versão registrada.",
+        "approve": "Aprovar",
+        "requestChanges": "Pedir ajustes",
+        "thumbAlt": "Imagem da versão {{version}}"
+      },
+      "deleteModal": {
+        "title": "Excluir proposta",
+        "message": "A proposta \"{{title}}\" e todas as suas versões serão excluídas. Esta ação não pode ser desfeita.",
+        "confirm": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "createSuccess": "Proposta criada.",
+        "createError": "Não foi possível criar a proposta.",
+        "updateSuccess": "Proposta atualizada.",
+        "updateError": "Não foi possível atualizar a proposta.",
+        "deleteSuccess": "Proposta excluída.",
+        "deleteError": "Não foi possível excluir a proposta.",
+        "versionSuccess": "Nova versão adicionada.",
+        "versionError": "Não foi possível adicionar a versão.",
+        "statusSuccess": "Status da versão atualizado.",
+        "statusError": "Não foi possível atualizar o status.",
+        "previewSuccess": "Prévia pronta — nova versão criada.",
+        "previewError": "A geração da prévia falhou."
+      }
+    },
     "attachments": {
       "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
       "mimeMismatch": "O conteúdo do arquivo não corresponde à extensão informada."

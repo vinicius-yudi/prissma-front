@@ -303,6 +303,158 @@
       "count_one": "{{count}} file",
       "count_other": "{{count}} files"
     },
+    "propostas": {
+      "title": "Proposals",
+      "count_one": "{{count}} proposal",
+      "count_other": "{{count}} proposals",
+      "emptyTitle": "No proposals yet",
+      "emptyDescription": "Create a proposal for the room and generate AI visual previews from a photo of the space.",
+      "thumbAlt": "Preview of proposal {{title}}",
+      "loadingImage": "Loading image...",
+      "noImage": "No image yet",
+      "aiBadge": "AI generated",
+      "generate": "AI visual preview",
+      "generating": "Generating preview...",
+      "unsupportedType": "Unsupported file type. Upload PNG, JPG or WEBP.",
+      "status": {
+        "DRAFT": "Draft",
+        "PENDING_REVIEW": "In review",
+        "APPROVED": "Approved",
+        "REJECTED": "Changes requested"
+      },
+      "environments": {
+        "LIVING_ROOM": "Living room",
+        "BEDROOM": "Bedroom",
+        "KITCHEN": "Kitchen",
+        "BATHROOM": "Bathroom",
+        "DINING_ROOM": "Dining room",
+        "OFFICE": "Office",
+        "BALCONY": "Balcony",
+        "GARAGE": "Garage",
+        "OTHER": "Other"
+      },
+      "styles": {
+        "MODERN": "Modern",
+        "MINIMALIST": "Minimalist",
+        "CONTEMPORARY": "Contemporary",
+        "INDUSTRIAL": "Industrial",
+        "CLASSIC": "Classic",
+        "RUSTIC": "Rustic"
+      },
+      "colors": {
+        "WHITE": "White",
+        "OFF_WHITE": "Off-white",
+        "BEIGE": "Beige",
+        "LIGHT_GRAY": "Light gray",
+        "DARK_GRAY": "Dark gray",
+        "BLACK": "Black",
+        "NATURAL_WOOD": "Natural wood",
+        "DARK_WOOD": "Dark wood",
+        "GREEN": "Green",
+        "BLUE": "Blue"
+      },
+      "lighting": {
+        "NATURAL": "Natural",
+        "WARM": "Warm",
+        "COOL": "Cool",
+        "NEUTRAL": "Neutral",
+        "WARM_INDIRECT": "Warm indirect",
+        "COOL_INDIRECT": "Cool indirect"
+      },
+      "flooring": {
+        "LIGHT_PORCELAIN": "Light porcelain",
+        "DARK_PORCELAIN": "Dark porcelain",
+        "WOOD": "Wood",
+        "LAMINATE": "Laminate",
+        "MARBLE": "Marble",
+        "POLISHED_CONCRETE": "Polished concrete",
+        "CERAMIC": "Ceramic"
+      },
+      "modes": {
+        "PREVIEW": "Preview (faster)",
+        "FINAL": "Final (more detailed)"
+      },
+      "actions": {
+        "create": "New proposal",
+        "submit": "Create proposal",
+        "cancel": "Cancel",
+        "close": "Close",
+        "saving": "Saving...",
+        "delete": "Delete proposal"
+      },
+      "form": {
+        "title": "New proposal",
+        "description": "The room type defines what the AI will draw in the previews.",
+        "fields": {
+          "title": "Proposal name",
+          "environment": "Room",
+          "description": "Description",
+          "file": "Initial image (optional)"
+        },
+        "placeholders": {
+          "title": "E.g. Living room — client proposal",
+          "description": "What this proposal solves in the room."
+        },
+        "fileHint": "PNG, JPG or WEBP. Without an image the proposal starts with data only and gets its first preview later."
+      },
+      "previa": {
+        "title": "AI visual preview",
+        "warning": "The visual preview uses AI and can take up to 40s per room.",
+        "submit": "Generate preview",
+        "generating": "Generating...",
+        "processing": "The AI is drawing the room. You can leave this open.",
+        "maxColors": "At most {{max}} colors per preview.",
+        "rawImageRequired": "Upload a photo of the room for the AI to work from.",
+        "rawImageAlt": "Uploaded room photo",
+        "changeFile": "Change photo",
+        "removeFile": "Remove",
+        "floorPlanHint": "Optional. With the floor plan the AI respects the room dimensions better.",
+        "colorsCount": "{{selected}} of {{max}} colors",
+        "fields": {
+          "rawImage": "Room photo",
+          "floorPlan": "Floor plan",
+          "style": "Style",
+          "lighting": "Lighting",
+          "flooring": "Flooring",
+          "mode": "Generation mode",
+          "colors": "Color palette",
+          "instructions": "Additional instructions"
+        },
+        "placeholders": {
+          "instructions": "E.g. keep the existing window and do not change the ceiling."
+        }
+      },
+      "versions": {
+        "title": "Version history",
+        "history": "View versions",
+        "count_one": "{{count}} version",
+        "count_other": "{{count}} versions",
+        "empty": "No versions recorded.",
+        "approve": "Approve",
+        "requestChanges": "Request changes",
+        "thumbAlt": "Image of version {{version}}"
+      },
+      "deleteModal": {
+        "title": "Delete proposal",
+        "message": "The proposal \"{{title}}\" and all its versions will be deleted. This cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "createSuccess": "Proposal created.",
+        "createError": "Could not create the proposal.",
+        "updateSuccess": "Proposal updated.",
+        "updateError": "Could not update the proposal.",
+        "deleteSuccess": "Proposal deleted.",
+        "deleteError": "Could not delete the proposal.",
+        "versionSuccess": "New version added.",
+        "versionError": "Could not add the version.",
+        "statusSuccess": "Version status updated.",
+        "statusError": "Could not update the status.",
+        "previewSuccess": "Preview ready — new version created.",
+        "previewError": "Preview generation failed."
+      }
+    },
     "attachments": {
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
       "mimeMismatch": "File contents do not match the declared extension."

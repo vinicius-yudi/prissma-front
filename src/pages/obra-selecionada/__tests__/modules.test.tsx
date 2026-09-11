@@ -46,6 +46,9 @@ vi.mock("../components/DocumentosTab", () => ({
 vi.mock("../components/DiarioDaObra", () => ({
   default: ({ projectId }: { projectId: number }) => <span>diario-{projectId}</span>,
 }))
+vi.mock("../components/PropostasTab", () => ({
+  PropostasTab: ({ projectId }: { projectId: number }) => <span>propostas-{projectId}</span>,
+}))
 
 const OBRA: Project = {
   id: 7,
@@ -92,6 +95,7 @@ describe("módulos da obra", () => {
     [OrcamentoModule, "orcamento-7"],
     [DocumentosModule, "documentos-7"],
     [DiarioModule, "diario-7"],
+    [PropostasModule, "propostas-7"],
   ])("repassa a obra do Outlet para a aba (%#)", (Modulo, marcador) => {
     renderModule(Modulo)
 
@@ -108,17 +112,14 @@ describe("módulos da obra", () => {
 })
 
 /**
- * Melhor uma tela honesta que um item de menu que não abre: Indicadores e
- * Propostas estão no design e ainda não têm backend.
+ * Melhor uma tela honesta que um item de menu que não abre: Indicadores está
+ * no design e ficou para a fase seguinte.
  */
 describe("módulos ainda sem backend", () => {
-  it.each([
-    [IndicadoresModule, "Indicadores"],
-    [PropostasModule, "Propostas"],
-  ])("anuncia %# como em breve", (Modulo, titulo) => {
-    renderModule(Modulo)
+  it("anuncia Indicadores como em breve", () => {
+    renderModule(IndicadoresModule)
 
-    expect(screen.getByText(titulo)).toBeInTheDocument()
+    expect(screen.getByText("Indicadores")).toBeInTheDocument()
     expect(screen.getByText(/em breve|Em breve/)).toBeInTheDocument()
   })
 })
