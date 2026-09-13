@@ -41,21 +41,38 @@ export interface DisplayStatus {
   daysLate: number
 }
 
-function startOfToday(): Date {
+export function startOfToday(): Date {
   const d = new Date()
   d.setHours(0, 0, 0, 0)
   return d
 }
 
+/**
+ * Meia-noite local do dia que a string descreve.
+ *
+ * O backend manda data pura — `plannedEndDate` chega como `"2026-06-18"` — e o
+ * JS lê esse formato como meia-noite **UTC**. Em qualquer fuso a oeste de
+ * Greenwich o instante cai no dia anterior, e a obra que vence hoje já nasce
+ * vencida. Ler ano/mês/dia e remontar a data no fuso do usuário tira o
+ * deslocamento. String com hora (`"2026-06-18T00:00:00"`) já é local e
+ * atravessa este caminho sem mudar de dia.
+ */
+export function startOfLocalDay(value: string | null | undefined): Date | null {
+  if (!value) return null
+  const [year, month, day] = value.slice(0, 10).split("-").map(Number)
+  const date = new Date(year, month - 1, day)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
 /** Dias corridos entre a data planejada e hoje. Negativo ou 0 = no prazo. */
 export function daysLate(plannedEndDate: string | null | undefined): number {
-  if (!plannedEndDate) return 0
-  const due = new Date(plannedEndDate)
-  if (Number.isNaN(due.getTime())) return 0
-  due.setHours(0, 0, 0, 0)
+  const due = startOfLocalDay(plannedEndDate)
+  if (!due) return 0
   const diff = startOfToday().getTime() - due.getTime()
   if (diff <= 0) return 0
-  return Math.floor(diff / 86_400_000)
+  // Arredonda, não trunca: onde há horário de verão o dia tem 23h ou 25h, e o
+  // truque do piso engoliria um dia inteiro de atraso.
+  return Math.round(diff / 86_400_000)
 }
 
 /**

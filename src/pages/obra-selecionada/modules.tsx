@@ -8,6 +8,7 @@ import DiarioDaObra from "./components/DiarioDaObra"
 import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { OrcamentoTab } from "./components/OrcamentoTab"
+import { PropostasTab } from "./components/PropostasTab"
 import { TarefasTab } from "./components/TarefasTab"
 import { VisaoGeral } from "./components/visaoGeral"
 
@@ -24,9 +25,9 @@ function useObra(): Project {
 }
 
 /**
- * Placeholder dos módulos que o design especifica mas que ainda não têm
- * backend (Diário, Propostas) ou que ficaram para a fase seguinte
- * (Indicadores). Melhor uma tela honesta que um item de menu que não abre.
+ * Placeholder dos módulos que o design especifica mas que ficaram para a fase
+ * seguinte (Indicadores). Melhor uma tela honesta que um item de menu que não
+ * abre.
  */
 function ComingSoon({ module }: { module: string }) {
   const { t } = useTranslation()
@@ -72,5 +73,5 @@ export function DiarioModule() {
 }
 
 export function PropostasModule() {
-  return <ComingSoon module="propostas" />
+  return <PropostasTab projectId={useObra().id} />
 }
