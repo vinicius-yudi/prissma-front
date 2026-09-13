@@ -1,6 +1,7 @@
-import { Check, History, RotateCcw, Sparkles } from "lucide-react"
+import { Check, Download, History, RotateCcw, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
 import { Hatch } from "@/shared/components/ui/hatch/Hatch"
@@ -12,6 +13,18 @@ import { useProposalImage } from "../hooks/useProposalImage"
 import { useProposta, usePropostas } from "../hooks/usePropostas"
 import type { Proposal, ProposalStatus, ProposalVersion } from "../types/proposal"
 import { PropostaStatusBadge } from "./PropostaStatusBadge"
+
+const rowAction = tv({
+  base: "inline-flex items-center gap-1 rounded-lg border border-outline-variant px-2.5 py-1 text-[11px] font-semibold text-on-surface-variant transition-colors hover:border-outline disabled:opacity-40",
+  variants: {
+    tone: {
+      approve: "hover:text-ok",
+      reject: "hover:text-warn",
+      download: "hover:text-gold-bright",
+    },
+  },
+  defaultVariants: { tone: "download" },
+})
 
 interface VersaoRowProps {
   projectId: number
@@ -72,26 +85,47 @@ function VersaoRow({
           {version.authorName} · <Num>{formatDate(version.submittedAt)}</Num>
         </p>
 
-        {canMutate && (
+        {(canMutate || url) && (
           <div className="mt-1 flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={isBusy || isApproved}
-              onClick={() => onChangeStatus(version.id, "APPROVED")}
-              className="inline-flex items-center gap-1 rounded-lg border border-outline-variant px-2.5 py-1 text-[11px] font-semibold text-on-surface-variant transition-colors hover:border-outline hover:text-ok disabled:opacity-40"
-            >
-              <Check size={12} strokeWidth={2} />
-              {t("obra.propostas.versions.approve")}
-            </button>
-            <button
-              type="button"
-              disabled={isBusy || isRejected}
-              onClick={() => onChangeStatus(version.id, "REJECTED")}
-              className="inline-flex items-center gap-1 rounded-lg border border-outline-variant px-2.5 py-1 text-[11px] font-semibold text-on-surface-variant transition-colors hover:border-outline hover:text-warn disabled:opacity-40"
-            >
-              <RotateCcw size={12} strokeWidth={2} />
-              {t("obra.propostas.versions.requestChanges")}
-            </button>
+            {canMutate && (
+              <>
+                <button
+                  type="button"
+                  disabled={isBusy || isApproved}
+                  onClick={() => onChangeStatus(version.id, "APPROVED")}
+                  className={rowAction({ tone: "approve" })}
+                >
+                  <Check size={12} strokeWidth={2} />
+                  {t("obra.propostas.versions.approve")}
+                </button>
+                <button
+                  type="button"
+                  disabled={isBusy || isRejected}
+                  onClick={() => onChangeStatus(version.id, "REJECTED")}
+                  className={rowAction({ tone: "reject" })}
+                >
+                  <RotateCcw size={12} strokeWidth={2} />
+                  {t("obra.propostas.versions.requestChanges")}
+                </button>
+              </>
+            )}
+            {/* Baixar não depende de canMutate: quem só enxerga a obra também
+                leva a imagem embora. É um `<a download>` sobre a mesma URL da
+                miniatura — o arquivo já está na máquina, não há segunda volta ao
+                servidor. Só aparece com a URL pronta porque `href` vazio baixaria
+                a própria página. */}
+            {url && (
+              <a
+                href={url}
+                // O nome vem do servidor (`previa-ia-v3.png`); o fallback cobre a
+                // versão gravada sem ele.
+                download={version.fileName ?? `v${version.version}`}
+                className={rowAction({ tone: "download" })}
+              >
+                <Download size={12} strokeWidth={2} />
+                {t("obra.propostas.versions.download")}
+              </a>
+            )}
           </div>
         )}
       </div>

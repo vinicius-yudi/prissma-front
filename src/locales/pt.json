@@ -432,6 +432,7 @@
         "empty": "Nenhuma versão registrada.",
         "approve": "Aprovar",
         "requestChanges": "Pedir ajustes",
+        "download": "Baixar",
         "thumbAlt": "Imagem da versão {{version}}"
       },
       "deleteModal": {

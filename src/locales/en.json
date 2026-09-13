@@ -432,6 +432,7 @@
         "empty": "No versions recorded.",
         "approve": "Approve",
         "requestChanges": "Request changes",
+        "download": "Download",
         "thumbAlt": "Image of version {{version}}"
       },
       "deleteModal": {
