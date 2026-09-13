@@ -1,7 +1,7 @@
 import { screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { Route, Routes, useLocation } from "react-router-dom"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { ProjectStatus, type Project } from "@/shared/types/project"
 import { renderWithProviders } from "@/test/renderWithProviders"
@@ -25,11 +25,19 @@ vi.mock("react-toastify", () => ({
 
 const excluir = vi.mocked(deleteProject)
 
-/** Datas relativas a hoje — o card fala em "dias restantes". */
+/**
+ * Datas relativas a hoje — o card fala em "dias restantes".
+ *
+ * Montada com os campos LOCAIS, nunca com `toISOString()`: em fuso negativo o
+ * ISO devolve a data UTC, que depois das 21h já é o dia seguinte, e "hoje"
+ * viraria "amanhã" só por causa da hora em que a suíte rodou.
+ */
 function emDias(dias: number): string {
   const d = new Date()
   d.setDate(d.getDate() + dias)
-  return d.toISOString().slice(0, 10)
+  const mes = String(d.getMonth() + 1).padStart(2, "0")
+  const dia = String(d.getDate()).padStart(2, "0")
+  return `${d.getFullYear()}-${mes}-${dia}`
 }
 
 function obra(over: Partial<Project> = {}): Project {
@@ -74,9 +82,26 @@ function render(project = obra()) {
   )
 }
 
+/**
+ * Relógio congelado: `dateProgress` é contínuo dentro do dia, então o
+ * `aria-valuenow` do card muda conforme a hora em que a suíte roda — estes
+ * testes passavam de manhã e falhavam à tarde. O instante é UTC de propósito:
+ * a janela do teste de progresso é comparada em instantes absolutos, e só assim
+ * o valor esperado independe do fuso da máquina.
+ *
+ * `shouldAdvanceTime` mantém o `userEvent` funcionando com timers falsos.
+ */
+const AGORA = new Date("2026-06-15T00:00:00Z")
+
 beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true })
+  vi.setSystemTime(AGORA)
   vi.resetAllMocks()
   excluir.mockResolvedValue(undefined)
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })
 
 describe("<ProjectCard />", () => {
@@ -97,8 +122,11 @@ describe("<ProjectCard />", () => {
 
   // O progresso é aproximação por tempo decorrido — o backend ainda não expõe
   // percentual executado.
+  // Janela escrita à mão, e não com `emDias`: `dateProgress` compara instantes
+  // absolutos, então o ponto médio exato só é o mesmo em todo fuso se as duas
+  // pontas e o "agora" forem UTC. 16/05 → 15/07 são 60 dias; AGORA é o dia 30.
   it("estima o progresso pela janela planejada", () => {
-    render()
+    render(obra({ plannedStartDate: "2026-05-16", plannedEndDate: "2026-07-15" }))
 
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "50")
   })
@@ -114,16 +142,27 @@ describe("<ProjectCard />", () => {
    * concluída e cancelada não contam dias, e prazo vencido é urgência, não
    * número negativo.
    */
+  // As obras vêm em fábrica, não prontas: o array do `it.each` é avaliado na
+  // coleta, antes do `beforeEach`, e as datas nasceriam com o relógio real.
   it.each([
-    ["conta os dias restantes", obra(), /dias restantes/],
-    ["avisa que vence hoje", obra({ plannedEndDate: emDias(0) }), /Vence hoje/],
-    ["avisa prazo vencido", obra({ plannedEndDate: emDias(-5) }), /Prazo vencido/],
-    ["diz concluído", obra({ status: ProjectStatus.COMPLETED }), /^Concluído$/],
-    ["diz cancelado", obra({ status: ProjectStatus.CANCELLED }), /^Cancelado$/],
-  ])("%s", (_caso, project, esperado) => {
-    render(project)
+    ["conta os dias restantes", () => obra(), /dias restantes/],
+    ["avisa que vence hoje", () => obra({ plannedEndDate: emDias(0) }), /Vence hoje/],
+    ["avisa prazo vencido", () => obra({ plannedEndDate: emDias(-5) }), /Prazo vencido/],
+    ["diz concluído", () => obra({ status: ProjectStatus.COMPLETED }), /^Concluído$/],
+    ["diz cancelado", () => obra({ status: ProjectStatus.CANCELLED }), /^Cancelado$/],
+  ])("%s", (_caso, criarObra, esperado) => {
+    render(criarObra())
 
     expect(screen.getByText(esperado)).toBeInTheDocument()
+  })
+
+  // Data pura vinda do backend não pode escorregar um dia na exibição: lida
+  // como meia-noite UTC, 16/05 aparecia como 15/05 em qualquer fuso negativo.
+  it("mostra a data planejada no dia certo", () => {
+    render(obra({ plannedStartDate: "2026-05-16", plannedEndDate: "2026-07-15" }))
+
+    expect(screen.getByText("16/05/2026")).toBeInTheDocument()
+    expect(screen.getByText("15/07/2026")).toBeInTheDocument()
   })
 
   it("mostra o traço quando não há prazo final", () => {

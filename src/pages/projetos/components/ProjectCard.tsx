@@ -6,19 +6,30 @@ import { Num } from "@/shared/components/ui/num/Num"
 import { Progress } from "@/shared/components/ui/progress/Progress"
 import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
 import { ProjectStatus, type Project } from "@/shared/types/project"
-import { dateProgress, deriveStatus } from "@/shared/utils/status"
+import { dateProgress, deriveStatus, startOfLocalDay, startOfToday } from "@/shared/utils/status"
 
 const DATE_SEPARATOR = "→"
 const NO_DATE = "—"
+const MS_PER_DAY = 86_400_000
 
 function formatDate(dateStr: string | null): string {
-  if (!dateStr) return NO_DATE
-  return new Date(dateStr).toLocaleDateString("pt-BR")
+  const date = startOfLocalDay(dateStr)
+  if (!date) return NO_DATE
+  return date.toLocaleDateString("pt-BR")
 }
 
+/**
+ * Dias até o prazo, contados em dias de calendário.
+ *
+ * Comparar a data planejada com o relógio de parede fazia o rodapé virar
+ * "Prazo vencido" ainda de manhã no próprio dia da entrega: a data pura é lida
+ * como meia-noite UTC e a fração do dia corrente empurrava a divisão para -1.
+ * Os dois lados viram meia-noite local antes da conta.
+ */
 function calcDaysRemaining(end: string | null): number | null {
-  if (!end) return null
-  return Math.round((new Date(end).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  const due = startOfLocalDay(end)
+  if (!due) return null
+  return Math.round((due.getTime() - startOfToday().getTime()) / MS_PER_DAY)
 }
 
 interface DaysDisplayProps {

@@ -46,6 +46,19 @@ describe("daysLate", () => {
   it("conta 1 no dia seguinte ao vencimento", () => {
     expect(daysLate("2026-03-19T00:00:00")).toBe(1)
   })
+
+  /**
+   * O formato que o backend manda de verdade: `plannedEndDate` chega como
+   * `"2026-06-18"`, sem hora. Era o caso que faltava aqui — data pura é lida
+   * como meia-noite UTC e, em fuso negativo, escorregava para o dia anterior:
+   * a obra que vencia hoje já aparecia com um dia de atraso.
+   */
+  it("lê data pura como dia local, não como meia-noite UTC", () => {
+    expect(daysLate("2026-03-20")).toBe(0)
+    expect(daysLate("2026-03-19")).toBe(1)
+    expect(daysLate("2026-03-15")).toBe(5)
+    expect(daysLate("2026-03-25")).toBe(0)
+  })
 })
 
 describe("dateProgress", () => {
