@@ -486,6 +486,16 @@
         "saving": "Guardando...",
         "save": "Guardar registro"
       },
+      "actions": {
+        "delete": "Eliminar registro",
+        "cancel": "Cancelar"
+      },
+      "deleteModal": {
+        "title": "Eliminar registro",
+        "message": "¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      },
       "toasts": {
         "created": "¡Registro guardado correctamente!",
         "errorCreating": "No se pudo guardar el registro",
