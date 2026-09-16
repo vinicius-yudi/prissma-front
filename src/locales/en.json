@@ -331,6 +331,16 @@
         "saving": "Saving...",
         "save": "Save entry"
       },
+      "actions": {
+        "delete": "Delete entry",
+        "cancel": "Cancel"
+      },
+      "deleteModal": {
+        "title": "Delete entry",
+        "message": "Are you sure you want to delete this entry? This action cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
       "toasts": {
         "created": "Entry saved successfully!",
         "errorCreating": "Could not save entry",

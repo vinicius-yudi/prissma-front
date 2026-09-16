@@ -331,6 +331,16 @@
         "saving": "Salvando...",
         "save": "Salvar registro"
       },
+      "actions": {
+        "delete": "Excluir registro",
+        "cancel": "Cancelar"
+      },
+      "deleteModal": {
+        "title": "Excluir registro",
+        "message": "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
+        "confirm": "Excluir",
+        "deleting": "Excluindo..."
+      },
       "toasts": {
         "created": "Registro salvo com sucesso!",
         "errorCreating": "Erro ao salvar registro",

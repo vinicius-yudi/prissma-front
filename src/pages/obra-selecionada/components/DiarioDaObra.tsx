@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import { HardHat, ImagePlus, Plus } from "lucide-react";
+import { AlertTriangle, HardHat, ImagePlus, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Modal } from "@/shared/components/ui/modal/Modal";
+import { Button } from "@/shared/components/ui/button/Button";
 import { useAccess } from "@/shared/hooks/useAccess";
 import { useAttachments } from "../hooks/useAttachments";
 
@@ -40,7 +41,7 @@ function formatDate(value: string, language: string) {
 export default function DiarioDaObra({ projectId }: { projectId: number }) {
   const { t, i18n } = useTranslation();
   const diario = useDiario(projectId);
-  const { entries, isLoading, error, create, isCreating } = diario;
+  const { entries, isLoading, error, create, isCreating, delete: deleteEntry, isDeleting } = diario;
   const attachments = useAttachments(projectId);
   const { isReadOnly } = useAccess();
   const [draft, setDraft] = useState("");
@@ -49,6 +50,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
   const [attachmentId, setAttachmentId] = useState<number | null>(null);
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{ id: number; description: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = () => {
@@ -76,6 +78,13 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
       },
     });
     event.target.value = "";
+  };
+
+  const confirmDelete = () => {
+    if (!pendingDelete) return;
+    deleteEntry(pendingDelete.id, {
+      onSuccess: () => setPendingDelete(null),
+    });
   };
 
   return (
@@ -107,14 +116,10 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
             </div>
 
             <div className="relative flex-1 space-y-8 overflow-y-auto pr-2" style={{ maxHeight: "60vh" }}>
-              <div className="absolute bottom-4 left-9.75 top-4 z-0 w-px bg-outline-variant" />
+              <div className="absolute bottom-4 left-24.5 top-4 z-0 w-px bg-outline-variant" />
 
               {isLoading ? <p className="text-sm text-on-surface-variant">{t("obra.diario.loading")}</p> : null}
-              {error ? (
-                <p className="text-sm text-danger">
-                  {t("obra.diario.error")} {error instanceof Error ? `(${error.message})` : ""}
-                </p>
-              ) : null}
+              {error ? <p className="text-sm text-danger">{t("obra.diario.error")}</p> : null}
               {!isLoading && !error && entries.length === 0 ? (
                 <p className="text-sm text-on-surface-variant">{t("obra.diario.empty")}</p>
               ) : null}
@@ -122,20 +127,30 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               {entries.map((entry) => {
                 const { date, time } = formatDate(entry.entryDate, i18n.language);
                 return (
-                  <div key={entry.id} className="group relative z-10 flex gap-6">
+                  <div key={entry.id} className="group relative z-10 flex gap-3">
                     <div className="w-20 shrink-0 pt-1 text-right">
                       <div className="text-sm font-semibold text-on-surface">{date}</div>
                       <div className="text-xs font-mono text-on-surface-variant">{time}</div>
                     </div>
                     <div className="relative flex-1 pt-1">
-                      <div className={`absolute -left-7.75 top-2 h-3 w-3 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface-container transition-transform group-hover:scale-125`} />
-                      <div className="mb-2 flex items-center gap-3">
+                      <div className="relative mb-2 flex items-center gap-3 pl-6">
+                        <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface-container transition-transform group-hover:scale-125`} />
                         <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[entry.entryType]}`}>
                           {t(`obra.diario.types.${entry.entryType}`)}
                         </span>
                         <span className="text-sm text-on-surface-variant">{entry.responsibleName}</span>
+                        {!isReadOnly("diario") ? (
+                          <button
+                            type="button"
+                            onClick={() => setPendingDelete({ id: entry.id, description: entry.description })}
+                            aria-label={t("obra.diario.actions.delete")}
+                            className="ml-auto rounded-lg p-1.5 text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        ) : null}
                       </div>
-                      <p className="text-sm leading-relaxed text-on-surface">{entry.description}</p>
+                      <p className="pl-6 text-sm leading-relaxed text-on-surface">{entry.description}</p>
                     </div>
                   </div>
                 );
@@ -222,6 +237,29 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        title={t("obra.diario.deleteModal.title")}
+        icon={<AlertTriangle size={20} />}
+        variant="danger"
+        size="sm"
+      >
+        <div className="space-y-5 px-6 pb-6">
+          <p className="text-sm leading-relaxed text-on-surface-variant">
+            {t("obra.diario.deleteModal.message", { description: pendingDelete?.description ?? "" })}
+          </p>
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={isDeleting}>
+              {t("obra.diario.actions.cancel")}
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete} disabled={isDeleting}>
+              {isDeleting ? t("obra.diario.deleteModal.deleting") : t("obra.diario.deleteModal.confirm")}
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
