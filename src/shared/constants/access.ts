@@ -13,6 +13,10 @@ import { WorkspaceRole } from "@/shared/types/workspace"
  * Regras (Fluxos v2 §3):
  * - `"w"` edita · `"r"` só lê (item ganha 👁 + aviso) · `""` nem aparece na nav
  * - acesso direto a módulo sem permissão → tela "Acesso negado"
+ *
+ * Exceção de origem: `schedule` não está na matriz de Fluxos v2 §3 — ela só
+ * cobre "Minha agenda", que é outra tela. A fonte dele é o índice de Telas v2,
+ * que classifica a tela 15 como nível 2 com papéis "E M".
  */
 
 /**
@@ -29,6 +33,9 @@ export const OBRA_MODULES = [
   "etapas",
   "tarefas",
   "equipes",
+  // Grade integrante × dia da obra (Telas v2 §15). Não confundir com `agenda`,
+  // que é a tela 7 — a agenda pessoal do usuário, de nível 1 e ainda adiada.
+  "schedule",
   "orcamento",
   "diario",
   "documentos",
@@ -54,22 +61,22 @@ export const ACCESS: Record<Profile, ModuleAccess> = {
   engenheiro: {
     home: "w", obras: "w", agenda: "w", relatorios: "w", pessoas: "w",
     "visao-geral": "w", indicadores: "w", etapas: "w", tarefas: "w",
-    equipes: "w", orcamento: "w", diario: "w", documentos: "w", propostas: "w",
+    equipes: "w", schedule: "w", orcamento: "w", diario: "w", documentos: "w", propostas: "w",
   },
   arquiteto: {
     home: "w", obras: "w", agenda: "w", relatorios: "r", pessoas: "",
     "visao-geral": "w", indicadores: "r", etapas: "r", tarefas: "w",
-    equipes: "r", orcamento: "", diario: "w", documentos: "w", propostas: "w",
+    equipes: "r", schedule: "", orcamento: "", diario: "w", documentos: "w", propostas: "w",
   },
   cliente: {
     home: "w", obras: "w", agenda: "", relatorios: "r", pessoas: "",
     "visao-geral": "r", indicadores: "r", etapas: "r", tarefas: "",
-    equipes: "", orcamento: "r", diario: "r", documentos: "r", propostas: "r",
+    equipes: "", schedule: "", orcamento: "r", diario: "r", documentos: "r", propostas: "r",
   },
   mestre: {
     home: "w", obras: "w", agenda: "w", relatorios: "", pessoas: "",
     "visao-geral": "w", indicadores: "r", etapas: "r", tarefas: "w",
-    equipes: "r", orcamento: "", diario: "w", documentos: "w", propostas: "",
+    equipes: "r", schedule: "w", orcamento: "", diario: "w", documentos: "w", propostas: "",
   },
 }
 

@@ -17,6 +17,7 @@
       "reports": "Informes",
       "obras": "Obras",
       "agenda": "Mi agenda",
+      "schedule": "Agenda del equipo",
       "relatorios": "Informes",
       "visaoGeral": "Vista general",
       "indicadores": "Indicadores",
@@ -778,6 +779,74 @@
         "plannedStartDateBeforeStage": "La tarea no puede comenzar antes de su etapa vinculada.",
         "stageRequired": "Selecciona una etapa para vincularla a la tarea.",
         "assigneeRequired": "Seleccionar el responsable es obligatorio"
+      }
+    },
+    "schedule": {
+      "columns": {
+        "member": "Integrante"
+      },
+      "views": {
+        "week": "Semana",
+        "month": "Mes"
+      },
+      "period": {
+        "week": "Semana del {{start}} al {{end}} {{month}} {{year}}",
+        "weekSpan": "Semana del {{start}} al {{end}}"
+      },
+      "noResponsibility": "Sin frente definido",
+      "legend": {
+        "allocated": "Asignado",
+        "overlap": "Superposición",
+        "free": "Libre"
+      },
+      "empty": {
+        "title": "Ningún integrante en la obra",
+        "description": "La grilla muestra quién está asignado cada día. Vincula a alguien a la obra para empezar a distribuir el personal.",
+        "cta": "Ir a Equipos ›"
+      },
+      "error": {
+        "title": "No se pudo cargar el schedule.",
+        "retry": "Reintentar"
+      },
+      "allocation": {
+        "title": "Asignar horas",
+        "subtitle": "{{name}} · {{date}}",
+        "hours": "Horas del día",
+        "hoursSuffix": "h",
+        "help": "Horas enteras, de 0 a 24. Cero libera el día.",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "clear": "Liberar el día",
+        "confirmClear": "¿Liberar el día de {{name}} el {{date}}? La asignación se elimina.",
+        "confirmClearAction": "Liberar"
+      },
+      "responsibility": {
+        "title": "Frente de trabajo",
+        "subtitle": "{{name}}",
+        "field": "Frente en la obra",
+        "placeholder": "Cimentación, Estructura, Instalaciones...",
+        "help": "Hasta 100 caracteres. En blanco, el integrante queda sin frente definido.",
+        "save": "Guardar"
+      },
+      "toast": {
+        "allocationSaved": "Horas asignadas.",
+        "allocationCleared": "Día liberado.",
+        "responsibilitySaved": "Frente de trabajo actualizado."
+      },
+      "errors": {
+        "hoursRequired": "Indica las horas del día",
+        "hoursRange": "Las horas deben estar entre 0 y 24",
+        "hoursDecimals": "Usa como máximo dos decimales",
+        "responsibilityLength": "Máximo 100 caracteres"
+      },
+      "a11y": {
+        "cellAllocated": "{{name}}, {{date}}: {{hours}} asignadas",
+        "cellFree": "{{name}}, {{date}}: día libre",
+        "cellOverlap": "{{name}}, {{date}}: {{hours}} asignadas, {{tasks}} tareas el mismo día",
+        "editResponsibility": "Editar el frente de trabajo de {{name}}",
+        "previousPeriod": "Período anterior",
+        "nextPeriod": "Período siguiente"
       }
     },
     "equipes": {

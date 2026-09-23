@@ -17,6 +17,7 @@
       "reports": "Reports",
       "obras": "Projects",
       "agenda": "My schedule",
+      "schedule": "Schedule",
       "relatorios": "Reports",
       "visaoGeral": "Overview",
       "indicadores": "Metrics",
@@ -778,6 +779,74 @@
         "plannedStartDateBeforeStage": "The task cannot start before its linked stage.",
         "stageRequired": "Select a stage to link to the task.",
         "assigneeRequired": "An assignee is required"
+      }
+    },
+    "schedule": {
+      "columns": {
+        "member": "Member"
+      },
+      "views": {
+        "week": "Week",
+        "month": "Month"
+      },
+      "period": {
+        "week": "Week of {{start}} to {{end}} {{month}} {{year}}",
+        "weekSpan": "Week of {{start}} to {{end}}"
+      },
+      "noResponsibility": "No work front set",
+      "legend": {
+        "allocated": "Allocated",
+        "overlap": "Overlap",
+        "free": "Free"
+      },
+      "empty": {
+        "title": "No members on this project",
+        "description": "The grid shows who is allocated each day. Add someone to the project to start planning the crew.",
+        "cta": "Go to Teams ›"
+      },
+      "error": {
+        "title": "Could not load the schedule.",
+        "retry": "Try again"
+      },
+      "allocation": {
+        "title": "Allocate hours",
+        "subtitle": "{{name}} · {{date}}",
+        "hours": "Hours for the day",
+        "hoursSuffix": "h",
+        "help": "Whole hours, from 0 to 24. Zero frees the day.",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "clear": "Free the day",
+        "confirmClear": "Free the day of {{name}} on {{date}}? The allocation is deleted.",
+        "confirmClearAction": "Free"
+      },
+      "responsibility": {
+        "title": "Work front",
+        "subtitle": "{{name}}",
+        "field": "Work front on this project",
+        "placeholder": "Foundation, Structure, Utilities...",
+        "help": "Up to 100 characters. Leave it blank to clear the work front.",
+        "save": "Save"
+      },
+      "toast": {
+        "allocationSaved": "Hours allocated.",
+        "allocationCleared": "Day freed.",
+        "responsibilitySaved": "Work front updated."
+      },
+      "errors": {
+        "hoursRequired": "Enter the hours for the day",
+        "hoursRange": "Hours must be between 0 and 24",
+        "hoursDecimals": "Use at most two decimal places",
+        "responsibilityLength": "100 characters maximum"
+      },
+      "a11y": {
+        "cellAllocated": "{{name}}, {{date}}: {{hours}} allocated",
+        "cellFree": "{{name}}, {{date}}: free day",
+        "cellOverlap": "{{name}}, {{date}}: {{hours}} allocated, {{tasks}} tasks on the same day",
+        "editResponsibility": "Edit the work front of {{name}}",
+        "previousPeriod": "Previous period",
+        "nextPeriod": "Next period"
       }
     },
     "equipes": {

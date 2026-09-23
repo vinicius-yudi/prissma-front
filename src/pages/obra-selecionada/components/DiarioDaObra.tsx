@@ -119,7 +119,11 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               <div className="absolute bottom-4 left-24.5 top-4 z-0 w-px bg-outline-variant" />
 
               {isLoading ? <p className="text-sm text-on-surface-variant">{t("obra.diario.loading")}</p> : null}
-              {error ? <p className="text-sm text-danger">{t("obra.diario.error")}</p> : null}
+              {error ? (
+                <p className="text-sm text-danger">
+                  {t("obra.diario.error")} {error instanceof Error ? `(${error.message})` : ""}
+                </p>
+              ) : null}
               {!isLoading && !error && entries.length === 0 ? (
                 <p className="text-sm text-on-surface-variant">{t("obra.diario.empty")}</p>
               ) : null}

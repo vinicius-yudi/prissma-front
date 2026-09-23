@@ -9,6 +9,7 @@ import { EquipesTab } from "./components/EquipesTab"
 import { EtapasTab } from "./components/EtapasTab"
 import { OrcamentoTab } from "./components/OrcamentoTab"
 import { PropostasTab } from "./components/PropostasTab"
+import { ScheduleTab } from "./components/ScheduleTab"
 import { TarefasTab } from "./components/TarefasTab"
 import { VisaoGeral } from "./components/visaoGeral"
 
@@ -54,6 +55,10 @@ export function TarefasModule() {
 
 export function EquipesModule() {
   return <EquipesTab obraId={useObra().id} />
+}
+
+export function ScheduleModule() {
+  return <ScheduleTab projectId={useObra().id} />
 }
 
 export function OrcamentoModule() {

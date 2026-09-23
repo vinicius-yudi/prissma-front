@@ -17,6 +17,7 @@
       "reports": "Relatórios",
       "obras": "Obras",
       "agenda": "Minha agenda",
+      "schedule": "Schedule",
       "relatorios": "Relatórios",
       "visaoGeral": "Visão geral",
       "indicadores": "Indicadores",
@@ -778,6 +779,74 @@
         "plannedStartDateBeforeStage": "A tarefa não pode começar antes da etapa vinculada.",
         "stageRequired": "Selecione uma etapa para vincular à tarefa.",
         "assigneeRequired": "Selecionar o responsável é obrigatório"
+      }
+    },
+    "schedule": {
+      "columns": {
+        "member": "Integrante"
+      },
+      "views": {
+        "week": "Semana",
+        "month": "Mês"
+      },
+      "period": {
+        "week": "Semana de {{start}} a {{end}} {{month}} {{year}}",
+        "weekSpan": "Semana de {{start}} a {{end}}"
+      },
+      "noResponsibility": "Sem frente definida",
+      "legend": {
+        "allocated": "Alocado",
+        "overlap": "Sobreposição",
+        "free": "Livre"
+      },
+      "empty": {
+        "title": "Nenhum integrante na obra",
+        "description": "A grade mostra quem está alocado a cada dia. Vincule alguém à obra para começar a distribuir o efetivo.",
+        "cta": "Ir para Equipes ›"
+      },
+      "error": {
+        "title": "Não foi possível carregar o schedule.",
+        "retry": "Tentar de novo"
+      },
+      "allocation": {
+        "title": "Alocar horas",
+        "subtitle": "{{name}} · {{date}}",
+        "hours": "Horas do dia",
+        "hoursSuffix": "h",
+        "help": "Horas inteiras, de 0 a 24. Zero libera o dia.",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "cancel": "Cancelar",
+        "clear": "Liberar o dia",
+        "confirmClear": "Liberar o dia de {{name}} em {{date}}? A alocação é apagada.",
+        "confirmClearAction": "Liberar"
+      },
+      "responsibility": {
+        "title": "Frente de trabalho",
+        "subtitle": "{{name}}",
+        "field": "Frente na obra",
+        "placeholder": "Fundação, Estrutura, Instalações...",
+        "help": "Até 100 caracteres. Em branco, o integrante fica sem frente definida.",
+        "save": "Salvar"
+      },
+      "toast": {
+        "allocationSaved": "Horas alocadas.",
+        "allocationCleared": "Dia liberado.",
+        "responsibilitySaved": "Frente de trabalho atualizada."
+      },
+      "errors": {
+        "hoursRequired": "Informe as horas do dia",
+        "hoursRange": "As horas devem ficar entre 0 e 24",
+        "hoursDecimals": "Use no máximo duas casas decimais",
+        "responsibilityLength": "Máximo de 100 caracteres"
+      },
+      "a11y": {
+        "cellAllocated": "{{name}}, {{date}}: {{hours}} alocadas",
+        "cellFree": "{{name}}, {{date}}: dia livre",
+        "cellOverlap": "{{name}}, {{date}}: {{hours}} alocadas, {{tasks}} tarefas no mesmo dia",
+        "editResponsibility": "Editar a frente de trabalho de {{name}}",
+        "previousPeriod": "Período anterior",
+        "nextPeriod": "Próximo período"
       }
     },
     "equipes": {
