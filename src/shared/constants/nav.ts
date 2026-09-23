@@ -3,6 +3,7 @@ import {
   Building,
   Building2,
   CalendarDays,
+  CalendarRange,
   CreditCard,
   FileText,
   Home,
@@ -52,6 +53,8 @@ export const OBRA_NAV: NavItem<ObraModule>[] = [
   { module: "etapas", path: "etapas", icon: ListOrdered, labelKey: "sidebar.nav.etapas" },
   { module: "tarefas", path: "tarefas", icon: ListTodo, labelKey: "sidebar.nav.tarefas" },
   { module: "equipes", path: "equipes", icon: Users, labelKey: "sidebar.nav.equipes" },
+  // Vizinho de Equipes por ser a mesma equipe distribuída no tempo.
+  { module: "schedule", path: "schedule", icon: CalendarRange, labelKey: "sidebar.nav.schedule" },
   { module: "orcamento", path: "orcamento", icon: CreditCard, labelKey: "sidebar.nav.orcamento" },
   { module: "diario", path: "diario", icon: Notebook, labelKey: "sidebar.nav.diario" },
   { module: "documentos", path: "documentos", icon: FileText, labelKey: "sidebar.nav.documentos" },

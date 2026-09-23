@@ -23,6 +23,7 @@ import {
   IndicadoresModule,
   OrcamentoModule,
   PropostasModule,
+  ScheduleModule,
   TarefasModule,
   VisaoGeralModule,
 } from "@/pages/obra-selecionada/modules"
@@ -136,6 +137,14 @@ function App() {
                       element={
                         <ModuleGuard module="equipes">
                           <EquipesModule />
+                        </ModuleGuard>
+                      }
+                    />
+                    <Route
+                      path="schedule"
+                      element={
+                        <ModuleGuard module="schedule">
+                          <ScheduleModule />
                         </ModuleGuard>
                       }
                     />
