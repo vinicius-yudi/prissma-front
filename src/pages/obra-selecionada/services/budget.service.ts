@@ -1,4 +1,4 @@
-import { api } from "@/lib/api"
+import { api, buildHeaders } from "@/lib/api"
 import type {
   BudgetItem,
   BudgetItemRequest,
@@ -10,10 +10,9 @@ import type {
 
 const BASE_URL = "/api"
 
+/** Delegado ao api.ts: Authorization + X-Workspace-Id sempre juntos. */
 function buildAuthHeader(): HeadersInit {
-  const token = localStorage.getItem("token")
-  if (!token) return {}
-  return { Authorization: `Bearer ${token}` }
+  return buildHeaders()
 }
 
 export async function getProjectBudget(projectId: number): Promise<ProjectBudget | null> {

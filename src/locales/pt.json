@@ -1,8 +1,10 @@
 {
   "header": {
-    "openMenu": "Abrir menu",
+    "search": "Buscar obras...",
+    "searchClear": "Limpar busca",
     "themeLight": "Ativar modo claro",
-    "themeDark": "Ativar modo escuro"
+    "themeDark": "Ativar modo escuro",
+    "readOnly": "Somente leitura no seu perfil"
   },
   "sidebar": {
     "accountType": "Conta pessoal",
@@ -12,13 +14,34 @@
       "projects": "Projetos",
       "tasks": "Tarefas",
       "team": "Equipe",
-      "reports": "Relatórios"
+      "reports": "Relatórios",
+      "obras": "Obras",
+      "agenda": "Minha agenda",
+      "schedule": "Schedule",
+      "relatorios": "Relatórios",
+      "visaoGeral": "Visão geral",
+      "indicadores": "Indicadores",
+      "etapas": "Etapas",
+      "tarefas": "Tarefas",
+      "equipes": "Equipes",
+      "orcamento": "Orçamento",
+      "diario": "Diário",
+      "documentos": "Documentos",
+      "propostas": "Propostas",
+      "pessoas": "Pessoas & papéis"
     },
     "menu": {
       "profile": "Perfil",
       "settings": "Configurações",
-      "logout": "Sair"
-    }
+      "logout": "Sair",
+      "help": "Ajuda"
+    },
+    "allObras": "Todas as obras",
+    "groupWorkspace": "Workspace",
+    "groupObra": "Nesta obra",
+    "accountsLabel": "Contas",
+    "unavailable": "Indisponível",
+    "accountsNew": "Nova conta"
   },
   "dashboard": {
     "title": "Painel de Controle",
@@ -44,7 +67,6 @@
     "emptyTitle": "Nenhum projeto encontrado",
     "emptyHint": "Ajuste os filtros ou crie um novo projeto",
     "filter": {
-      "search": "Buscar projetos...",
       "all": "Todos",
       "inProgress": "Em Andamento",
       "completed": "Concluídos",
@@ -64,9 +86,7 @@
       "dueToday": "Vence hoje",
       "completed": "Concluído",
       "cancelled": "Cancelado",
-      "built": "{{area}} m² construído",
-      "edit": "Editar obra",
-      "delete": "Excluir obra"
+      "built": "{{area}} m² construído"
     },
     "editModal": {
       "title": "Editar Obra",
@@ -83,20 +103,24 @@
       "cancel": "Cancelar",
       "confirm": "Excluir",
       "deleting": "Excluindo..."
-    }
+    },
+    "dimension": "{{total}} obras · {{inProgress}} em andamento",
+    "groupAll": "Todas as obras"
   },
   "login": {
-    "title": "Bem-vindo de volta",
-    "subtitle": "Entre com suas credenciais para acessar sua conta.",
-    "email": "Email *",
-    "emailPlaceholder": "seuemail@example.com",
-    "password": "Senha *",
+    "title": "Bem-vindo de volta!",
+    "subtitle": "Faça login para acessar sua conta e gerenciar suas obras e projetos.",
+    "email": "E-mail",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
     "passwordPlaceholder": "Digite sua senha",
-    "forgotPassword": "Esqueceu?",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
+    "forgotPassword": "Esqueci minha senha",
     "submit": "Entrar",
     "submitting": "Entrando...",
-    "noAccount": "Não tem uma conta?",
-    "register": "Cadastre-se"
+    "noAccount": "Ainda não tem uma conta?",
+    "register": "Cadastrar"
   },
   "brand": {
     "name": "PRISSMA",
@@ -230,16 +254,39 @@
       "title": "Resumo do Projeto",
       "totalProgress": "Progresso Total",
       "location": "Localização",
-      "deadline": "Prazo",
+      "deadline": "Prazo final",
       "deadlineOverdue": "Prazo vencido",
       "areas": "Áreas",
       "landArea": "Terreno",
-      "builtArea": "Construção",
       "stages": "Etapas",
       "stagesProgress": "Progresso das Etapas",
       "total": "Total",
       "inProgress": "Em andamento",
-      "completed": "Concluídas"
+      "completed": "Concluídas",
+      "currentStage": "Frente atual",
+      "executed": "Executado",
+      "team": "Efetivo vinculado",
+      "cycle": "Ciclo da obra",
+      "manageStages": "Gerenciar etapas",
+      "budget": "Orçamento",
+      "seeExpenses": "Ver lançamentos",
+      "noBudget": "Nenhum orçamento cadastrado.",
+      "ofPlanned": "de {{planned}} previsto",
+      "allocatedTeams": "Equipe alocada",
+      "seeTeams": "Ver equipes",
+      "noTeam": "Nenhum integrante vinculado.",
+      "lateBy_one": "⚠ prazo expirado há {{count}} dia",
+      "lateBy_other": "⚠ prazo expirado há {{count}} dias",
+      "completedLabel": "concluído",
+      "deadlineDeviation_one": "{{count}} dia de desvio previsto",
+      "deadlineDeviation_other": "{{count}} dias de desvio previsto",
+      "stageOf": "etapa {{index}} de {{total}}",
+      "ofBudget": "{{percent}}% do orçamento",
+      "headcount_one": "{{count}} pessoa na obra",
+      "headcount_other": "{{count}} pessoas na obra",
+      "recentDocs": "Documentos recentes",
+      "seeAllDocs": "Ver todos",
+      "noDocs": "Nenhum arquivo enviado ainda."
     },
     "documentos": {
       "title": "Documentos",
@@ -249,18 +296,213 @@
       "download": "Baixar",
       "downloading": "Baixando...",
       "downloadError": "Erro ao baixar documento",
-      "unsupportedType": "Tipo de arquivo não suportado. Envie PDF ou DOCX."
+      "unsupportedType": "Tipo de arquivo não suportado. Envie PDF ou DOCX.",
+      "dropzone": {
+        "title": "Arraste arquivos ou clique para enviar",
+        "maxSize": "até {{max}} MB"
+      },
+      "count_one": "{{count}} arquivo",
+      "count_other": "{{count}} arquivos"
     },
-    "fotos": {
-      "title": "Fotos Recentes",
-      "add": "Adicionar Foto",
-      "uploading": "Enviando...",
-      "empty": "Nenhuma foto adicionada.",
-      "unsupportedType": "Tipo de imagem não suportado. Envie PNG, JPEG, GIF, BMP, TIFF ou WEBP."
+    "propostas": {
+      "title": "Propostas",
+      "count_one": "{{count}} proposta",
+      "count_other": "{{count}} propostas",
+      "emptyTitle": "Nenhuma proposta ainda",
+      "emptyDescription": "Crie uma proposta para o ambiente e gere prévias visuais com IA a partir de uma foto do local.",
+      "thumbAlt": "Prévia da proposta {{title}}",
+      "loadingImage": "Carregando imagem...",
+      "noImage": "Sem imagem ainda",
+      "aiBadge": "Gerada por IA",
+      "generate": "Prévia visual IA",
+      "generating": "Gerando prévia...",
+      "unsupportedType": "Tipo de arquivo não suportado. Envie PNG, JPG ou WEBP.",
+      "status": {
+        "DRAFT": "Rascunho",
+        "PENDING_REVIEW": "Em análise",
+        "APPROVED": "Aprovada",
+        "REJECTED": "Ajustes pedidos"
+      },
+      "environments": {
+        "LIVING_ROOM": "Sala de estar",
+        "BEDROOM": "Quarto",
+        "KITCHEN": "Cozinha",
+        "BATHROOM": "Banheiro",
+        "DINING_ROOM": "Sala de jantar",
+        "OFFICE": "Escritório",
+        "BALCONY": "Varanda",
+        "GARAGE": "Garagem",
+        "OTHER": "Outro"
+      },
+      "styles": {
+        "MODERN": "Moderno",
+        "MINIMALIST": "Minimalista",
+        "CONTEMPORARY": "Contemporâneo",
+        "INDUSTRIAL": "Industrial",
+        "CLASSIC": "Clássico",
+        "RUSTIC": "Rústico"
+      },
+      "colors": {
+        "WHITE": "Branco",
+        "OFF_WHITE": "Branco off",
+        "BEIGE": "Bege",
+        "LIGHT_GRAY": "Cinza claro",
+        "DARK_GRAY": "Cinza escuro",
+        "BLACK": "Preto",
+        "NATURAL_WOOD": "Madeira natural",
+        "DARK_WOOD": "Madeira escura",
+        "GREEN": "Verde",
+        "BLUE": "Azul"
+      },
+      "lighting": {
+        "NATURAL": "Natural",
+        "WARM": "Quente",
+        "COOL": "Fria",
+        "NEUTRAL": "Neutra",
+        "WARM_INDIRECT": "Quente indireta",
+        "COOL_INDIRECT": "Fria indireta"
+      },
+      "flooring": {
+        "LIGHT_PORCELAIN": "Porcelanato claro",
+        "DARK_PORCELAIN": "Porcelanato escuro",
+        "WOOD": "Madeira",
+        "LAMINATE": "Laminado",
+        "MARBLE": "Mármore",
+        "POLISHED_CONCRETE": "Concreto polido",
+        "CERAMIC": "Cerâmica"
+      },
+      "modes": {
+        "PREVIEW": "Prévia (mais rápida)",
+        "FINAL": "Final (mais detalhada)"
+      },
+      "actions": {
+        "create": "Nova proposta",
+        "submit": "Criar proposta",
+        "cancel": "Cancelar",
+        "close": "Fechar",
+        "saving": "Salvando...",
+        "delete": "Excluir proposta"
+      },
+      "form": {
+        "title": "Nova proposta",
+        "description": "O ambiente define o que a IA vai desenhar nas prévias.",
+        "fields": {
+          "title": "Nome da proposta",
+          "environment": "Ambiente",
+          "description": "Descrição",
+          "file": "Imagem inicial (opcional)"
+        },
+        "placeholders": {
+          "title": "Ex.: Sala de estar — proposta cliente",
+          "description": "O que esta proposta resolve no ambiente."
+        },
+        "fileHint": "PNG, JPG ou WEBP. Sem imagem, a proposta nasce só com os dados e recebe a primeira prévia depois."
+      },
+      "previa": {
+        "title": "Prévia visual IA",
+        "warning": "A prévia visual usa IA e pode levar até 40s por ambiente.",
+        "submit": "Gerar prévia",
+        "generating": "Gerando...",
+        "processing": "A IA está desenhando o ambiente. Pode deixar a tela aberta.",
+        "maxColors": "No máximo {{max}} cores por prévia.",
+        "rawImageRequired": "Envie uma foto do ambiente para a IA trabalhar em cima.",
+        "rawImageAlt": "Foto do ambiente enviada",
+        "changeFile": "Trocar foto",
+        "removeFile": "Remover",
+        "floorPlanHint": "Opcional. Com a planta a IA respeita melhor as dimensões do ambiente.",
+        "colorsCount": "{{selected}} de {{max}} cores",
+        "fields": {
+          "rawImage": "Foto do ambiente",
+          "floorPlan": "Planta baixa",
+          "style": "Estilo",
+          "lighting": "Iluminação",
+          "flooring": "Piso",
+          "mode": "Modo de geração",
+          "colors": "Paleta de cores",
+          "instructions": "Instruções adicionais"
+        },
+        "placeholders": {
+          "instructions": "Ex.: manter a janela existente e não alterar o teto."
+        }
+      },
+      "versions": {
+        "title": "Histórico de versões",
+        "history": "Ver versões",
+        "count_one": "{{count}} versão",
+        "count_other": "{{count}} versões",
+        "empty": "Nenhuma versão registrada.",
+        "approve": "Aprovar",
+        "requestChanges": "Pedir ajustes",
+        "download": "Baixar",
+        "thumbAlt": "Imagem da versão {{version}}"
+      },
+      "deleteModal": {
+        "title": "Excluir proposta",
+        "message": "A proposta \"{{title}}\" e todas as suas versões serão excluídas. Esta ação não pode ser desfeita.",
+        "confirm": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "createSuccess": "Proposta criada.",
+        "createError": "Não foi possível criar a proposta.",
+        "updateSuccess": "Proposta atualizada.",
+        "updateError": "Não foi possível atualizar a proposta.",
+        "deleteSuccess": "Proposta excluída.",
+        "deleteError": "Não foi possível excluir a proposta.",
+        "versionSuccess": "Nova versão adicionada.",
+        "versionError": "Não foi possível adicionar a versão.",
+        "statusSuccess": "Status da versão atualizado.",
+        "statusError": "Não foi possível atualizar o status.",
+        "previewSuccess": "Prévia pronta — nova versão criada.",
+        "previewError": "A geração da prévia falhou."
+      }
     },
     "attachments": {
       "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
       "mimeMismatch": "O conteúdo do arquivo não corresponde à extensão informada."
+    },
+    "diario": {
+      "title": "Diário da obra",
+      "count_one": "{{count}} registro",
+      "count_other": "{{count}} registros",
+      "timeline": "Linha do tempo",
+      "newEntry": "Novo registro",
+      "loading": "Carregando registros...",
+      "loadingMore": "Carregando...",
+      "loadMore": "Carregar mais",
+      "error": "Não foi possível carregar o diário.",
+      "empty": "Nenhum registro encontrado.",
+      "types": {
+        "OCCURRENCE": "Ocorrência",
+        "DELIVERY": "Entrega",
+        "WORKFORCE": "Efetivo",
+        "IMPEDIMENT": "Impedimento"
+      },
+      "form": {
+        "title": "Adicionar registro",
+        "date": "Data e hora",
+        "descriptionPlaceholder": "Descreva ocorrências, entregas e impedimentos do dia...",
+        "attach": "Anexar foto ou arquivo",
+        "uploading": "Enviando arquivo...",
+        "saving": "Salvando...",
+        "save": "Salvar registro"
+      },
+      "actions": {
+        "delete": "Excluir registro",
+        "cancel": "Cancelar"
+      },
+      "deleteModal": {
+        "title": "Excluir registro",
+        "message": "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
+        "confirm": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "created": "Registro salvo com sucesso!",
+        "errorCreating": "Erro ao salvar registro",
+        "deleted": "Registro excluído com sucesso!",
+        "errorDeleting": "Erro ao excluir registro"
+      }
     },
     "orcamento": {
       "title": "Orçamento",
@@ -283,7 +525,8 @@
         "saving": "Salvando...",
         "cancel": "Cancelar",
         "delete": "Excluir",
-        "deleting": "Excluindo..."
+        "deleting": "Excluindo...",
+        "addCategoryShort": "Categoria"
       },
       "kpi": {
         "planned": "Planejado",
@@ -341,7 +584,7 @@
         "descriptionPlaceholder": "Ex: Compra de 5m³ de concreto",
         "amount": "Valor (R$)",
         "spentAt": "Data do gasto",
-        "stage": "Etapa (opcional)",
+        "stage": "Etapa",
         "stagePlaceholder": "Selecione uma etapa",
         "stageNone": "Sem etapa vinculada",
         "supplier": "Fornecedor (opcional)",
@@ -373,6 +616,13 @@
       },
       "errors": {
         "loadFailed": "Não foi possível carregar o orçamento."
+      },
+      "exceededBanner": {
+        "title": "\"{{category}}\" excedeu o previsto",
+        "deviation": "Desvio",
+        "action": "Revisar categoria",
+        "others_one": "e mais {{count}} categoria estourada",
+        "others_other": "e mais {{count}} categorias estouradas"
       }
     },
     "etapas": {
@@ -380,19 +630,15 @@
       "empty": "Nenhuma etapa cadastrada.",
       "tasksEmpty": "Nenhuma tarefa nesta etapa.",
       "tasks": "Tarefas",
-      "sections": {
-        "inProgress": "Em Andamento",
-        "pending": "Pendentes",
-        "done": "Concluídas",
-        "emptySection": "Arraste etapas para esta seção."
-      },
       "actions": {
         "create": "Nova Etapa",
         "edit": "Editar",
         "delete": "Excluir",
         "cancel": "Cancelar",
         "save": "Salvar",
-        "saving": "Salvando..."
+        "saving": "Salvando...",
+        "menu": "Ações da etapa",
+        "reorder": "Reordenar etapa"
       },
       "card": {
         "progress": "Progresso",
@@ -430,7 +676,13 @@
         "updateError": "Erro ao atualizar etapa",
         "deleteSuccess": "Etapa excluída com sucesso!",
         "deleteError": "Erro ao excluir etapa",
-        "reorderError": "Erro ao reordenar etapas"
+        "reorderError": "Erro ao reordenar etapas",
+        "startBeforeProject": "A etapa não pode começar antes do início da obra.",
+        "previousStartRequired": "A etapa anterior precisa ter uma data de início antes desta etapa.",
+        "startBeforePrevious": "A etapa não pode começar antes da etapa anterior.",
+        "reorderSuccess": "Etapas reordenadas com sucesso!",
+        "moveSuccess": "Etapa movida para {{status}}",
+        "moveError": "Erro ao mover etapa"
       },
       "etapaStatus": {
         "PLANNED": "Planejada",
@@ -448,6 +700,203 @@
         "HIGH": "Alta",
         "MEDIUM": "Média",
         "LOW": "Baixa"
+      },
+      "emptyTitle": "Nenhuma etapa cadastrada",
+      "emptyHint": "Crie as etapas do ciclo da obra para acompanhar prazos, progresso e atrasos.",
+      "emptyCta": "Criar primeira etapa",
+      "reorderHint": "Arraste para reordenar ou solte em outra seção para mudar o status",
+      "emptySection": "Nenhuma etapa aqui"
+    },
+    "startedAt": "início {{date}}",
+    "tarefas": {
+      "columns": {
+        "TODO": "Não iniciada",
+        "IN_PROGRESS": "Em andamento",
+        "DONE": "Concluída",
+        "BLOCKED": "Bloqueada"
+      },
+      "priority": {
+        "HIGH": "Alta",
+        "MEDIUM": "Média",
+        "LOW": "Baixa"
+      },
+      "actions": {
+        "edit": "Editar tarefa",
+        "delete": "Excluir tarefa"
+      },
+      "toasts": {
+        "deleted": "Tarefa excluída.",
+        "errorDeleting": "Não foi possível excluir a tarefa.",
+        "errorMoving": "Não foi possível mover a tarefa."
+      },
+      "emptyColumn": "Nenhuma tarefa aqui",
+      "allStages": "Todas as etapas",
+      "count_one": "{{count}} tarefa",
+      "count_other": "{{count}} tarefas",
+      "newTask": "Nova tarefa",
+      "unassigned": "Sem responsável",
+      "lateBy_one": "⚠ prazo expirado há {{count}} dia",
+      "lateBy_other": "⚠ prazo expirado há {{count}} dias",
+      "noStagesTitle": "Nenhuma etapa cadastrada",
+      "noStagesHint": "As tarefas pendem das etapas da obra. Cadastre a primeira frente de trabalho para começar a lançar tarefas.",
+      "deleteTitle": "Excluir tarefa",
+      "deleteDescription": "Tem certeza que deseja excluir a tarefa \"{{title}}\"?",
+      "cancel": "Cancelar",
+      "confirmDelete": "Excluir",
+      "filters": {
+        "ALL": "Todas",
+        "IN_PROGRESS": "Em andamento",
+        "DONE": "Concluídas",
+        "LATE": "Em atraso"
+      },
+      "form": {
+        "createTitle": "Criar tarefa",
+        "editTitle": "Editar tarefa",
+        "title": "Título",
+        "description": "Descrição",
+        "status": "Status",
+        "priority": "Prioridade",
+        "startDate": "Início planejado",
+        "endDate": "Término planejado",
+        "stage": "Etapa",
+        "stagePlaceholder": "Selecione uma etapa",
+        "assignee": "Responsável",
+        "assigneePlaceholder": "— Selecionar —",
+        "save": "Salvar",
+        "saving": "Salvando..."
+      },
+      "validation": {
+        "titleRequired": "Título é obrigatório",
+        "descriptionRequired": "Descrição é obrigatória",
+        "priorityRequired": "Selecionar o nível de prioridade é obrigatório",
+        "statusRequired": "Selecionar o status é obrigatório",
+        "plannedStartDateRequired": "Data de início planejada é obrigatória",
+        "plannedStartDatePast": "Data de início não pode ser no passado",
+        "plannedEndDateRequired": "Data de término planejada é obrigatória",
+        "plannedEndDatePast": "Data de término não pode ser no passado",
+        "plannedEndDateBeforeStart": "Data de término não pode ser antes da data de início",
+        "stageStartDateRequired": "A etapa vinculada precisa ter uma data de início.",
+        "plannedStartDateBeforeStage": "A tarefa não pode começar antes da etapa vinculada.",
+        "stageRequired": "Selecione uma etapa para vincular à tarefa.",
+        "assigneeRequired": "Selecionar o responsável é obrigatório"
+      }
+    },
+    "schedule": {
+      "columns": {
+        "member": "Integrante"
+      },
+      "views": {
+        "week": "Semana",
+        "month": "Mês"
+      },
+      "period": {
+        "week": "Semana de {{start}} a {{end}} {{month}} {{year}}",
+        "weekSpan": "Semana de {{start}} a {{end}}"
+      },
+      "noResponsibility": "Sem frente definida",
+      "legend": {
+        "allocated": "Alocado",
+        "overlap": "Sobreposição",
+        "free": "Livre"
+      },
+      "empty": {
+        "title": "Nenhum integrante na obra",
+        "description": "A grade mostra quem está alocado a cada dia. Vincule alguém à obra para começar a distribuir o efetivo.",
+        "cta": "Ir para Equipes ›"
+      },
+      "error": {
+        "title": "Não foi possível carregar o schedule.",
+        "retry": "Tentar de novo"
+      },
+      "allocation": {
+        "title": "Alocar horas",
+        "subtitle": "{{name}} · {{date}}",
+        "hours": "Horas do dia",
+        "hoursSuffix": "h",
+        "help": "Horas inteiras, de 0 a 24. Zero libera o dia.",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "cancel": "Cancelar",
+        "clear": "Liberar o dia",
+        "confirmClear": "Liberar o dia de {{name}} em {{date}}? A alocação é apagada.",
+        "confirmClearAction": "Liberar"
+      },
+      "responsibility": {
+        "title": "Frente de trabalho",
+        "subtitle": "{{name}}",
+        "field": "Frente na obra",
+        "placeholder": "Fundação, Estrutura, Instalações...",
+        "help": "Até 100 caracteres. Em branco, o integrante fica sem frente definida.",
+        "save": "Salvar"
+      },
+      "toast": {
+        "allocationSaved": "Horas alocadas.",
+        "allocationCleared": "Dia liberado.",
+        "responsibilitySaved": "Frente de trabalho atualizada."
+      },
+      "errors": {
+        "hoursRequired": "Informe as horas do dia",
+        "hoursRange": "As horas devem ficar entre 0 e 24",
+        "hoursDecimals": "Use no máximo duas casas decimais",
+        "responsibilityLength": "Máximo de 100 caracteres"
+      },
+      "a11y": {
+        "cellAllocated": "{{name}}, {{date}}: {{hours}} alocadas",
+        "cellFree": "{{name}}, {{date}}: dia livre",
+        "cellOverlap": "{{name}}, {{date}}: {{hours}} alocadas, {{tasks}} tarefas no mesmo dia",
+        "editResponsibility": "Editar a frente de trabalho de {{name}}",
+        "previousPeriod": "Período anterior",
+        "nextPeriod": "Próximo período"
+      }
+    },
+    "equipes": {
+      "rolesLink": "Papéis e permissões",
+      "empty": "Ninguém vinculado ainda.",
+      "memberCount_one": "{{count}} pessoa",
+      "memberCount_other": "{{count}} pessoas",
+      "sections": {
+        "team": {
+          "title": "Equipe da obra",
+          "hint": "Engenheiros, arquitetos e mestres de obras",
+          "add": "adicionar integrante"
+        },
+        "client": {
+          "title": "Clientes",
+          "hint": "Quem acompanha a obra pelo lado do contratante",
+          "add": "adicionar cliente"
+        }
+      },
+      "actions": {
+        "addMember": "Adicionar integrante",
+        "cancel": "Cancelar",
+        "remove": "Remover {{name}} da obra",
+        "addMemberShort": "Integrante"
+      },
+      "removeModal": {
+        "title": "Remover pessoa",
+        "message": "Tem certeza que deseja remover {{name}} desta obra?",
+        "confirm": "Remover",
+        "removing": "Removendo..."
+      },
+      "addModal": {
+        "searchPlaceholder": "Pesquise por nome ou e-mail...",
+        "available": "Usuários disponíveis",
+        "loadMore": "Carregar mais resultados",
+        "roleLabel": "Papel na obra",
+        "confirm": "Adicionar",
+        "adding": "Adicionando...",
+        "team": {
+          "title": "Adicionar integrante",
+          "hint": "Procure e selecione quem entra na equipe da obra.",
+          "noResults": "Nenhum colaborador encontrado com este critério.",
+          "noneAvailable": "Nenhum colaborador disponível para adicionar."
+        },
+        "client": {
+          "title": "Adicionar cliente",
+          "hint": "Procure e selecione o cliente que acompanha a obra.",
+          "noResults": "Nenhum cliente encontrado com este critério.",
+          "noneAvailable": "Nenhum cliente disponível para adicionar."
+        }
       }
     }
   },
@@ -474,6 +923,103 @@
     "roles": {
       "engineer": "Engenheiro",
       "user": "Usuário"
+    },
+    "page": {
+      "title": "Conta",
+      "preferences": "Preferências",
+      "theme": "Tema",
+      "language": "Idioma",
+      "session": "Sessão"
     }
+  },
+  "status": {
+    "PLANNING": "Não iniciada",
+    "PLANNED": "Não iniciada",
+    "TODO": "Não iniciada",
+    "IN_PROGRESS": "Em andamento",
+    "PAUSED": "Pausada",
+    "BLOCKED": "Impedida",
+    "DONE": "Concluída",
+    "COMPLETED": "Concluída",
+    "CANCELLED": "Cancelada",
+    "LATE": "Em atraso"
+  },
+  "roles": {
+    "OWNER": "Proprietário",
+    "ENGINEER": "Engenheiro",
+    "ARCHITECT": "Arquiteto",
+    "FOREMAN": "Mestre de obras",
+    "USER": "Cliente"
+  },
+  "accessDenied": {
+    "title": "Acesso negado",
+    "description": "Seu papel nesta obra não alcança este módulo. Fale com o responsável se precisar de acesso.",
+    "action": "Voltar para as obras"
+  },
+  "pessoas": {
+    "membersTitle": "Vinculados à obra",
+    "membersHint": "Quem tem acesso a esta frente de trabalho e com que papel.",
+    "membersEmpty": "Nenhum integrante vinculado ainda.",
+    "membersError": "Não foi possível carregar os vinculados.",
+    "permissionsTitle": "Permissões do papel",
+    "permissionsHint": "Vale para todos os vinculados que exercem o papel selecionado.",
+    "permissionsError": "Não foi possível carregar as permissões deste papel."
+  },
+  "mobile": {
+    "backTo": "Voltar para {{target}}",
+    "menu": "Menu",
+    "menuTitle": "Todas as seções"
+  },
+  "workspace": {
+    "newAccount": "Nova conta",
+    "createTitle": "Criar nova conta",
+    "createHint": "Uma conta separa as obras, a equipe e os clientes de outro workspace.",
+    "nameLabel": "Nome do workspace",
+    "namePlaceholder": "Ex.: Construtora Silva",
+    "create": "Criar conta",
+    "creating": "Criando…",
+    "createError": "Não foi possível criar a conta.",
+    "switchError": "Não foi possível trocar de conta.",
+    "roles": {
+      "OWNER": "Proprietário",
+      "ADMIN": "Administrador",
+      "MEMBER": "Membro",
+      "CLIENT": "Cliente"
+    },
+    "team": {
+      "title": "Equipe da conta",
+      "hint": "Quem faz parte deste workspace e com que papel na conta.",
+      "empty": "Nenhum membro ainda. Convide alguém para começar.",
+      "error": "Não foi possível carregar a equipe.",
+      "invite": "Convidar",
+      "inviteTitle": "Convidar para a conta",
+      "inviteEmail": "E-mail",
+      "inviteName": "Nome (opcional)",
+      "inviteRole": "Papel na conta",
+      "inviteSend": "Enviar convite",
+      "inviteSending": "Enviando…",
+      "inviteSent": "Convite enviado para {{email}}.",
+      "inviteError": "Não foi possível enviar o convite.",
+      "changeRole": "Mudar papel",
+      "deactivate": "Desativar",
+      "remove": "Remover",
+      "removeConfirm": "Remover {{name}} da conta? A pessoa perde o acesso a todas as obras deste workspace.",
+      "inactive": "Inativo",
+      "pending": "Pendente",
+      "actionError": "Não foi possível concluir a ação."
+    }
+  },
+  "invitePage": {
+    "title": "Convite para o PRISSMA",
+    "hint": "Você foi convidado(a) para um workspace. Complete os dados para aceitar.",
+    "nameLabel": "Seu nome",
+    "passwordLabel": "Crie uma senha",
+    "passwordHint": "Mínimo: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.",
+    "accept": "Aceitar convite",
+    "accepting": "Aceitando…",
+    "success": "Convite aceito! Entre com seu e-mail e senha para continuar.",
+    "goLogin": "Ir para o login",
+    "error": "Convite inválido ou expirado.",
+    "missingToken": "Link de convite inválido."
   }
 }

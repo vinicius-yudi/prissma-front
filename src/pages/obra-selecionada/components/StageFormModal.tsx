@@ -3,6 +3,7 @@ import { AlertTriangle, Layers, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -11,6 +12,7 @@ import { Label } from "@/shared/components/ui/label/Label"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Select } from "@/shared/components/ui/select/Select"
 import { EtapaStatus } from "@/pages/projetos/types"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
 import { useStages } from "../hooks/useStages"
 import {
@@ -32,6 +34,8 @@ interface StageFormModalProps {
   open: boolean
   onClose: () => void
   projectId: number
+  projectStartDate: string | null
+  stages: Stage[]
   stage?: Stage | null
   suggestedDisplayOrder?: number
   canMutate: boolean
@@ -46,6 +50,8 @@ export function StageFormModal({
   open,
   onClose,
   projectId,
+  projectStartDate,
+  stages,
   stage,
   suggestedDisplayOrder = 1,
   canMutate,
@@ -84,12 +90,38 @@ export function StageFormModal({
   }, [open, stage, suggestedDisplayOrder, form])
 
   async function onSubmit(data: StageFormData) {
+    const plannedStartDate = data.plannedStartDate?.trim() || null
+
+    if (plannedStartDate && projectStartDate && plannedStartDate < toDateInput(projectStartDate)) {
+      toast.error(t("obra.etapas.toasts.startBeforeProject"))
+      return
+    }
+
+    if (plannedStartDate) {
+      const previousStage = stages
+        .filter((item) => item.id !== stage?.id && item.displayOrder < data.displayOrder)
+        .sort((a, b) => b.displayOrder - a.displayOrder)[0]
+
+      if (previousStage && !previousStage.plannedStartDate) {
+        toast.error(t("obra.etapas.toasts.previousStartRequired"))
+        return
+      }
+
+      if (
+        previousStage?.plannedStartDate &&
+        plannedStartDate < toDateInput(previousStage.plannedStartDate)
+      ) {
+        toast.error(t("obra.etapas.toasts.startBeforePrevious"))
+        return
+      }
+    }
+
     const payload = {
       name: data.name,
       description: data.description?.trim() ? data.description.trim() : null,
       displayOrder: data.displayOrder,
       status: data.status,
-      plannedStartDate: data.plannedStartDate?.trim() ? data.plannedStartDate : null,
+      plannedStartDate,
       plannedEndDate: data.plannedEndDate?.trim() ? data.plannedEndDate : null,
     }
 
@@ -105,6 +137,11 @@ export function StageFormModal({
     }
   }
 
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
+  }
+
   async function handleConfirmDelete() {
     if (!stage) return
     try {
@@ -116,7 +153,6 @@ export function StageFormModal({
     }
   }
 
-  const errors = form.formState.errors
   const readOnly = !canMutate
 
   return (
@@ -131,7 +167,7 @@ export function StageFormModal({
         variant="default"
         size="lg"
       >
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
           <div className="px-6 pt-5 pb-2 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="md:col-span-2 space-y-1.5">
               <Label className={formLabel()}>{t("obra.etapas.form.fields.name")}</Label>
@@ -141,9 +177,6 @@ export function StageFormModal({
                 disabled={readOnly}
                 {...form.register("name")}
               />
-              {errors.name && (
-                <p className="text-xs text-error mt-1">{errors.name.message}</p>
-              )}
             </div>
 
             <div className="md:col-span-2 space-y-1.5">
@@ -192,9 +225,6 @@ export function StageFormModal({
                 disabled={readOnly}
                 {...form.register("displayOrder", { valueAsNumber: true })}
               />
-              {errors.displayOrder && (
-                <p className="text-xs text-error mt-1">{errors.displayOrder.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
@@ -219,9 +249,6 @@ export function StageFormModal({
                 disabled={readOnly}
                 {...form.register("plannedEndDate")}
               />
-              {errors.plannedEndDate && (
-                <p className="text-xs text-error mt-1">{errors.plannedEndDate.message}</p>
-              )}
             </div>
           </div>
 

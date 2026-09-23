@@ -47,6 +47,14 @@ export async function deleteStage(stageId: number): Promise<void> {
   return api.delete<void>(`/stages/${stageId}`)
 }
 
-export async function reorderStages(projectId: number, orderedIds: number[]): Promise<void> {
-  return api.post<void>(`/projects/${projectId}/stages/reorder`, orderedIds)
+export interface StageReorderResponse {
+  message: string
+  stages: Stage[]
+}
+
+export async function reorderStages(
+  projectId: number,
+  orderedIds: number[],
+): Promise<StageReorderResponse> {
+  return api.post<StageReorderResponse>(`/projects/${projectId}/stages/reorder`, orderedIds)
 }

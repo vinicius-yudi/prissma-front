@@ -3,6 +3,7 @@ import { Receipt } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -12,6 +13,7 @@ import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Select } from "@/shared/components/ui/select/Select"
 import type { Expense } from "@/shared/types/budget"
 import { todayIsoDate } from "@/shared/utils/formatters"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
 import {
   EXPENSE_FORM_DEFAULTS,
@@ -84,7 +86,10 @@ export function ExpenseFormModal({
     }
   }
 
-  const errors = form.formState.errors
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
+  }
 
   return (
     <Modal
@@ -99,7 +104,7 @@ export function ExpenseFormModal({
       variant="default"
       size="xl"
     >
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         <div className="px-6 pt-5 pb-2 grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="md:col-span-2 space-y-1.5">
             <Label className={formLabel()}>
@@ -110,9 +115,6 @@ export function ExpenseFormModal({
               placeholder={t("obra.orcamento.expenseForm.descriptionPlaceholder")}
               {...form.register("description")}
             />
-            {errors.description && (
-              <p className="text-xs text-error mt-1">{errors.description.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -126,9 +128,6 @@ export function ExpenseFormModal({
               min={0}
               {...form.register("amount", { valueAsNumber: true })}
             />
-            {errors.amount && (
-              <p className="text-xs text-error mt-1">{errors.amount.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -140,9 +139,6 @@ export function ExpenseFormModal({
               type="date"
               {...form.register("spentAt")}
             />
-            {errors.spentAt && (
-              <p className="text-xs text-error mt-1">{errors.spentAt.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -173,9 +169,6 @@ export function ExpenseFormModal({
               placeholder={t("obra.orcamento.expenseForm.supplierPlaceholder")}
               {...form.register("supplier")}
             />
-            {errors.supplier && (
-              <p className="text-xs text-error mt-1">{errors.supplier.message}</p>
-            )}
           </div>
 
           <div className="md:col-span-2 space-y-1.5">
@@ -188,9 +181,6 @@ export function ExpenseFormModal({
               placeholder={t("obra.orcamento.expenseForm.receiptUrlPlaceholder")}
               {...form.register("receiptUrl")}
             />
-            {errors.receiptUrl && (
-              <p className="text-xs text-error mt-1">{errors.receiptUrl.message}</p>
-            )}
           </div>
         </div>
 

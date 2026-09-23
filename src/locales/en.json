@@ -1,8 +1,10 @@
 {
   "header": {
-    "openMenu": "Open menu",
+    "search": "Search projects...",
+    "searchClear": "Clear search",
     "themeLight": "Switch to light mode",
-    "themeDark": "Switch to dark mode"
+    "themeDark": "Switch to dark mode",
+    "readOnly": "Read-only for your role"
   },
   "sidebar": {
     "accountType": "Personal account",
@@ -12,13 +14,34 @@
       "projects": "Projects",
       "tasks": "Tasks",
       "team": "Team",
-      "reports": "Reports"
+      "reports": "Reports",
+      "obras": "Projects",
+      "agenda": "My schedule",
+      "schedule": "Schedule",
+      "relatorios": "Reports",
+      "visaoGeral": "Overview",
+      "indicadores": "Metrics",
+      "etapas": "Stages",
+      "tarefas": "Tasks",
+      "equipes": "Teams",
+      "orcamento": "Budget",
+      "diario": "Site log",
+      "documentos": "Documents",
+      "propostas": "Proposals",
+      "pessoas": "People & roles"
     },
     "menu": {
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Logout"
-    }
+      "logout": "Logout",
+      "help": "Help"
+    },
+    "allObras": "All projects",
+    "groupWorkspace": "Workspace",
+    "groupObra": "In this project",
+    "accountsLabel": "Accounts",
+    "unavailable": "Unavailable",
+    "accountsNew": "New account"
   },
   "dashboard": {
     "title": "Control Panel",
@@ -44,7 +67,6 @@
     "emptyTitle": "No projects found",
     "emptyHint": "Adjust filters or create a new project",
     "filter": {
-      "search": "Search projects...",
       "all": "All",
       "inProgress": "In Progress",
       "completed": "Completed",
@@ -64,9 +86,7 @@
       "dueToday": "Due today",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "built": "{{area}} m² built",
-      "edit": "Edit project",
-      "delete": "Delete project"
+      "built": "{{area}} m² built"
     },
     "editModal": {
       "title": "Edit Project",
@@ -83,19 +103,23 @@
       "cancel": "Cancel",
       "confirm": "Delete",
       "deleting": "Deleting..."
-    }
+    },
+    "dimension": "{{total}} projects · {{inProgress}} in progress",
+    "groupAll": "All projects"
   },
   "login": {
-    "title": "Welcome back",
-    "subtitle": "Sign in with your credentials to access your account.",
-    "email": "Email *",
-    "emailPlaceholder": "name@example.com",
-    "password": "Password *",
+    "title": "Welcome back!",
+    "subtitle": "Sign in to access your account and manage your projects and sites.",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "password": "Password",
     "passwordPlaceholder": "Enter your password",
-    "forgotPassword": "Forgot?",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "forgotPassword": "Forgot password",
     "submit": "Sign in",
     "submitting": "Signing in...",
-    "noAccount": "Don't have an account?",
+    "noAccount": "Don't have an account yet?",
     "register": "Sign up"
   },
   "brand": {
@@ -230,16 +254,39 @@
       "title": "Project Summary",
       "totalProgress": "Total Progress",
       "location": "Location",
-      "deadline": "Deadline",
+      "deadline": "Final deadline",
       "deadlineOverdue": "Overdue",
       "areas": "Areas",
       "landArea": "Land",
-      "builtArea": "Built",
       "stages": "Stages",
       "stagesProgress": "Stage Progress",
       "total": "Total",
       "inProgress": "In progress",
-      "completed": "Completed"
+      "completed": "Completed",
+      "currentStage": "Current work front",
+      "executed": "Executed",
+      "team": "Members linked",
+      "cycle": "Project cycle",
+      "manageStages": "Manage stages",
+      "budget": "Budget",
+      "seeExpenses": "See expenses",
+      "noBudget": "No budget registered.",
+      "ofPlanned": "of {{planned}} planned",
+      "allocatedTeams": "Allocated team",
+      "seeTeams": "See teams",
+      "noTeam": "No members linked.",
+      "lateBy_one": "⚠ {{count}} day past due",
+      "lateBy_other": "⚠ {{count}} days past due",
+      "completedLabel": "completed",
+      "deadlineDeviation_one": "{{count}} day of projected slippage",
+      "deadlineDeviation_other": "{{count}} days of projected slippage",
+      "stageOf": "stage {{index}} of {{total}}",
+      "ofBudget": "{{percent}}% of the budget",
+      "headcount_one": "{{count}} person on site",
+      "headcount_other": "{{count}} people on site",
+      "recentDocs": "Recent documents",
+      "seeAllDocs": "See all",
+      "noDocs": "No files uploaded yet."
     },
     "documentos": {
       "title": "Documents",
@@ -249,18 +296,213 @@
       "download": "Download",
       "downloading": "Downloading...",
       "downloadError": "Failed to download document",
-      "unsupportedType": "Unsupported file type. Upload PDF or DOCX."
+      "unsupportedType": "Unsupported file type. Upload PDF or DOCX.",
+      "dropzone": {
+        "title": "Drag files here or click to upload",
+        "maxSize": "up to {{max}} MB"
+      },
+      "count_one": "{{count}} file",
+      "count_other": "{{count}} files"
     },
-    "fotos": {
-      "title": "Recent Photos",
-      "add": "Add Photo",
-      "uploading": "Uploading...",
-      "empty": "No photos added yet.",
-      "unsupportedType": "Unsupported image type. Upload PNG, JPEG, GIF, BMP, TIFF or WEBP."
+    "propostas": {
+      "title": "Proposals",
+      "count_one": "{{count}} proposal",
+      "count_other": "{{count}} proposals",
+      "emptyTitle": "No proposals yet",
+      "emptyDescription": "Create a proposal for the room and generate AI visual previews from a photo of the space.",
+      "thumbAlt": "Preview of proposal {{title}}",
+      "loadingImage": "Loading image...",
+      "noImage": "No image yet",
+      "aiBadge": "AI generated",
+      "generate": "AI visual preview",
+      "generating": "Generating preview...",
+      "unsupportedType": "Unsupported file type. Upload PNG, JPG or WEBP.",
+      "status": {
+        "DRAFT": "Draft",
+        "PENDING_REVIEW": "In review",
+        "APPROVED": "Approved",
+        "REJECTED": "Changes requested"
+      },
+      "environments": {
+        "LIVING_ROOM": "Living room",
+        "BEDROOM": "Bedroom",
+        "KITCHEN": "Kitchen",
+        "BATHROOM": "Bathroom",
+        "DINING_ROOM": "Dining room",
+        "OFFICE": "Office",
+        "BALCONY": "Balcony",
+        "GARAGE": "Garage",
+        "OTHER": "Other"
+      },
+      "styles": {
+        "MODERN": "Modern",
+        "MINIMALIST": "Minimalist",
+        "CONTEMPORARY": "Contemporary",
+        "INDUSTRIAL": "Industrial",
+        "CLASSIC": "Classic",
+        "RUSTIC": "Rustic"
+      },
+      "colors": {
+        "WHITE": "White",
+        "OFF_WHITE": "Off-white",
+        "BEIGE": "Beige",
+        "LIGHT_GRAY": "Light gray",
+        "DARK_GRAY": "Dark gray",
+        "BLACK": "Black",
+        "NATURAL_WOOD": "Natural wood",
+        "DARK_WOOD": "Dark wood",
+        "GREEN": "Green",
+        "BLUE": "Blue"
+      },
+      "lighting": {
+        "NATURAL": "Natural",
+        "WARM": "Warm",
+        "COOL": "Cool",
+        "NEUTRAL": "Neutral",
+        "WARM_INDIRECT": "Warm indirect",
+        "COOL_INDIRECT": "Cool indirect"
+      },
+      "flooring": {
+        "LIGHT_PORCELAIN": "Light porcelain",
+        "DARK_PORCELAIN": "Dark porcelain",
+        "WOOD": "Wood",
+        "LAMINATE": "Laminate",
+        "MARBLE": "Marble",
+        "POLISHED_CONCRETE": "Polished concrete",
+        "CERAMIC": "Ceramic"
+      },
+      "modes": {
+        "PREVIEW": "Preview (faster)",
+        "FINAL": "Final (more detailed)"
+      },
+      "actions": {
+        "create": "New proposal",
+        "submit": "Create proposal",
+        "cancel": "Cancel",
+        "close": "Close",
+        "saving": "Saving...",
+        "delete": "Delete proposal"
+      },
+      "form": {
+        "title": "New proposal",
+        "description": "The room type defines what the AI will draw in the previews.",
+        "fields": {
+          "title": "Proposal name",
+          "environment": "Room",
+          "description": "Description",
+          "file": "Initial image (optional)"
+        },
+        "placeholders": {
+          "title": "E.g. Living room — client proposal",
+          "description": "What this proposal solves in the room."
+        },
+        "fileHint": "PNG, JPG or WEBP. Without an image the proposal starts with data only and gets its first preview later."
+      },
+      "previa": {
+        "title": "AI visual preview",
+        "warning": "The visual preview uses AI and can take up to 40s per room.",
+        "submit": "Generate preview",
+        "generating": "Generating...",
+        "processing": "The AI is drawing the room. You can leave this open.",
+        "maxColors": "At most {{max}} colors per preview.",
+        "rawImageRequired": "Upload a photo of the room for the AI to work from.",
+        "rawImageAlt": "Uploaded room photo",
+        "changeFile": "Change photo",
+        "removeFile": "Remove",
+        "floorPlanHint": "Optional. With the floor plan the AI respects the room dimensions better.",
+        "colorsCount": "{{selected}} of {{max}} colors",
+        "fields": {
+          "rawImage": "Room photo",
+          "floorPlan": "Floor plan",
+          "style": "Style",
+          "lighting": "Lighting",
+          "flooring": "Flooring",
+          "mode": "Generation mode",
+          "colors": "Color palette",
+          "instructions": "Additional instructions"
+        },
+        "placeholders": {
+          "instructions": "E.g. keep the existing window and do not change the ceiling."
+        }
+      },
+      "versions": {
+        "title": "Version history",
+        "history": "View versions",
+        "count_one": "{{count}} version",
+        "count_other": "{{count}} versions",
+        "empty": "No versions recorded.",
+        "approve": "Approve",
+        "requestChanges": "Request changes",
+        "download": "Download",
+        "thumbAlt": "Image of version {{version}}"
+      },
+      "deleteModal": {
+        "title": "Delete proposal",
+        "message": "The proposal \"{{title}}\" and all its versions will be deleted. This cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "createSuccess": "Proposal created.",
+        "createError": "Could not create the proposal.",
+        "updateSuccess": "Proposal updated.",
+        "updateError": "Could not update the proposal.",
+        "deleteSuccess": "Proposal deleted.",
+        "deleteError": "Could not delete the proposal.",
+        "versionSuccess": "New version added.",
+        "versionError": "Could not add the version.",
+        "statusSuccess": "Version status updated.",
+        "statusError": "Could not update the status.",
+        "previewSuccess": "Preview ready — new version created.",
+        "previewError": "Preview generation failed."
+      }
     },
     "attachments": {
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
       "mimeMismatch": "File contents do not match the declared extension."
+    },
+    "diario": {
+      "title": "Site diary",
+      "count_one": "{{count}} entry",
+      "count_other": "{{count}} entries",
+      "timeline": "Timeline",
+      "newEntry": "New entry",
+      "loading": "Loading entries...",
+      "loadingMore": "Loading...",
+      "loadMore": "Load more",
+      "error": "Could not load the site diary.",
+      "empty": "No entries found.",
+      "types": {
+        "OCCURRENCE": "Occurrence",
+        "DELIVERY": "Delivery",
+        "WORKFORCE": "Workforce",
+        "IMPEDIMENT": "Impediment"
+      },
+      "form": {
+        "title": "Add register",
+        "date": "Date and time",
+        "descriptionPlaceholder": "Describe occurrences, deliveries and impediments of the day...",
+        "attach": "Attach photo or file",
+        "uploading": "Uploading file...",
+        "saving": "Saving...",
+        "save": "Save entry"
+      },
+      "actions": {
+        "delete": "Delete entry",
+        "cancel": "Cancel"
+      },
+      "deleteModal": {
+        "title": "Delete entry",
+        "message": "Are you sure you want to delete this entry? This action cannot be undone.",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "created": "Entry saved successfully!",
+        "errorCreating": "Could not save entry",
+        "deleted": "Entry deleted successfully!",
+        "errorDeleting": "Could not delete entry"
+      }
     },
     "orcamento": {
       "title": "Budget",
@@ -283,7 +525,8 @@
         "saving": "Saving...",
         "cancel": "Cancel",
         "delete": "Delete",
-        "deleting": "Deleting..."
+        "deleting": "Deleting...",
+        "addCategoryShort": "Category"
       },
       "kpi": {
         "planned": "Planned",
@@ -341,7 +584,7 @@
         "descriptionPlaceholder": "e.g. Purchase of 5m³ concrete",
         "amount": "Amount ($)",
         "spentAt": "Expense date",
-        "stage": "Stage (optional)",
+        "stage": "Stage",
         "stagePlaceholder": "Select a stage",
         "stageNone": "No stage linked",
         "supplier": "Supplier (optional)",
@@ -373,6 +616,13 @@
       },
       "errors": {
         "loadFailed": "Failed to load the budget."
+      },
+      "exceededBanner": {
+        "title": "\"{{category}}\" exceeded the plan",
+        "deviation": "Deviation",
+        "action": "Review category",
+        "others_one": "and {{count}} more category over budget",
+        "others_other": "and {{count}} more categories over budget"
       }
     },
     "etapas": {
@@ -380,19 +630,15 @@
       "empty": "No stages registered.",
       "tasksEmpty": "No tasks in this stage.",
       "tasks": "Tasks",
-      "sections": {
-        "inProgress": "In Progress",
-        "pending": "Pending",
-        "done": "Completed",
-        "emptySection": "Drag stages into this section."
-      },
       "actions": {
         "create": "New Stage",
         "edit": "Edit",
         "delete": "Delete",
         "cancel": "Cancel",
         "save": "Save",
-        "saving": "Saving..."
+        "saving": "Saving...",
+        "menu": "Stage actions",
+        "reorder": "Reorder stage"
       },
       "card": {
         "progress": "Progress",
@@ -430,7 +676,13 @@
         "updateError": "Failed to update stage",
         "deleteSuccess": "Stage deleted successfully!",
         "deleteError": "Failed to delete stage",
-        "reorderError": "Failed to reorder stages"
+        "reorderError": "Failed to reorder stages",
+        "startBeforeProject": "The stage cannot start before the project start date.",
+        "previousStartRequired": "The previous stage must have a start date before this stage.",
+        "startBeforePrevious": "The stage cannot start before the previous stage.",
+        "reorderSuccess": "Stages reordered successfully!",
+        "moveSuccess": "Stage moved to {{status}}",
+        "moveError": "Failed to move stage"
       },
       "etapaStatus": {
         "PLANNED": "Planned",
@@ -448,6 +700,203 @@
         "HIGH": "High",
         "MEDIUM": "Medium",
         "LOW": "Low"
+      },
+      "emptyTitle": "No stages yet",
+      "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
+      "emptyCta": "Create first stage",
+      "reorderHint": "Drag to reorder or drop in another section to change status",
+      "emptySection": "No stages here"
+    },
+    "startedAt": "started {{date}}",
+    "tarefas": {
+      "columns": {
+        "TODO": "Not started",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Completed",
+        "BLOCKED": "Blocked"
+      },
+      "priority": {
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low"
+      },
+      "actions": {
+        "edit": "Edit task",
+        "delete": "Delete task"
+      },
+      "toasts": {
+        "deleted": "Task deleted.",
+        "errorDeleting": "Could not delete the task.",
+        "errorMoving": "Could not move the task."
+      },
+      "emptyColumn": "No tasks here",
+      "allStages": "All stages",
+      "count_one": "{{count}} task",
+      "count_other": "{{count}} tasks",
+      "newTask": "New task",
+      "unassigned": "Unassigned",
+      "lateBy_one": "⚠ {{count}} day past due",
+      "lateBy_other": "⚠ {{count}} days past due",
+      "noStagesTitle": "No stages yet",
+      "noStagesHint": "Tasks hang off the project stages. Create the first work front to start logging tasks.",
+      "deleteTitle": "Delete task",
+      "deleteDescription": "Are you sure you want to delete the task \"{{title}}\"?",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete",
+      "filters": {
+        "ALL": "All",
+        "IN_PROGRESS": "In progress",
+        "DONE": "Done",
+        "LATE": "Overdue"
+      },
+      "form": {
+        "createTitle": "New task",
+        "editTitle": "Edit task",
+        "title": "Title",
+        "description": "Description",
+        "status": "Status",
+        "priority": "Priority",
+        "startDate": "Planned start",
+        "endDate": "Planned end",
+        "stage": "Stage",
+        "stagePlaceholder": "Select a stage",
+        "assignee": "Assignee",
+        "assigneePlaceholder": "— Select —",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "validation": {
+        "titleRequired": "Title is required",
+        "descriptionRequired": "Description is required",
+        "priorityRequired": "Priority is required",
+        "statusRequired": "Status is required",
+        "plannedStartDateRequired": "Planned start date is required",
+        "plannedStartDatePast": "Start date cannot be in the past",
+        "plannedEndDateRequired": "Planned end date is required",
+        "plannedEndDatePast": "End date cannot be in the past",
+        "plannedEndDateBeforeStart": "End date cannot be before the start date",
+        "stageStartDateRequired": "The linked stage must have a start date.",
+        "plannedStartDateBeforeStage": "The task cannot start before its linked stage.",
+        "stageRequired": "Select a stage to link to the task.",
+        "assigneeRequired": "An assignee is required"
+      }
+    },
+    "schedule": {
+      "columns": {
+        "member": "Member"
+      },
+      "views": {
+        "week": "Week",
+        "month": "Month"
+      },
+      "period": {
+        "week": "Week of {{start}} to {{end}} {{month}} {{year}}",
+        "weekSpan": "Week of {{start}} to {{end}}"
+      },
+      "noResponsibility": "No work front set",
+      "legend": {
+        "allocated": "Allocated",
+        "overlap": "Overlap",
+        "free": "Free"
+      },
+      "empty": {
+        "title": "No members on this project",
+        "description": "The grid shows who is allocated each day. Add someone to the project to start planning the crew.",
+        "cta": "Go to Teams ›"
+      },
+      "error": {
+        "title": "Could not load the schedule.",
+        "retry": "Try again"
+      },
+      "allocation": {
+        "title": "Allocate hours",
+        "subtitle": "{{name}} · {{date}}",
+        "hours": "Hours for the day",
+        "hoursSuffix": "h",
+        "help": "Whole hours, from 0 to 24. Zero frees the day.",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "clear": "Free the day",
+        "confirmClear": "Free the day of {{name}} on {{date}}? The allocation is deleted.",
+        "confirmClearAction": "Free"
+      },
+      "responsibility": {
+        "title": "Work front",
+        "subtitle": "{{name}}",
+        "field": "Work front on this project",
+        "placeholder": "Foundation, Structure, Utilities...",
+        "help": "Up to 100 characters. Leave it blank to clear the work front.",
+        "save": "Save"
+      },
+      "toast": {
+        "allocationSaved": "Hours allocated.",
+        "allocationCleared": "Day freed.",
+        "responsibilitySaved": "Work front updated."
+      },
+      "errors": {
+        "hoursRequired": "Enter the hours for the day",
+        "hoursRange": "Hours must be between 0 and 24",
+        "hoursDecimals": "Use at most two decimal places",
+        "responsibilityLength": "100 characters maximum"
+      },
+      "a11y": {
+        "cellAllocated": "{{name}}, {{date}}: {{hours}} allocated",
+        "cellFree": "{{name}}, {{date}}: free day",
+        "cellOverlap": "{{name}}, {{date}}: {{hours}} allocated, {{tasks}} tasks on the same day",
+        "editResponsibility": "Edit the work front of {{name}}",
+        "previousPeriod": "Previous period",
+        "nextPeriod": "Next period"
+      }
+    },
+    "equipes": {
+      "rolesLink": "Roles and permissions",
+      "empty": "Nobody linked yet.",
+      "memberCount_one": "{{count}} person",
+      "memberCount_other": "{{count}} people",
+      "sections": {
+        "team": {
+          "title": "Project team",
+          "hint": "Engineers, architects and site foremen",
+          "add": "add member"
+        },
+        "client": {
+          "title": "Clients",
+          "hint": "Who follows the project on the client side",
+          "add": "add client"
+        }
+      },
+      "actions": {
+        "addMember": "Add member",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}} from the project",
+        "addMemberShort": "Member"
+      },
+      "removeModal": {
+        "title": "Remove person",
+        "message": "Are you sure you want to remove {{name}} from this project?",
+        "confirm": "Remove",
+        "removing": "Removing..."
+      },
+      "addModal": {
+        "searchPlaceholder": "Search by name or e-mail...",
+        "available": "Available users",
+        "loadMore": "Load more results",
+        "roleLabel": "Role on the project",
+        "confirm": "Add",
+        "adding": "Adding...",
+        "team": {
+          "title": "Add member",
+          "hint": "Find and select who joins the project team.",
+          "noResults": "No collaborator matches this search.",
+          "noneAvailable": "No collaborator available to add."
+        },
+        "client": {
+          "title": "Add client",
+          "hint": "Find and select the client following this project.",
+          "noResults": "No client matches this search.",
+          "noneAvailable": "No client available to add."
+        }
       }
     }
   },
@@ -474,6 +923,103 @@
     "roles": {
       "engineer": "Engineer",
       "user": "User"
+    },
+    "page": {
+      "title": "Account",
+      "preferences": "Preferences",
+      "theme": "Theme",
+      "language": "Language",
+      "session": "Session"
     }
+  },
+  "status": {
+    "PLANNING": "Not started",
+    "PLANNED": "Not started",
+    "TODO": "Not started",
+    "IN_PROGRESS": "In progress",
+    "PAUSED": "Paused",
+    "BLOCKED": "Blocked",
+    "DONE": "Completed",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "LATE": "Overdue"
+  },
+  "roles": {
+    "OWNER": "Owner",
+    "ENGINEER": "Engineer",
+    "ARCHITECT": "Architect",
+    "FOREMAN": "Site foreman",
+    "USER": "Client"
+  },
+  "accessDenied": {
+    "title": "Access denied",
+    "description": "Your role in this project does not reach this module. Ask the project owner if you need access.",
+    "action": "Back to projects"
+  },
+  "pessoas": {
+    "membersTitle": "Project members",
+    "membersHint": "Who has access to this work front, and with which role.",
+    "membersEmpty": "No members linked yet.",
+    "membersError": "Could not load members.",
+    "permissionsTitle": "Role permissions",
+    "permissionsHint": "Applies to every member holding the selected role.",
+    "permissionsError": "Could not load permissions for this role."
+  },
+  "mobile": {
+    "backTo": "Back to {{target}}",
+    "menu": "Menu",
+    "menuTitle": "All sections"
+  },
+  "workspace": {
+    "newAccount": "New account",
+    "createTitle": "Create new account",
+    "createHint": "An account keeps projects, team and clients separate from other workspaces.",
+    "nameLabel": "Workspace name",
+    "namePlaceholder": "E.g.: Silva Construction",
+    "create": "Create account",
+    "creating": "Creating…",
+    "createError": "Could not create the account.",
+    "switchError": "Could not switch accounts.",
+    "roles": {
+      "OWNER": "Owner",
+      "ADMIN": "Administrator",
+      "MEMBER": "Member",
+      "CLIENT": "Client"
+    },
+    "team": {
+      "title": "Account team",
+      "hint": "Who belongs to this workspace and their account role.",
+      "empty": "No members yet. Invite someone to get started.",
+      "error": "Could not load the team.",
+      "invite": "Invite",
+      "inviteTitle": "Invite to the account",
+      "inviteEmail": "Email",
+      "inviteName": "Name (optional)",
+      "inviteRole": "Account role",
+      "inviteSend": "Send invite",
+      "inviteSending": "Sending…",
+      "inviteSent": "Invite sent to {{email}}.",
+      "inviteError": "Could not send the invite.",
+      "changeRole": "Change role",
+      "deactivate": "Deactivate",
+      "remove": "Remove",
+      "removeConfirm": "Remove {{name}} from the account? They will lose access to every project of this workspace.",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "actionError": "Could not complete the action."
+    }
+  },
+  "invitePage": {
+    "title": "PRISSMA invitation",
+    "hint": "You were invited to a workspace. Fill in your details to accept.",
+    "nameLabel": "Your name",
+    "passwordLabel": "Create a password",
+    "passwordHint": "At least: 1 uppercase, 1 lowercase, 1 digit and 1 special character.",
+    "accept": "Accept invite",
+    "accepting": "Accepting…",
+    "success": "Invite accepted! Sign in with your email and password to continue.",
+    "goLogin": "Go to login",
+    "error": "Invalid or expired invite.",
+    "missingToken": "Invalid invite link."
   }
 }

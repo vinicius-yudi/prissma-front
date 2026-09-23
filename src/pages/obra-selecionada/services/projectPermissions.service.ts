@@ -2,6 +2,8 @@ import { api } from "@/lib/api"
 
 export const ProjectPermission = {
   VIEW_PROJECT: "VIEW_PROJECT",
+  /** Editar e excluir o cadastro da obra em si. */
+  MANAGE_PROJECT: "MANAGE_PROJECT",
   MANAGE_MEMBERS: "MANAGE_MEMBERS",
   MANAGE_BUDGET: "MANAGE_BUDGET",
   MANAGE_STAGES: "MANAGE_STAGES",
@@ -24,6 +26,7 @@ export type ProjectRole = (typeof ProjectRole)[keyof typeof ProjectRole]
 
 export const ALL_PROJECT_PERMISSIONS: ProjectPermission[] = [
   ProjectPermission.VIEW_PROJECT,
+  ProjectPermission.MANAGE_PROJECT,
   ProjectPermission.MANAGE_MEMBERS,
   ProjectPermission.MANAGE_BUDGET,
   ProjectPermission.MANAGE_STAGES,

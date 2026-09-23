@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/ui/button/Button"
 import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { Select } from "@/shared/components/ui/select/Select"
+import { GlobalRole } from "@/shared/types/user"
 
 import { usePerfilForm } from "../hooks/usePerfilForm"
 
@@ -34,8 +35,8 @@ export function PerfilForm({ open, onClose, onDeleteAccount }: PerfilFormProps) 
   } = usePerfilForm({ open, onClose })
 
   const ROLE_OPTIONS = [
-    { value: "ENG", label: t("profile.roles.engineer") },
-    { value: "USER", label: t("profile.roles.user") },
+    { value: GlobalRole.ENG, label: t("profile.roles.engineer") },
+    { value: GlobalRole.USER, label: t("profile.roles.user") },
   ]
 
   if (isLoading) {

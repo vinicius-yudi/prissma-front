@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+AGENTS.md
 CLAUDE.md
 .claude/
 .agents/
@@ -26,3 +27,4 @@ CLAUDE.md
 *.njsproj
 *.sln
 *.sw?
+coverage

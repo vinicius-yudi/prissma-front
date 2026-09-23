@@ -1,0 +1,86 @@
+name: CI
+
+# Roda na abertura e em cada push do PR, e de novo depois do merge em develop
+# ou main. O `synchronize` é o que garante que um push novo no PR revalida —
+# sem ele, um PR aprovado poderia receber commit quebrado e continuar verde.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+# Um PR que recebe três pushes seguidos não precisa de três execuções: cancela
+# as anteriores e economiza fila.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, tipos e testes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar dependências
+        run: bun install --frozen-lockfile
+
+      # Os quatro gates rodam em passos separados de propósito: quando um
+      # quebra, a aba do Actions diz qual foi sem precisar ler o log inteiro.
+      # `if: always()` faz os seguintes rodarem mesmo após uma falha, então um
+      # PR com erro de lint E de tipo mostra os dois de uma vez.
+      - name: ESLint
+        run: bun run lint
+
+      - name: Trava de cor (tokens de design)
+        if: always()
+        run: bun run lint:colors
+
+      - name: Tipos
+        if: always()
+        run: bunx tsc -b
+
+      - name: Testes unitários + cobertura
+        if: always()
+        run: bun run test:coverage
+
+      - name: Publicar relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ github.sha }}
+          path: coverage/
+          retention-days: 14
+
+  build:
+    name: Build de produção
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar dependências
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
