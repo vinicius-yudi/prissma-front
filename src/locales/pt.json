@@ -51,32 +51,56 @@
   },
   "dashboard": {
     "title": "Painel de Controle",
-    "subtitle": "Gerencie seus projetos e acompanhe o progresso",
-    "inProgressTitle": "Projetos em Andamento",
-    "inProgressEmpty": "Nenhum projeto em andamento no momento.",
-    "stats": {
-      "activeProjects": "PROJETOS ATIVOS",
-      "activeProjectsDetail": "+2 este mês",
-      "pendingTasks": "TAREFAS PENDENTES",
-      "pendingTasksDetail": "5 com prazo hoje",
-      "nextVisits": "PRÓXIMAS VISITAS",
-      "nextVisitsDetail": "Próxima: amanhã"
-    }
+    "inProgressTitle": "Obras em andamento",
+    "inProgressEmpty": "Nenhuma obra em andamento",
+    "greeting": {
+      "morning": "Bom dia, {{name}}.",
+      "afternoon": "Boa tarde, {{name}}.",
+      "evening": "Boa noite, {{name}}."
+    },
+    "summaryLate_one": "Você tem {{count}} ponto de atenção nas suas obras.",
+    "summaryLate_other": "Você tem {{count}} pontos de atenção nas suas obras.",
+    "summaryClear": "Nenhum atraso nas suas obras hoje.",
+    "kpi": {
+      "inProgress": "Obras em andamento",
+      "planning": "{{count}} em planejamento",
+      "openTasks": "Suas tarefas abertas",
+      "dueThisWeek": "{{count}} vencem nos próximos 7 dias",
+      "late": "Atrasos",
+      "lateHint": "precisam de decisão",
+      "completed": "Obras concluídas",
+      "ofTotal": "de {{count}} obras na conta"
+    },
+    "attentionHeading_one": "{{count}} ponto precisa de decisão",
+    "attentionHeading_other": "{{count}} pontos precisam de decisão",
+    "attentionEmpty": "Tudo dentro do prazo nas suas tarefas e obras.",
+    "alerts": {
+      "taskLate_one": "{{project}} — {{count}} dia de atraso",
+      "taskLate_other": "{{project}} — {{count}} dias de atraso",
+      "taskBlocked_one": "{{project}} — bloqueada e {{count}} dia de atraso",
+      "taskBlocked_other": "{{project}} — bloqueada e {{count}} dias de atraso",
+      "projectLate_one": "Prazo da obra venceu há {{count}} dia",
+      "projectLate_other": "Prazo da obra venceu há {{count}} dias"
+    },
+    "weekTitle": "Próximos 7 dias",
+    "today": "Hoje",
+    "allProjects": "Todas as obras",
+    "inProgressEmptyHint": "Quando uma obra começar, ela aparece aqui com o avanço de cada etapa."
   },
   "projects": {
-    "title": "Projetos",
-    "subtitle": "Gerencie todos os seus projetos",
-    "newProject": "Novo Projeto",
-    "loading": "Carregando projetos...",
-    "errorTitle": "Erro ao carregar projetos",
-    "errorHint": "Tente novamente mais tarde",
-    "emptyTitle": "Nenhum projeto encontrado",
-    "emptyHint": "Ajuste os filtros ou crie um novo projeto",
+    "title": "Obras",
+    "newProject": "Nova obra",
+    "errorTitle": "Não foi possível carregar as obras",
+    "errorHint": "Tente de novo em instantes.",
+    "emptyTitle": "Nenhuma obra ainda",
+    "emptyHint": "Cadastre a primeira obra em dois passos: dados e endereço.",
     "filter": {
-      "all": "Todos",
-      "inProgress": "Em Andamento",
-      "completed": "Concluídos",
-      "overdue": "Atrasados"
+      "all": "Todas",
+      "inProgress": "Em andamento",
+      "completed": "Concluídas",
+      "overdue": "Atrasadas",
+      "label": "Filtrar obras",
+      "planning": "Planejamento"
     },
     "status": {
       "planning": "Planejamento",
@@ -86,13 +110,19 @@
       "cancelled": "Cancelado"
     },
     "card": {
-      "progress": "Progresso",
-      "daysRemaining": "{{count}} dias restantes",
-      "overdue": "Prazo vencido",
-      "dueToday": "Vence hoje",
-      "completed": "Concluído",
+      "progress": "Avanço físico",
+      "dueToday": "Termina hoje",
+      "completed": "Entregue",
       "cancelled": "Cancelado",
-      "built": "{{area}} m² construído"
+      "built": "{{area}} m² construídos",
+      "noStage": "Sem etapas",
+      "noDeadline": "Sem prazo",
+      "overdue_one": "{{count}} dia além do prazo",
+      "overdue_other": "{{count}} dias além do prazo",
+      "daysRemaining_one": "{{count}} dia restante",
+      "daysRemaining_other": "{{count}} dias restantes",
+      "lateStages_one": "{{count}} etapa atrasada",
+      "lateStages_other": "{{count}} etapas atrasadas"
     },
     "editModal": {
       "title": "Editar Obra",
@@ -110,8 +140,31 @@
       "confirm": "Excluir",
       "deleting": "Excluindo..."
     },
-    "dimension": "{{total}} obras · {{inProgress}} em andamento",
-    "groupAll": "Todas as obras"
+    "summary": "{{inProgress}} em andamento, {{planning}} em planejamento e {{completed}} concluídas.",
+    "dimensionLabel": "Carteira de obras",
+    "dimensionTotal_one": "{{count}} obra",
+    "dimensionTotal_other": "{{count}} obras",
+    "searchPlaceholder": "Buscar por nome ou endereço",
+    "searchLabel": "Buscar obras",
+    "searchClear": "Limpar busca",
+    "sort": {
+      "label": "Ordenar",
+      "recent": "Recentes",
+      "deadline": "Prazo mais próximo",
+      "name": "Nome"
+    },
+    "view": {
+      "label": "Visualização",
+      "grid": "Cartões",
+      "list": "Lista"
+    },
+    "emptySearchTitle": "Nenhuma obra encontrada para “{{term}}”",
+    "emptyFilteredHint": "Confira a grafia ou tire o filtro para ver todas.",
+    "clearFilters": "Limpar filtros",
+    "newCard": {
+      "title": "Começar uma nova obra",
+      "body": "Dados e endereço em dois passos"
+    }
   },
   "login": {
     "title": "Bem-vindo de volta",
@@ -213,7 +266,8 @@
     "cidade": "Cidade",
     "cidadePlaceholder": "Nome da cidade",
     "uf": "UF",
-    "currentAddress": "Endereço atual"
+    "currentAddress": "Endereço atual",
+    "cepLooking": "Buscando CEP"
   },
   "forgotPassword": {
     "title": "Recuperar senha",
@@ -239,10 +293,11 @@
     "success": "Senha redefinida. Entre com a senha nova."
   },
   "notFound": {
-    "code": "ERRO 404",
-    "title": "PÁGINA NÃO ENCONTRADA",
+    "code": "404",
+    "title": "Página não encontrada",
     "description": "A página que você está procurando não existe ou foi movida.",
-    "action": "Ir para o Dashboard"
+    "action": "Voltar ao início",
+    "body": "O endereço pode ter mudado ou a página foi removida."
   },
   "obra": {
     "back": "Voltar",
@@ -1023,7 +1078,8 @@
       "removeConfirm": "Remover {{name}} da conta? A pessoa perde o acesso a todas as obras deste workspace.",
       "inactive": "Inativo",
       "pending": "Pendente",
-      "actionError": "Não foi possível concluir a ação."
+      "actionError": "Não foi possível concluir a ação.",
+      "listTitle": "Pessoas"
     }
   },
   "invitePage": {

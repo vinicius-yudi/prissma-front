@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
 
 /**
  * Acesso negado — destino de quem chega por URL a um módulo que o seu papel
@@ -17,19 +18,22 @@ export function AccessDeniedPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-      <div className="flex size-14 items-center justify-center rounded-2xl bg-danger-soft text-danger">
-        <ShieldOff size={26} strokeWidth={1.8} />
-      </div>
-
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-ink">{t("accessDenied.title")}</h1>
-        <p className="max-w-md text-sm text-ink-2">{t("accessDenied.description")}</p>
-      </div>
-
-      <Button variant="outline" fullWidth={false} onClick={() => navigate("/obras")}>
-        {t("accessDenied.action")}
-      </Button>
+    <div className="flex min-h-[60vh] items-center">
+      <EmptyState
+        as="h1"
+        icon={
+          <span className="flex size-14 items-center justify-center rounded-lg bg-danger-soft text-danger">
+            <ShieldOff size={26} />
+          </span>
+        }
+        title={t("accessDenied.title")}
+        body={t("accessDenied.description")}
+        action={
+          <Button variant="outline" fullWidth={false} onClick={() => navigate("/obras")}>
+            {t("accessDenied.action")}
+          </Button>
+        }
+      />
     </div>
   )
 }

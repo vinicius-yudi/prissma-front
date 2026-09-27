@@ -16,6 +16,8 @@ interface EmptyStateProps {
    * criar o primeiro item.
    */
   action?: ReactNode
+  /** Quando o vazio é a página inteira (404, acesso negado), o título é o `h1`. */
+  as?: "p" | "h1" | "h2"
   className?: string
 }
 
@@ -23,11 +25,11 @@ interface EmptyStateProps {
  * Vazio sobre papel quadriculado: o espaço que ainda não foi desenhado
  * (DS v2, EmptyState). Sem ilustração nem emoji.
  */
-export function EmptyState({ title, body, icon, action, className }: EmptyStateProps) {
+export function EmptyState({ title, body, icon, action, as: Title = "p", className }: EmptyStateProps) {
   return (
     <div className={empty({ className })}>
       {icon && <div className="mb-4 text-gold-hi">{icon}</div>}
-      <p className="t-section text-[17px] text-ink">{title}</p>
+      <Title className="t-section text-[17px] text-ink">{title}</Title>
       {body && <p className="mt-1.5 max-w-[42ch] text-[14px] text-ink-2">{body}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>

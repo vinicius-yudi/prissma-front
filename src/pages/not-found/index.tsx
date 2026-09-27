@@ -1,25 +1,31 @@
-import { DotLottieReact } from "@lottiefiles/dotlottie-react"
+import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
-import lottie404Url from "@/assets/lotties/Under Maintenance.lottie?url"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
 
+/**
+ * Rota inexistente dentro do app. Papel quadriculado vazio — "o espaço que
+ * ainda não foi desenhado" — e o caminho de volta, sem ilustração (DS v2).
+ */
 export function NotFoundPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] gap-2 text-center">
-      <DotLottieReact
-        src={lottie404Url}
-        loop
-        autoplay
-        style={{ width: "100%", height: "100%", maxWidth: "820px", maxHeight: "820px" }}
+    <div className="flex min-h-[60vh] items-center">
+      <EmptyState
+        as="h1"
+        icon={<span className="t-hero text-[80px] text-gold-hi">{t("notFound.code")}</span>}
+        title={t("notFound.title")}
+        body={t("notFound.body")}
+        action={
+          <Link
+            to="/dashboard"
+            className="inline-flex h-11 items-center rounded-md bg-surface px-4 text-[14px] font-[620] text-ink hairline-strong hover:bg-raised"
+          >
+            {t("notFound.action")}
+          </Link>
+        }
       />
-      <p className="text-3xl font-bold tracking-[0.3em] uppercase text-gold">
-        {t("notFound.code")}
-      </p>
-      <h1 className="text-xs font-black tracking-[0.2em] uppercase text-ink">
-        {t("notFound.title")}
-      </h1>
     </div>
   )
 }

@@ -51,32 +51,56 @@
   },
   "dashboard": {
     "title": "Control Panel",
-    "subtitle": "Manage your projects and track progress",
-    "inProgressTitle": "In Progress Projects",
-    "inProgressEmpty": "No projects in progress at the moment.",
-    "stats": {
-      "activeProjects": "ACTIVE PROJECTS",
-      "activeProjectsDetail": "+2 this month",
-      "pendingTasks": "PENDING TASKS",
-      "pendingTasksDetail": "5 due today",
-      "nextVisits": "UPCOMING VISITS",
-      "nextVisitsDetail": "Next: tomorrow"
-    }
+    "inProgressTitle": "Projects in progress",
+    "inProgressEmpty": "No projects in progress",
+    "greeting": {
+      "morning": "Good morning, {{name}}.",
+      "afternoon": "Good afternoon, {{name}}.",
+      "evening": "Good evening, {{name}}."
+    },
+    "summaryLate_one": "You have {{count}} point needing attention in your projects.",
+    "summaryLate_other": "You have {{count}} points needing attention in your projects.",
+    "summaryClear": "No delays in your projects today.",
+    "kpi": {
+      "inProgress": "Projects in progress",
+      "planning": "{{count}} in planning",
+      "openTasks": "Your open tasks",
+      "dueThisWeek": "{{count}} due in the next 7 days",
+      "late": "Delays",
+      "lateHint": "need a decision",
+      "completed": "Completed projects",
+      "ofTotal": "of {{count}} projects in the account"
+    },
+    "attentionHeading_one": "{{count}} point needs a decision",
+    "attentionHeading_other": "{{count}} points need a decision",
+    "attentionEmpty": "Everything is on schedule in your tasks and projects.",
+    "alerts": {
+      "taskLate_one": "{{project}} — {{count}} day late",
+      "taskLate_other": "{{project}} — {{count}} days late",
+      "taskBlocked_one": "{{project}} — blocked and {{count}} day late",
+      "taskBlocked_other": "{{project}} — blocked and {{count}} days late",
+      "projectLate_one": "Project deadline passed {{count}} day ago",
+      "projectLate_other": "Project deadline passed {{count}} days ago"
+    },
+    "weekTitle": "Next 7 days",
+    "today": "Today",
+    "allProjects": "All projects",
+    "inProgressEmptyHint": "When a project starts, it shows up here with the progress of each stage."
   },
   "projects": {
     "title": "Projects",
-    "subtitle": "Manage all your projects",
-    "newProject": "New Project",
-    "loading": "Loading projects...",
-    "errorTitle": "Error loading projects",
-    "errorHint": "Please try again later",
-    "emptyTitle": "No projects found",
-    "emptyHint": "Adjust filters or create a new project",
+    "newProject": "New project",
+    "errorTitle": "Couldn't load the projects",
+    "errorHint": "Try again in a moment.",
+    "emptyTitle": "No projects yet",
+    "emptyHint": "Add your first project in two steps: details and address.",
     "filter": {
       "all": "All",
-      "inProgress": "In Progress",
+      "inProgress": "In progress",
       "completed": "Completed",
-      "overdue": "Overdue"
+      "overdue": "Overdue",
+      "label": "Filter projects",
+      "planning": "Planning"
     },
     "status": {
       "planning": "Planning",
@@ -86,13 +110,19 @@
       "cancelled": "Cancelled"
     },
     "card": {
-      "progress": "Progress",
-      "daysRemaining": "{{count}} days remaining",
-      "overdue": "Overdue",
-      "dueToday": "Due today",
-      "completed": "Completed",
+      "progress": "Physical progress",
+      "dueToday": "Ends today",
+      "completed": "Delivered",
       "cancelled": "Cancelled",
-      "built": "{{area}} m² built"
+      "built": "{{area}} m² built",
+      "noStage": "No stages",
+      "noDeadline": "No deadline",
+      "overdue_one": "{{count}} day past due",
+      "overdue_other": "{{count}} days past due",
+      "daysRemaining_one": "{{count}} day left",
+      "daysRemaining_other": "{{count}} days left",
+      "lateStages_one": "{{count}} stage late",
+      "lateStages_other": "{{count}} stages late"
     },
     "editModal": {
       "title": "Edit Project",
@@ -110,8 +140,31 @@
       "confirm": "Delete",
       "deleting": "Deleting..."
     },
-    "dimension": "{{total}} projects · {{inProgress}} in progress",
-    "groupAll": "All projects"
+    "summary": "{{inProgress}} in progress, {{planning}} in planning and {{completed}} completed.",
+    "dimensionLabel": "Project portfolio",
+    "dimensionTotal_one": "{{count}} project",
+    "dimensionTotal_other": "{{count}} projects",
+    "searchPlaceholder": "Search by name or address",
+    "searchLabel": "Search projects",
+    "searchClear": "Clear search",
+    "sort": {
+      "label": "Sort",
+      "recent": "Most recent",
+      "deadline": "Nearest deadline",
+      "name": "Name"
+    },
+    "view": {
+      "label": "View",
+      "grid": "Cards",
+      "list": "List"
+    },
+    "emptySearchTitle": "No project found for “{{term}}”",
+    "emptyFilteredHint": "Check the spelling or clear the filter to see all.",
+    "clearFilters": "Clear filters",
+    "newCard": {
+      "title": "Start a new project",
+      "body": "Details and address in two steps"
+    }
   },
   "login": {
     "title": "Welcome back",
@@ -213,7 +266,8 @@
     "cidade": "City",
     "cidadePlaceholder": "City name",
     "uf": "State",
-    "currentAddress": "Current address"
+    "currentAddress": "Current address",
+    "cepLooking": "Looking up postal code"
   },
   "forgotPassword": {
     "title": "Reset password",
@@ -239,10 +293,11 @@
     "success": "Password reset. Sign in with the new password."
   },
   "notFound": {
-    "code": "ERROR 404",
-    "title": "PAGE NOT FOUND",
+    "code": "404",
+    "title": "Page not found",
     "description": "The page you are looking for does not exist or has been moved.",
-    "action": "Go to Dashboard"
+    "action": "Back to home",
+    "body": "The address may have changed or the page was removed."
   },
   "obra": {
     "back": "Back",
@@ -1023,7 +1078,8 @@
       "removeConfirm": "Remove {{name}} from the account? They will lose access to every project of this workspace.",
       "inactive": "Inactive",
       "pending": "Pending",
-      "actionError": "Could not complete the action."
+      "actionError": "Could not complete the action.",
+      "listTitle": "People"
     }
   },
   "invitePage": {

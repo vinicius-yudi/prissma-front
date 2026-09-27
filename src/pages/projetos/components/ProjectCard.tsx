@@ -1,142 +1,108 @@
-import { Calendar, MapPin } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
+import { tv } from "tailwind-variants"
 
-import { Num } from "@/shared/components/ui/num/Num"
+import { Fachada } from "@/shared/components/ui/fachada/Fachada"
+import { estimateFloors, roofFor } from "@/shared/components/ui/fachada/fachadaGeometry"
 import { Progress } from "@/shared/components/ui/progress/Progress"
 import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
-import { ProjectStatus, type Project } from "@/shared/types/project"
-import { dateProgress, deriveStatus, startOfLocalDay, startOfToday } from "@/shared/utils/status"
+import type { Project } from "@/shared/types/project"
+import { dateProgress, deriveStatus } from "@/shared/utils/status"
 
-const DATE_SEPARATOR = "→"
-const NO_DATE = "—"
-const MS_PER_DAY = 86_400_000
+import { useProjectProgress } from "../hooks/useProjectProgress"
+import { ProjectDeadline } from "./ProjectDeadline"
 
-function formatDate(dateStr: string | null): string {
-  const date = startOfLocalDay(dateStr)
-  if (!date) return NO_DATE
-  return date.toLocaleDateString("pt-BR")
-}
+/** Mais que isso atrás do esperado, o percentual fica `danger` (DS v2, Card). */
+const BEHIND_THRESHOLD = 8
 
-/**
- * Dias até o prazo, contados em dias de calendário.
- *
- * Comparar a data planejada com o relógio de parede fazia o rodapé virar
- * "Prazo vencido" ainda de manhã no próprio dia da entrega: a data pura é lida
- * como meia-noite UTC e a fração do dia corrente empurrava a divisão para -1.
- * Os dois lados viram meia-noite local antes da conta.
- */
-function calcDaysRemaining(end: string | null): number | null {
-  const due = startOfLocalDay(end)
-  if (!due) return null
-  return Math.round((due.getTime() - startOfToday().getTime()) / MS_PER_DAY)
-}
+const percent = tv({
+  base: "t-kpi text-[26px]",
+  variants: {
+    behind: {
+      true: "text-danger",
+      false: "text-ink",
+    },
+  },
+})
 
-interface DaysDisplayProps {
-  days: number | null
-  status: ProjectStatus
-}
+type TapeTone = "gold" | "ok" | "danger"
 
-function DaysDisplay({ days, status }: DaysDisplayProps) {
-  const { t } = useTranslation()
-
-  if (status === ProjectStatus.COMPLETED) {
-    return <span className="text-sm font-semibold text-success">{t("projects.card.completed")}</span>
-  }
-  if (status === ProjectStatus.CANCELLED) {
-    return <span className="text-sm font-medium text-ink-2">{t("projects.card.cancelled")}</span>
-  }
-  if (days === null) {
-    return <span className="text-sm text-ink-2">{NO_DATE}</span>
-  }
-  if (days < 0) {
-    return <span className="text-sm font-semibold text-danger">{t("projects.card.overdue")}</span>
-  }
-  if (days === 0) {
-    return <span className="text-sm font-semibold text-warning">{t("projects.card.dueToday")}</span>
-  }
-  return (
-    <span className="text-sm font-medium text-ink-2">
-      {t("projects.card.daysRemaining", { count: days })}
-    </span>
-  )
+/** Concluída em verde; atrasada ou atrás do esperado em perigo; o resto em ouro. */
+function tapeTone(done: boolean, trouble: boolean): TapeTone {
+  if (done) return "ok"
+  if (trouble) return "danger"
+  return "gold"
 }
 
 interface ProjectCardProps {
   project: Project
 }
 
+/**
+ * Card de obra (DS v2): fachada em prancha no topo, avanço físico em `t-kpi`,
+ * trena com o marcador de onde a obra deveria estar hoje, etapa atual e prazo.
+ * Sobe 2px com `shadow-soft` no hover, e o tracejado da fachada anda.
+ */
 export function ProjectCard({ project }: ProjectCardProps) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { progress, lateCount, currentStage } = useProjectProgress(project.id)
+  const expected = dateProgress(project.plannedStartDate, project.plannedEndDate)
+  const { state } = deriveStatus({ status: project.status, plannedEndDate: project.plannedEndDate })
 
-  const progress = dateProgress(project.plannedStartDate, project.plannedEndDate)
-  const daysRemaining = calcDaysRemaining(project.plannedEndDate)
-
-  // O preenchimento segue o estado: ouro no curso normal, verde ao concluir,
-  // vermelho em atraso (Style Guide v2 §5).
-  const { state } = deriveStatus({
-    status: project.status,
-    plannedEndDate: project.plannedEndDate,
-  })
-  const projectTone = state === "late" ? "danger" : state === "done" ? "ok" : "gold"
-
-  // Editar e excluir moram na Visão geral da obra. No card eles surgiam no
-  // hover sobre a mesma área do tipo da obra, que sumia para dar lugar a eles —
-  // dois destinos de clique disputando o mesmo alvo, e uma ação destrutiva
-  // escondida atrás do ponteiro.
-  function handleCardClick() {
-    navigate(`/obras/${project.id}/visao-geral`)
-  }
+  const value = progress ?? 0
+  const behind = progress !== null && expected - value >= BEHIND_THRESHOLD
+  const tone = tapeTone(state === "done", behind || state === "late")
 
   return (
-    <div
-      onClick={handleCardClick}
-      className="bg-surface border border-border rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface hover:border-border-strong transition-all duration-200 cursor-pointer"
+    <Link
+      to={`/obras/${project.id}/visao-geral`}
+      className="group flex flex-col overflow-hidden rounded-[18px] bg-surface hairline transition-[box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:shadow-soft motion-reduce:transition-none"
     >
-      <div className="flex items-start justify-between gap-2">
-        <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} />
-        <span className="text-xs text-ink-2 uppercase tracking-wider font-medium mt-0.5 shrink-0">
-          {project.projectType}
-        </span>
-      </div>
-
-      <div className="space-y-1">
-        <h3 className="font-semibold text-ink text-[17px] leading-snug line-clamp-1">
-          {project.title}
-        </h3>
-        <div className="flex items-center gap-1.5 text-ink-2 text-sm">
-          <MapPin size={13} className="flex-none" />
-          <span className="line-clamp-1">{project.address}</span>
+      <div className="blueprint relative bg-raised px-6 pt-10">
+        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
+          <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} kind="project" />
+          {lateCount > 0 && (
+            <span
+              className="t-num inline-flex h-6 items-center gap-1 rounded-pill bg-danger-soft px-2 text-[12px] font-semibold text-danger"
+              title={t("projects.card.lateStages", { count: lateCount })}
+            >
+              <AlertTriangle size={12} />
+              {lateCount}
+            </span>
+          )}
         </div>
-      </div>
-
-      <div className="flex items-center gap-1.5 text-xs text-ink-2">
-        <Calendar size={13} className="flex-none" />
-        <span>{formatDate(project.plannedStartDate)}</span>
-        <span>{DATE_SEPARATOR}</span>
-        <span>{formatDate(project.plannedEndDate)}</span>
-      </div>
-
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-ink-2">{t("projects.card.progress")}</span>
-          <Num className="font-semibold text-ink-2">{progress}%</Num>
-        </div>
-        <Progress
-          value={progress}
-          height={6}
-          tone={projectTone}
-          label={t("projects.card.progress")}
+        <Fachada
+          progress={value}
+          seed={project.id}
+          floors={estimateFloors(project.builtArea, project.landArea)}
+          roof={roofFor(project.projectType)}
+          showDims={false}
+          className="mx-auto h-36 w-full max-w-[260px]"
         />
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-border">
-        <span className="text-xs text-ink-2">
-          {t("projects.card.built", { area: project.builtArea })}
-        </span>
-        <DaysDisplay days={daysRemaining} status={project.status} />
+      <div className="flex flex-1 flex-col gap-4 p-5">
+        <div className="min-w-0">
+          <h3 className="t-section truncate text-[17px] text-ink">{project.title}</h3>
+          <p className="mt-0.5 truncate text-[13px] text-meta">{project.address}</p>
+        </div>
+
+        <div>
+          <div className="mb-1 flex items-baseline justify-between gap-2">
+            <span className={percent({ behind })}>{progress === null ? "—" : `${value}%`}</span>
+            <span className="truncate text-[12.5px] text-ink-2">
+              {currentStage ? currentStage.name : t("projects.card.noStage")}
+            </span>
+          </div>
+          <Progress value={value} expected={expected} tone={tone} label={t("projects.card.progress")} />
+        </div>
+
+        <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
+          <span className="t-num text-[12.5px] text-meta">{t("projects.card.built", { area: project.builtArea })}</span>
+          <ProjectDeadline project={project} />
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -141,13 +141,16 @@ describe("<ProjectStepModal /> — abertura", () => {
 })
 
 describe("<ProjectStepModal /> — navegação entre passos", () => {
-  it("só avança com o passo 1 válido", async () => {
+  // Erro de campo vai no campo (DS v2, Field), não em toast.
+  it("só avança com o passo 1 válido e mostra o erro no campo", async () => {
     render()
 
     await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalled())
+    expect(await screen.findByText("O título deve ter pelo menos 3 caracteres")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("Ex: Residencial Aurora")).toHaveAttribute("aria-invalid", "true")
     expect(screen.queryByPlaceholderText("00000-000")).not.toBeInTheDocument()
+    expect(toast.error).not.toHaveBeenCalled()
   })
 
   it("avança para o endereço com o passo 1 preenchido", async () => {
@@ -210,13 +213,14 @@ describe("<ProjectStepModal /> — gravação", () => {
     expect(editar.mock.calls[0][0]).toBe(7)
   })
 
-  it("avisa por toast quando o passo 2 está incompleto", async () => {
+  it("mostra nos campos o que falta no passo 2", async () => {
     render()
     await preencherPasso1()
 
     await userEvent.click(screen.getByRole("button", { name: "Salvar" }))
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalled())
+    expect(await screen.findByText("CEP deve ter 8 dígitos")).toBeInTheDocument()
+    expect(screen.getByText("Logradouro obrigatório")).toBeInTheDocument()
     expect(criar).not.toHaveBeenCalled()
   })
 
