@@ -18,10 +18,13 @@ export function BrandPanel() {
   const { t } = useTranslation()
 
   return (
-    <section className="relative hidden h-full flex-col justify-between overflow-hidden bg-bg p-16 lg:flex lg:w-[55%]">
-      <ConstructionHero />
+    // Fica à direita do formulário: a cena vem espelhada (`mirror`) para o
+    // poente continuar do lado de fora da tela, e o painel acompanha a altura
+    // da janela enquanto o formulário rola.
+    <section className="relative hidden h-dvh flex-col justify-between overflow-hidden bg-bg p-16 lg:sticky lg:top-0 lg:flex">
+      <ConstructionHero mirror />
       <div className="pointer-events-none absolute inset-0 blueprint" />
-      <div className="pointer-events-none absolute left-0 top-0 size-[480px] bg-brand-glow" />
+      <div className="pointer-events-none absolute right-0 top-0 size-[480px] bg-brand-glow" />
 
       <div className="z-10">
         <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-gold">

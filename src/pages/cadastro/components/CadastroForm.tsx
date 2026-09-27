@@ -1,155 +1,96 @@
-import { ArrowRight, Eye, EyeOff, Lock, Mail, Undo2, User } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 
-import { Brand } from "@/shared/components/brand/Brand"
+import { PasswordInput } from "@/shared/components/auth/PasswordInput"
+import { PasswordRules } from "@/shared/components/auth/PasswordRules"
 import { Button } from "@/shared/components/ui/button/Button"
+import { Field } from "@/shared/components/ui/field/Field"
 import { Input } from "@/shared/components/ui/input/Input"
-import { Label } from "@/shared/components/ui/label/Label"
-import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
-import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 
-import { ReturnButton } from "./ReturnButton"
-import type { CadastroFormData } from "../types"
-
-/**
- * Formulário de cadastro dos três perfis (arquiteto, engenheiro, cliente).
- *
- * Os três eram arquivos de ~140 linhas com JSX idêntico — só o título e o hook
- * mudavam. O que varia entra por prop; cada perfil ficou como um casco fino em
- * cima do seu próprio hook.
- */
+import type { CadastroKind } from "../constants/cadastroKinds"
+import { useCadastro } from "../hooks/useCadastro"
 
 interface CadastroFormProps {
-  title: string
-  formData: CadastroFormData
-  showPassword: boolean
-  isPending: boolean
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  onTogglePassword: () => void
+  kind: CadastroKind
   onBack: () => void
 }
 
-export function CadastroForm({
-  title,
-  formData,
-  showPassword,
-  isPending,
-  onChange,
-  onSubmit,
-  onTogglePassword,
-  onBack,
-}: CadastroFormProps) {
+/**
+ * Segundo passo do cadastro, igual para os três perfis. Erro de campo no
+ * campo; a lista de regras marca a senha enquanto se digita.
+ */
+export function CadastroForm({ kind, onBack }: CadastroFormProps) {
   const { t } = useTranslation()
+  const { form, onSubmit, isPending } = useCadastro(kind)
+  const { errors } = form.formState
+  const password = form.watch("password")
 
-  const passwordToggle = (
-    <button
-      type="button"
-      onClick={onTogglePassword}
-      aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
-      className="cursor-pointer text-ink-2 transition-colors hover:text-ink"
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </button>
-  )
+  function errorOf(message: string | undefined): string | undefined {
+    return message ? t(message) : undefined
+  }
 
   return (
-    <section className="relative flex h-full w-full flex-col items-center overflow-y-auto bg-bg px-6 pb-10 pt-20 sm:px-16 lg:w-[45%] lg:px-24 lg:py-12">
-      <div className="absolute left-4 top-4 z-10">
-        <ReturnButton icon={Undo2} type="button" onClick={onBack}>
-          {t("register.back")}
-        </ReturnButton>
-      </div>
-      <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
-        <LanguageSelect />
-        <ThemeToggle />
-      </div>
+    <>
+      <button
+        type="button"
+        onClick={onBack}
+        className="-ml-2 mb-6 inline-flex h-9 cursor-pointer items-center gap-1.5 self-start rounded-sm px-2 text-[13.5px] font-semibold text-ink-2 transition-colors hover:bg-raised hover:text-ink"
+      >
+        <ArrowLeft size={15} />
+        {t("register.changeKind")}
+      </button>
 
-      <div className="my-auto w-full max-w-md space-y-6 sm:space-y-8">
-        <div className="flex justify-center">
-          <Brand />
-        </div>
+      <h1 className="t-title text-[32px] text-ink">{t(`register.kinds.${kind}.title`)}</h1>
 
-        <div className="enter-up space-y-2 text-center" style={{ animationDelay: "0.16s" }}>
-          <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h2>
-          <p className="text-sm text-ink-2">{t("register.formSubtitle")}</p>
-        </div>
+      <form onSubmit={onSubmit} noValidate className="mt-7 flex flex-col gap-4">
+        <Field label={t("register.fullName")} error={errorOf(errors.name?.message)}>
+          {(id) => (
+            <Input id={id} autoComplete="name" aria-invalid={!!errors.name} {...form.register("name")} />
+          )}
+        </Field>
 
-        <form className="enter-up space-y-6" onSubmit={onSubmit} noValidate style={{ animationDelay: "0.24s" }}>
-          <div className="space-y-2">
-            <Label htmlFor="name">{t("register.fullName")}</Label>
+        <Field label={t("register.email")} error={errorOf(errors.email?.message)}>
+          {(id) => (
             <Input
-              id="name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              placeholder={t("register.fullNamePlaceholder")}
-              value={formData.name}
-              onChange={onChange}
-              prefix={<User size={20} />}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("register.email")}</Label>
-            <Input
-              id="email"
-              name="email"
+              id={id}
               type="email"
               autoComplete="email"
               placeholder={t("register.emailPlaceholder")}
-              value={formData.email}
-              onChange={onChange}
-              prefix={<Mail size={20} />}
+              aria-invalid={!!errors.email}
+              {...form.register("email")}
             />
-          </div>
+          )}
+        </Field>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">{t("register.password")}</Label>
-            <Input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
+        <Field label={t("register.password")} error={errorOf(errors.password?.message)}>
+          {(id) => (
+            <PasswordInput
+              id={id}
               autoComplete="new-password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={onChange}
-              prefix={<Lock size={20} />}
-              suffix={passwordToggle}
+              aria-invalid={!!errors.password}
+              {...form.register("password")}
             />
-          </div>
+          )}
+        </Field>
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">{t("register.confirmPassword")}</Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showPassword ? "text" : "password"}
+        <PasswordRules value={password} />
+
+        <Field label={t("register.confirmPassword")} error={errorOf(errors.confirmPassword?.message)}>
+          {(id) => (
+            <PasswordInput
+              id={id}
               autoComplete="new-password"
-              placeholder="••••••••"
-              value={formData.confirmPassword}
-              onChange={onChange}
-              prefix={<Lock size={20} />}
-              suffix={passwordToggle}
+              aria-invalid={!!errors.confirmPassword}
+              {...form.register("confirmPassword")}
             />
-          </div>
+          )}
+        </Field>
 
-          <div className="pt-4">
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t("register.submitting") : t("register.submit")}
-              {!isPending && <ArrowRight size={18} />}
-            </Button>
-          </div>
-        </form>
-
-        <p className="enter-up pb-5 text-center text-sm text-ink-2" style={{ animationDelay: "0.48s" }}>
-          {t("register.hasAccount")}{" "}
-          <Link to="/login" className="ml-1 font-bold text-gold-hi underline-offset-4 hover:underline">
-            {t("register.login")}
-          </Link>
-        </p>
-      </div>
-    </section>
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending && <Loader2 size={16} className="animate-spin" />}
+          {isPending ? t("register.submitting") : t("register.submit")}
+        </Button>
+      </form>
+    </>
   )
 }

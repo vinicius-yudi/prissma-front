@@ -1,11 +1,11 @@
-import { BrandPanel } from "@/shared/components/brand/BrandPanel"
+import { AuthShell } from "@/shared/components/auth/AuthShell"
+
 import { ForgotPasswordForm } from "./components/ForgotPasswordForm"
 
 export function ForgotPasswordPage() {
-	return (
-		<main className="flex h-screen overflow-hidden bg-bg">
-			<BrandPanel />
-			<ForgotPasswordForm />
-		</main>
-	)
+  return (
+    <AuthShell>
+      <ForgotPasswordForm />
+    </AuthShell>
+  )
 }

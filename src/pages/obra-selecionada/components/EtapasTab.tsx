@@ -112,7 +112,7 @@ function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () 
         height="82"
         viewBox="0 0 96 72"
         fill="none"
-        stroke="var(--color-gold)"
+        stroke="var(--gold)"
         strokeWidth="1.2"
         aria-hidden
       >

@@ -20,7 +20,7 @@ export const DONUT_COLORS = [
   "var(--success)",
   "var(--ink-3)",
   "var(--warning)",
-  "var(--color-danger)",
+  "var(--danger)",
 ] as const
 
 export function donutColor(index: number): string {
@@ -31,5 +31,5 @@ export function donutColor(index: number): string {
 export const TONE_COLOR: Record<BudgetTone, string> = {
   ok: "var(--gold)",
   warning: "var(--warning)",
-  exceeded: "var(--color-danger)",
+  exceeded: "var(--danger)",
 }

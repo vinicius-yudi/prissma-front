@@ -30,7 +30,10 @@
    luz forte.
 --------------------------------------------------------------------------- */
 
-:root {
+/* `[data-theme="dark"]` além de `:root`: um trecho da tela pode forçar o
+   escuro (o painel de marca das telas públicas) mesmo com o app no claro. */
+:root,
+[data-theme="dark"] {
   color-scheme: dark;
 
   /* superfícies: no escuro o card é mais fundo que a página */
@@ -137,7 +140,10 @@
   --elev-lift: 0 24px 64px -24px rgba(36, 27, 12, 0.35);
 }
 
-@theme {
+/* `inline`: os utilitários leem `var(--bg)` direto, e não uma cópia resolvida
+   em `:root`. É o que deixa um trecho com `data-theme` próprio trocar as cores
+   de tudo dentro dele. */
+@theme inline {
   /* Apaga o palette default do Tailwind. `bg-blue-500`, `text-slate-400` e
      companhia deixam de compilar — a cor genérica fica inalcançável em vez de
      desaconselhada. Só voltam branco e preto. */

@@ -114,10 +114,10 @@
     "groupAll": "All projects"
   },
   "login": {
-    "title": "Welcome back!",
-    "subtitle": "Sign in to access your account and manage your projects and sites.",
+    "title": "Welcome back",
+    "subtitle": "Sign in to see how your projects are going.",
     "email": "Email",
-    "emailPlaceholder": "you@email.com",
+    "emailPlaceholder": "name@company.com",
     "password": "Password",
     "passwordPlaceholder": "Enter your password",
     "showPassword": "Show password",
@@ -126,36 +126,42 @@
     "submit": "Sign in",
     "submitting": "Signing in...",
     "noAccount": "Don't have an account yet?",
-    "register": "Sign up"
-  },
-  "brand": {
-    "name": "PRISSMA",
-    "headline": "Total control",
-    "headlineSuffix": "of your projects.",
-    "tagline": "From the initial budget",
-    "taglineSuffix": "to the handover."
+    "register": "Create account",
+    "invalidCredentials": "Incorrect email or password.",
+    "failed": "Couldn't sign in right now. Try again in a moment."
   },
   "register": {
     "title": "Create your account",
-    "subtitle": "Choose the type of account you want to create",
-    "typeArchitect": "Create Architect account",
-    "typeEngineer": "Create Engineer account",
-    "typeClient": "Create Client account",
+    "subtitle": "How do you take part in the projects?",
     "hasAccount": "Already have an account?",
     "login": "Sign in",
-    "titleClient": "Create your account as client",
-    "titleArchitect": "Create your account as architect",
-    "titleEngineer": "Create your account as engineer",
-    "formSubtitle": "Enter your credentials to continue",
-    "back": "Back",
-    "fullName": "Full Name",
-    "fullNamePlaceholder": "Your full name",
+    "fullName": "Full name",
     "email": "Email",
     "emailPlaceholder": "name@company.com",
     "password": "Password",
-    "confirmPassword": "Confirm your password",
-    "submit": "Confirm",
-    "submitting": "Registering..."
+    "confirmPassword": "Confirm password",
+    "submit": "Create account",
+    "submitting": "Creating account",
+    "changeKind": "Change account type",
+    "emailTaken": "This email already has an account. Sign in or reset your password.",
+    "failed": "Couldn't create the account right now. Try again in a moment.",
+    "kinds": {
+      "engineer": {
+        "label": "Engineer",
+        "body": "Plans stages, teams and budget.",
+        "title": "Engineer account"
+      },
+      "architect": {
+        "label": "Architect",
+        "body": "Follows the project and sends designs.",
+        "title": "Architect account"
+      },
+      "client": {
+        "label": "Owner",
+        "body": "Follows your project closely.",
+        "title": "Owner account"
+      }
+    }
   },
   "registerWork": {
     "title": "Project Registration",
@@ -210,26 +216,27 @@
     "currentAddress": "Current address"
   },
   "forgotPassword": {
-    "title": "Forgot your password?",
-    "subtitle": "Enter your e-mail and we'll send you a link to reset your password.",
-    "email": "Email *",
+    "title": "Reset password",
+    "subtitle": "We'll send a secure link so you can create a new password.",
+    "email": "Email",
     "emailPlaceholder": "name@company.com",
     "submit": "Send link",
-    "submitting": "Sending...",
-    "backToLogin": "Back to login",
-    "sentTitle": "Check your e-mail",
-    "sentBefore": "If the e-mail",
-    "sentAfter": "is registered, you'll receive a link to reset your password shortly."
+    "submitting": "Sending",
+    "backToLogin": "Back to sign in",
+    "sentTitle": "Check your email",
+    "sentBefore": "If",
+    "sentAfter": "is registered, the link arrives in a few minutes."
   },
   "resetPassword": {
     "title": "Reset password",
     "subtitle": "Create a new password for your account.",
-    "newPassword": "New password *",
-    "confirmPassword": "Confirm password *",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
     "passwordPlaceholder": "••••••••",
     "submit": "Reset password",
-    "submitting": "Saving...",
-    "backToLogin": "Back to login"
+    "submitting": "Saving",
+    "backToLogin": "Back to login",
+    "success": "Password reset. Sign in with the new password."
   },
   "notFound": {
     "code": "ERROR 404",
@@ -1054,5 +1061,31 @@
       "stages": "Stages",
       "tasks": "Tasks"
     }
+  },
+  "validation": {
+    "emailRequired": "Enter your email.",
+    "emailInvalid": "Enter a valid email, like name@company.com.",
+    "passwordRequired": "Enter your password.",
+    "passwordMin": "The password has at least 6 characters.",
+    "nameMin": "Enter your full name.",
+    "passwordRules": "The password doesn't meet all the rules below yet.",
+    "confirmRequired": "Repeat the password to confirm.",
+    "passwordMismatch": "Passwords don't match."
+  },
+  "auth": {
+    "passwordRules": {
+      "length": "6 characters or more",
+      "upper": "One uppercase letter",
+      "lower": "One lowercase letter",
+      "number": "One number",
+      "symbol": "One symbol, like ! or #"
+    }
+  },
+  "brand": {
+    "name": "PRISSMA",
+    "headline": "Total control",
+    "headlineSuffix": "of your projects.",
+    "tagline": "From the initial budget",
+    "taglineSuffix": "to the handover."
   }
 }

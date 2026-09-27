@@ -84,7 +84,7 @@ function ProgressRing({ percent }: { percent: number }) {
           r={RING_RADIUS}
           strokeWidth={RING_STROKE}
           fill="none"
-          stroke="var(--color-raised)"
+          stroke="var(--raised)"
         />
         <circle
           cx={center}

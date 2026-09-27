@@ -1,69 +1,55 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useForm } from "react-hook-form"
+import type { UseFormReturn } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+
 import { useAuth } from "@/contexts/AuthContext"
+
+import { LOGIN_DEFAULTS, loginSchema } from "../schemas/login.schema"
+import type { LoginFormSchema } from "../schemas/login.schema"
 import { login } from "../services/login.service"
-import { loginSchema } from "../schemas/login.schema"
-import type { LoginFormData } from "../types"
 
-export function useLoginForm() {
-	const [formData, setFormData] = useState<LoginFormData>({ email: "", password: "" })
-	const [showPassword, setShowPassword] = useState(false)
-	const { saveToken, logout } = useAuth()
-	const navigate = useNavigate()
+interface UseLoginFormResult {
+  form: UseFormReturn<LoginFormSchema>
+  onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>
+  isPending: boolean
+}
 
-	const mutation = useMutation({
-		mutationFn: login,
-		onSuccess: ({ token }) => {
-			saveToken(token)
-			navigate("/dashboard")
-		},
-		onError: (error: Error) => {
-            const serverMessage = error.message
-            if (serverMessage.includes("Invalid credentials")) {
-                toast.error("E-mail ou senha incorretos.")
-            } else {
-                toast.error("Ocorreu um erro ao realizar o login.")
-            }
-        },
-    })
+/**
+ * Login: erro de campo vai no campo (react-hook-form + zod); toast só para o
+ * erro do servidor. A sessão anterior é derrubada antes de pedir a nova, para
+ * nenhum dado de outra conta sobreviver no cache.
+ */
+export function useLoginForm(): UseLoginFormResult {
+  const { t } = useTranslation()
+  const { saveToken, logout } = useAuth()
+  const navigate = useNavigate()
 
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-		const { name, value } = e.target
-		setFormData((prev) => ({ ...prev, [name]: value }))
-	}
+  const form = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: LOGIN_DEFAULTS,
+    mode: "onTouched",
+  })
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        const result = loginSchema.safeParse(formData)
-        if (!result.success) {
-            const fieldErrors = result.error.flatten().fieldErrors
-            const firstErrorKey = Object.keys(fieldErrors).find(
-                (key) => fieldErrors[key as keyof typeof fieldErrors]?.length
-            )
-            if (firstErrorKey) {
-                const messages = fieldErrors[firstErrorKey as keyof typeof fieldErrors]
-                if (messages && messages.length > 0) {
-                    toast.error(messages[0])
-                }
-            }
-            return
-        }
-		logout()
-        mutation.mutate(formData)
-    }
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: ({ token }) => {
+      saveToken(token)
+      navigate("/dashboard")
+    },
+    onError: (error: Error) => {
+      const key = error.message.includes("Invalid credentials") ? "login.invalidCredentials" : "login.failed"
+      toast.error(t(key))
+    },
+  })
 
-	function togglePassword() {
-		setShowPassword((prev) => !prev)
-	}
+  const onSubmit = form.handleSubmit((data) => {
+    logout()
+    mutation.mutate(data)
+  })
 
-	return {
-		formData,
-		showPassword,
-		handleChange,
-		handleSubmit,
-		togglePassword,
-		isPending: mutation.isPending,
-	}
+  return { form, onSubmit, isPending: mutation.isPending }
 }

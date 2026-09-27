@@ -1,28 +1,23 @@
 import { useState } from "react"
 
-import { BrandPanel } from "@/shared/components/brand/BrandPanel"
+import { AuthShell } from "@/shared/components/auth/AuthShell"
 
-import { CadastroArquiteto } from "./components/CadastroArquiteto"
-import { CadastroCliente } from "./components/CadastroCliente"
-import { CadastroEngenheiro } from "./components/CadastroEngenheiro"
+import { CadastroForm } from "./components/CadastroForm"
 import { CadastroType } from "./components/CadastroType"
-
-type CadastroTypeOption = "arquiteto" | "engenheiro" | "cliente" | null
+import type { CadastroKind } from "./constants/cadastroKinds"
 
 export function CadastroPage() {
-  const [selectedType, setSelectedType] = useState<CadastroTypeOption>(null)
+  const [kind, setKind] = useState<CadastroKind | null>(null)
 
-  function handleBack() {
-    setSelectedType(null)
-  }
-
+  // Uma casca só: trocar de passo refaz a entrada do conteúdo (`step`) sem
+  // remontar o painel de marca ao lado.
   return (
-    <main className="flex h-screen overflow-hidden bg-bg">
-      <BrandPanel />
-      {!selectedType && <CadastroType onTypeSelected={setSelectedType} />}
-      {selectedType === "arquiteto" && <CadastroArquiteto onBack={handleBack} />}
-      {selectedType === "engenheiro" && <CadastroEngenheiro onBack={handleBack} />}
-      {selectedType === "cliente" && <CadastroCliente onBack={handleBack} />}
-    </main>
+    <AuthShell step={kind ?? "type"}>
+      {kind ? (
+        <CadastroForm kind={kind} onBack={() => setKind(null)} />
+      ) : (
+        <CadastroType onTypeSelected={setKind} />
+      )}
+    </AuthShell>
   )
 }

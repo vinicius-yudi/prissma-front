@@ -23,6 +23,11 @@ const aceitar = vi.mocked(acceptInvite)
 
 const TOKEN = "tok-123"
 
+/** A casca pública também tem botões (tema, idioma, mostrar senha). */
+function aceitarBotao() {
+  return screen.getByRole("button", { name: /Aceit/ })
+}
+
 function render(route = `/invite?token=${TOKEN}`) {
   return renderWithProviders(<InvitePage />, { route })
 }
@@ -41,8 +46,8 @@ describe("<InvitePage />", () => {
   it("avisa quando o link veio sem token", () => {
     render("/invite")
 
-    expect(screen.getByText(/link/i)).toBeInTheDocument()
-    expect(screen.queryByRole("button")).not.toBeInTheDocument()
+    expect(screen.getByRole("alert")).toHaveTextContent(/link/i)
+    expect(screen.queryByRole("button", { name: /Aceitar/ })).not.toBeInTheDocument()
   })
 
   it("mostra o formulário quando há token", () => {
@@ -54,7 +59,7 @@ describe("<InvitePage />", () => {
   it("aceita o convite com o token do link", async () => {
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
     await waitFor(() =>
       expect(aceitar).toHaveBeenCalledWith(TOKEN, {
@@ -67,12 +72,12 @@ describe("<InvitePage />", () => {
   it("manda nome e senha quando preenchidos", async () => {
     render()
 
-    await userEvent.type(screen.getAllByRole("textbox")[0], "  Ana Souza  ")
+    await userEvent.type(screen.getByLabelText("Seu nome"), "  Ana Souza  ")
     await userEvent.type(
       document.querySelector('input[type="password"]') as HTMLInputElement,
       "Segredo@1",
     )
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
     await waitFor(() =>
       expect(aceitar).toHaveBeenCalledWith(TOKEN, {
@@ -86,9 +91,9 @@ describe("<InvitePage />", () => {
   it("troca o formulário pelo atalho de login ao concluir", async () => {
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
-    expect(await screen.findByRole("link")).toHaveAttribute("href", "/login")
+    expect(await screen.findByRole("link", { name: "Ir para o login" })).toHaveAttribute("href", "/login")
     expect(document.querySelector('input[type="password"]')).not.toBeInTheDocument()
   })
 
@@ -96,7 +101,7 @@ describe("<InvitePage />", () => {
     aceitar.mockRejectedValue(new Error("Convite expirado."))
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
     expect(await screen.findByText("Convite expirado.")).toBeInTheDocument()
   })
@@ -106,7 +111,7 @@ describe("<InvitePage />", () => {
     aceitar.mockRejectedValue(new Error(""))
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
     expect(await screen.findByText("Convite inválido ou expirado.")).toBeInTheDocument()
   })
@@ -115,18 +120,18 @@ describe("<InvitePage />", () => {
     aceitar.mockRejectedValue(new Error("Convite expirado."))
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
     await screen.findByText("Convite expirado.")
-    expect(screen.getByRole("button")).toBeEnabled()
+    expect(aceitarBotao()).toBeEnabled()
   })
 
   it("bloqueia o botão durante o envio", async () => {
     aceitar.mockImplementation(() => new Promise(() => {}))
     render()
 
-    await userEvent.click(screen.getByRole("button"))
+    await userEvent.click(aceitarBotao())
 
-    await waitFor(() => expect(screen.getByRole("button")).toBeDisabled())
+    await waitFor(() => expect(aceitarBotao()).toBeDisabled())
   })
 })

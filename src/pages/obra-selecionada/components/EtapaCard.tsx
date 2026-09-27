@@ -32,7 +32,7 @@ const card = tv({
   base: "group relative rounded-2xl border bg-surface p-4 transition-colors hover:border-border-strong",
   variants: {
     late: {
-      true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger)]",
+      true: "border-danger/50 shadow-[inset_3px_0_0_var(--danger)]",
       false: "border-border",
     },
     dragging: {

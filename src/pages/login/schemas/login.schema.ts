@@ -1,14 +1,12 @@
-import { z } from "zod";
+import { z } from "zod"
 
+/** Mensagens são chaves i18n: a view traduz com `t(error.message)`. */
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .nonempty("O e-mail é obrigatório.")
-    .email("Informe um e-mail válido."),
-  password: z
-    .string()
-    .nonempty("A senha é obrigatória.")
-    .min(6, "A senha deve ter no mínimo 6 caracteres."),
-});
+  email: z.string().min(1, "validation.emailRequired").email("validation.emailInvalid"),
+  // O mínimo de 6 é a regra que o back-end também aplica.
+  password: z.string().min(1, "validation.passwordRequired").min(6, "validation.passwordMin"),
+})
 
-export type LoginFormSchema = z.infer<typeof loginSchema>;
+export type LoginFormSchema = z.infer<typeof loginSchema>
+
+export const LOGIN_DEFAULTS: LoginFormSchema = { email: "", password: "" }

@@ -114,48 +114,54 @@
     "groupAll": "Todas las obras"
   },
   "login": {
-    "title": "¡Bienvenido de nuevo!",
-    "subtitle": "Inicia sesión para acceder a tu cuenta y gestionar tus obras y proyectos.",
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Entra para ver el avance de tus obras.",
     "email": "Correo electrónico",
-    "emailPlaceholder": "tu@email.com",
+    "emailPlaceholder": "nombre@empresa.com",
     "password": "Contraseña",
     "passwordPlaceholder": "Escribe tu contraseña",
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
-    "forgotPassword": "Olvidé mi contraseña",
+    "forgotPassword": "Olvidé la contraseña",
     "submit": "Iniciar sesión",
     "submitting": "Iniciando sesión...",
-    "noAccount": "¿Aún no tienes una cuenta?",
-    "register": "Regístrate"
-  },
-  "brand": {
-    "name": "PRISSMA",
-    "headline": "Control total",
-    "headlineSuffix": "de tus obras.",
-    "tagline": "Del presupuesto inicial",
-    "taglineSuffix": "a la entrega de llaves."
+    "noAccount": "¿Aún no tienes cuenta?",
+    "register": "Crear cuenta",
+    "invalidCredentials": "Correo o contraseña incorrectos.",
+    "failed": "No fue posible entrar ahora. Inténtalo de nuevo en un momento."
   },
   "register": {
     "title": "Crea tu cuenta",
-    "subtitle": "Elige el tipo de cuenta que deseas crear",
-    "typeArchitect": "Crear cuenta de Arquitecto",
-    "typeEngineer": "Crear cuenta de Ingeniero",
-    "typeClient": "Crear cuenta de Cliente",
-    "hasAccount": "¿Ya tienes una cuenta?",
-    "login": "Inicia sesión",
-    "titleClient": "Crea tu cuenta como cliente",
-    "titleArchitect": "Crea tu cuenta como arquitecto",
-    "titleEngineer": "Crea tu cuenta como ingeniero",
-    "formSubtitle": "Ingresa tus credenciales para continuar",
-    "back": "Volver",
-    "fullName": "Nombre Completo",
-    "fullNamePlaceholder": "Tu nombre completo",
-    "email": "Email",
+    "subtitle": "¿Cómo participas en las obras?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "login": "Entrar",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
     "emailPlaceholder": "nombre@empresa.com",
     "password": "Contraseña",
-    "confirmPassword": "Confirma tu contraseña",
-    "submit": "Confirmar",
-    "submitting": "Registrando..."
+    "confirmPassword": "Confirma la contraseña",
+    "submit": "Crear cuenta",
+    "submitting": "Creando cuenta",
+    "changeKind": "Cambiar tipo de cuenta",
+    "emailTaken": "Este correo ya tiene cuenta. Entra o recupera la contraseña.",
+    "failed": "No fue posible crear la cuenta ahora. Inténtalo de nuevo en un momento.",
+    "kinds": {
+      "engineer": {
+        "label": "Ingeniero(a)",
+        "body": "Planifica etapas, equipos y presupuesto.",
+        "title": "Cuenta de ingeniero(a)"
+      },
+      "architect": {
+        "label": "Arquitecto(a)",
+        "body": "Acompaña la obra y envía proyectos.",
+        "title": "Cuenta de arquitecto(a)"
+      },
+      "client": {
+        "label": "Propietario(a)",
+        "body": "Acompaña tu obra de cerca.",
+        "title": "Cuenta de propietario(a)"
+      }
+    }
   },
   "registerWork": {
     "title": "Registro de Obra",
@@ -210,26 +216,27 @@
     "currentAddress": "Dirección actual"
   },
   "forgotPassword": {
-    "title": "¿Olvidaste la contraseña?",
-    "subtitle": "Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.",
-    "email": "Email *",
+    "title": "Recuperar contraseña",
+    "subtitle": "Te enviaremos un enlace seguro para crear una nueva contraseña.",
+    "email": "Correo electrónico",
     "emailPlaceholder": "nombre@empresa.com",
     "submit": "Enviar enlace",
-    "submitting": "Enviando...",
+    "submitting": "Enviando",
     "backToLogin": "Volver al inicio de sesión",
     "sentTitle": "Revisa tu correo",
-    "sentBefore": "Si el correo",
-    "sentAfter": "está registrado, recibirás un enlace para restablecer tu contraseña en breve."
+    "sentBefore": "Si",
+    "sentAfter": "está registrado, el enlace llega en unos minutos."
   },
   "resetPassword": {
     "title": "Restablecer contraseña",
     "subtitle": "Crea una nueva contraseña para tu cuenta.",
-    "newPassword": "Nueva contraseña *",
-    "confirmPassword": "Confirmar contraseña *",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirma la contraseña",
     "passwordPlaceholder": "••••••••",
     "submit": "Restablecer contraseña",
-    "submitting": "Guardando...",
-    "backToLogin": "Volver al inicio de sesión"
+    "submitting": "Guardando",
+    "backToLogin": "Volver al inicio de sesión",
+    "success": "Contraseña restablecida. Entra con la nueva contraseña."
   },
   "notFound": {
     "code": "ERROR 404",
@@ -1054,5 +1061,31 @@
       "stages": "Etapas",
       "tasks": "Tareas"
     }
+  },
+  "validation": {
+    "emailRequired": "Escribe el correo electrónico.",
+    "emailInvalid": "Escribe un correo válido, como nombre@empresa.com.",
+    "passwordRequired": "Escribe la contraseña.",
+    "passwordMin": "La contraseña tiene al menos 6 caracteres.",
+    "nameMin": "Escribe el nombre completo.",
+    "passwordRules": "La contraseña aún no cumple todas las reglas de abajo.",
+    "confirmRequired": "Repite la contraseña para confirmar.",
+    "passwordMismatch": "Las contraseñas no coinciden."
+  },
+  "auth": {
+    "passwordRules": {
+      "length": "6 caracteres o más",
+      "upper": "Una letra mayúscula",
+      "lower": "Una letra minúscula",
+      "number": "Un número",
+      "symbol": "Un símbolo, como ! o #"
+    }
+  },
+  "brand": {
+    "name": "PRISSMA",
+    "headline": "Control total",
+    "headlineSuffix": "de tus obras.",
+    "tagline": "Del presupuesto inicial",
+    "taglineSuffix": "a la entrega de llaves."
   }
 }
