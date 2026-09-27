@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { EtapaStatus } from "@/pages/projetos/types"
 
-import { ALL_STAGES, COLUMN_STATUSES } from "../kanban"
+import { COLUMN_STATUSES, TASK_STATUS } from "../kanban"
 import { STAGE_SECTIONS } from "../stageSections"
 
 /** Ordem dos status nos seletores de etapa e nas colunas do quadro de tarefas. */
@@ -23,12 +23,11 @@ describe("STAGE_SECTIONS", () => {
 })
 
 describe("colunas do kanban de tarefas", () => {
-  it("segue o fluxo, com bloqueada por último", () => {
-    expect(COLUMN_STATUSES).toEqual(["TODO", "IN_PROGRESS", "DONE", "BLOCKED"])
+  it("segue o fluxo, com bloqueada antes de concluída", () => {
+    expect(COLUMN_STATUSES).toEqual(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"])
   })
 
-  it("usa um valor de filtro que não colide com status nenhum", () => {
-    expect(COLUMN_STATUSES).not.toContain(ALL_STAGES)
-    expect(STAGE_SECTIONS).not.toContain(ALL_STAGES as EtapaStatus)
+  it("cobre todos os status de tarefa", () => {
+    expect([...COLUMN_STATUSES].sort()).toEqual(Object.values(TASK_STATUS).sort())
   })
 })

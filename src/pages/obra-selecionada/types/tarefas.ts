@@ -18,12 +18,13 @@ export interface Tarefa {
 
 export interface CreateTarefaRequest {
   title: string
-  description: string
+  description?: string
   priority: TarefaPriority
   status: TarefaStatus
   plannedStartDate: string
   plannedEndDate: string
-  assigneeUserId: number
+  /** Opcional: tarefa pode nascer sem responsável. */
+  assigneeUserId?: number | null
 }
 
 export interface UpdateTarefaRequest {

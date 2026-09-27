@@ -830,22 +830,24 @@
         "LOW": "Low"
       },
       "actions": {
-        "edit": "Edit task",
         "delete": "Delete task"
       },
       "toasts": {
         "deleted": "Task deleted.",
         "errorDeleting": "Could not delete the task.",
-        "errorMoving": "Could not move the task."
+        "errorMoving": "Could not move the task.",
+        "completed": "Task done",
+        "moved": "Moved to {{status}}",
+        "created": "Task created.",
+        "errorCreating": "Could not create the task.",
+        "errorUpdating": "Could not save the change."
       },
-      "emptyColumn": "No tasks here",
+      "emptyColumn": "Drag tasks here",
       "allStages": "All stages",
       "count_one": "{{count}} task",
       "count_other": "{{count}} tasks",
       "newTask": "New task",
       "unassigned": "Unassigned",
-      "lateBy_one": "⚠ {{count}} day past due",
-      "lateBy_other": "⚠ {{count}} days past due",
       "noStagesTitle": "No stages yet",
       "noStagesHint": "Tasks hang off the project stages. Create the first work front to start logging tasks.",
       "deleteTitle": "Delete task",
@@ -853,42 +855,55 @@
       "cancel": "Cancel",
       "confirmDelete": "Delete",
       "filters": {
-        "ALL": "All",
-        "IN_PROGRESS": "In progress",
-        "DONE": "Done",
-        "LATE": "Overdue"
+        "LATE": "Late",
+        "mine": "Assigned to me",
+        "clear": "Clear filters"
       },
       "form": {
         "createTitle": "New task",
-        "editTitle": "Edit task",
+        "editTitle": "Task details",
         "title": "Title",
         "description": "Description",
         "status": "Status",
         "priority": "Priority",
-        "startDate": "Planned start",
-        "endDate": "Planned end",
+        "startDate": "Start",
+        "endDate": "Due",
         "stage": "Stage",
-        "stagePlaceholder": "Select a stage",
         "assignee": "Assignee",
-        "assigneePlaceholder": "— Select —",
-        "save": "Save",
-        "saving": "Saving..."
+        "descriptionPlaceholder": "Details, measurements, materials…",
+        "create": "Create task"
       },
       "validation": {
-        "titleRequired": "Title is required",
-        "descriptionRequired": "Description is required",
-        "priorityRequired": "Priority is required",
-        "statusRequired": "Status is required",
-        "plannedStartDateRequired": "Planned start date is required",
-        "plannedStartDatePast": "Start date cannot be in the past",
-        "plannedEndDateRequired": "Planned end date is required",
-        "plannedEndDatePast": "End date cannot be in the past",
-        "plannedEndDateBeforeStart": "End date cannot be before the start date",
+        "titleRequired": "Give the task a title.",
+        "plannedStartDateRequired": "Enter when the task starts.",
+        "plannedEndDateRequired": "Enter the task deadline.",
+        "plannedEndDateBeforeStart": "The deadline must be on or after the start.",
         "stageStartDateRequired": "The linked stage must have a start date.",
         "plannedStartDateBeforeStage": "The task cannot start before its linked stage.",
-        "stageRequired": "Select a stage to link to the task.",
-        "assigneeRequired": "An assignee is required"
-      }
+        "stageRequired": "Select a stage to link to the task."
+      },
+      "priorityLabel": "{{priority}} priority",
+      "lateShort_one": "{{count}}d late",
+      "lateShort_other": "{{count}}d late",
+      "dueToday": "Due today",
+      "cardLabel": "{{title}}, {{status}}. Enter opens, space drags.",
+      "draggable": "draggable task",
+      "quickAdd": {
+        "open": "Add task",
+        "label": "New task title",
+        "placeholder": "What needs to be done?",
+        "hint": "In {{stage}} · Enter saves · Esc exits",
+        "submit": "Add"
+      },
+      "showRecent": "Show only recent",
+      "showMoreDone_one": "Show {{count}} more done",
+      "showMoreDone_other": "Show {{count}} more done",
+      "search": "Filter tasks",
+      "lateBanner_one": "The deadline passed {{count}} day ago. Reschedule it or log the blocker in the diary.",
+      "lateBanner_other": "The deadline passed {{count}} days ago. Reschedule it or log the blocker in the diary.",
+      "autosave": "Changes are saved automatically.",
+      "goToStages": "Go to Stages",
+      "count_zero": "No tasks"
     },
     "schedule": {
       "columns": {

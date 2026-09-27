@@ -830,22 +830,24 @@
         "LOW": "Baja"
       },
       "actions": {
-        "edit": "Editar tarea",
         "delete": "Eliminar tarea"
       },
       "toasts": {
         "deleted": "Tarea eliminada.",
         "errorDeleting": "No se pudo eliminar la tarea.",
-        "errorMoving": "No se pudo mover la tarea."
+        "errorMoving": "No se pudo mover la tarea.",
+        "completed": "Tarea concluida",
+        "moved": "Movida a {{status}}",
+        "created": "Tarea creada.",
+        "errorCreating": "No se pudo crear la tarea.",
+        "errorUpdating": "No se pudo guardar el cambio."
       },
-      "emptyColumn": "Sin tareas aquí",
+      "emptyColumn": "Arrastra tareas aquí",
       "allStages": "Todas las etapas",
       "count_one": "{{count}} tarea",
       "count_other": "{{count}} tareas",
       "newTask": "Nueva tarea",
       "unassigned": "Sin responsable",
-      "lateBy_one": "⚠ plazo vencido hace {{count}} día",
-      "lateBy_other": "⚠ plazo vencido hace {{count}} días",
       "noStagesTitle": "Ninguna etapa registrada",
       "noStagesHint": "Las tareas dependen de las etapas de la obra. Registra el primer frente de trabajo para empezar.",
       "deleteTitle": "Eliminar tarea",
@@ -853,42 +855,55 @@
       "cancel": "Cancelar",
       "confirmDelete": "Eliminar",
       "filters": {
-        "ALL": "Todas",
-        "IN_PROGRESS": "En curso",
-        "DONE": "Completadas",
-        "LATE": "Atrasadas"
+        "LATE": "Atrasadas",
+        "mine": "Asignadas a mí",
+        "clear": "Limpiar filtros"
       },
       "form": {
-        "createTitle": "Crear tarea",
-        "editTitle": "Editar tarea",
+        "createTitle": "Nueva tarea",
+        "editTitle": "Detalles de la tarea",
         "title": "Título",
         "description": "Descripción",
         "status": "Estado",
         "priority": "Prioridad",
-        "startDate": "Inicio planificado",
-        "endDate": "Término planificado",
+        "startDate": "Inicio",
+        "endDate": "Plazo",
         "stage": "Etapa",
-        "stagePlaceholder": "Selecciona una etapa",
         "assignee": "Responsable",
-        "assigneePlaceholder": "— Seleccionar —",
-        "save": "Guardar",
-        "saving": "Guardando..."
+        "descriptionPlaceholder": "Detalles, medidas, materiales…",
+        "create": "Crear tarea"
       },
       "validation": {
-        "titleRequired": "El título es obligatorio",
-        "descriptionRequired": "La descripción es obligatoria",
-        "priorityRequired": "Seleccionar la prioridad es obligatorio",
-        "statusRequired": "Seleccionar el estado es obligatorio",
-        "plannedStartDateRequired": "La fecha de inicio planificada es obligatoria",
-        "plannedStartDatePast": "La fecha de inicio no puede estar en el pasado",
-        "plannedEndDateRequired": "La fecha de término planificada es obligatoria",
-        "plannedEndDatePast": "La fecha de término no puede estar en el pasado",
-        "plannedEndDateBeforeStart": "La fecha de término no puede ser anterior a la de inicio",
+        "titleRequired": "Ponle un título a la tarea.",
+        "plannedStartDateRequired": "Indica cuándo empieza la tarea.",
+        "plannedEndDateRequired": "Indica el plazo de la tarea.",
+        "plannedEndDateBeforeStart": "El plazo debe ser el día del inicio o después.",
         "stageStartDateRequired": "La etapa vinculada debe tener una fecha de inicio.",
         "plannedStartDateBeforeStage": "La tarea no puede comenzar antes de su etapa vinculada.",
-        "stageRequired": "Selecciona una etapa para vincularla a la tarea.",
-        "assigneeRequired": "Seleccionar el responsable es obligatorio"
-      }
+        "stageRequired": "Selecciona una etapa para vincularla a la tarea."
+      },
+      "priorityLabel": "Prioridad {{priority}}",
+      "lateShort_one": "{{count}}d de retraso",
+      "lateShort_other": "{{count}}d de retraso",
+      "dueToday": "Vence hoy",
+      "cardLabel": "{{title}}, {{status}}. Enter abre, espacio arrastra.",
+      "draggable": "tarea arrastrable",
+      "quickAdd": {
+        "open": "Agregar tarea",
+        "label": "Título de la nueva tarea",
+        "placeholder": "¿Qué hay que hacer?",
+        "hint": "En {{stage}} · Enter guarda · Esc sale",
+        "submit": "Agregar"
+      },
+      "showRecent": "Mostrar solo las recientes",
+      "showMoreDone_one": "Ver {{count}} concluida más",
+      "showMoreDone_other": "Ver {{count}} concluidas más",
+      "search": "Filtrar tareas",
+      "lateBanner_one": "El plazo venció hace {{count}} día. Reprograma la fecha o registra el impedimento en el diario.",
+      "lateBanner_other": "El plazo venció hace {{count}} días. Reprograma la fecha o registra el impedimento en el diario.",
+      "autosave": "Los cambios se guardan automáticamente.",
+      "goToStages": "Ir a Etapas",
+      "count_zero": "Ninguna tarea"
     },
     "schedule": {
       "columns": {
