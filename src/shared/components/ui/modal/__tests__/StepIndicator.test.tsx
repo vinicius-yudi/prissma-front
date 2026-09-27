@@ -40,12 +40,12 @@ describe("<StepIndicator />", () => {
   it("desenha um conector a menos que a quantidade de passos", () => {
     const { container } = renderWithProviders(<StepIndicator steps={PASSOS} current={2} />)
 
-    expect(container.querySelectorAll(".flex-1.h-0\\.5")).toHaveLength(2)
+    expect(container.querySelectorAll("li[aria-hidden]")).toHaveLength(2)
   })
 
   it("não desenha conector com um passo só", () => {
     const { container } = renderWithProviders(<StepIndicator steps={["Único"]} current={1} />)
 
-    expect(container.querySelectorAll(".flex-1.h-0\\.5")).toHaveLength(0)
+    expect(container.querySelectorAll("li[aria-hidden]")).toHaveLength(0)
   })
 })

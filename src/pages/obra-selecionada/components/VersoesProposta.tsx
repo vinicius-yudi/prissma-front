@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
-import { Hatch } from "@/shared/components/ui/hatch/Hatch"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Num } from "@/shared/components/ui/num/Num"
 import { formatDate } from "@/shared/utils/formatters"
@@ -59,7 +58,7 @@ function VersaoRow({
             className="size-full object-cover"
           />
         ) : (
-          <Hatch className="size-full rounded-lg" />
+          <div className="blueprint size-full rounded-lg bg-raised" />
         )}
       </div>
 

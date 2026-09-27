@@ -1,8 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { MotionConfig } from "motion/react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ThemeProvider } from "@/contexts/ThemeContext"
@@ -30,6 +28,7 @@ import {
 } from "@/pages/obra-selecionada/modules"
 import { ProjetosPage } from "@/pages/projetos"
 import { ResetPasswordPage } from "@/pages/reset-password"
+import { Toaster } from "@/shared/components/ui/toast/Toaster"
 
 import { ModuleGuard } from "./ModuleGuard"
 import { ProtectedRoute } from "./ProtectedRoute"
@@ -196,7 +195,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
             </BrowserRouter>
-            <ToastContainer position="top-right" theme="dark" autoClose={3000} />
+            <Toaster />
           </AuthProvider>
         </ThemeProvider>
       </MotionConfig>

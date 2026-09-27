@@ -2,70 +2,36 @@ import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
 import { deriveStatus } from "@/shared/utils/status"
+import type { StatusKind } from "@/shared/utils/status"
 
 /**
- * Badge de status — componente único do sistema.
+ * Pill de status — componente único do sistema (DS v2, Status).
  *
- * Mapa fixo de cinco estados, usado por obra, etapa e tarefa. O ponto de 6px à
- * esquerda e o texto sempre presente garantem que status nunca dependa só de
- * cor (Style Guide v2 §6).
- *
- * `variant="light"` é obrigatório sobre o <ContrastCard>: as cores normais são
- * calibradas para a superfície escura e somem sobre o creme.
+ * Cor + ponto + palavra, nunca só cor. "Em andamento" é o único status em
+ * ouro e o ponto pulsa; "Bloqueada" leva listras de sinalização para não se
+ * confundir com "Em atraso", que é **derivado** do prazo e substitui o status
+ * real enquanto houver atraso.
  */
 
 const badge = tv({
-  base: "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-[11px] py-[3px] text-[11px] font-semibold",
+  base: "t-num inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-pill px-2.5 text-[12px] font-semibold",
   variants: {
     state: {
-      done: "",
-      progress: "",
-      late: "",
-      paused: "",
-      idle: "",
-    },
-    variant: {
-      default: "",
-      light: "",
+      done: "bg-success-soft text-success",
+      progress: "bg-gold-soft text-gold-hi",
+      late: "bg-danger-soft text-danger",
+      paused: "bg-warning-soft text-warning",
+      blocked: "hazard bg-danger-soft text-danger",
+      idle: "bg-raised text-ink-2",
     },
   },
-  compoundVariants: [
-    { state: "done", variant: "default", class: "bg-success-soft text-success" },
-    { state: "progress", variant: "default", class: "bg-raised text-gold-hi" },
-    { state: "late", variant: "default", class: "bg-danger-soft text-danger" },
-    { state: "paused", variant: "default", class: "bg-warning-soft text-warning" },
-    { state: "idle", variant: "default", class: "bg-raised text-ink-3" },
-    // Sobre a superfície invertida: fundo translúcido do tom, texto escuro.
-    { state: "done", variant: "light", class: "bg-success/15 text-success" },
-    { state: "progress", variant: "light", class: "bg-on-inverse/10 text-on-inverse" },
-    { state: "late", variant: "light", class: "bg-danger/15 text-danger" },
-    { state: "paused", variant: "light", class: "bg-warning/20 text-warning" },
-    { state: "idle", variant: "light", class: "bg-on-inverse/10 text-on-inverse/70" },
-  ],
-  defaultVariants: { variant: "default" },
 })
 
 const dot = tv({
-  base: "size-1.5 flex-none rounded-full",
+  base: "size-1.5 flex-none rounded-full bg-current",
   variants: {
-    state: {
-      done: "bg-success",
-      progress: "bg-gold-hi",
-      late: "bg-danger",
-      paused: "bg-warning",
-      idle: "bg-ink-3",
-    },
-    variant: {
-      default: "",
-      light: "",
-    },
+    pulse: { true: "live-dot" },
   },
-  compoundVariants: [
-    { state: "progress", variant: "light", class: "bg-on-inverse" },
-    { state: "late", variant: "light", class: "bg-danger" },
-    { state: "idle", variant: "light", class: "bg-on-inverse/50" },
-  ],
-  defaultVariants: { variant: "default" },
 })
 
 interface StatusBadgeProps {
@@ -73,23 +39,18 @@ interface StatusBadgeProps {
   status: string
   /** Data de término planejada — é o que faz o estado "Em atraso" existir. */
   plannedEndDate?: string | null
-  variant?: "default" | "light"
+  /** Tarefa passa `task`: é o único caso em que `BLOCKED` vira "Bloqueada". */
+  kind?: StatusKind
   className?: string
 }
 
-export function StatusBadge({
-  status,
-  plannedEndDate,
-  variant = "default",
-  className,
-}: StatusBadgeProps) {
+export function StatusBadge({ status, plannedEndDate, kind, className }: StatusBadgeProps) {
   const { t } = useTranslation()
-  const { state, labelKey } = deriveStatus({ status, plannedEndDate })
+  const { state, labelKey } = deriveStatus({ status, plannedEndDate, kind })
 
   return (
-    <span className={badge({ state, variant, className })}>
-      <span className={dot({ state, variant })} />
-      {state === "late" && <span aria-hidden="true">⚠</span>}
+    <span className={badge({ state, className })}>
+      <span className={dot({ pulse: state === "progress" })} />
       {t(labelKey)}
     </span>
   )

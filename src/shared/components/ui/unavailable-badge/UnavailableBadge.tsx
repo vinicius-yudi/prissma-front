@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next"
 export function UnavailableBadge() {
   const { t } = useTranslation()
   return (
-    <span className="rounded-full bg-warning-soft px-1.5 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.06em] text-warning">
+    <span className="rounded-pill bg-warning-soft px-2 py-0.5 text-[11px] font-semibold text-warning">
       {t("sidebar.unavailable")}
     </span>
   )

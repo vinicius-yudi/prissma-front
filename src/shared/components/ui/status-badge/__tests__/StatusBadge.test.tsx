@@ -17,7 +17,7 @@ describe("<StatusBadge />", () => {
     ["obra pausada", "PAUSED", "Pausada"],
     ["obra em planejamento", "PLANNING", "Não iniciada"],
     ["etapa concluída", "DONE", "Concluída"],
-    ["etapa impedida", "BLOCKED", "Impedida"],
+    ["etapa impedida", "BLOCKED", "Pausada"],
     ["obra cancelada", "CANCELLED", "Cancelada"],
   ])("traduz o status de %s", (_caso, status, rotulo) => {
     renderWithProviders(<StatusBadge status={status} />)
@@ -51,26 +51,29 @@ describe("<StatusBadge />", () => {
     expect(screen.getByText("Concluída")).toBeInTheDocument()
   })
 
-  // §13: status nunca depende só de cor — sempre texto, ponto e, no atraso,
-  // o símbolo de alerta.
+  // §13: status nunca depende só de cor — sempre texto e ponto.
   it("acompanha o ponto de estado além do texto", () => {
     const { container } = renderWithProviders(<StatusBadge status="DONE" />)
 
     expect(container.querySelector(".size-1\\.5")).toBeInTheDocument()
   })
 
-  it("acrescenta o símbolo de alerta no atraso", () => {
-    renderWithProviders(<StatusBadge status="IN_PROGRESS" plannedEndDate={VENCIDO} />)
+  // DS v2: só a tarefa fica "Bloqueada", com listras de sinalização que a
+  // separam de "Em atraso". Etapa com impedimento aparece como pausada.
+  it("marca tarefa bloqueada com listras e rótulo próprio", () => {
+    renderWithProviders(<StatusBadge status="BLOCKED" kind="task" />)
 
-    expect(screen.getByText("⚠")).toHaveAttribute("aria-hidden", "true")
+    expect(screen.getByText("Bloqueada")).toHaveClass("hazard")
   })
 
-  // Sobre o <ContrastCard> as cores normais somem: a variante clara existe
-  // para essa superfície.
-  it.each(["default", "light"] as const)("aceita a variante %s", (variant) => {
-    renderWithProviders(<StatusBadge status="DONE" variant={variant} />)
+  // "Em andamento" é o único status em ouro, e o ponto pulsa.
+  it("pulsa o ponto só em andamento", () => {
+    const { container, rerender } = renderWithProviders(<StatusBadge status="IN_PROGRESS" />)
+    expect(container.querySelector(".live-dot")).toBeInTheDocument()
 
-    expect(screen.getByText("Concluída")).toBeInTheDocument()
+    rerender(<StatusBadge status="DONE" />)
+
+    expect(container.querySelector(".live-dot")).not.toBeInTheDocument()
   })
 
   it("aceita classe extra de quem monta", () => {

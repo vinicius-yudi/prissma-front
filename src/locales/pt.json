@@ -938,7 +938,7 @@
     "TODO": "Não iniciada",
     "IN_PROGRESS": "Em andamento",
     "PAUSED": "Pausada",
-    "BLOCKED": "Impedida",
+    "BLOCKED": "Bloqueada",
     "DONE": "Concluída",
     "COMPLETED": "Concluída",
     "CANCELLED": "Cancelada",
@@ -1021,5 +1021,12 @@
     "goLogin": "Ir para o login",
     "error": "Convite inválido ou expirado.",
     "missingToken": "Link de convite inválido."
+  },
+  "common": {
+    "close": "Fechar",
+    "dismiss": "Dispensar",
+    "undo": "Desfazer",
+    "expectedToday": "Esperado para hoje: {{value}}%",
+    "facadeScale": "Fachada · esc. 1:100"
   }
 }

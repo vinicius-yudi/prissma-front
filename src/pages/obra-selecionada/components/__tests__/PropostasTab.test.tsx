@@ -429,7 +429,9 @@ describe("caminhos de desistência", () => {
     await user.click(screen.getByRole("button", { name: /Prévia visual IA/i }))
     await screen.findByText("Foto do ambiente")
 
-    await user.click(screen.getByRole("button", { name: "Fechar" }))
+    // O X do cabeçalho do modal.
+    const [fecharCabecalho] = screen.getAllByRole("button", { name: "Fechar" })
+    await user.click(fecharCabecalho)
 
     await waitFor(() => expect(screen.queryByText("Foto do ambiente")).not.toBeInTheDocument())
     expect(dispararPrevia).not.toHaveBeenCalled()
@@ -457,7 +459,9 @@ describe("caminhos de desistência", () => {
     await user.click(screen.getByRole("button", { name: /Ver versões/i }))
     await screen.findByText("Histórico de versões")
 
-    await user.click(screen.getByRole("button", { name: "Fechar" }))
+    // O primeiro "Fechar" é o X do cabeçalho; o do rodapé vem depois.
+    const [, fecharRodape] = screen.getAllByRole("button", { name: "Fechar" })
+    await user.click(fecharRodape)
 
     await waitFor(() =>
       expect(screen.queryByText("Histórico de versões")).not.toBeInTheDocument(),

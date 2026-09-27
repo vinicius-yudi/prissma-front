@@ -46,6 +46,9 @@
   --ink: #fbf4e6;
   --ink-2: #dccdb0;
   --ink-3: #8a7a5f;
+  /* Metadado pequeno (12–13px). No escuro `ink-3` passa de 4.5:1; no claro
+     não (3.4–3.8:1), então lá o metadado sobe para `ink-2` (pendência do DS). */
+  --meta: var(--ink-3);
 
   /* ouro */
   --gold-hi: #e2b457;
@@ -102,6 +105,7 @@
   --ink: #241b0c;
   --ink-2: #5a4c33;
   --ink-3: #8b7c60;
+  --meta: var(--ink-2);
 
   --gold-hi: #8c5f16;
   --gold: #a5761f;
@@ -149,6 +153,7 @@
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
+  --color-meta: var(--meta);
 
   --color-gold-hi: var(--gold-hi);
   --color-gold: var(--gold);
@@ -314,6 +319,14 @@
   @apply ring-2 ring-focus ring-offset-2 ring-offset-bg;
 }
 
+/* Avatar: tom pastel fixo por pessoa. O matiz vem de `--hue` (0–360, inline
+   no componente) e a claridade fica aqui — fundo 0.84 e texto 0.32 passam de
+   7:1 em qualquer matiz. */
+@utility avatar-hue {
+  background-color: oklch(0.84 0.06 var(--hue, 60));
+  color: oklch(0.32 0.08 var(--hue, 60));
+}
+
 @utility bg-gold-grad {
   background-image: var(--grad-action);
 }
@@ -353,16 +366,6 @@
     100% 100%,
     100% 45%;
   background-repeat: no-repeat;
-}
-
-/* Hachura: v1 para "previsto / indisponível". O DS v2 separa em tracejado
-   (previsto) e `hazard` (bloqueado); fica até o último uso sair. */
-@utility bg-hatch {
-  background-image: repeating-linear-gradient(
-    45deg,
-    color-mix(in srgb, var(--ink) 6%, transparent) 0 2px,
-    transparent 2px 7px
-  );
 }
 
 /* ---------------------------------------------------------------------------
@@ -620,6 +623,62 @@
   .enter-hero {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Toast (react-toastify) no DS v2.
+
+   Superfície `inverse`, raio 14px, `shadow-lift`, canto inferior direito
+   (largura total no mobile, que o próprio toastify já faz abaixo de 480px).
+   As variáveis são redefinidas no contêiner, e não em `:root`, para ganhar da
+   folha do toastify sem depender da ordem de import. Entram subindo e saem
+   para a direita.
+--------------------------------------------------------------------------- */
+
+.Toastify {
+  --toastify-z-index: var(--z-toast);
+  --toastify-font-family: var(--font-sans);
+  --toastify-toast-width: 380px;
+  --toastify-toast-min-height: 56px;
+  --toastify-toast-padding: 14px 8px 14px 14px;
+  --toastify-toast-bd-radius: 14px;
+  --toastify-toast-shadow: var(--elev-lift);
+  --toastify-color-light: var(--inverse);
+  --toastify-text-color-light: var(--on-inverse);
+  --toastify-toast-background: var(--inverse);
+}
+
+@keyframes pr-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pr-toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(40px) scale(0.96);
+  }
+}
+
+.pr-toast-in {
+  animation: pr-toast-in 0.36s var(--ease-out-expo) both;
+}
+
+.pr-toast-out {
+  animation: pr-toast-out 0.2s ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-toast-in,
+  .pr-toast-out {
+    animation-duration: 1ms;
   }
 }
 

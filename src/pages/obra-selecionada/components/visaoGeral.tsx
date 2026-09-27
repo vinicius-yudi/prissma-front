@@ -142,8 +142,9 @@ const node = tv({
     state: {
       done: "bg-success text-on-gold",
       progress: "bg-gold text-on-gold",
-      late: "bg-danger text-white",
+      late: "bg-danger text-on-inverse",
       paused: "bg-warning text-on-gold",
+      blocked: "bg-danger text-on-inverse",
       idle: "border border-dashed border-border-strong bg-surface text-ink-3",
     },
   },

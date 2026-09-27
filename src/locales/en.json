@@ -1021,5 +1021,12 @@
     "goLogin": "Go to login",
     "error": "Invalid or expired invite.",
     "missingToken": "Invalid invite link."
+  },
+  "common": {
+    "close": "Close",
+    "dismiss": "Dismiss",
+    "undo": "Undo",
+    "expectedToday": "Expected by today: {{value}}%",
+    "facadeScale": "Elevation · scale 1:100"
   }
 }

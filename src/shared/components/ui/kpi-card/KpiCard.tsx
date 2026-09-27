@@ -1,56 +1,80 @@
+import type { ReactNode } from "react"
 import { tv } from "tailwind-variants"
 
 import { Num } from "../num/Num"
 
 /**
- * KPI — label + valor em mono + pill de variação semântica.
+ * Célula de KPI (DS v2, Card → faixa de KPIs).
  *
- * O valor sempre passa pelo <Num>; a variação carrega o sinal (▲/▼) além da
- * cor, porque status nunca é comunicado só por cor (Style Guide v2 §6).
+ * Rótulo 13px, valor `t-kpi` e uma linha de contexto que diz o que o número
+ * significa ("precisam de decisão"). Só o indicador de problema fica
+ * `danger`. A variação carrega o sinal (▲/▼) além da cor — status nunca só
+ * por cor.
+ *
+ * Sozinha é um card; dentro de <KpiStrip> vira célula de uma faixa dividida
+ * por fios (`bare`).
  */
 
 export type DeltaTone = "ok" | "warn" | "danger" | "neutral"
 
 const deltaPill = tv({
-  base: "inline-flex items-center gap-1 rounded-full px-[9px] py-[3px] t-num text-[10.5px] font-semibold",
+  base: "t-num inline-flex h-6 items-center gap-1 rounded-pill px-2 text-[11.5px] font-semibold",
   variants: {
     tone: {
       ok: "bg-success-soft text-success",
       warn: "bg-warning-soft text-warning",
       danger: "bg-danger-soft text-danger",
-      neutral: "bg-raised text-gold-hi",
+      neutral: "bg-raised text-ink-2",
     },
   },
 })
 
 const card = tv({
-  base: "rounded-2xl border border-border bg-surface p-5",
+  base: "p-5",
+  variants: {
+    bare: {
+      true: "",
+      false: "rounded-lg bg-surface hairline",
+    },
+  },
+})
+
+const valueText = tv({
+  base: "t-kpi text-[30px] text-ink",
+  variants: {
+    danger: { true: "text-danger" },
+  },
 })
 
 interface KpiCardProps {
   label: string
-  value: string
+  /** Texto já formatado, ou um <Ticker> para contar ao entrar na tela. */
+  value: ReactNode
+  /** Só o indicador de problema (atrasos, estouro). */
+  danger?: boolean
   delta?: {
     /** Já formatado com o sinal, ex.: "▲ 18%". */
     text: string
     tone?: DeltaTone
   }
-  /** Nota de rodapé, sparkline ou qualquer conteúdo auxiliar. */
-  children?: React.ReactNode
+  /** Linha de contexto, trena ou qualquer conteúdo auxiliar. */
+  children?: ReactNode
+  /** Dentro de <KpiStrip>: sem superfície própria. */
+  bare?: boolean
   className?: string
 }
 
-export function KpiCard({ label, value, delta, children, className }: KpiCardProps) {
+export function KpiCard({ label, value, danger, delta, children, bare = false, className }: KpiCardProps) {
   return (
-    <div className={card({ className })}>
-      <div className="text-xs font-medium text-ink-2">{label}</div>
+    <div className={card({ bare, className })}>
+      <div className="text-[13px] text-meta">{label}</div>
 
-      <div className="mt-[7px] flex items-baseline gap-[9px]">
-        <Num className="text-2xl font-bold text-ink">{value}</Num>
+      <div className="mt-1.5 flex items-baseline gap-2">
+        <Num className={valueText({ danger })}>{value}</Num>
         {delta && <span className={deltaPill({ tone: delta.tone ?? "neutral" })}>{delta.text}</span>}
       </div>
 
-      {children && <div className="mt-2">{children}</div>}
+      {children && <div className="mt-2 text-[12.5px] text-ink-2">{children}</div>}
     </div>
   )
 }

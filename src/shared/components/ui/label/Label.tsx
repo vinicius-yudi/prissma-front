@@ -1,11 +1,10 @@
 import { tv } from "tailwind-variants"
 import type { InterfaceLabelProps } from "./LabelInterface"
 
-// Rótulo é texto de apoio (Style Guide v2 §3), não destaque. Estava em
-// `text-success`, que aponta para o verde semântico — o que deixava **todos**
-// os rótulos de formulário do sistema verdes.
+// Rótulo acima do campo, nunca placeholder como rótulo: `t-label` em `ink-2`
+// (DS v2, Field).
 const label = tv({
-  base: "block text-sm font-medium text-ink-2",
+  base: "t-label block text-ink-2",
 })
 
 export function Label({ className, children, ...props }: InterfaceLabelProps) {

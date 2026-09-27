@@ -79,8 +79,8 @@ describe("<EtapaCard />", () => {
     render(etapa({ plannedEndDate: VENCIDO }))
 
     expect(screen.getByText("Em atraso")).toBeInTheDocument()
-    // Dois avisos: o do badge e a linha com a contagem de dias sob ele.
-    expect(screen.getAllByText(/⚠/)).toHaveLength(2)
+    // O pill diz "Em atraso"; a linha sob ele quantifica os dias.
+    expect(screen.getAllByText(/⚠/)).toHaveLength(1)
     expect(screen.getByText(/dias?$/)).toBeInTheDocument()
   })
 

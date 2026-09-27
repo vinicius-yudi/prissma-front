@@ -1,15 +1,13 @@
 import { ChevronDown } from "lucide-react"
 import { tv } from "tailwind-variants"
 
+import { fieldBase } from "../input/fieldStyles"
 import type { InterfaceSelectProps } from "./SelectInterface"
 
 const select = tv({
   base: [
-    "w-full bg-surface text-ink text-sm",
-    "px-4 py-2.5 pr-10 rounded-lg outline-none",
-    "border border-border",
-    "focus:border-gold focus:ring-2 focus:ring-gold/30",
-    "transition-all appearance-none cursor-pointer",
+    ...fieldBase,
+    "h-11 cursor-pointer appearance-none px-3.5 pr-10",
     "[&_option]:bg-surface [&_option]:text-ink",
   ],
   variants: {
@@ -23,14 +21,14 @@ export function Select({ prefix, className, children, ...props }: InterfaceSelec
   return (
     <div className="relative w-full">
       {prefix && (
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none">
+        <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-2">
           {prefix}
         </span>
       )}
       <select className={select({ withPrefix: !!prefix, className })} {...props}>
         {children}
       </select>
-      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none">
+      <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-3">
         <ChevronDown size={16} />
       </span>
     </div>

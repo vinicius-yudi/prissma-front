@@ -938,7 +938,7 @@
     "TODO": "No iniciada",
     "IN_PROGRESS": "En curso",
     "PAUSED": "Pausada",
-    "BLOCKED": "Impedida",
+    "BLOCKED": "Bloqueada",
     "DONE": "Concluida",
     "COMPLETED": "Concluida",
     "CANCELLED": "Cancelada",
@@ -1021,5 +1021,12 @@
     "goLogin": "Ir al login",
     "error": "Invitación inválida o expirada.",
     "missingToken": "Enlace de invitación inválido."
+  },
+  "common": {
+    "close": "Cerrar",
+    "dismiss": "Descartar",
+    "undo": "Deshacer",
+    "expectedToday": "Esperado para hoy: {{value}}%",
+    "facadeScale": "Fachada · esc. 1:100"
   }
 }

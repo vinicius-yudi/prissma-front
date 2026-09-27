@@ -1,6 +1,8 @@
 import { forwardRef, type TextareaHTMLAttributes } from "react"
 import { tv } from "tailwind-variants"
 
+import { fieldBase } from "../input/fieldStyles"
+
 /**
  * Campo de texto longo.
  *
@@ -10,7 +12,7 @@ import { tv } from "tailwind-variants"
  * fundo.
  */
 const textarea = tv({
-  base: "w-full resize-y rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none transition-all placeholder:text-ink-2 focus:border-gold focus:ring-2 focus:ring-gold/30",
+  base: [...fieldBase, "min-h-24 resize-y px-3.5 py-3 leading-relaxed"],
 })
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(

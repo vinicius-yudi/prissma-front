@@ -2,7 +2,6 @@ import { History, Sparkles, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/shared/components/ui/button/Button"
-import { Hatch } from "@/shared/components/ui/hatch/Hatch"
 import { Num } from "@/shared/components/ui/num/Num"
 import { Progress } from "@/shared/components/ui/progress/Progress"
 
@@ -50,13 +49,13 @@ export function PropostaCard({
             className="size-full object-cover"
           />
         ) : (
-          // Hachura = previsto/indisponível. É o vocabulário do sistema para
-          // "ainda não existe", e evita um placeholder cinza genérico.
-          <Hatch className="flex size-full items-center justify-center rounded-xl">
+          // Papel quadriculado = o espaço que ainda não foi desenhado (DS v2),
+          // no lugar de um placeholder cinza genérico.
+          <div className="blueprint flex size-full items-center justify-center rounded-xl bg-raised">
             <span className="px-4 text-center text-xs text-ink-3">
               {isLoading ? t("obra.propostas.loadingImage") : t("obra.propostas.noImage")}
             </span>
-          </Hatch>
+          </div>
         )}
       </div>
 

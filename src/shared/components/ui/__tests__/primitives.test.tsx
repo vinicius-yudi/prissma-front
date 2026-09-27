@@ -6,9 +6,7 @@ import { describe, expect, it, vi } from "vitest"
 
 import { renderWithProviders } from "@/test/renderWithProviders"
 
-import { ContrastCard } from "../contrast-card/ContrastCard"
 import { DimensionLine } from "../dimension-line/DimensionLine"
-import { Hatch } from "../hatch/Hatch"
 import { Num } from "../num/Num"
 import { Select } from "../select/Select"
 import { Textarea } from "../textarea/Textarea"
@@ -21,9 +19,9 @@ import { UnavailableBadge } from "../unavailable-badge/UnavailableBadge"
  */
 
 describe("<Num />", () => {
-  // §3: valor de dado sempre em mono com alinhamento tabular, para a coluna não
-  // dançar quando o número muda.
-  it("desenha o valor em mono tabular", () => {
+  // Valor de dado sempre estreito e tabular, para a coluna não dançar quando
+  // o número muda.
+  it("desenha o valor em número tabular", () => {
     render(<Num>R$ 1.240,00</Num>)
 
     expect(screen.getByText("R$ 1.240,00")).toHaveClass("t-num")
@@ -40,55 +38,24 @@ describe("<Num />", () => {
   })
 })
 
-describe("<Hatch />", () => {
-  // §4: hachura significa "previsto ou indisponível" — não é textura
-  // decorativa.
-  it("aplica a hachura da marca", () => {
-    render(<Hatch data-testid="area" />)
-
-    expect(screen.getByTestId("area")).toHaveClass("bg-hatch")
-  })
-
-  it("envolve o conteúdo recebido", () => {
-    render(
-      <Hatch>
-        <span>Sem dados</span>
-      </Hatch>,
-    )
-
-    expect(screen.getByText("Sem dados")).toBeInTheDocument()
-  })
-})
-
 describe("<DimensionLine />", () => {
-  it("desenha a legenda técnica em mono", () => {
+  // Cota: valores em número tabular nas pontas do fio.
+  it("desenha a cota com os valores em t-data", () => {
     render(<DimensionLine>OBRA-042 · Rua das Palmeiras</DimensionLine>)
 
-    expect(screen.getByText("OBRA-042 · Rua das Palmeiras")).toHaveClass("t-num")
+    expect(screen.getByText("OBRA-042 · Rua das Palmeiras").closest("p")).toHaveClass("t-data")
+  })
+
+  it("mostra a medida na outra ponta quando vem", () => {
+    render(<DimensionLine measure="186 m²">OBRA-042</DimensionLine>)
+
+    expect(screen.getByText("186 m²")).toBeInTheDocument()
   })
 
   it("aceita classe extra", () => {
     render(<DimensionLine className="mt-1">OBRA-042</DimensionLine>)
 
-    expect(screen.getByText("OBRA-042")).toHaveClass("mt-1")
-  })
-})
-
-describe("<ContrastCard />", () => {
-  it("aplica a superfície invertida", () => {
-    render(<ContrastCard data-testid="card">Tarefas de hoje</ContrastCard>)
-
-    expect(screen.getByTestId("card")).toHaveClass("bg-inverse", "text-on-inverse")
-  })
-
-  it("repassa classe e atributos", () => {
-    render(
-      <ContrastCard className="mb-6" data-testid="card">
-        Conteúdo
-      </ContrastCard>,
-    )
-
-    expect(screen.getByTestId("card")).toHaveClass("mb-6")
+    expect(screen.getByText("OBRA-042").closest("p")).toHaveClass("mt-1")
   })
 })
 
