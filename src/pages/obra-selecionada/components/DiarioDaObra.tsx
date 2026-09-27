@@ -1,15 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { AlertTriangle, Download, FileText, HardHat, ImagePlus, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { Modal } from "@/shared/components/ui/modal/Modal";
 import { Button } from "@/shared/components/ui/button/Button";
 import { useAccess } from "@/shared/hooks/useAccess";
+import { useAttachmentPreview } from "../hooks/useAttachmentPreview";
 import { useAttachments } from "../hooks/useAttachments";
 import { downloadAttachment, triggerFileDownload } from "../services/attachments.service";
 import type { Attachment } from "@/shared/types/attachment";
 
 import { useDiario } from "../hooks/useDiario";
+import { AttachmentImage } from "./AttachmentImage";
 import type { DiarioEntry, DiarioEntryType } from "../types/diario";
 
 const TAG_STYLES: Record<DiarioEntryType, string> = {
@@ -54,45 +57,12 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{ id: number; description: string } | null>(null);
   const [selectedEntry, setSelectedEntry] = useState<DiarioEntry | null>(null);
-  const [attachmentPreviewUrl, setAttachmentPreviewUrl] = useState<string | null>(null);
-  const [isLoadingAttachment, setIsLoadingAttachment] = useState(false);
-  const [attachmentError, setAttachmentError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const selectedAttachment = selectedEntry?.attachmentId
     ? attachments.attachments.find((attachment) => attachment.id === selectedEntry.attachmentId) ?? null
     : null;
 
-  useEffect(() => {
-    if (!selectedEntry?.attachmentId || !selectedAttachment?.fileType.toLowerCase().startsWith("image/")) {
-      setAttachmentPreviewUrl(null);
-      setAttachmentError(false);
-      setIsLoadingAttachment(false);
-      return;
-    }
-
-    let objectUrl: string | null = null;
-    let cancelled = false;
-    setIsLoadingAttachment(true);
-    setAttachmentError(false);
-
-    downloadAttachment(projectId, selectedEntry.attachmentId)
-      .then((blob) => {
-        if (cancelled) return;
-        objectUrl = URL.createObjectURL(blob);
-        setAttachmentPreviewUrl(objectUrl);
-      })
-      .catch(() => {
-        if (!cancelled) setAttachmentError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoadingAttachment(false);
-      });
-
-    return () => {
-      cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [projectId, selectedEntry, selectedAttachment]);
+  const preview = useAttachmentPreview(projectId, selectedAttachment);
 
   const handleSave = () => {
     const description = draft.trim();
@@ -133,7 +103,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
       const blob = await downloadAttachment(projectId, attachment.id);
       triggerFileDownload(blob, attachment.fileName);
     } catch {
-      setAttachmentError(true);
+      toast.error(t("obra.diario.details.attachmentError"));
     }
   };
 
@@ -337,12 +307,12 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               ) : (
                 <div className="space-y-3 rounded-lg border border-outline-variant bg-surface-container-low p-3">
                   {selectedAttachment.fileType.toLowerCase().startsWith("image/") ? (
-                    isLoadingAttachment ? (
+                    preview.isLoading ? (
                       <div className="h-48 animate-pulse rounded bg-surface-container-high" />
-                    ) : attachmentPreviewUrl ? (
-                      <img src={attachmentPreviewUrl} alt={selectedAttachment.fileName} className="max-h-80 w-full rounded object-contain" />
+                    ) : preview.blob ? (
+                      <AttachmentImage blob={preview.blob} alt={selectedAttachment.fileName} className="max-h-80 w-full rounded object-contain" />
                     ) : (
-                      <p className="text-sm text-danger">{attachmentError ? t("obra.diario.details.attachmentError") : t("obra.diario.details.attachmentUnavailable")}</p>
+                      <p className="text-sm text-danger">{preview.isError ? t("obra.diario.details.attachmentError") : t("obra.diario.details.attachmentUnavailable")}</p>
                     )
                   ) : null}
                   <div className="flex items-center justify-between gap-3">

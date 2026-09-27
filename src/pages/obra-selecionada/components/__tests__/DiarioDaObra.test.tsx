@@ -259,6 +259,48 @@ describe("<DiarioDaObra /> — detalhes do registro", () => {
   })
 })
 
+describe("<DiarioDaObra /> — anexo com falha", () => {
+  it("avisa quando a prévia da imagem não carrega", async () => {
+    baixarAnexo.mockRejectedValue(new Error("Erro 500"))
+    listar.mockResolvedValue(pagina([registro({ attachmentId: ANEXO.id })]))
+    listarAnexos.mockResolvedValue([ANEXO])
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+
+    expect(await screen.findByText("Não foi possível carregar o anexo.")).toBeInTheDocument()
+    expect(screen.queryByRole("img", { name: "obra.png" })).not.toBeInTheDocument()
+  })
+
+  // Documento não tem prévia: nada é baixado até o usuário pedir.
+  it("não baixa nada para prévia quando o anexo não é imagem", async () => {
+    const documento = { ...ANEXO, fileName: "relatorio.pdf", fileType: "application/pdf" }
+    listar.mockResolvedValue(pagina([registro({ attachmentId: documento.id })]))
+    listarAnexos.mockResolvedValue([documento])
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+
+    expect(await screen.findByText("relatorio.pdf")).toBeInTheDocument()
+    expect(baixarAnexo).not.toHaveBeenCalled()
+  })
+
+  it("avisa por toast quando o download do arquivo falha", async () => {
+    const { toast } = await import("react-toastify")
+    const documento = { ...ANEXO, fileName: "relatorio.pdf", fileType: "application/pdf" }
+    baixarAnexo.mockRejectedValue(new Error("Erro 500"))
+    listar.mockResolvedValue(pagina([registro({ attachmentId: documento.id })]))
+    listarAnexos.mockResolvedValue([documento])
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+    await userEvent.click(await screen.findByRole("button", { name: "Baixar arquivo" }))
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível carregar o anexo."))
+    expect(dispararDownload).not.toHaveBeenCalled()
+  })
+})
+
 describe("<DiarioDaObra /> — exclusão", () => {
   it("pede confirmação antes de excluir o registro", async () => {
     listar.mockResolvedValue(pagina([registro()]))
