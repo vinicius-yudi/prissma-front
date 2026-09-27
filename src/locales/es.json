@@ -382,19 +382,46 @@
     },
     "documentos": {
       "title": "Documentos",
-      "add": "Agregar Documento",
-      "uploading": "Enviando...",
-      "empty": "No se han añadido documentos.",
-      "download": "Descargar",
-      "downloading": "Descargando...",
-      "downloadError": "Error al descargar documento",
-      "unsupportedType": "Tipo de archivo no admitido. Sube PDF o DOCX.",
+      "add": "Adjuntar archivos",
+      "uploading": "Subiendo archivos",
+      "downloadError": "No se pudo descargar el archivo.",
+      "unsupportedType": "\"{{name}}\" no se acepta. Sube una imagen, PDF o DOCX.",
       "dropzone": {
         "title": "Arrastra archivos o haz clic para subir",
-        "maxSize": "hasta {{max}} MB"
+        "maxSize": "hasta {{max}} MB",
+        "headline": "Arrastra planos, fotos y contratos",
+        "release": "Suelta para adjuntar",
+        "accepts": "Imágenes, PDF y DOCX · hasta {{max}} MB cada uno · {{batch}} archivos por vez",
+        "choose": "Elegir archivos",
+        "stage": "Vincular a la etapa",
+        "noStage": "Sin etapa vinculada"
       },
-      "count_one": "{{count}} archivo",
-      "count_other": "{{count}} archivos"
+      "sending": "Subiendo…",
+      "batchLimit": "Hasta {{max}} archivos por vez: el resto quedó fuera.",
+      "filterLabel": "Filtrar por tipo de archivo",
+      "kinds": {
+        "all": "Todos",
+        "pdf": "PDF",
+        "doc": "DOC",
+        "img": "Fotos"
+      },
+      "kindShort": {
+        "pdf": "PDF",
+        "doc": "DOC",
+        "img": "FOTO"
+      },
+      "emptyTitle": "Ningún documento",
+      "emptyBody": "Adjunta los permisos, los planos y las fotos de cada etapa.",
+      "emptyFiltered": "Ningún archivo de este tipo.",
+      "showAll": "Mostrar todos",
+      "downloadFile": "Descargar {{name}}",
+      "deleteFile": "Eliminar {{name}}",
+      "deleteModal": {
+        "title": "Eliminar archivo",
+        "message": "¿Eliminar \"{{name}}\"? El archivo sale de la obra y no se puede recuperar.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar"
+      }
     },
     "propostas": {
       "title": "Propuestas",
@@ -551,7 +578,17 @@
     },
     "attachments": {
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
-      "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada."
+      "mimeMismatch": "El contenido del archivo no coincide con la extensión declarada.",
+      "toasts": {
+        "photoUploaded": "Foto agregada.",
+        "photoUploadError": "No se pudo subir la foto.",
+        "photoDeleted": "Foto eliminada.",
+        "photoDeleteError": "No se pudo eliminar la foto.",
+        "documentUploaded": "Archivo adjuntado.",
+        "documentUploadError": "No se pudo subir el archivo.",
+        "documentDeleted": "Archivo eliminado.",
+        "documentDeleteError": "No se pudo eliminar el archivo."
+      }
     },
     "diario": {
       "title": "Diario de la obra",

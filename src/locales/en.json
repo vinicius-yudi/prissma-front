@@ -382,19 +382,46 @@
     },
     "documentos": {
       "title": "Documents",
-      "add": "Add Document",
-      "uploading": "Uploading...",
-      "empty": "No documents added yet.",
-      "download": "Download",
-      "downloading": "Downloading...",
-      "downloadError": "Failed to download document",
-      "unsupportedType": "Unsupported file type. Upload PDF or DOCX.",
+      "add": "Attach files",
+      "uploading": "Uploading files",
+      "downloadError": "Could not download the file.",
+      "unsupportedType": "\"{{name}}\" is not accepted. Upload an image, PDF or DOCX.",
       "dropzone": {
         "title": "Drag files here or click to upload",
-        "maxSize": "up to {{max}} MB"
+        "maxSize": "up to {{max}} MB",
+        "headline": "Drag in plans, photos and contracts",
+        "release": "Drop to attach",
+        "accepts": "Images, PDF and DOCX · up to {{max}} MB each · {{batch}} files at a time",
+        "choose": "Choose files",
+        "stage": "Link to stage",
+        "noStage": "No linked stage"
       },
-      "count_one": "{{count}} file",
-      "count_other": "{{count}} files"
+      "sending": "Uploading…",
+      "batchLimit": "Up to {{max}} files at a time — the rest were skipped.",
+      "filterLabel": "Filter by file type",
+      "kinds": {
+        "all": "All",
+        "pdf": "PDF",
+        "doc": "DOC",
+        "img": "Photos"
+      },
+      "kindShort": {
+        "pdf": "PDF",
+        "doc": "DOC",
+        "img": "IMG"
+      },
+      "emptyTitle": "No documents",
+      "emptyBody": "Attach the permits, plans and photos of each stage.",
+      "emptyFiltered": "No files of this type.",
+      "showAll": "Show all",
+      "downloadFile": "Download {{name}}",
+      "deleteFile": "Delete {{name}}",
+      "deleteModal": {
+        "title": "Delete file",
+        "message": "Delete \"{{name}}\"? The file leaves the project and cannot be recovered.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      }
     },
     "propostas": {
       "title": "Proposals",
@@ -551,7 +578,17 @@
     },
     "attachments": {
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
-      "mimeMismatch": "File contents do not match the declared extension."
+      "mimeMismatch": "File contents do not match the declared extension.",
+      "toasts": {
+        "photoUploaded": "Photo added.",
+        "photoUploadError": "Could not upload the photo.",
+        "photoDeleted": "Photo removed.",
+        "photoDeleteError": "Could not remove the photo.",
+        "documentUploaded": "File attached.",
+        "documentUploadError": "Could not upload the file.",
+        "documentDeleted": "File removed.",
+        "documentDeleteError": "Could not remove the file."
+      }
     },
     "diario": {
       "title": "Site diary",

@@ -1,96 +1,126 @@
-import { FileText, UploadCloud } from "lucide-react"
-import { useRef } from "react"
+import { UploadCloud } from "lucide-react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
 
-import {
-  DOCUMENT_ACCEPT_ATTRIBUTE,
-  MAX_ATTACHMENT_SIZE_MB,
-} from "@/shared/constants/attachments"
-import { Num } from "@/shared/components/ui/num/Num"
+import { ATTACHMENT_ACCEPT_ATTRIBUTE, MAX_ATTACHMENT_SIZE_MB } from "@/shared/constants/attachments"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+import { Segmented } from "@/shared/components/ui/segmented/Segmented"
 import { useAccess } from "@/shared/hooks/useAccess"
+import type { Attachment } from "@/shared/types/attachment"
 
-import { useDocumentos } from "../hooks/useDocumentos"
-import { AttachmentDropzone } from "./AttachmentDropzone"
-import { DocumentRow } from "./DocumentRow"
+import { MAX_BATCH, useDocumentos } from "../hooks/useDocumentos"
+import { useObraMembers } from "../hooks/useObraMembers"
+import { useStagesList } from "../hooks/useStages"
+import { DOC_KINDS, kindOf, type DocKind } from "../utils/documentKind"
+import { DeleteDocumentModal } from "./documentos/DeleteDocumentModal"
+import { DocumentList } from "./documentos/DocumentList"
+import { DocumentsDropzone } from "./documentos/DocumentsDropzone"
+import { UploadQueue } from "./documentos/UploadQueue"
+
+/** `?tipo=pdf` filtra a lista (CLAUDE.md §8). */
+const KIND_PARAM = "tipo"
+const ALL = "all"
+type KindFilter = typeof ALL | DocKind
 
 interface DocumentosTabProps {
   projectId: number
 }
 
 /**
- * Documentos & anexos (Telas §18).
- *
- * A dropzone é a ação principal e fica no topo — não um botão discreto no
- * canto. Validação, upload e download vivem em `useDocumentos`.
+ * Documentos (redesign): zona de envio sobre blueprint, fila de envio, filtro
+ * por tipo com contagem e a lista com ações no hover.
  */
 export function DocumentosTab({ projectId }: DocumentosTabProps) {
   const { t } = useTranslation()
   const { isReadOnly } = useAccess()
+  const canWrite = !isReadOnly("documentos")
   const docs = useDocumentos(projectId)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { stages } = useStagesList(projectId)
+  const { list: members } = useObraMembers(projectId)
+  const [stageId, setStageId] = useState<number | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<Attachment | null>(null)
+  const [params, setParams] = useSearchParams()
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  // O FAB do celular abre o mesmo seletor da dropzone. `.click()` a partir do
-  // toque conta como gesto do usuário, então o navegador permite.
-  usePrimaryAction(
-    isReadOnly("documentos")
-      ? null
-      : {
-          label: t("obra.documentos.add"),
-          icon: UploadCloud,
-          disabled: docs.isUploading,
-          onClick: () => fileInputRef.current?.click(),
-        },
-  )
+  // Antes dos early returns: o FAB do celular abre o mesmo seletor.
+  usePrimaryAction(canWrite ? { label: t("obra.documentos.add"), icon: UploadCloud, onClick: () => inputRef.current?.click() } : null)
+
+  const counts = new Map<DocKind, number>()
+  for (const doc of docs.documents) counts.set(kindOf(doc), (counts.get(kindOf(doc)) ?? 0) + 1)
+  const filter: KindFilter = DOC_KINDS.find((kind) => kind === params.get(KIND_PARAM)) ?? ALL
+  const shown = filter === ALL ? docs.documents : docs.documents.filter((doc) => kindOf(doc) === filter)
+
+  function setFilter(next: KindFilter) {
+    setParams(
+      (prev) => {
+        const nextParams = new URLSearchParams(prev)
+        if (next === ALL) nextParams.delete(KIND_PARAM)
+        else nextParams.set(KIND_PARAM, next)
+        return nextParams
+      },
+      { replace: true },
+    )
+  }
+
+  function confirmDelete() {
+    if (!pendingDelete) return
+    docs.remove(pendingDelete.id, () => setPendingDelete(null))
+  }
 
   if (docs.isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-32 animate-pulse rounded-2xl bg-surface" />
-        <div className="h-12 animate-pulse rounded-xl bg-surface" />
-        <div className="h-12 animate-pulse rounded-xl bg-surface" />
+      <div className="space-y-4" aria-busy="true">
+        <div className="h-48 animate-pulse rounded-[20px] bg-surface hairline" />
+        <div className="h-40 animate-pulse rounded-lg bg-surface hairline" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-5">
-      <AttachmentDropzone
-        accept={DOCUMENT_ACCEPT_ATTRIBUTE}
-        acceptLabel="PDF · DOCX"
-        maxSizeMb={MAX_ATTACHMENT_SIZE_MB}
-        isUploading={docs.isUploading}
-        onFile={docs.submitFile}
-        inputRef={fileInputRef}
+    <div className="flex flex-col gap-6">
+      {canWrite && (
+        <DocumentsDropzone
+          accept={ATTACHMENT_ACCEPT_ATTRIBUTE}
+          maxSizeMb={MAX_ATTACHMENT_SIZE_MB}
+          maxBatch={MAX_BATCH}
+          stages={stages}
+          stageId={stageId}
+          onStageChange={setStageId}
+          onFiles={(files) => void docs.submitFiles(files, stageId)}
+          inputRef={inputRef}
+        />
+      )}
+
+      <UploadQueue pending={docs.pending} />
+
+      <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+        <Segmented
+          id="document-kind"
+          size="sm"
+          label={t("obra.documentos.filterLabel")}
+          value={filter}
+          onChange={setFilter}
+          options={[
+            { value: ALL, label: t("obra.documentos.kinds.all"), count: docs.documents.length },
+            ...DOC_KINDS.filter((kind) => counts.get(kind)).map((kind) => ({ value: kind, label: t(`obra.documentos.kinds.${kind}`), count: counts.get(kind) })),
+          ]}
+        />
+      </div>
+
+      <DocumentList
+        documents={shown}
+        filtered={filter !== ALL}
+        stageById={new Map(stages.map((stage) => [stage.id, stage.name]))}
+        memberById={new Map(members.map((member) => [member.user.id, member.user.name]))}
+        downloadingId={docs.downloadingId}
+        canDelete={canWrite}
+        onClearFilter={() => setFilter(ALL)}
+        onDownload={(doc) => void docs.download(doc)}
+        onDelete={setPendingDelete}
       />
 
-      <section className="rounded-2xl border border-border bg-surface p-5">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-base font-semibold text-ink">{t("obra.documentos.title")}</h2>
-          <Num className="text-[11.5px] text-ink-3">
-            {t("obra.documentos.count", { count: docs.documents.length })}
-          </Num>
-        </div>
-
-        {docs.documents.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-            <FileText size={24} strokeWidth={1.6} className="text-ink-3" />
-            <p className="text-sm text-ink-2">{t("obra.documentos.empty")}</p>
-          </div>
-        ) : (
-          <div>
-            {docs.documents.map((doc) => (
-              <DocumentRow
-                key={doc.id}
-                attachment={doc}
-                isDownloading={docs.downloadingId === doc.id}
-                onDownload={docs.download}
-                onRemove={docs.remove}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      <DeleteDocumentModal attachment={pendingDelete} isDeleting={docs.isDeleting} onCancel={() => setPendingDelete(null)} onConfirm={confirmDelete} />
     </div>
   )
 }

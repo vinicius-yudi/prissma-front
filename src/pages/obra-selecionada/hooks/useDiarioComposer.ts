@@ -9,6 +9,7 @@ import { DIARY_TYPE } from "../constants/diario"
 import { diarioSchema, type DiarioFormData } from "../schemas/diario.schema"
 import type { CreateDiarioEntryRequest } from "../types/diario"
 import { nowForInput } from "../utils/diarioGroups"
+import type { UploadInput } from "./useAttachments"
 
 interface MutateOptions<T> {
   onSuccess?: (data: T) => void
@@ -16,7 +17,7 @@ interface MutateOptions<T> {
 
 interface UseDiarioComposerArgs {
   create: (payload: CreateDiarioEntryRequest, options?: MutateOptions<unknown>) => void
-  upload: (file: File, options?: MutateOptions<Attachment>) => void
+  upload: (input: UploadInput, options?: MutateOptions<Attachment>) => void
 }
 
 export interface UseDiarioComposerResult {
@@ -60,7 +61,7 @@ export function useDiarioComposer({ create, upload }: UseDiarioComposerArgs): Us
   return {
     form,
     attachment,
-    handleAttach: (file) => upload(file, { onSuccess: (uploaded) => setAttachment({ id: uploaded.id, fileName: uploaded.fileName }) }),
+    handleAttach: (file) => upload({ file }, { onSuccess: (uploaded) => setAttachment({ id: uploaded.id, fileName: uploaded.fileName }) }),
     clearAttachment: () => setAttachment(null),
     handleSave: () => void form.handleSubmit(save)(),
   }

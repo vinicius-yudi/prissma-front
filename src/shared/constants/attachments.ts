@@ -42,3 +42,6 @@ export function isDocumentMime(mime: string): mime is DocumentMimeType {
 export function isAllowedAttachmentMime(mime: string): mime is AttachmentMimeType {
   return (ALLOWED_ATTACHMENT_MIME_TYPES as readonly string[]).includes(mime)
 }
+
+/** Tudo o que Documentos aceita: imagens, PDF e DOCX. */
+export const ATTACHMENT_ACCEPT_ATTRIBUTE = [IMAGE_ACCEPT_ATTRIBUTE, DOCUMENT_ACCEPT_ATTRIBUTE].join(",")
