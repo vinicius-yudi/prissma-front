@@ -598,7 +598,6 @@
     },
     "orcamento": {
       "title": "Budget",
-      "subtitle": "Track planned, spent and remaining values for the project.",
       "empty": {
         "title": "No budget created yet",
         "description": "Define the planned total to start tracking expenses for this project.",
@@ -618,47 +617,40 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "deleting": "Deleting...",
-        "addCategoryShort": "Category"
+        "budgetMenu": "Budget actions"
       },
       "kpi": {
-        "planned": "Planned",
-        "spent": "Spent",
-        "remaining": "Remaining",
-        "exceeded": "Overruns",
-        "exceededOne": "{{count}} category",
-        "exceededOther": "{{count}} categories",
-        "used": "{{percent}}% of the budget used"
-      },
-      "charts": {
-        "donutTitle": "Spending by category",
-        "barTitle": "% spent vs planned",
-        "percentOfTotal": "{{percent}}% of total spent",
-        "limitLabel": "Limit",
-        "noData": "Add an expense to see the charts."
+        "planned": "Budgeted",
+        "spent": "Spent to date",
+        "remaining": "Balance",
+        "used": "{{percent}}% of the budget used",
+        "categories_one": "{{count}} category",
+        "categories_other": "{{count}} categories",
+        "available": "{{percent}}% still available",
+        "projection": "Projected at completion",
+        "projectionAbove": "{{percent}}% over budget · spent ÷ physical progress",
+        "projectionBelow": "{{percent}}% under budget · spent ÷ physical progress",
+        "projectionWithin": "Within budget · spent ÷ physical progress",
+        "projectionUnavailable": "Available once the project is in progress with 12% physical progress."
       },
       "category": {
-        "empty": "No expenses recorded for this category.",
-        "expensesCount_one": "{{count}} expense",
-        "expensesCount_other": "{{count}} expenses",
-        "expand": "Expand",
-        "collapse": "Collapse"
+        "title": "By category",
+        "exceededCount_one": "{{count}} over",
+        "exceededCount_other": "{{count}} over",
+        "noneTitle": "No categories yet",
+        "noneBody": "Split the budget into categories (foundation, structure, finishing) to log expenses.",
+        "over": "+{{value}} over plan",
+        "menu": "{{name}} actions"
       },
       "expense": {
-        "noStage": "No stage",
-        "noSupplier": "No supplier",
         "receipt": "Receipt"
-      },
-      "status": {
-        "ok": "On track",
-        "warning": "Near limit",
-        "exceeded": "Overrun"
       },
       "budgetForm": {
         "createTitle": "Create budget",
         "editTitle": "Edit budget",
         "description": "Description",
         "descriptionPlaceholder": "e.g. Downtown Project Budget",
-        "plannedTotal": "Planned total ($)"
+        "plannedTotal": "Total budget (BRL)"
       },
       "itemForm": {
         "createTitle": "New category",
@@ -673,16 +665,17 @@
         "createTitle": "Add expense",
         "editTitle": "Edit expense",
         "description": "Description",
-        "descriptionPlaceholder": "e.g. Purchase of 5m³ concrete",
-        "amount": "Amount ($)",
-        "spentAt": "Expense date",
-        "stage": "Stage",
-        "stagePlaceholder": "Select a stage",
-        "stageNone": "No stage linked",
-        "supplier": "Supplier (optional)",
-        "supplierPlaceholder": "e.g. XYZ Concrete Co.",
+        "descriptionPlaceholder": "E.g. 40 bags of mortar",
+        "amount": "Amount",
+        "spentAt": "Date",
+        "stage": "Stage (optional)",
+        "stageNone": "No stage",
+        "supplier": "Supplier",
+        "supplierPlaceholder": "Optional",
         "receiptUrl": "Receipt URL (optional)",
-        "receiptUrlPlaceholder": "https://..."
+        "receiptUrlPlaceholder": "https://...",
+        "submit": "Log expense",
+        "submitAnyway": "Log anyway"
       },
       "toasts": {
         "budgetCreated": "Budget created successfully!",
@@ -702,19 +695,52 @@
         "budgetTitle": "Delete budget",
         "budgetMessage": "Are you sure? All linked categories and expenses will be removed.",
         "itemTitle": "Delete category",
-        "itemMessage": "Are you sure? All expenses in this category will be removed.",
+        "itemMessage": "Deleting \"{{name}}\" also removes all its expenses.",
         "expenseTitle": "Delete expense",
-        "expenseMessage": "Are you sure? This action cannot be undone."
+        "expenseMessage": "Delete \"{{name}}\"? This cannot be undone."
       },
       "errors": {
-        "loadFailed": "Failed to load the budget."
+        "loadFailed": "Failed to load the budget.",
+        "saveFailed": "Could not save the budget."
       },
-      "exceededBanner": {
-        "title": "\"{{category}}\" exceeded the plan",
-        "deviation": "Deviation",
-        "action": "Review category",
-        "others_one": "and {{count}} more category over budget",
-        "others_other": "and {{count}} more categories over budget"
+      "intro": "Amounts in BRL. A category turns amber above 85% and red once it goes over plan.",
+      "curve": {
+        "title": "Spending curve",
+        "label": "Cumulative spending compared with the planned curve",
+        "budgetLine": "Budget {{value}}",
+        "plannedAt": "Planned {{value}}",
+        "spentAt": "Spent {{value}}",
+        "actualLegend": "Cumulative spending",
+        "plannedLegend": "Planned curve",
+        "noDates": "Set the project's planned start and end to see the curve."
+      },
+      "expenses": {
+        "title": "Entries",
+        "showAll": "Show all categories",
+        "emptyTitle": "No entries",
+        "emptyBody": "Log invoices and receipts to track actual spending.",
+        "date": "Date",
+        "supplier": "Supplier",
+        "amount": "Amount",
+        "actions": "Actions"
+      },
+      "impact": {
+        "title": "{{category}} after this entry",
+        "over": "Goes over plan by {{value}}.",
+        "remaining": "{{value}} of {{planned}} planned will remain."
+      },
+      "validation": {
+        "amountRequired": "Enter the amount.",
+        "amountPositive": "The amount cannot be negative.",
+        "amountAboveZero": "Enter an amount above zero.",
+        "amountTooHigh": "Amount above the limit.",
+        "tooLong": "Text is too long.",
+        "categoryRequired": "Pick or name a category.",
+        "descriptionRequired": "Describe what the category covers.",
+        "expenseDescriptionRequired": "Describe the expense.",
+        "dateRequired": "Enter the date.",
+        "dateInvalid": "Invalid date.",
+        "urlInvalid": "The link must start with http:// or https://."
       }
     },
     "etapas": {

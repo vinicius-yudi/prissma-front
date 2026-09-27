@@ -102,3 +102,8 @@ export async function updateExpense(
 export async function deleteExpense(expenseId: number): Promise<void> {
   return api.delete<void>(`/expenses/${expenseId}`)
 }
+
+/** Todas as despesas do orçamento, de todas as categorias. */
+export async function listBudgetExpenses(budgetId: number): Promise<Expense[]> {
+  return api.get<Expense[]>(`/budgets/${budgetId}/expenses`)
+}

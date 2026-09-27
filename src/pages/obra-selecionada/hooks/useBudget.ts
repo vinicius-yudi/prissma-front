@@ -66,7 +66,7 @@ export function useBudget(projectId: number) {
         invalidate()
         return
       }
-      toast.error(error.message || t("obra.orcamento.toasts.budgetCreated"))
+      toast.error(error.message || t("obra.orcamento.errors.saveFailed"))
     },
   })
 

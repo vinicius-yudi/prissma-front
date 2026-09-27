@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { calculatePercent, resolveBudgetTone } from "../budgetMath"
+import { calculatePercent, projectEnd, resolveBudgetTone } from "../budgetMath"
 
 /**
  * Estes dois decidem a cor da barra, do KPI e do banner de estouro. O tom é a
@@ -35,13 +35,13 @@ describe("calculatePercent", () => {
 })
 
 describe("resolveBudgetTone", () => {
-  it("é 'ok' abaixo de 80%", () => {
+  it("é 'ok' até 85% (DS v2)", () => {
     expect(resolveBudgetTone(0)).toBe("ok")
-    expect(resolveBudgetTone(79.9)).toBe("ok")
+    expect(resolveBudgetTone(85)).toBe("ok")
   })
 
-  it("vira 'warning' a partir de 80% inclusive", () => {
-    expect(resolveBudgetTone(80)).toBe("warning")
+  it("vira 'warning' acima de 85%", () => {
+    expect(resolveBudgetTone(85.1)).toBe("warning")
     expect(resolveBudgetTone(100)).toBe("warning")
   })
 
@@ -60,5 +60,19 @@ describe("resolveBudgetTone", () => {
 
   it("ignora a flag quando ela vem falsa", () => {
     expect(resolveBudgetTone(10, false)).toBe("ok")
+  })
+})
+
+describe("projectEnd", () => {
+  it("não projeta sem avanço, abaixo de 12% ou sem orçado", () => {
+    expect(projectEnd(100, 1000, null)).toBeNull()
+    expect(projectEnd(100, 1000, 11)).toBeNull()
+    expect(projectEnd(100, 0, 50)).toBeNull()
+  })
+
+  it("projeta gasto ÷ avanço e diz para que lado vai", () => {
+    expect(projectEnd(600, 1000, 50)).toMatchObject({ value: 1200, trend: "above" })
+    expect(projectEnd(400, 1000, 50)).toMatchObject({ value: 800, trend: "below" })
+    expect(projectEnd(510, 1000, 50)?.trend).toBe("within")
   })
 })

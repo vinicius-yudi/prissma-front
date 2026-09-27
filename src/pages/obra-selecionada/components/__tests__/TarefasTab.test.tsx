@@ -438,6 +438,21 @@ describe("<TarefasTab /> — bordas", () => {
   })
 })
 
+describe("<TarefasTab /> — criar sem responsável", () => {
+  // O <select> recebe o valor inicial `null`; virar 0 reprovaria o schema.
+  it("cria sem escolher responsável", async () => {
+    await renderCarregado()
+    await userEvent.click(screen.getByRole("button", { name: /Nova tarefa/ }))
+    const dialog = within(await screen.findByRole("dialog", { name: "Nova tarefa" }))
+
+    await userEvent.type(dialog.getByLabelText("Título"), "Sem dono")
+    await userEvent.click(dialog.getByRole("button", { name: "Criar tarefa" }))
+
+    await waitFor(() => expect(criar).toHaveBeenCalled())
+    expect(criar.mock.calls[0][1]).toMatchObject({ title: "Sem dono", assigneeUserId: null })
+  })
+})
+
 describe("<TarefasTab /> — permissões", () => {
   it("quem só vê não arrasta, não cria e abre o drawer em leitura", async () => {
     permissoes.mockResolvedValue({ role: ProjectRole.ENGINEER, permissions: [] })

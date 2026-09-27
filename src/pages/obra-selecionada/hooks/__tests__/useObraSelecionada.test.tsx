@@ -5,7 +5,6 @@ import { getProject } from "@/pages/projetos/services/projects.service"
 import { ProjectStatus } from "@/shared/types/project"
 import { createHookWrapper } from "@/test/renderWithProviders"
 
-import { useCategoryExpenses } from "../useCategoryExpenses"
 import { useObraSelecionada } from "../useObraSelecionada"
 import { listExpenses } from "../../services/budget.service"
 
@@ -75,25 +74,3 @@ describe("useObraSelecionada", () => {
  * N categorias na tela, e buscar todas de uma vez seria N requisições que
  * ninguém pediu.
  */
-describe("useCategoryExpenses", () => {
-  it("não busca com o acordeão fechado", () => {
-    renderHook(() => useCategoryExpenses(3, false), { wrapper: createHookWrapper() })
-
-    expect(listarDespesas).not.toHaveBeenCalled()
-  })
-
-  it("busca as despesas da categoria quando abre", async () => {
-    renderHook(() => useCategoryExpenses(3, true), { wrapper: createHookWrapper() })
-
-    await waitFor(() => expect(listarDespesas).toHaveBeenCalledWith(3))
-  })
-
-  it("devolve lista vazia enquanto carrega", () => {
-    const { result } = renderHook(() => useCategoryExpenses(3, true), {
-      wrapper: createHookWrapper(),
-    })
-
-    expect(result.current.expenses).toEqual([])
-    expect(result.current.isLoading).toBe(true)
-  })
-})

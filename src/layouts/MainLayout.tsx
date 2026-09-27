@@ -36,7 +36,11 @@ export function MainLayout() {
           <Sidebar />
 
           <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto" data-scroll-root>
+            {/* `relative` é o que prende aqui dentro os descendentes absolutos
+                sem ancestral posicionado (ex.: `sr-only`): sem ele, o bloco de
+                contenção é a página, e um deles abaixo da dobra estica o
+                `body` e cria uma segunda barra de rolagem. */}
+            <div className="relative flex-1 overflow-y-auto" data-scroll-root>
               <Topbar />
               {/* `pb-24` no celular: a ação flutuante não cobre a última linha. */}
               <main className="px-4 pt-6 pb-24 sm:px-6 lg:px-8 lg:pb-12">

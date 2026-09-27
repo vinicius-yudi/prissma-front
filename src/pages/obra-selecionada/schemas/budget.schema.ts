@@ -1,12 +1,15 @@
 import { z } from "zod"
 
+/** Mensagens são chaves de i18n: a view faz `t(message)`. */
+const E = "obra.orcamento.validation"
+
 const moneyAmount = z
-  .number({ message: "Valor obrigatório" })
-  .nonnegative("Valor deve ser positivo")
-  .max(999_999_999_999.99, "Valor acima do limite")
+  .number(`${E}.amountRequired`)
+  .nonnegative(`${E}.amountPositive`)
+  .max(999_999_999_999.99, `${E}.amountTooHigh`)
 
 export const budgetSchema = z.object({
-  description: z.string().max(255, "Máximo 255 caracteres").optional(),
+  description: z.string().max(255, `${E}.tooLong`).optional(),
   plannedTotal: moneyAmount,
 })
 
@@ -18,11 +21,8 @@ export const BUDGET_FORM_DEFAULTS: BudgetFormData = {
 }
 
 export const budgetItemSchema = z.object({
-  category: z
-    .string()
-    .min(1, "Categoria obrigatória")
-    .max(100, "Máximo 100 caracteres"),
-  description: z.string().min(1, "Descrição obrigatória"),
+  category: z.string().trim().min(1, `${E}.categoryRequired`).max(100, `${E}.tooLong`),
+  description: z.string().trim().min(1, `${E}.descriptionRequired`),
   plannedAmount: moneyAmount,
 })
 
@@ -35,29 +35,29 @@ export const BUDGET_ITEM_FORM_DEFAULTS: BudgetItemFormData = {
 }
 
 export const expenseSchema = z.object({
-  description: z.string().min(1, "Descrição obrigatória"),
+  /** Categoria (item do orçamento) que recebe o lançamento. */
+  itemId: z.number(`${E}.categoryRequired`).int().positive(`${E}.categoryRequired`),
+  description: z.string().trim().min(1, `${E}.expenseDescriptionRequired`),
   amount: z
-    .number({ message: "Valor obrigatório" })
-    .gt(0, "Valor deve ser maior que zero")
-    .max(999_999_999_999.99, "Valor acima do limite"),
+    .number(`${E}.amountRequired`)
+    .gt(0, `${E}.amountAboveZero`)
+    .max(999_999_999_999.99, `${E}.amountTooHigh`),
   spentAt: z
     .string()
-    .min(1, "Data obrigatória")
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida"),
+    .min(1, `${E}.dateRequired`)
+    .regex(/^\d{4}-\d{2}-\d{2}$/, `${E}.dateInvalid`),
   stageId: z.number().int().positive().nullable(),
-  supplier: z.string().max(255, "Máximo 255 caracteres").optional(),
+  supplier: z.string().max(255, `${E}.tooLong`).optional(),
   receiptUrl: z
     .string()
     .optional()
-    .refine(
-      (val) => !val || /^https?:\/\//i.test(val),
-      "URL deve começar com http:// ou https://",
-    ),
+    .refine((val) => !val || /^https?:\/\//i.test(val), `${E}.urlInvalid`),
 })
 
 export type ExpenseFormData = z.infer<typeof expenseSchema>
 
 export const EXPENSE_FORM_DEFAULTS: ExpenseFormData = {
+  itemId: 0,
   description: "",
   amount: 0,
   spentAt: "",

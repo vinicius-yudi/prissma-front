@@ -38,7 +38,7 @@ vi.mock("../components/EquipesTab", () => ({
   EquipesTab: ({ obraId }: { obraId: number }) => <span>equipes-{obraId}</span>,
 }))
 vi.mock("../components/OrcamentoTab", () => ({
-  OrcamentoTab: ({ projectId }: { projectId: number }) => <span>orcamento-{projectId}</span>,
+  OrcamentoTab: ({ project }: { project: { id: number } }) => <span>orcamento-{project.id}</span>,
 }))
 vi.mock("../components/DocumentosTab", () => ({
   DocumentosTab: ({ projectId }: { projectId: number }) => <span>documentos-{projectId}</span>,

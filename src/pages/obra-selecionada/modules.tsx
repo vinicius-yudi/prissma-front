@@ -62,7 +62,7 @@ export function ScheduleModule() {
 }
 
 export function OrcamentoModule() {
-  return <OrcamentoTab projectId={useObra().id} />
+  return <OrcamentoTab project={useObra()} />
 }
 
 export function DocumentosModule() {

@@ -25,8 +25,9 @@ interface TaskFormFieldsProps {
   readOnly: boolean
 }
 
-function toAssignee(value: string): number | null {
-  return value === "" ? null : Number(value)
+// Recebe também o valor inicial (`null`), não só o texto do <select>.
+function toAssignee(value: string | number | null): number | null {
+  return value === "" || value === null ? null : Number(value)
 }
 
 /** Campos do drawer. Em edição cada um grava ao sair; ao criar, só coleta. */
