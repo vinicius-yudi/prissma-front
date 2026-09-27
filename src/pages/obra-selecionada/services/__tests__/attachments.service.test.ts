@@ -25,8 +25,8 @@ vi.mock("@/lib/api", async () => {
   }
 })
 
-const get = vi.mocked(api.get)
-const del = vi.mocked(api.delete)
+const get = api.get as ReturnType<typeof vi.fn>
+const del = api.delete as ReturnType<typeof vi.fn>
 const fetchMock = vi.fn()
 
 const locationOriginal = window.location
@@ -56,6 +56,15 @@ function jsonResponse(body: unknown, status = 200): Response {
     status,
     headers: { "content-type": "application/json" },
   })
+}
+
+/**
+ * `blob.text()` e não `FileReader`: o `Response` do teste é o nativo do Node,
+ * que devolve um `Blob` do Node — e o `FileReader` do jsdom só aceita o
+ * `Blob` do próprio jsdom ("parameter 1 is not of type 'Blob'").
+ */
+function readBlob(blob: Blob): Promise<string> {
+  return blob.text()
 }
 
 describe("rotas que passam pelo cliente comum", () => {
@@ -150,7 +159,7 @@ describe("downloadAttachment", () => {
 
     const blob = await downloadAttachment(7, 4)
 
-    expect(await blob.text()).toBe("conteudo")
+    expect(await readBlob(blob)).toBe("conteudo")
     expect(fetchMock).toHaveBeenCalledWith("/api/projects/7/attachments/4/download", {
       headers: { Authorization: "Bearer jwt", "X-Workspace-Id": "3" },
     })

@@ -497,6 +497,17 @@
         "confirm": "Excluir",
         "deleting": "Excluindo..."
       },
+      "details": {
+        "open": "Ver detalhes do registro de {{type}}",
+        "title": "Detalhes do registro",
+        "responsible": "Responsável",
+        "description": "Descrição",
+        "attachment": "Anexo",
+        "noAttachment": "Nenhum anexo neste registro.",
+        "attachmentUnavailable": "Os dados do anexo não estão disponíveis.",
+        "attachmentError": "Não foi possível carregar o anexo.",
+        "download": "Baixar arquivo"
+      },
       "toasts": {
         "created": "Registro salvo com sucesso!",
         "errorCreating": "Erro ao salvar registro",
