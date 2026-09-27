@@ -557,27 +557,25 @@
       "title": "Diario de la obra",
       "count_one": "{{count}} registro",
       "count_other": "{{count}} registros",
-      "timeline": "Línea de tiempo",
-      "newEntry": "Nuevo registro",
-      "loading": "Cargando registros...",
       "loadingMore": "Cargando...",
       "loadMore": "Cargar más",
       "error": "No se pudo cargar el diario de la obra.",
-      "empty": "No se encontraron registros.",
       "types": {
         "OCCURRENCE": "Ocurrencia",
         "DELIVERY": "Entrega",
-        "WORKFORCE": "Personal",
+        "WORKFORCE": "Mano de obra",
         "IMPEDIMENT": "Impedimento"
       },
       "form": {
-        "title": "Agregar registro",
         "date": "Fecha y hora",
-        "descriptionPlaceholder": "Describe ocurrencias, entregas e impedimentos del día...",
-        "attach": "Adjuntar foto o archivo",
-        "uploading": "Enviando archivo...",
-        "saving": "Guardando...",
-        "save": "Guardar registro"
+        "attach": "Adjuntar foto",
+        "uploading": "Subiendo foto...",
+        "saving": "Registrando...",
+        "save": "Registrar en el diario",
+        "type": "Tipo de registro",
+        "text": "Qué pasó",
+        "removeAttachment": "Quitar foto",
+        "shortcut": "Ctrl + Enter también registra"
       },
       "actions": {
         "delete": "Eliminar registro",
@@ -585,7 +583,7 @@
       },
       "deleteModal": {
         "title": "Eliminar registro",
-        "message": "¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.",
+        "message": "¿Eliminar este registro del diario? Esta acción no se puede deshacer.",
         "confirm": "Eliminar",
         "deleting": "Eliminando..."
       },
@@ -594,6 +592,47 @@
         "errorCreating": "No se pudo guardar el registro",
         "deleted": "¡Registro eliminado correctamente!",
         "errorDeleting": "No se pudo eliminar el registro"
+      },
+      "details": {
+        "open": "Ver detalles del registro de {{type}}",
+        "title": "Detalles del registro",
+        "responsible": "Responsable",
+        "description": "Descripción",
+        "attachment": "Adjunto",
+        "noAttachment": "Este registro no tiene archivos adjuntos.",
+        "attachmentUnavailable": "Los datos del archivo adjunto no están disponibles.",
+        "attachmentError": "No se pudo cargar el archivo adjunto.",
+        "download": "Descargar archivo"
+      },
+      "composer": {
+        "title": "Registro de hoy"
+      },
+      "placeholder": {
+        "WORKFORCE": "Quién trabajó y en qué frente.",
+        "DELIVERY": "Qué llegó, cantidad y si coincide con la factura.",
+        "OCCURRENCE": "Qué pasó hoy en la obra.",
+        "IMPEDIMENT": "Qué detuvo la obra y qué se necesita para destrabarla."
+      },
+      "filterLabel": "Filtrar registros por tipo",
+      "filters": {
+        "all": "Todo",
+        "WORKFORCE": "Mano de obra",
+        "DELIVERY": "Entregas",
+        "OCCURRENCE": "Incidencias",
+        "IMPEDIMENT": "Impedimentos"
+      },
+      "days": {
+        "today": "Hoy",
+        "yesterday": "Ayer"
+      },
+      "hasAttachment": "Foto",
+      "emptyTitle": "Aún no hay registros",
+      "emptyBody": "Registra la mano de obra, las entregas y los impedimentos del día: es la memoria de la obra.",
+      "emptyFiltered": "Ningún registro con este filtro.",
+      "showAll": "Mostrar todo",
+      "validation": {
+        "descriptionRequired": "Escribe qué pasó.",
+        "dateRequired": "Indica fecha y hora."
       }
     },
     "orcamento": {

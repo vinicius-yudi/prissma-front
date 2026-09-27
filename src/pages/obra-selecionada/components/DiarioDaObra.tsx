@@ -1,270 +1,115 @@
-import { useRef, useState } from "react";
-import { AlertTriangle, HardHat, ImagePlus, Plus, Trash2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
+import { tv } from "tailwind-variants"
 
-import { Modal } from "@/shared/components/ui/modal/Modal";
-import { Button } from "@/shared/components/ui/button/Button";
-import { useAccess } from "@/shared/hooks/useAccess";
-import { useAttachments } from "../hooks/useAttachments";
+import { Button } from "@/shared/components/ui/button/Button"
+import { Segmented } from "@/shared/components/ui/segmented/Segmented"
+import { useAccess } from "@/shared/hooks/useAccess"
+import { getMyProfile } from "@/shared/services/user.service"
 
-import { useDiario } from "../hooks/useDiario";
-import type { DiarioEntryType } from "../types/diario";
+import { ALL_TYPES, DIARY_TYPES } from "../constants/diario"
+import { useAttachments } from "../hooks/useAttachments"
+import { useDiario } from "../hooks/useDiario"
+import { useDiarioComposer } from "../hooks/useDiarioComposer"
+import type { DiarioEntry, DiarioEntryType } from "../types/diario"
+import { DeleteDiaryModal } from "./diario/DeleteDiaryModal"
+import { DiaryComposer } from "./diario/DiaryComposer"
+import { DiaryEntryModal } from "./diario/DiaryEntryModal"
+import { DiaryTimeline } from "./diario/DiaryTimeline"
 
-const TAG_STYLES: Record<DiarioEntryType, string> = {
-  OCCURRENCE: "bg-warning-soft text-warning border-warning/20",
-  DELIVERY: "bg-success-soft text-success border-success/20",
-  WORKFORCE: "bg-gold/10 text-gold border-gold/20",
-  IMPEDIMENT: "bg-danger-soft text-danger border-danger/20",
-};
+/** `?tipo=DELIVERY` filtra a linha do tempo (CLAUDE.md §8). */
+const TYPE_PARAM = "tipo"
 
-const DOT_COLOR: Record<DiarioEntryType, string> = {
-  OCCURRENCE: "bg-warning",
-  DELIVERY: "bg-success",
-  WORKFORCE: "bg-gold",
-  IMPEDIMENT: "bg-danger",
-};
+/** Sem o compositor (só leitura), a linha do tempo ocupa a largura toda. */
+const timeline = tv({ variants: { full: { true: "xl:col-span-2" } } })
 
-function currentDateTime() {
-  const date = new Date();
-  const offset = date.getTimezoneOffset() * 60000;
-  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+type TypeFilter = typeof ALL_TYPES | DiarioEntryType
+
+function readFilter(value: string | null): TypeFilter {
+  return DIARY_TYPES.find((type) => type === value) ?? ALL_TYPES
 }
 
-function formatDate(value: string, language: string) {
-  const date = new Date(value);
-  return {
-    date: date.toLocaleDateString(language, { day: "numeric", month: "short" }).replace(".", ""),
-    time: date.toLocaleTimeString(language, { hour: "2-digit", minute: "2-digit" }),
-  };
-}
-
+/**
+ * Diário da obra (redesign): o compositor "Registro de hoje" à esquerda e a
+ * linha do tempo agrupada por dia à direita, com filtro por tipo na URL.
+ */
 export default function DiarioDaObra({ projectId }: { projectId: number }) {
-  const { t, i18n } = useTranslation();
-  const diario = useDiario(projectId);
-  const { entries, isLoading, error, create, isCreating, delete: deleteEntry, isDeleting } = diario;
-  const attachments = useAttachments(projectId);
-  const { isReadOnly } = useAccess();
-  const [draft, setDraft] = useState("");
-  const [entryType, setEntryType] = useState<DiarioEntryType>("OCCURRENCE");
-  const [entryDate, setEntryDate] = useState(currentDateTime);
-  const [attachmentId, setAttachmentId] = useState<number | null>(null);
-  const [attachmentName, setAttachmentName] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [pendingDelete, setPendingDelete] = useState<{ id: number; description: string } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation()
+  const diario = useDiario(projectId)
+  const attachments = useAttachments(projectId)
+  const { isReadOnly } = useAccess()
+  const canWrite = !isReadOnly("diario")
+  const me = useQuery({ queryKey: ["me"], queryFn: getMyProfile })
+  const composer = useDiarioComposer({ create: diario.create, upload: attachments.upload })
+  const [params, setParams] = useSearchParams()
+  const [opened, setOpened] = useState<DiarioEntry | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<DiarioEntry | null>(null)
 
-  const handleSave = () => {
-    const description = draft.trim();
-    if (!description || !entryDate || isReadOnly("diario") || isCreating) return;
+  const filter = readFilter(params.get(TYPE_PARAM))
+  const visible = filter === ALL_TYPES ? diario.entries : diario.entries.filter((entry) => entry.entryType === filter)
+  const openedAttachment = attachments.attachments.find((a) => a.id === opened?.attachmentId) ?? null
 
-    create({ entryDate: new Date(entryDate).toISOString(), entryType, description, attachmentId }, {
-      onSuccess: () => {
-        setDraft("");
-        setEntryDate(currentDateTime());
-        setAttachmentId(null);
-        setAttachmentName(null);
-        setIsFormOpen(false);
+  function setFilter(next: TypeFilter) {
+    setParams(
+      (prev) => {
+        const nextParams = new URLSearchParams(prev)
+        if (next === ALL_TYPES) nextParams.delete(TYPE_PARAM)
+        else nextParams.set(TYPE_PARAM, next)
+        return nextParams
       },
-    });
-  };
+      { replace: true },
+    )
+  }
 
-  const handleAttachmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    attachments.upload(file, {
-      onSuccess: (attachment) => {
-        setAttachmentId(attachment.id);
-        setAttachmentName(attachment.fileName);
-      },
-    });
-    event.target.value = "";
-  };
-
-  const confirmDelete = () => {
-    if (!pendingDelete) return;
-    deleteEntry(pendingDelete.id, {
-      onSuccess: () => setPendingDelete(null),
-    });
-  };
+  function confirmDelete() {
+    if (!pendingDelete) return
+    diario.delete(pendingDelete.id, { onSuccess: () => setPendingDelete(null) })
+  }
 
   return (
-    <div className="min-h-screen bg-bg p-6">
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <h1 className="mb-1 text-3xl font-semibold text-ink">{t("obra.diario.title")}</h1>
-          <div className="flex text-xs t-num uppercase tracking-widest text-ink-2">
-            <span className="mr-2 mt-1 h-1 w-1 rounded-full bg-border-strong" />
-            <span>{t("obra.diario.count", { count: entries.length })}</span>
-          </div>
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] xl:items-start">
+      {canWrite && (
+        <DiaryComposer composer={composer} authorName={me.data?.name ?? null} isSaving={diario.isCreating} isUploading={attachments.isUploading} />
+      )}
+
+      <div className={timeline({ full: !canWrite })}>
+        <div className="-mx-4 mb-5 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+          <Segmented
+            id="diary-filter"
+            size="sm"
+            label={t("obra.diario.filterLabel")}
+            value={filter}
+            onChange={setFilter}
+            options={[
+              { value: ALL_TYPES, label: t("obra.diario.filters.all") },
+              ...DIARY_TYPES.map((type) => ({ value: type, label: t(`obra.diario.filters.${type}`) })),
+            ]}
+          />
         </div>
+
+        <DiaryTimeline
+          entries={visible}
+          isLoading={diario.isLoading}
+          isError={!!diario.error}
+          filtered={filter !== ALL_TYPES}
+          canDelete={canWrite}
+          onRetry={() => diario.refetch()}
+          onClearFilter={() => setFilter(ALL_TYPES)}
+          onOpen={setOpened}
+          onDelete={setPendingDelete}
+        />
+
+        {diario.hasNextPage && (
+          <Button variant="outline" size="sm" fullWidth={false} onClick={() => diario.fetchNextPage()} disabled={diario.isFetchingNextPage} className="mt-6">
+            {diario.isFetchingNextPage ? t("obra.diario.loadingMore") : t("obra.diario.loadMore")}
+          </Button>
+        )}
       </div>
 
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-12 flex flex-col gap-4 lg:col-span-8">
-          <div className="flex h-full flex-col rounded-xl bg-surface p-6 shadow-lg">
-            <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
-              <h2 className="text-xl font-semibold text-ink">{t("obra.diario.timeline")}</h2>
-              <button
-                type="button"
-                onClick={() => setIsFormOpen(true)}
-                disabled={isReadOnly("diario")}
-                className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-sm font-medium text-on-gold shadow-md transition-colors hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Plus size={16} />
-                {t("obra.diario.newEntry")}
-              </button>
-            </div>
-
-            <div className="relative flex-1 space-y-8 overflow-y-auto pr-2" style={{ maxHeight: "60vh" }}>
-              <div className="absolute bottom-4 left-24.5 top-4 z-0 w-px bg-border" />
-
-              {isLoading ? <p className="text-sm text-ink-2">{t("obra.diario.loading")}</p> : null}
-              {error ? (
-                <p className="text-sm text-danger">
-                  {t("obra.diario.error")} {error instanceof Error ? `(${error.message})` : ""}
-                </p>
-              ) : null}
-              {!isLoading && !error && entries.length === 0 ? (
-                <p className="text-sm text-ink-2">{t("obra.diario.empty")}</p>
-              ) : null}
-
-              {entries.map((entry) => {
-                const { date, time } = formatDate(entry.entryDate, i18n.language);
-                return (
-                  <div key={entry.id} className="group relative z-10 flex gap-3">
-                    <div className="w-20 shrink-0 pt-1 text-right">
-                      <div className="text-sm font-semibold text-ink">{date}</div>
-                      <div className="text-xs t-num text-ink-2">{time}</div>
-                    </div>
-                    <div className="relative flex-1 pt-1">
-                      <div className="relative mb-2 flex items-center gap-3 pl-6">
-                        <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface transition-transform group-hover:scale-125`} />
-                        <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[entry.entryType]}`}>
-                          {t(`obra.diario.types.${entry.entryType}`)}
-                        </span>
-                        <span className="text-sm text-ink-2">{entry.responsibleName}</span>
-                        {!isReadOnly("diario") ? (
-                          <button
-                            type="button"
-                            onClick={() => setPendingDelete({ id: entry.id, description: entry.description })}
-                            aria-label={t("obra.diario.actions.delete")}
-                            className="ml-auto rounded-lg p-1.5 text-ink-3 transition-colors hover:bg-danger-soft hover:text-danger"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        ) : null}
-                      </div>
-                      <p className="pl-6 text-sm leading-relaxed text-ink">{entry.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-              {diario.hasNextPage ? (
-                <button
-                  type="button"
-                  onClick={() => diario.fetchNextPage()}
-                  disabled={diario.isFetchingNextPage}
-                  className="relative z-10 rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-ink-2 hover:bg-raised disabled:opacity-50"
-                >
-                  {diario.isFetchingNextPage ? t("obra.diario.loadingMore") : t("obra.diario.loadMore")}
-                </button>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Modal
-        open={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        title={t("obra.diario.form.title")}
-        icon={<HardHat size={18} />}
-        size="lg"
-      >
-        <form onSubmit={(event) => { event.preventDefault(); handleSave(); }}>
-          <div className="grid grid-cols-1 gap-4 px-6 pb-5 pt-1">
-            <select
-              value={entryType}
-              onChange={(event) => setEntryType(event.target.value as DiarioEntryType)}
-              disabled={isReadOnly("diario")}
-              className="w-full rounded-lg border border-border bg-raised p-3 text-sm text-ink focus:border-gold focus:ring-1 focus:ring-gold"
-            >
-              {(["OCCURRENCE", "DELIVERY", "WORKFORCE", "IMPEDIMENT"] as DiarioEntryType[]).map((value) => (
-                <option key={value} value={value}>{t(`obra.diario.types.${value}`)}</option>
-              ))}
-            </select>
-
-            <label className="grid gap-1 text-sm text-ink-2">
-              {t("obra.diario.form.date")}
-              <input
-                type="datetime-local"
-                value={entryDate}
-                onChange={(event) => setEntryDate(event.target.value)}
-                disabled={isReadOnly("diario")}
-                className="w-full rounded-lg border border-border bg-raised p-3 text-ink focus:border-gold focus:ring-1 focus:ring-gold"
-              />
-            </label>
-
-            <textarea
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              disabled={isReadOnly("diario")}
-              placeholder={t("obra.diario.form.descriptionPlaceholder")}
-              className="h-48 w-full resize-none rounded-lg border border-border bg-raised p-4 text-sm text-ink outline-none transition-all placeholder:text-ink-3 focus:border-gold focus:ring-1 focus:ring-gold"
-            />
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleAttachmentChange}
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isReadOnly("diario") || attachments.isUploading}
-              className="flex items-center gap-2 text-sm text-ink-2 hover:text-gold disabled:opacity-50"
-            >
-              <ImagePlus size={20} />
-              {attachments.isUploading ? t("obra.diario.form.uploading") : attachmentName ?? t("obra.diario.form.attach")}
-            </button>
-          </div>
-
-          <div className="mx-6 mb-6 mt-1 flex items-center justify-between gap-3 border-t border-border pt-5">
-            <button
-              type="submit"
-              disabled={isReadOnly("diario") || isCreating || !draft.trim()}
-              className="rounded-lg bg-gold px-6 py-2.5 text-sm font-semibold text-on-gold shadow-md transition-all hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isCreating ? t("obra.diario.form.saving") : t("obra.diario.form.save")}
-            </button>
-          </div>
-        </form>
-      </Modal>
-
-      <Modal
-        open={pendingDelete !== null}
-        onClose={() => setPendingDelete(null)}
-        title={t("obra.diario.deleteModal.title")}
-        icon={<AlertTriangle size={20} />}
-        variant="danger"
-        size="sm"
-      >
-        <div className="space-y-5 px-6 pb-6">
-          <p className="text-sm leading-relaxed text-ink-2">
-            {t("obra.diario.deleteModal.message", { description: pendingDelete?.description ?? "" })}
-          </p>
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={isDeleting}>
-              {t("obra.diario.actions.cancel")}
-            </Button>
-            <Button variant="destructive" onClick={confirmDelete} disabled={isDeleting}>
-              {isDeleting ? t("obra.diario.deleteModal.deleting") : t("obra.diario.deleteModal.confirm")}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <DiaryEntryModal projectId={projectId} entry={opened} attachment={openedAttachment} onClose={() => setOpened(null)} />
+      <DeleteDiaryModal entry={pendingDelete} isDeleting={diario.isDeleting} onCancel={() => setPendingDelete(null)} onConfirm={confirmDelete} />
     </div>
-  );
+  )
 }

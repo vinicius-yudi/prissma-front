@@ -61,6 +61,7 @@ export function useDiario(projectId: number) {
     entries: query.data?.pages.flatMap((page, index) => normalizePage(page, index).content) ?? [],
     isLoading: query.isLoading,
     error: query.error,
+    refetch: query.refetch,
     hasNextPage: query.hasNextPage,
     fetchNextPage: query.fetchNextPage,
     isFetchingNextPage: query.isFetchingNextPage,

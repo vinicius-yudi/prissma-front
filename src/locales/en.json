@@ -557,13 +557,9 @@
       "title": "Site diary",
       "count_one": "{{count}} entry",
       "count_other": "{{count}} entries",
-      "timeline": "Timeline",
-      "newEntry": "New entry",
-      "loading": "Loading entries...",
       "loadingMore": "Loading...",
       "loadMore": "Load more",
       "error": "Could not load the site diary.",
-      "empty": "No entries found.",
       "types": {
         "OCCURRENCE": "Occurrence",
         "DELIVERY": "Delivery",
@@ -571,13 +567,15 @@
         "IMPEDIMENT": "Impediment"
       },
       "form": {
-        "title": "Add register",
         "date": "Date and time",
-        "descriptionPlaceholder": "Describe occurrences, deliveries and impediments of the day...",
-        "attach": "Attach photo or file",
-        "uploading": "Uploading file...",
-        "saving": "Saving...",
-        "save": "Save entry"
+        "attach": "Attach photo",
+        "uploading": "Uploading photo...",
+        "saving": "Logging...",
+        "save": "Log in the diary",
+        "type": "Entry type",
+        "text": "What happened",
+        "removeAttachment": "Remove photo",
+        "shortcut": "Ctrl + Enter also logs it"
       },
       "actions": {
         "delete": "Delete entry",
@@ -585,7 +583,7 @@
       },
       "deleteModal": {
         "title": "Delete entry",
-        "message": "Are you sure you want to delete this entry? This action cannot be undone.",
+        "message": "Delete this diary entry? This cannot be undone.",
         "confirm": "Delete",
         "deleting": "Deleting..."
       },
@@ -594,6 +592,47 @@
         "errorCreating": "Could not save entry",
         "deleted": "Entry deleted successfully!",
         "errorDeleting": "Could not delete entry"
+      },
+      "details": {
+        "open": "View {{type}} entry details",
+        "title": "Entry details",
+        "responsible": "Responsible",
+        "description": "Description",
+        "attachment": "Attachment",
+        "noAttachment": "No attachment on this entry.",
+        "attachmentUnavailable": "Attachment details are unavailable.",
+        "attachmentError": "Could not load the attachment.",
+        "download": "Download file"
+      },
+      "composer": {
+        "title": "Today's entry"
+      },
+      "placeholder": {
+        "WORKFORCE": "Who worked and on which front.",
+        "DELIVERY": "What arrived, how much, and whether it matches the invoice.",
+        "OCCURRENCE": "What happened on site today.",
+        "IMPEDIMENT": "What stopped the work and what is needed to unblock it."
+      },
+      "filterLabel": "Filter entries by type",
+      "filters": {
+        "all": "All",
+        "WORKFORCE": "Workforce",
+        "DELIVERY": "Deliveries",
+        "OCCURRENCE": "Occurrences",
+        "IMPEDIMENT": "Blockers"
+      },
+      "days": {
+        "today": "Today",
+        "yesterday": "Yesterday"
+      },
+      "hasAttachment": "Photo",
+      "emptyTitle": "No entries yet",
+      "emptyBody": "Log the day's crew, deliveries and blockers — it's the project's memory.",
+      "emptyFiltered": "No entries with this filter.",
+      "showAll": "Show all",
+      "validation": {
+        "descriptionRequired": "Write what happened.",
+        "dateRequired": "Enter the date and time."
       }
     },
     "orcamento": {

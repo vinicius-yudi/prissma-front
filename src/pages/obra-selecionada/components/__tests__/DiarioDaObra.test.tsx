@@ -1,14 +1,17 @@
-import { screen, waitFor } from "@testing-library/react"
+import { screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { toast } from "react-toastify"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import type { AppModule } from "@/shared/constants/access"
+import { getMyProfile } from "@/shared/services/user.service"
 import type { Attachment } from "@/shared/types/attachment"
+import { GlobalRole } from "@/shared/types/user"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
-import { listAttachments, uploadAttachment } from "../../services/attachments.service"
-import { createDiarioEntry, getDiarioEntries } from "../../services/diario.service"
-import type { DiarioEntry, DiarioEntryType, DiarioPage } from "../../types/diario"
+import { downloadAttachment, listAttachments, uploadAttachment } from "../../services/attachments.service"
+import { createDiarioEntry, deleteDiarioEntry, getDiarioEntries } from "../../services/diario.service"
+import type { DiarioEntry, DiarioPage } from "../../types/diario"
 import DiarioDaObra from "../DiarioDaObra"
 
 vi.mock("../../services/diario.service", () => ({
@@ -22,7 +25,9 @@ vi.mock("../../services/attachments.service", async (importOriginal) => ({
   uploadAttachment: vi.fn(),
   deleteAttachment: vi.fn(),
   downloadAttachment: vi.fn(),
+  triggerFileDownload: vi.fn(),
 }))
+vi.mock("@/shared/services/user.service", () => ({ getMyProfile: vi.fn() }))
 vi.mock("@/shared/hooks/useAccess", () => ({
   useAccess: vi.fn(),
   useCurrentModule: vi.fn(() => null),
@@ -35,12 +40,13 @@ vi.mock("react-toastify", () => ({
 const { useAccess } = await import("@/shared/hooks/useAccess")
 const listar = vi.mocked(getDiarioEntries)
 const criar = vi.mocked(createDiarioEntry)
+const excluir = vi.mocked(deleteDiarioEntry)
 const listarAnexos = vi.mocked(listAttachments)
 const enviarAnexo = vi.mocked(uploadAttachment)
-const acesso = vi.mocked(useAccess)
+const baixarAnexo = vi.mocked(downloadAttachment)
 
 function mockAcesso(somenteLeitura = false) {
-  acesso.mockReturnValue({
+  vi.mocked(useAccess).mockReturnValue({
     profile: "engenheiro",
     obraId: 7,
     isLoading: false,
@@ -67,14 +73,7 @@ function registro(over: Partial<DiarioEntry> = {}): DiarioEntry {
 }
 
 function pagina(content: DiarioEntry[], last = true, page = 0): DiarioPage {
-  return {
-    content,
-    page,
-    size: content.length,
-    totalElements: content.length,
-    totalPages: last ? page + 1 : page + 2,
-    last,
-  }
+  return { content, page, size: content.length, totalElements: content.length, totalPages: last ? page + 1 : page + 2, last }
 }
 
 const ANEXO: Attachment = {
@@ -88,216 +87,232 @@ const ANEXO: Attachment = {
   uploadedAt: "2026-02-10T00:00:00Z",
 }
 
-function render() {
-  return renderWithProviders(<DiarioDaObra projectId={7} />)
+function render(route = "/") {
+  return renderWithProviders(<DiarioDaObra projectId={7} />, { route })
 }
 
-/** Abre a folha do formulário e espera o campo de descrição. */
-async function abrirFormulario() {
-  await userEvent.click(screen.getByRole("button", { name: /Novo registro/ }))
-  return screen.getByPlaceholderText(/Descreva ocorrências/)
+function texto() {
+  return screen.getByLabelText("O que aconteceu")
+}
+
+async function abrirDetalhes(tipo = "Ocorrência") {
+  await userEvent.click(await screen.findByRole("button", { name: `Ver detalhes do registro de ${tipo}` }))
+  return within(await screen.findByRole("dialog", { name: "Detalhes do registro" }))
 }
 
 beforeEach(() => {
   vi.resetAllMocks()
   mockAcesso()
+  vi.mocked(getMyProfile).mockResolvedValue({ id: 1, name: "Ana Souza", email: "ana@alfa.com", role: GlobalRole.ENG })
   listar.mockResolvedValue(pagina([]))
   listarAnexos.mockResolvedValue([])
   criar.mockResolvedValue(registro())
+  excluir.mockResolvedValue(undefined)
   enviarAnexo.mockResolvedValue(ANEXO)
+  baixarAnexo.mockResolvedValue(new Blob(["image-data"], { type: "image/png" }))
+  vi.stubGlobal("URL", Object.assign(URL, { createObjectURL: vi.fn(() => "blob:x"), revokeObjectURL: vi.fn() }))
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
 })
 
 describe("<DiarioDaObra /> — linha do tempo", () => {
-  it("avisa enquanto carrega", () => {
+  it("mostra o esqueleto enquanto carrega", () => {
     listar.mockImplementation(() => new Promise(() => {}))
-
-    render()
-
-    expect(screen.getByText("Carregando registros...")).toBeInTheDocument()
+    const { container } = render()
+    expect(container.querySelector(".animate-pulse")).toBeInTheDocument()
   })
 
-  it("avisa quando o diário está vazio", async () => {
+  it("convida a registrar quando o diário está vazio", async () => {
     render()
-
-    expect(await screen.findByText("Nenhum registro encontrado.")).toBeInTheDocument()
+    expect(await screen.findByText("Nenhum registro ainda")).toBeInTheDocument()
   })
 
-  it("mostra o erro da consulta com a mensagem do servidor", async () => {
+  it("oferece recarregar quando a consulta falha", async () => {
     listar.mockRejectedValue(new Error("Erro 500"))
-
     render()
-
-    expect(await screen.findByText(/Não foi possível carregar o diário/)).toBeInTheDocument()
-    expect(screen.getByText(/Erro 500/)).toBeInTheDocument()
+    await screen.findByText("Não foi possível carregar o diário.")
+    listar.mockClear()
+    await userEvent.click(screen.getByRole("button", { name: "Tentar novamente" }))
+    await waitFor(() => expect(listar).toHaveBeenCalled())
   })
 
-  it("lista os registros com tipo, responsável e descrição", async () => {
-    listar.mockResolvedValue(pagina([registro()]))
-
+  it("agrupa por dia, do mais recente ao mais antigo, com Hoje e Ontem", async () => {
+    const agora = new Date()
+    const ontem = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() - 1, 9)
+    listar.mockResolvedValue(
+      pagina([
+        registro({ id: 1, entryDate: "2026-02-10T14:30:00Z", description: "Antigo" }),
+        registro({ id: 2, entryDate: agora.toISOString(), entryType: "DELIVERY", description: "Chegou areia" }),
+        registro({ id: 3, entryDate: ontem.toISOString(), entryType: "IMPEDIMENT", description: "Falta de cimento" }),
+      ]),
+    )
     render()
 
-    expect(await screen.findByText("Chuva forte pela manhã")).toBeInTheDocument()
-    expect(screen.getAllByText("Ocorrência").length).toBeGreaterThan(0)
-    expect(screen.getByText("Ana Souza")).toBeInTheDocument()
+    await screen.findByText("Chegou areia")
+    // A primeira região é o compositor ("Registro de hoje"); os dias vêm depois.
+    const dias = screen.getAllByRole("region").slice(1)
+    const nomes = dias.map((d) => d.getAttribute("aria-label"))
+    expect(nomes.slice(0, 2)).toEqual(["Hoje", "Ontem"])
+    expect(within(dias[0]).getByText("Chegou areia")).toBeInTheDocument()
+    expect(within(dias[1]).getByText("Falta de cimento")).toBeInTheDocument()
+    expect(within(dias[2]).getByText("Antigo")).toBeInTheDocument()
   })
 
-  it("conta os registros carregados", async () => {
-    listar.mockResolvedValue(pagina([registro(), registro({ id: 2 })]))
+  it("filtra por tipo pela URL e oferece mostrar tudo", async () => {
+    listar.mockResolvedValue(pagina([registro({ id: 1 }), registro({ id: 2, entryType: "DELIVERY", description: "Blocos" })]))
+    render("/?tipo=DELIVERY")
 
-    render()
+    expect(await screen.findByText("Blocos")).toBeInTheDocument()
+    expect(screen.queryByText("Chuva forte pela manhã")).not.toBeInTheDocument()
 
-    expect(await screen.findByText("2 registros")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("tab", { name: "Impedimentos" }))
+    expect(screen.getByText("Nenhum registro com esse filtro.")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Mostrar tudo" }))
+    expect(screen.getByText("Chuva forte pela manhã")).toBeInTheDocument()
   })
 
-  it.each([
-    ["OCCURRENCE", "Ocorrência"],
-    ["DELIVERY", "Entrega"],
-    ["WORKFORCE", "Efetivo"],
-    ["IMPEDIMENT", "Impedimento"],
-  ] as [DiarioEntryType, string][])("traduz o tipo %s", async (entryType, rotulo) => {
-    listar.mockResolvedValue(pagina([registro({ entryType })]))
-
+  it("emenda a próxima página", async () => {
+    listar.mockResolvedValueOnce(pagina([registro({ id: 1 })], false)).mockResolvedValueOnce(pagina([registro({ id: 2, description: "Segunda página" })], true, 1))
     render()
 
-    await screen.findByText("Chuva forte pela manhã")
-    expect(screen.getAllByText(rotulo).length).toBeGreaterThan(0)
-  })
-})
-
-describe("<DiarioDaObra /> — paginação", () => {
-  it("não oferece carregar mais na última página", async () => {
-    listar.mockResolvedValue(pagina([registro()]))
-
-    render()
-
-    await screen.findByText("Chuva forte pela manhã")
+    await userEvent.click(await screen.findByRole("button", { name: "Carregar mais" }))
+    expect(await screen.findByText("Segunda página")).toBeInTheDocument()
+    expect(listar).toHaveBeenLastCalledWith(7, 1)
     expect(screen.queryByRole("button", { name: "Carregar mais" })).not.toBeInTheDocument()
   })
 
-  it("emenda a próxima página na linha do tempo", async () => {
-    listar.mockImplementation((_id, page) =>
-      Promise.resolve(
-        pagina(
-          [registro({ id: (page ?? 0) + 1, description: `Registro ${(page ?? 0) + 1}` })],
-          (page ?? 0) === 1,
-          page,
-        ),
-      ),
-    )
+  it("aceita a resposta em lista simples, sem paginação", async () => {
+    listar.mockResolvedValue([registro()])
     render()
-    await screen.findByText("Registro 1")
+    expect(await screen.findByText("Chuva forte pela manhã")).toBeInTheDocument()
+  })
+})
 
-    await userEvent.click(screen.getByRole("button", { name: "Carregar mais" }))
+describe("<DiarioDaObra /> — detalhes do registro", () => {
+  it("mostra responsável, texto e a falta de anexo", async () => {
+    listar.mockResolvedValue(pagina([registro()]))
+    render()
+    const dialog = await abrirDetalhes()
+    expect(dialog.getByText("Ana Souza")).toBeInTheDocument()
+    expect(dialog.getByText("Chuva forte pela manhã")).toBeInTheDocument()
+    expect(dialog.getByText("Nenhum anexo neste registro.")).toBeInTheDocument()
+  })
 
-    expect(await screen.findByText("Registro 2")).toBeInTheDocument()
-    expect(screen.getByText("Registro 1")).toBeInTheDocument()
+  it("mostra a prévia da imagem e baixa o arquivo", async () => {
+    listar.mockResolvedValue(pagina([registro({ attachmentId: 55 })]))
+    listarAnexos.mockResolvedValue([ANEXO])
+    render()
+    expect(await screen.findByText("Foto")).toBeInTheDocument()
+    const dialog = await abrirDetalhes()
+
+    expect(await dialog.findByRole("img", { name: "obra.png" })).toBeInTheDocument()
+    await userEvent.click(dialog.getByRole("button", { name: /Baixar arquivo/ }))
+    await waitFor(() => expect(baixarAnexo).toHaveBeenCalledTimes(2))
+  })
+
+  it("não baixa prévia de documento e avisa quando o download falha", async () => {
+    listar.mockResolvedValue(pagina([registro({ attachmentId: 56 })]))
+    listarAnexos.mockResolvedValue([{ ...ANEXO, id: 56, fileName: "laudo.pdf", fileType: "application/pdf" }])
+    baixarAnexo.mockRejectedValue(new Error("falhou"))
+    render()
+    const dialog = await abrirDetalhes()
+
+    expect(dialog.getByText("laudo.pdf")).toBeInTheDocument()
+    expect(baixarAnexo).not.toHaveBeenCalled()
+    await userEvent.click(dialog.getByRole("button", { name: /Baixar arquivo/ }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível carregar o anexo."))
+  })
+
+  it("avisa quando a prévia não carrega ou o anexo sumiu", async () => {
+    listar.mockResolvedValue(pagina([registro({ attachmentId: 55 }), registro({ id: 2, entryType: "DELIVERY", attachmentId: 99 })]))
+    listarAnexos.mockResolvedValue([ANEXO])
+    baixarAnexo.mockRejectedValue(new Error("falhou"))
+    render()
+
+    let dialog = await abrirDetalhes()
+    expect(await dialog.findByText("Não foi possível carregar o anexo.")).toBeInTheDocument()
+    await userEvent.keyboard("{Escape}")
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument())
+
+    dialog = await abrirDetalhes("Entrega")
+    expect(dialog.getByText("Os dados do anexo não estão disponíveis.")).toBeInTheDocument()
   })
 })
 
 describe("<DiarioDaObra /> — novo registro", () => {
-  it("abre a folha do formulário", async () => {
+  it("cria com o tipo escolhido e a data em ISO, e limpa o texto", async () => {
     render()
-    await screen.findByText("Nenhum registro encontrado.")
+    await screen.findByText("Nenhum registro ainda")
 
-    await abrirFormulario()
-
-    expect(screen.getByRole("heading", { name: "Adicionar registro" })).toBeInTheDocument()
-  })
-
-  // A data vai em ISO para o backend, mas o campo é datetime-local (sem fuso):
-  // converter na hora de enviar é o que evita gravar a hora deslocada.
-  it("cria o registro convertendo a data para ISO", async () => {
-    render()
-    await screen.findByText("Nenhum registro encontrado.")
-    const descricao = await abrirFormulario()
-
-    await userEvent.type(descricao, "Chuva forte")
-    await userEvent.click(screen.getByRole("button", { name: "Salvar registro" }))
+    await userEvent.click(screen.getByRole("radio", { name: "Entrega" }))
+    await userEvent.type(texto(), "  40 sacos de cimento  ")
+    await userEvent.click(screen.getByRole("button", { name: /Registrar no diário/ }))
 
     await waitFor(() => expect(criar).toHaveBeenCalled())
-    expect(criar.mock.calls[0][0]).toBe(7)
-    expect(criar.mock.calls[0][1]).toMatchObject({
-      description: "Chuva forte",
-      entryType: "OCCURRENCE",
-    })
-    expect(criar.mock.calls[0][1].entryDate).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+    const [projeto, payload] = criar.mock.calls[0]
+    expect(projeto).toBe(7)
+    expect(payload).toMatchObject({ entryType: "DELIVERY", description: "40 sacos de cimento", attachmentId: null })
+    expect(payload.entryDate).toMatch(/^\d{4}-\d{2}-\d{2}T.*Z$/)
+    await waitFor(() => expect(texto()).toHaveValue(""))
+    expect(screen.getByRole("radio", { name: "Entrega" })).toHaveAttribute("aria-checked", "true")
   })
 
-  it("manda o tipo escolhido", async () => {
+  it("recusa texto vazio ou só de espaços com erro no campo", async () => {
     render()
-    await screen.findByText("Nenhum registro encontrado.")
-    const descricao = await abrirFormulario()
-
-    await userEvent.selectOptions(screen.getByRole("combobox"), "IMPEDIMENT")
-    await userEvent.type(descricao, "Falta de material")
-    await userEvent.click(screen.getByRole("button", { name: "Salvar registro" }))
-
-    await waitFor(() =>
-      expect(criar.mock.calls[0][1]).toMatchObject({ entryType: "IMPEDIMENT" }),
-    )
+    await userEvent.type(texto(), "   ")
+    await userEvent.click(screen.getByRole("button", { name: /Registrar no diário/ }))
+    expect(await screen.findByText("Escreva o que aconteceu.")).toBeInTheDocument()
+    expect(criar).not.toHaveBeenCalled()
   })
 
-  // Registro em branco não diz nada a ninguém: o botão fica travado até haver
-  // texto de verdade.
-  it("mantém o salvar travado enquanto a descrição está vazia", async () => {
+  it("registra com Ctrl + Enter e troca o botão para perigo no impedimento", async () => {
     render()
-    await screen.findByText("Nenhum registro encontrado.")
-    await abrirFormulario()
-
-    expect(screen.getByRole("button", { name: "Salvar registro" })).toBeDisabled()
+    await userEvent.click(screen.getByRole("radio", { name: "Impedimento" }))
+    expect(texto()).toHaveAttribute("placeholder", "O que parou a obra e o que é preciso para destravar.")
+    await userEvent.type(texto(), "Sem energia{Control>}{Enter}{/Control}")
+    await waitFor(() => expect(criar).toHaveBeenCalled())
+    expect(criar.mock.calls[0][1]).toMatchObject({ entryType: "IMPEDIMENT" })
   })
 
-  it("recusa descrição só de espaços", async () => {
-    render()
-    await screen.findByText("Nenhum registro encontrado.")
-    const descricao = await abrirFormulario()
-
-    await userEvent.type(descricao, "   ")
-
-    expect(screen.getByRole("button", { name: "Salvar registro" })).toBeDisabled()
-  })
-
-  it("limpa o rascunho e fecha a folha ao salvar", async () => {
-    render()
-    await screen.findByText("Nenhum registro encontrado.")
-    const descricao = await abrirFormulario()
-    await userEvent.type(descricao, "Chuva forte")
-
-    await userEvent.click(screen.getByRole("button", { name: "Salvar registro" }))
-
-    await waitFor(() =>
-      expect(screen.queryByRole("heading", { name: "Adicionar registro" })).not.toBeInTheDocument(),
-    )
-  })
-
-  // O anexo sobe antes do registro: o backend guarda só o id, então o upload
-  // precisa terminar para o registro saber a que arquivo se referir.
-  it("anexa a foto e envia o id junto do registro", async () => {
-    render()
-    await screen.findByText("Nenhum registro encontrado.")
-    const descricao = await abrirFormulario()
-
+  it("anexa a foto, permite remover e envia o id junto", async () => {
+    const { container } = render()
     const arquivo = new File(["x"], "obra.png", { type: "image/png" })
-    await userEvent.upload(
-      document.querySelector('input[type="file"]') as HTMLInputElement,
-      arquivo,
-    )
+    const input = container.querySelector<HTMLInputElement>('input[type="file"]')
+    if (!input) throw new Error("sem input de arquivo")
+
+    await userEvent.upload(input, arquivo)
+    expect(await screen.findByText("obra.png")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Remover foto" }))
+    expect(screen.getByRole("button", { name: /Anexar foto/ })).toBeInTheDocument()
+
+    await userEvent.upload(input, arquivo)
     await screen.findByText("obra.png")
-
-    await userEvent.type(descricao, "Chuva forte")
-    await userEvent.click(screen.getByRole("button", { name: "Salvar registro" }))
-
-    await waitFor(() => expect(criar.mock.calls[0][1]).toMatchObject({ attachmentId: 55 }))
+    await userEvent.type(texto(), "Foto da laje")
+    await userEvent.click(screen.getByRole("button", { name: /Registrar no diário/ }))
+    await waitFor(() => expect(criar).toHaveBeenCalled())
+    expect(criar.mock.calls[0][1]).toMatchObject({ attachmentId: 55 })
   })
 })
 
-describe("<DiarioDaObra /> — somente leitura", () => {
-  it("bloqueia o botão de novo registro", async () => {
-    mockAcesso(true)
-
+describe("<DiarioDaObra /> — exclusão e leitura", () => {
+  it("pede confirmação antes de excluir", async () => {
+    listar.mockResolvedValue(pagina([registro()]))
     render()
+    await userEvent.click(await screen.findByRole("button", { name: "Excluir registro" }))
+    const dialog = within(await screen.findByRole("dialog"))
+    expect(excluir).not.toHaveBeenCalled()
+    await userEvent.click(dialog.getByRole("button", { name: "Excluir" }))
+    await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
+  })
 
-    await screen.findByText("Nenhum registro encontrado.")
-    expect(screen.getByRole("button", { name: /Novo registro/ })).toBeDisabled()
+  it("só leitura: sem compositor nem excluir", async () => {
+    mockAcesso(true)
+    listar.mockResolvedValue(pagina([registro()]))
+    render()
+    await screen.findByText("Chuva forte pela manhã")
+    expect(screen.queryByLabelText("O que aconteceu")).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Excluir registro" })).not.toBeInTheDocument()
   })
 })
