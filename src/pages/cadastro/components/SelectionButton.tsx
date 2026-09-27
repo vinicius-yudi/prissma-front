@@ -15,11 +15,11 @@ import type { InterfaceButtonProps } from "@/shared/components/ui/button/ButtonI
  */
 
 const selection = tv({
-  base: "group h-14 justify-start px-4 text-sm hover:border-primary",
+  base: "group h-14 justify-start px-4 text-sm hover:border-gold",
 })
 
 const iconBadge = tv({
-  base: "flex size-9 items-center justify-center rounded-lg bg-surface-container-high text-gold-bright transition-colors group-hover:bg-gold-grad group-hover:text-on-primary",
+  base: "flex size-9 items-center justify-center rounded-lg bg-raised text-gold-hi transition-colors group-hover:bg-gold-grad group-hover:text-on-gold",
 })
 
 interface SelectionButtonProps extends InterfaceButtonProps {
@@ -36,7 +36,7 @@ export function SelectionButton({ icon: Icon, children, className, ...props }: S
       <span className="flex-1 text-left">{children}</span>
       <ArrowRight
         size={18}
-        className="text-on-surface-faint transition-transform duration-200 group-hover:translate-x-1 group-hover:text-gold-bright"
+        className="text-ink-3 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-gold-hi"
       />
     </Button>
   )

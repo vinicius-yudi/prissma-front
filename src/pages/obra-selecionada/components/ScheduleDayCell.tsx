@@ -19,9 +19,9 @@ const block = tv({
   base: "flex h-[34px] w-full items-center justify-center rounded-lg transition-colors",
   variants: {
     state: {
-      FREE: "border border-dashed border-outline-variant bg-transparent",
-      ALLOCATED: "bg-gold-grad text-on-primary",
-      OVERLAP: "bg-warn-bg text-warn",
+      FREE: "border border-dashed border-border bg-transparent",
+      ALLOCATED: "bg-gold-grad text-on-gold",
+      OVERLAP: "bg-warning-soft text-warning",
     },
     interactive: {
       true: "cursor-pointer",
@@ -41,7 +41,7 @@ const cell = tv({
 })
 
 const trigger = tv({
-  base: "block w-full rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+  base: "block w-full rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-gold/40",
 })
 
 interface ScheduleDayCellProps {

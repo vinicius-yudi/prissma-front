@@ -8,9 +8,9 @@ const pill = tv({
   base: "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap",
   variants: {
     tone: {
-      ok: "bg-primary/15 text-primary",
-      warning: "bg-tertiary/15 text-tertiary",
-      exceeded: "bg-error/15 text-error",
+      ok: "bg-gold/15 text-gold",
+      warning: "bg-warning/15 text-warning",
+      exceeded: "bg-danger/15 text-danger",
     },
   },
 })

@@ -22,7 +22,7 @@ function ReadOnlyNotice() {
     <div
       title={t("header.readOnly")}
       aria-label={t("header.readOnly")}
-      className="flex min-h-9 shrink-0 items-center gap-2 rounded-full bg-warn-bg px-2.5 text-[11.5px] font-semibold text-warn sm:px-3"
+      className="flex min-h-9 shrink-0 items-center gap-2 rounded-full bg-warning-soft px-2.5 text-[11.5px] font-semibold text-warning sm:px-3"
     >
       <Eye size={13} strokeWidth={1.8} />
       <span className="hidden sm:inline">{t("header.readOnly")}</span>
@@ -35,7 +35,7 @@ export function Header() {
   const { isReadOnly } = useAccess()
 
   return (
-    <header className="flex h-14 items-center justify-between gap-3 border-b border-outline-variant bg-surface-container-low px-4 lg:h-16 lg:gap-4 lg:px-6">
+    <header className="flex h-14 items-center justify-between gap-3 border-b border-border bg-surface px-4 lg:h-16 lg:gap-4 lg:px-6">
       {/* A marca só aparece no celular: no desktop ela já está no topo da
           sidebar, e repeti-la roubaria a largura da busca. */}
       <img

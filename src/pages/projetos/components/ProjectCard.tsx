@@ -41,22 +41,22 @@ function DaysDisplay({ days, status }: DaysDisplayProps) {
   const { t } = useTranslation()
 
   if (status === ProjectStatus.COMPLETED) {
-    return <span className="text-sm font-semibold text-ok">{t("projects.card.completed")}</span>
+    return <span className="text-sm font-semibold text-success">{t("projects.card.completed")}</span>
   }
   if (status === ProjectStatus.CANCELLED) {
-    return <span className="text-sm font-medium text-on-surface-variant">{t("projects.card.cancelled")}</span>
+    return <span className="text-sm font-medium text-ink-2">{t("projects.card.cancelled")}</span>
   }
   if (days === null) {
-    return <span className="text-sm text-on-surface-variant">{NO_DATE}</span>
+    return <span className="text-sm text-ink-2">{NO_DATE}</span>
   }
   if (days < 0) {
     return <span className="text-sm font-semibold text-danger">{t("projects.card.overdue")}</span>
   }
   if (days === 0) {
-    return <span className="text-sm font-semibold text-warn">{t("projects.card.dueToday")}</span>
+    return <span className="text-sm font-semibold text-warning">{t("projects.card.dueToday")}</span>
   }
   return (
-    <span className="text-sm font-medium text-on-surface-variant">
+    <span className="text-sm font-medium text-ink-2">
       {t("projects.card.daysRemaining", { count: days })}
     </span>
   )
@@ -92,26 +92,26 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface-container-low hover:border-outline transition-all duration-200 cursor-pointer"
+      className="bg-surface border border-border rounded-2xl p-5 flex flex-col gap-4 hover:bg-surface hover:border-border-strong transition-all duration-200 cursor-pointer"
     >
       <div className="flex items-start justify-between gap-2">
         <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} />
-        <span className="text-xs text-on-surface-variant uppercase tracking-wider font-medium mt-0.5 shrink-0">
+        <span className="text-xs text-ink-2 uppercase tracking-wider font-medium mt-0.5 shrink-0">
           {project.projectType}
         </span>
       </div>
 
       <div className="space-y-1">
-        <h3 className="font-semibold text-on-surface text-[17px] leading-snug line-clamp-1">
+        <h3 className="font-semibold text-ink text-[17px] leading-snug line-clamp-1">
           {project.title}
         </h3>
-        <div className="flex items-center gap-1.5 text-on-surface-variant text-sm">
+        <div className="flex items-center gap-1.5 text-ink-2 text-sm">
           <MapPin size={13} className="flex-none" />
           <span className="line-clamp-1">{project.address}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+      <div className="flex items-center gap-1.5 text-xs text-ink-2">
         <Calendar size={13} className="flex-none" />
         <span>{formatDate(project.plannedStartDate)}</span>
         <span>{DATE_SEPARATOR}</span>
@@ -120,8 +120,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-on-surface-variant">{t("projects.card.progress")}</span>
-          <Num className="font-semibold text-on-surface-variant">{progress}%</Num>
+          <span className="text-ink-2">{t("projects.card.progress")}</span>
+          <Num className="font-semibold text-ink-2">{progress}%</Num>
         </div>
         <Progress
           value={progress}
@@ -131,8 +131,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
         />
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
-        <span className="text-xs text-on-surface-variant">
+      <div className="flex items-center justify-between pt-2 border-t border-border">
+        <span className="text-xs text-ink-2">
           {t("projects.card.built", { area: project.builtArea })}
         </span>
         <DaysDisplay days={daysRemaining} status={project.status} />

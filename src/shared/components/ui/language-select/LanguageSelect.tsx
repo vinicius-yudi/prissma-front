@@ -20,8 +20,8 @@ const langOption = tv({
   base: "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
   variants: {
     active: {
-      true: "bg-primary/10 text-primary font-medium",
-      false: "text-on-surface-variant hover:bg-surface-container-high",
+      true: "bg-gold/10 text-gold font-medium",
+      false: "text-ink-2 hover:bg-raised",
     },
   },
 })
@@ -75,18 +75,18 @@ export function LanguageSelect() {
       <button
         type="button"
         onClick={handleToggle}
-        className="flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container px-2.5 py-1.5 transition-colors hover:bg-surface-container-high cursor-pointer"
+        className="flex items-center gap-2 rounded-lg border border-border bg-surface px-2.5 py-1.5 transition-colors hover:bg-raised cursor-pointer"
       >
         <ReactCountryFlag
           countryCode={current.countryCode}
           svg
           style={FLAG_STYLE_TRIGGER}
         />
-        <span className="uppercase text-xs font-bold text-on-surface-variant">{current.code}</span>
+        <span className="uppercase text-xs font-bold text-ink-2">{current.code}</span>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-outline-variant bg-surface-container py-1 shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-border bg-surface py-1 shadow-lg z-50">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}

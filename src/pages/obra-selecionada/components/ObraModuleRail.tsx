@@ -22,9 +22,9 @@ const chip = tv({
   base: "flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-[12.5px] font-semibold transition-colors",
   variants: {
     active: {
-      true: "bg-gold-grad text-on-primary shadow-glow",
+      true: "bg-gold-grad text-on-gold shadow-soft",
       false:
-        "border border-outline-variant bg-surface-container-low text-on-surface-variant hover:text-on-surface",
+        "border border-border bg-surface text-ink-2 hover:text-ink",
     },
   },
 })

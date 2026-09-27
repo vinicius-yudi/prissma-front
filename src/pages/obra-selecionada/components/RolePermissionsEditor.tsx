@@ -26,8 +26,8 @@ const permissionRow = tv({
   base: "flex items-center justify-between gap-3 rounded-xl border px-4 py-3 transition-colors cursor-pointer",
   variants: {
     checked: {
-      true: "border-primary bg-primary/10",
-      false: "border-outline-variant/60 bg-surface-container",
+      true: "border-gold bg-gold/10",
+      false: "border-border/60 bg-surface",
     },
   },
 })
@@ -78,7 +78,7 @@ export function RolePermissionsEditor({
           const checked = selected.has(permission)
           return (
             <label key={permission} className={permissionRow({ checked })}>
-              <span className="text-sm text-on-surface">
+              <span className="text-sm text-ink">
                 {PERMISSION_LABELS.get(permission) ?? permission}
               </span>
               <input
@@ -86,7 +86,7 @@ export function RolePermissionsEditor({
                 checked={checked}
                 data-permission={permission}
                 onChange={handleToggle}
-                className="h-4 w-4 accent-primary cursor-pointer"
+                className="h-4 w-4 accent-gold cursor-pointer"
               />
             </label>
           )

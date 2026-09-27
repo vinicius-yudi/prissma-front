@@ -15,12 +15,12 @@ import type { Proposal, ProposalStatus, ProposalVersion } from "../types/proposa
 import { PropostaStatusBadge } from "./PropostaStatusBadge"
 
 const rowAction = tv({
-  base: "inline-flex items-center gap-1 rounded-lg border border-outline-variant px-2.5 py-1 text-[11px] font-semibold text-on-surface-variant transition-colors hover:border-outline disabled:opacity-40",
+  base: "inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-[11px] font-semibold text-ink-2 transition-colors hover:border-border-strong disabled:opacity-40",
   variants: {
     tone: {
-      approve: "hover:text-ok",
-      reject: "hover:text-warn",
-      download: "hover:text-gold-bright",
+      approve: "hover:text-success",
+      reject: "hover:text-warning",
+      download: "hover:text-gold-hi",
     },
   },
   defaultVariants: { tone: "download" },
@@ -50,7 +50,7 @@ function VersaoRow({
   const isRejected = version.status === "REJECTED"
 
   return (
-    <li className="flex gap-3.5 border-b border-outline-variant py-3.5 last:border-b-0">
+    <li className="flex gap-3.5 border-b border-border py-3.5 last:border-b-0">
       <div className="size-16 shrink-0 overflow-hidden rounded-lg">
         {url ? (
           <img
@@ -65,10 +65,10 @@ function VersaoRow({
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex flex-wrap items-center gap-2">
-          <Num className="text-[13px] font-semibold text-on-surface">v{version.version}</Num>
+          <Num className="text-[13px] font-semibold text-ink">v{version.version}</Num>
           <PropostaStatusBadge status={version.status} />
           {version.generatedByAi && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-bright">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-hi">
               <Sparkles size={11} strokeWidth={2} />
               {t("obra.propostas.aiBadge")}
             </span>
@@ -76,12 +76,12 @@ function VersaoRow({
         </div>
 
         {version.description && (
-          <p className="line-clamp-2 text-xs leading-relaxed text-on-surface-variant">
+          <p className="line-clamp-2 text-xs leading-relaxed text-ink-2">
             {version.description}
           </p>
         )}
 
-        <p className="text-[11px] text-on-surface-faint">
+        <p className="text-[11px] text-ink-3">
           {version.authorName} · <Num>{formatDate(version.submittedAt)}</Num>
         </p>
 
@@ -186,7 +186,7 @@ export function VersoesProposta({
       return (
         <ul className="space-y-3">
           {[0, 1, 2].map((i) => (
-            <li key={i} className="h-20 animate-pulse rounded-xl bg-surface-container-low" />
+            <li key={i} className="h-20 animate-pulse rounded-xl bg-surface" />
           ))}
         </ul>
       )
@@ -194,13 +194,13 @@ export function VersoesProposta({
 
     if (isError) {
       return (
-        <p className="py-8 text-center text-sm text-on-surface-variant">{t("obra.acompError")}</p>
+        <p className="py-8 text-center text-sm text-ink-2">{t("obra.acompError")}</p>
       )
     }
 
     if (versions.length === 0) {
       return (
-        <p className="py-8 text-center text-sm text-on-surface-variant">
+        <p className="py-8 text-center text-sm text-ink-2">
           {t("obra.propostas.versions.empty")}
         </p>
       )
@@ -238,7 +238,7 @@ export function VersoesProposta({
       <div className="px-6 pb-6">
         {renderBody()}
 
-        <div className="mt-5 flex justify-end border-t border-outline-variant pt-5">
+        <div className="mt-5 flex justify-end border-t border-border pt-5">
           <Button type="button" variant="outline" fullWidth={false} onClick={onClose}>
             {t("obra.propostas.actions.close")}
           </Button>

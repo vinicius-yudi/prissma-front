@@ -55,7 +55,7 @@ describe("<BudgetKpiCard />", () => {
     )
 
     expect(screen.getByText("Planejado")).toBeInTheDocument()
-    expect(screen.getByText("R$ 100.000")).toHaveClass("font-mono")
+    expect(screen.getByText("R$ 100.000")).toHaveClass("t-num")
   })
 
   it("omite a nota de rodapé quando não vem", () => {

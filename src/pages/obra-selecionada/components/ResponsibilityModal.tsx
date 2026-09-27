@@ -73,7 +73,7 @@ export function ResponsibilityModal({
             {t(errors.userResponsibility.message ?? "")}
           </p>
         ) : (
-          <p className="mt-1.5 text-xs text-on-surface-faint">
+          <p className="mt-1.5 text-xs text-ink-3">
             {t("obra.schedule.responsibility.help")}
           </p>
         )}

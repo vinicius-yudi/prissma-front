@@ -12,19 +12,19 @@ import { Num } from "../num/Num"
 export type DeltaTone = "ok" | "warn" | "danger" | "neutral"
 
 const deltaPill = tv({
-  base: "inline-flex items-center gap-1 rounded-full px-[9px] py-[3px] font-mono text-[10.5px] font-semibold",
+  base: "inline-flex items-center gap-1 rounded-full px-[9px] py-[3px] t-num text-[10.5px] font-semibold",
   variants: {
     tone: {
-      ok: "bg-ok-bg text-ok",
-      warn: "bg-warn-bg text-warn",
-      danger: "bg-danger-bg text-danger",
-      neutral: "bg-tint text-gold-bright",
+      ok: "bg-success-soft text-success",
+      warn: "bg-warning-soft text-warning",
+      danger: "bg-danger-soft text-danger",
+      neutral: "bg-raised text-gold-hi",
     },
   },
 })
 
 const card = tv({
-  base: "rounded-2xl border border-outline-variant bg-surface-container-low p-5",
+  base: "rounded-2xl border border-border bg-surface p-5",
 })
 
 interface KpiCardProps {
@@ -43,10 +43,10 @@ interface KpiCardProps {
 export function KpiCard({ label, value, delta, children, className }: KpiCardProps) {
   return (
     <div className={card({ className })}>
-      <div className="text-xs font-medium text-on-surface-variant">{label}</div>
+      <div className="text-xs font-medium text-ink-2">{label}</div>
 
       <div className="mt-[7px] flex items-baseline gap-[9px]">
-        <Num className="text-2xl font-bold text-on-surface">{value}</Num>
+        <Num className="text-2xl font-bold text-ink">{value}</Num>
         {delta && <span className={deltaPill({ tone: delta.tone ?? "neutral" })}>{delta.text}</span>}
       </div>
 

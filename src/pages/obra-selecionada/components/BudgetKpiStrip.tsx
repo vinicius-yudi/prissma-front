@@ -60,7 +60,7 @@ export function BudgetKpiStrip({ budget }: BudgetKpiStripProps) {
 
       <div className="space-y-2">
         <BudgetProgressBar percent={usedPercent} exceeded={budget.exceeded} height="lg" />
-        <p className="text-xs text-on-surface-variant text-right tabular-nums">
+        <p className="text-xs text-ink-2 text-right tabular-nums">
           {t("obra.orcamento.kpi.used", { percent: Math.round(usedPercent) })}
         </p>
       </div>

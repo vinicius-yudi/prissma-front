@@ -59,10 +59,10 @@ const sectionDot = tv({
   base: "size-2 shrink-0 rounded-full",
   variants: {
     status: {
-      PLANNED: "bg-on-surface-faint",
-      IN_PROGRESS: "bg-gold-bright",
-      DONE: "bg-ok",
-      BLOCKED: "bg-warn",
+      PLANNED: "bg-ink-3",
+      IN_PROGRESS: "bg-gold-hi",
+      DONE: "bg-success",
+      BLOCKED: "bg-warning",
     },
   },
 })
@@ -71,7 +71,7 @@ const section = tv({
   base: "rounded-2xl border p-3 transition-colors lg:p-4",
   variants: {
     over: {
-      true: "border-gold bg-surface-container-high",
+      true: "border-gold bg-raised",
       false: "border-transparent",
     },
   },
@@ -104,7 +104,7 @@ const collisionDetection: CollisionDetection = (args) => {
 function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () => void }) {
   const { t } = useTranslation()
   return (
-    <section className="flex flex-col items-center gap-3.5 rounded-2xl border border-outline-variant bg-surface-container-low px-5 py-14 text-center">
+    <section className="flex flex-col items-center gap-3.5 rounded-2xl border border-border bg-surface px-5 py-14 text-center">
       {/* Wireframe de construção em traço ouro — a ilustração de vazio do
           Style Guide v2 §4. */}
       <svg
@@ -120,8 +120,8 @@ function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () 
         <path d="M20 26h56" strokeDasharray="3 4" />
       </svg>
 
-      <p className="text-base font-semibold text-on-surface">{t("obra.etapas.emptyTitle")}</p>
-      <p className="max-w-[330px] text-[13px] text-on-surface-variant">
+      <p className="text-base font-semibold text-ink">{t("obra.etapas.emptyTitle")}</p>
+      <p className="max-w-[330px] text-[13px] text-ink-2">
         {t("obra.etapas.emptyHint")}
       </p>
 
@@ -166,14 +166,14 @@ function StageSection({
     >
       <header className="mb-3 flex items-center gap-2 px-1">
         <span className={sectionDot({ status })} />
-        <h2 className="text-[13.5px] font-semibold text-on-surface">
+        <h2 className="text-[13.5px] font-semibold text-ink">
           {t(`obra.etapas.etapaStatus.${status}`)}
         </h2>
-        <Num className="ml-auto text-[11px] font-bold text-on-surface-faint">{stages.length}</Num>
+        <Num className="ml-auto text-[11px] font-bold text-ink-3">{stages.length}</Num>
       </header>
 
       {stages.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-outline p-4 text-center text-[11.5px] text-on-surface-faint">
+        <div className="rounded-xl border border-dashed border-border-strong p-4 text-center text-[11.5px] text-ink-3">
           {t("obra.etapas.emptySection")}
         </div>
       ) : (
@@ -331,7 +331,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
       return (
         <ul className="space-y-3">
           {[0, 1, 2, 3].map((i) => (
-            <li key={i} className="h-[76px] animate-pulse rounded-2xl bg-surface-container-low" />
+            <li key={i} className="h-[76px] animate-pulse rounded-2xl bg-surface" />
           ))}
         </ul>
       )
@@ -339,8 +339,8 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
 
     if (isError) {
       return (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-outline-variant bg-surface-container-low p-12">
-          <p className="text-sm text-on-surface-variant">{t("obra.acompError")}</p>
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-surface p-12">
+          <p className="text-sm text-ink-2">{t("obra.acompError")}</p>
           <Button variant="outline" fullWidth={false} onClick={() => refetch()}>
             <RefreshCw size={14} />
             {t("obra.retry")}
@@ -385,7 +385,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         {canMutate && localStages.length > 0 ? (
-          <p className="hidden items-center gap-2 text-[12px] text-on-surface-faint lg:flex">
+          <p className="hidden items-center gap-2 text-[12px] text-ink-3 lg:flex">
             <ArrowUpDown size={14} />
             {t("obra.etapas.reorderHint")}
           </p>
@@ -431,7 +431,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
         size="sm"
       >
         <div className="space-y-5 px-6 pb-6">
-          <p className="text-sm leading-relaxed text-on-surface-variant">
+          <p className="text-sm leading-relaxed text-ink-2">
             {t("obra.etapas.deleteModal.message", { name: pendingDelete?.name ?? "" })}
           </p>
           <div className="flex gap-3">

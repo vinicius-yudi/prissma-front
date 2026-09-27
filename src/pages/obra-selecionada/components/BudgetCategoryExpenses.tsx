@@ -22,8 +22,8 @@ interface BudgetCategoryExpensesProps {
 function ExpensesSkeleton() {
   return (
     <div className="space-y-2 py-2">
-      <div className="h-8 bg-surface-container-highest animate-pulse rounded" />
-      <div className="h-8 bg-surface-container-highest animate-pulse rounded" />
+      <div className="h-8 bg-raised animate-pulse rounded" />
+      <div className="h-8 bg-raised animate-pulse rounded" />
     </div>
   )
 }
@@ -43,9 +43,9 @@ export function BudgetCategoryExpenses({
   const stageNameById = new Map(stages.map((s) => [s.id, s.name]))
 
   return (
-    <div className="px-4 pb-4 pt-2 border-t border-outline-variant/15 bg-surface-container-low">
+    <div className="px-4 pb-4 pt-2 border-t border-border/15 bg-surface">
       <div className="sm:hidden mb-3 flex justify-between text-sm tabular-nums">
-        <span className="text-on-surface-variant">
+        <span className="text-ink-2">
           {formatCurrency(item.totalSpent)} / {formatCurrency(item.plannedAmount)}
         </span>
       </div>
@@ -53,7 +53,7 @@ export function BudgetCategoryExpenses({
       {isLoading && <ExpensesSkeleton />}
 
       {!isLoading && expenses.length === 0 && (
-        <p className="text-xs text-on-surface-variant py-4 text-center">
+        <p className="text-xs text-ink-2 py-4 text-center">
           {t("obra.orcamento.category.empty")}
         </p>
       )}

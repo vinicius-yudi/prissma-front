@@ -20,14 +20,14 @@ export function LoginForm() {
       type="button"
       onClick={togglePassword}
       aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
-      className="cursor-pointer text-on-surface-variant transition-colors hover:text-on-surface"
+      className="cursor-pointer text-ink-2 transition-colors hover:text-ink"
     >
       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
     </button>
   )
 
   return (
-    <section className="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-surface px-8 py-12 sm:px-16 lg:w-[45%] lg:px-24">
+    <section className="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-bg px-8 py-12 sm:px-16 lg:w-[45%] lg:px-24">
       <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
         <LanguageSelect />
         <ThemeToggle />
@@ -38,8 +38,8 @@ export function LoginForm() {
         </div>
 
         <div className="enter-up space-y-2 text-center" style={{ animationDelay: "0.16s" }}>
-          <h2 className="text-3xl font-bold tracking-tight text-on-surface">{t("login.title")}</h2>
-          <p className="text-sm leading-relaxed text-on-surface-variant">{t("login.subtitle")}</p>
+          <h2 className="text-3xl font-bold tracking-tight text-ink">{t("login.title")}</h2>
+          <p className="text-sm leading-relaxed text-ink-2">{t("login.subtitle")}</p>
         </div>
 
         <form className="enter-up space-y-6" onSubmit={handleSubmit} noValidate style={{ animationDelay: "0.24s" }}>
@@ -62,7 +62,7 @@ export function LoginForm() {
               <Label htmlFor="password">{t("login.password")}</Label>
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-gold-bright underline-offset-4 transition-colors hover:underline"
+                className="text-sm font-medium text-gold-hi underline-offset-4 transition-colors hover:underline"
               >
                 {t("login.forgotPassword")}
               </Link>
@@ -88,9 +88,9 @@ export function LoginForm() {
           </div>
         </form>
 
-        <p className="enter-up text-center text-sm text-on-surface-variant" style={{ animationDelay: "0.48s" }}>
+        <p className="enter-up text-center text-sm text-ink-2" style={{ animationDelay: "0.48s" }}>
           {t("login.noAccount")}{" "}
-          <Link to="/cadastro" className="ml-1 font-bold text-gold-bright underline-offset-4 hover:underline">
+          <Link to="/cadastro" className="ml-1 font-bold text-gold-hi underline-offset-4 hover:underline">
             {t("login.register")}
           </Link>
         </p>

@@ -7,9 +7,9 @@ const iconWrap = tv({
   base: "p-2 rounded-lg",
   variants: {
     accent: {
-      default: "bg-primary/10 text-primary",
-      warning: "bg-tertiary/15 text-tertiary",
-      danger: "bg-error/15 text-error",
+      default: "bg-gold/10 text-gold",
+      warning: "bg-warning/15 text-warning",
+      danger: "bg-danger/15 text-danger",
     },
   },
   defaultVariants: {
@@ -35,15 +35,15 @@ export function BudgetKpiCard({
   hint,
 }: BudgetKpiCardProps) {
   return (
-    <div className="bg-surface-container rounded-xl p-4 border border-outline-variant/20 flex flex-col gap-3">
+    <div className="bg-surface rounded-xl p-4 border border-border/20 flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <div className={iconWrap({ accent })}>{icon}</div>
-        <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-ink-2">
           {label}
         </span>
       </div>
-      <Num className="text-xl font-bold text-on-surface">{value}</Num>
-      {hint && <div className="text-xs text-on-surface-variant">{hint}</div>}
+      <Num className="text-xl font-bold text-ink">{value}</Num>
+      {hint && <div className="text-xs text-ink-2">{hint}</div>}
     </div>
   )
 }

@@ -11,15 +11,15 @@ import { useDiario } from "../hooks/useDiario";
 import type { DiarioEntryType } from "../types/diario";
 
 const TAG_STYLES: Record<DiarioEntryType, string> = {
-  OCCURRENCE: "bg-warn-bg text-warn border-warn/20",
-  DELIVERY: "bg-ok-bg text-ok border-ok/20",
+  OCCURRENCE: "bg-warning-soft text-warning border-warning/20",
+  DELIVERY: "bg-success-soft text-success border-success/20",
   WORKFORCE: "bg-gold/10 text-gold border-gold/20",
-  IMPEDIMENT: "bg-danger-bg text-danger border-danger/20",
+  IMPEDIMENT: "bg-danger-soft text-danger border-danger/20",
 };
 
 const DOT_COLOR: Record<DiarioEntryType, string> = {
-  OCCURRENCE: "bg-warn",
-  DELIVERY: "bg-ok",
+  OCCURRENCE: "bg-warning",
+  DELIVERY: "bg-success",
   WORKFORCE: "bg-gold",
   IMPEDIMENT: "bg-danger",
 };
@@ -88,12 +88,12 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-bg p-6">
       <div className="mb-8 flex items-end justify-between">
         <div>
-          <h1 className="mb-1 text-3xl font-semibold text-on-surface">{t("obra.diario.title")}</h1>
-          <div className="flex text-xs font-mono uppercase tracking-widest text-on-surface-variant">
-            <span className="mr-2 mt-1 h-1 w-1 rounded-full bg-outline" />
+          <h1 className="mb-1 text-3xl font-semibold text-ink">{t("obra.diario.title")}</h1>
+          <div className="flex text-xs t-num uppercase tracking-widest text-ink-2">
+            <span className="mr-2 mt-1 h-1 w-1 rounded-full bg-border-strong" />
             <span>{t("obra.diario.count", { count: entries.length })}</span>
           </div>
         </div>
@@ -101,14 +101,14 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
 
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 flex flex-col gap-4 lg:col-span-8">
-          <div className="flex h-full flex-col rounded-xl bg-surface-container p-6 shadow-lg">
-            <div className="mb-6 flex items-center justify-between border-b border-outline-variant pb-4">
-              <h2 className="text-xl font-semibold text-on-surface">{t("obra.diario.timeline")}</h2>
+          <div className="flex h-full flex-col rounded-xl bg-surface p-6 shadow-lg">
+            <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+              <h2 className="text-xl font-semibold text-ink">{t("obra.diario.timeline")}</h2>
               <button
                 type="button"
                 onClick={() => setIsFormOpen(true)}
                 disabled={isReadOnly("diario")}
-                className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-sm font-medium text-on-primary shadow-md transition-colors hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-sm font-medium text-on-gold shadow-md transition-colors hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Plus size={16} />
                 {t("obra.diario.newEntry")}
@@ -116,16 +116,16 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
             </div>
 
             <div className="relative flex-1 space-y-8 overflow-y-auto pr-2" style={{ maxHeight: "60vh" }}>
-              <div className="absolute bottom-4 left-24.5 top-4 z-0 w-px bg-outline-variant" />
+              <div className="absolute bottom-4 left-24.5 top-4 z-0 w-px bg-border" />
 
-              {isLoading ? <p className="text-sm text-on-surface-variant">{t("obra.diario.loading")}</p> : null}
+              {isLoading ? <p className="text-sm text-ink-2">{t("obra.diario.loading")}</p> : null}
               {error ? (
                 <p className="text-sm text-danger">
                   {t("obra.diario.error")} {error instanceof Error ? `(${error.message})` : ""}
                 </p>
               ) : null}
               {!isLoading && !error && entries.length === 0 ? (
-                <p className="text-sm text-on-surface-variant">{t("obra.diario.empty")}</p>
+                <p className="text-sm text-ink-2">{t("obra.diario.empty")}</p>
               ) : null}
 
               {entries.map((entry) => {
@@ -133,28 +133,28 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
                 return (
                   <div key={entry.id} className="group relative z-10 flex gap-3">
                     <div className="w-20 shrink-0 pt-1 text-right">
-                      <div className="text-sm font-semibold text-on-surface">{date}</div>
-                      <div className="text-xs font-mono text-on-surface-variant">{time}</div>
+                      <div className="text-sm font-semibold text-ink">{date}</div>
+                      <div className="text-xs t-num text-ink-2">{time}</div>
                     </div>
                     <div className="relative flex-1 pt-1">
                       <div className="relative mb-2 flex items-center gap-3 pl-6">
-                        <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface-container transition-transform group-hover:scale-125`} />
+                        <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface transition-transform group-hover:scale-125`} />
                         <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[entry.entryType]}`}>
                           {t(`obra.diario.types.${entry.entryType}`)}
                         </span>
-                        <span className="text-sm text-on-surface-variant">{entry.responsibleName}</span>
+                        <span className="text-sm text-ink-2">{entry.responsibleName}</span>
                         {!isReadOnly("diario") ? (
                           <button
                             type="button"
                             onClick={() => setPendingDelete({ id: entry.id, description: entry.description })}
                             aria-label={t("obra.diario.actions.delete")}
-                            className="ml-auto rounded-lg p-1.5 text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger"
+                            className="ml-auto rounded-lg p-1.5 text-ink-3 transition-colors hover:bg-danger-soft hover:text-danger"
                           >
                             <Trash2 size={15} />
                           </button>
                         ) : null}
                       </div>
-                      <p className="pl-6 text-sm leading-relaxed text-on-surface">{entry.description}</p>
+                      <p className="pl-6 text-sm leading-relaxed text-ink">{entry.description}</p>
                     </div>
                   </div>
                 );
@@ -164,7 +164,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
                   type="button"
                   onClick={() => diario.fetchNextPage()}
                   disabled={diario.isFetchingNextPage}
-                  className="relative z-10 rounded-lg border border-outline px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-high disabled:opacity-50"
+                  className="relative z-10 rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-ink-2 hover:bg-raised disabled:opacity-50"
                 >
                   {diario.isFetchingNextPage ? t("obra.diario.loadingMore") : t("obra.diario.loadMore")}
                 </button>
@@ -187,21 +187,21 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               value={entryType}
               onChange={(event) => setEntryType(event.target.value as DiarioEntryType)}
               disabled={isReadOnly("diario")}
-              className="w-full rounded-lg border border-outline-variant bg-surface-container-highest p-3 text-sm text-on-surface focus:border-gold focus:ring-1 focus:ring-gold"
+              className="w-full rounded-lg border border-border bg-raised p-3 text-sm text-ink focus:border-gold focus:ring-1 focus:ring-gold"
             >
               {(["OCCURRENCE", "DELIVERY", "WORKFORCE", "IMPEDIMENT"] as DiarioEntryType[]).map((value) => (
                 <option key={value} value={value}>{t(`obra.diario.types.${value}`)}</option>
               ))}
             </select>
 
-            <label className="grid gap-1 text-sm text-on-surface-variant">
+            <label className="grid gap-1 text-sm text-ink-2">
               {t("obra.diario.form.date")}
               <input
                 type="datetime-local"
                 value={entryDate}
                 onChange={(event) => setEntryDate(event.target.value)}
                 disabled={isReadOnly("diario")}
-                className="w-full rounded-lg border border-outline-variant bg-surface-container-highest p-3 text-on-surface focus:border-gold focus:ring-1 focus:ring-gold"
+                className="w-full rounded-lg border border-border bg-raised p-3 text-ink focus:border-gold focus:ring-1 focus:ring-gold"
               />
             </label>
 
@@ -210,7 +210,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               onChange={(event) => setDraft(event.target.value)}
               disabled={isReadOnly("diario")}
               placeholder={t("obra.diario.form.descriptionPlaceholder")}
-              className="h-48 w-full resize-none rounded-lg border border-outline-variant bg-surface-container-highest p-4 text-sm text-on-surface outline-none transition-all placeholder:text-on-surface-faint focus:border-gold focus:ring-1 focus:ring-gold"
+              className="h-48 w-full resize-none rounded-lg border border-border bg-raised p-4 text-sm text-ink outline-none transition-all placeholder:text-ink-3 focus:border-gold focus:ring-1 focus:ring-gold"
             />
 
             <input
@@ -224,18 +224,18 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isReadOnly("diario") || attachments.isUploading}
-              className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-gold disabled:opacity-50"
+              className="flex items-center gap-2 text-sm text-ink-2 hover:text-gold disabled:opacity-50"
             >
               <ImagePlus size={20} />
               {attachments.isUploading ? t("obra.diario.form.uploading") : attachmentName ?? t("obra.diario.form.attach")}
             </button>
           </div>
 
-          <div className="mx-6 mb-6 mt-1 flex items-center justify-between gap-3 border-t border-outline-variant pt-5">
+          <div className="mx-6 mb-6 mt-1 flex items-center justify-between gap-3 border-t border-border pt-5">
             <button
               type="submit"
               disabled={isReadOnly("diario") || isCreating || !draft.trim()}
-              className="rounded-lg bg-gold px-6 py-2.5 text-sm font-semibold text-on-primary shadow-md transition-all hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-gold px-6 py-2.5 text-sm font-semibold text-on-gold shadow-md transition-all hover:bg-gold-deep disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isCreating ? t("obra.diario.form.saving") : t("obra.diario.form.save")}
             </button>
@@ -252,7 +252,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
         size="sm"
       >
         <div className="space-y-5 px-6 pb-6">
-          <p className="text-sm leading-relaxed text-on-surface-variant">
+          <p className="text-sm leading-relaxed text-ink-2">
             {t("obra.diario.deleteModal.message", { description: pendingDelete?.description ?? "" })}
           </p>
           <div className="flex gap-3">

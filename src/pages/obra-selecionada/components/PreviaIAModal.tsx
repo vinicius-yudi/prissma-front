@@ -36,16 +36,16 @@ import { AttachmentDropzone } from "./AttachmentDropzone"
 const MAX_COLORS = 5
 
 const formLabel = tv({
-  base: "block text-xs font-semibold uppercase tracking-widest text-primary",
+  base: "block text-xs font-semibold uppercase tracking-widest text-gold",
 })
 
 const colorChip = tv({
   base: "rounded-full border px-3 py-1.5 text-[11.5px] font-semibold transition-colors",
   variants: {
     selected: {
-      true: "border-gold bg-tint text-gold-bright",
+      true: "border-gold bg-raised text-gold-hi",
       false:
-        "border-outline-variant text-on-surface-variant hover:border-outline hover:text-on-surface",
+        "border-border text-ink-2 hover:border-border-strong hover:text-ink",
     },
   },
 })
@@ -191,8 +191,8 @@ export function PreviaIAModal({
         <fieldset disabled={isProcessing} className="mx-6 mt-5 space-y-5">
           {/* Aviso literal da spec: o usuário precisa saber que a espera é
               longa antes de disparar, não depois. */}
-          <p className="flex items-start gap-2 rounded-xl bg-tint px-4 py-3 text-xs leading-relaxed text-on-surface-variant">
-            <Sparkles size={14} strokeWidth={1.8} className="mt-px shrink-0 text-gold-bright" />
+          <p className="flex items-start gap-2 rounded-xl bg-raised px-4 py-3 text-xs leading-relaxed text-ink-2">
+            <Sparkles size={14} strokeWidth={1.8} className="mt-px shrink-0 text-gold-hi" />
             {t("obra.propostas.previa.warning")}
           </p>
 
@@ -200,7 +200,7 @@ export function PreviaIAModal({
             <Label className={formLabel()}>{t("obra.propostas.previa.fields.rawImage")}</Label>
             {rawPreviewUrl ? (
               <div className="space-y-2">
-                <div className="aspect-[3/2] w-full overflow-hidden rounded-xl border border-outline-variant">
+                <div className="aspect-[3/2] w-full overflow-hidden rounded-xl border border-border">
                   <img
                     src={rawPreviewUrl}
                     alt={t("obra.propostas.previa.rawImageAlt")}
@@ -208,13 +208,13 @@ export function PreviaIAModal({
                   />
                 </div>
                 <div className="flex items-center justify-between gap-3">
-                  <Num className="min-w-0 truncate text-[11px] text-on-surface-faint">
+                  <Num className="min-w-0 truncate text-[11px] text-ink-3">
                     {rawImage?.name}
                   </Num>
                   <button
                     type="button"
                     onClick={() => setRawImage(null)}
-                    className="shrink-0 text-[11px] font-semibold text-gold-bright hover:text-gold"
+                    className="shrink-0 text-[11px] font-semibold text-gold-hi hover:text-gold"
                   >
                     {t("obra.propostas.previa.changeFile")}
                   </button>
@@ -234,14 +234,14 @@ export function PreviaIAModal({
           <div className="space-y-1.5">
             <Label className={formLabel()}>{t("obra.propostas.previa.fields.floorPlan")}</Label>
             {floorPlan ? (
-              <div className="flex items-center justify-between gap-3 rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3">
-                <Num className="min-w-0 truncate text-[11.5px] text-on-surface-variant">
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+                <Num className="min-w-0 truncate text-[11.5px] text-ink-2">
                   {floorPlan.name}
                 </Num>
                 <button
                   type="button"
                   onClick={() => setFloorPlan(null)}
-                  className="shrink-0 text-[11px] font-semibold text-gold-bright hover:text-gold"
+                  className="shrink-0 text-[11px] font-semibold text-gold-hi hover:text-gold"
                 >
                   {t("obra.propostas.previa.removeFile")}
                 </button>
@@ -255,7 +255,7 @@ export function PreviaIAModal({
                 onFile={pickFloorPlan}
               />
             )}
-            <p className="text-[11px] text-on-surface-faint">
+            <p className="text-[11px] text-ink-3">
               {t("obra.propostas.previa.floorPlanHint")}
             </p>
           </div>
@@ -328,7 +328,7 @@ export function PreviaIAModal({
                 </button>
               ))}
             </div>
-            <Num className="text-[11px] text-on-surface-faint">
+            <Num className="text-[11px] text-ink-3">
               {t("obra.propostas.previa.colorsCount", { selected: colors.length, max: MAX_COLORS })}
             </Num>
           </div>
@@ -356,20 +356,20 @@ export function PreviaIAModal({
               className="animate-pulse"
               label={t("obra.propostas.generating")}
             />
-            <p className="text-center text-xs text-on-surface-variant">
+            <p className="text-center text-xs text-ink-2">
               {t("obra.propostas.previa.processing")}
             </p>
           </div>
         )}
 
         {!isProcessing && errorMessage && (
-          <p className="mx-6 mt-5 flex items-start gap-2 rounded-xl bg-warn-bg px-4 py-3 text-xs leading-relaxed text-warn">
+          <p className="mx-6 mt-5 flex items-start gap-2 rounded-xl bg-warning-soft px-4 py-3 text-xs leading-relaxed text-warning">
             <AlertTriangle size={14} strokeWidth={1.8} className="mt-px shrink-0" />
             {errorMessage}
           </p>
         )}
 
-        <div className="mx-6 mb-6 mt-5 flex items-center justify-between gap-3 border-t border-outline-variant pt-5">
+        <div className="mx-6 mb-6 mt-5 flex items-center justify-between gap-3 border-t border-border pt-5">
           <Button type="button" variant="outline" fullWidth={false} onClick={onClose}>
             {t("obra.propostas.actions.close")}
           </Button>

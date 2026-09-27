@@ -34,12 +34,12 @@ function DonutTooltip({ active, payload, total }: DonutTooltipProps) {
   if (!datum) return null
   const percent = total > 0 ? Math.round((datum.value / total) * 100) : 0
   return (
-    <div className="rounded-lg bg-surface-container-highest border border-outline-variant px-3 py-2 shadow-lg">
-      <p className="text-xs font-semibold text-on-surface">{datum.name}</p>
-      <p className="text-xs text-on-surface-variant tabular-nums">
+    <div className="rounded-lg bg-raised border border-border px-3 py-2 shadow-lg">
+      <p className="text-xs font-semibold text-ink">{datum.name}</p>
+      <p className="text-xs text-ink-2 tabular-nums">
         {formatCurrency(datum.value)}
       </p>
-      <p className="text-[10px] text-on-surface-variant mt-0.5">
+      <p className="text-[10px] text-ink-2 mt-0.5">
         {t("obra.orcamento.charts.percentOfTotal", { percent })}
       </p>
     </div>

@@ -7,8 +7,8 @@ interface BudgetChartPanelProps {
 
 export function BudgetChartPanel({ title, children }: BudgetChartPanelProps) {
   return (
-    <div className="bg-surface-container rounded-xl p-5 border border-outline-variant/20">
-      <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">
+    <div className="bg-surface rounded-xl p-5 border border-border/20">
+      <h3 className="text-xs font-bold uppercase tracking-widest text-ink-2 mb-4">
         {title}
       </h3>
       {children}

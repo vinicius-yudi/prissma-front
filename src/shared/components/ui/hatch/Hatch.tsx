@@ -9,7 +9,7 @@ import { tv } from "tailwind-variants"
  */
 
 const hatch = tv({
-  base: "bg-surface-container-low bg-hatch",
+  base: "bg-surface bg-hatch",
 })
 
 interface HatchProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -25,18 +25,18 @@ const row = tv({
   base: "flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-sm transition-colors",
   variants: {
     variant: {
-      default: "cursor-pointer text-on-surface hover:bg-surface-container-high",
-      danger: "cursor-pointer text-danger hover:bg-danger-bg",
-      disabled: "cursor-not-allowed text-on-surface-faint",
-      static: "text-on-surface",
+      default: "cursor-pointer text-ink hover:bg-raised",
+      danger: "cursor-pointer text-danger hover:bg-danger-soft",
+      disabled: "cursor-not-allowed text-ink-3",
+      static: "text-ink",
     },
   },
 })
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-2">
-      <h2 className="px-3 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-surface-faint">
+    <section className="rounded-2xl border border-border bg-surface p-2">
+      <h2 className="px-3 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-3">
         {title}
       </h2>
       {children}
@@ -54,11 +54,11 @@ export function PerfilPage() {
 
   return (
     <div className="mx-auto flex max-w-lg flex-col gap-4">
-      <div className="flex items-center gap-3 rounded-2xl border border-outline-variant bg-surface-container-low p-4">
+      <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-4">
         <img src={logoUrl} alt="PRISSMA" className="size-10 shrink-0 rounded-xl object-contain" />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-on-surface">{name}</p>
-          <p className="truncate text-[11px] text-on-surface-faint">
+          <p className="truncate text-sm font-semibold text-ink">{name}</p>
+          <p className="truncate text-[11px] text-ink-3">
             {user?.email ?? t("sidebar.accountType")}
           </p>
         </div>

@@ -63,7 +63,7 @@ describe("<Progress />", () => {
     (tone) => {
       const { container } = renderWithProviders(<Progress value={50} tone={tone} />)
 
-      expect(preenchimento(container).style.backgroundImage).toContain("--pk-trena")
+      expect(preenchimento(container).style.backgroundImage).not.toBe("")
     },
   )
 

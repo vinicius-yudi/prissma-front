@@ -18,14 +18,14 @@ export type ProgressTone = "gold" | "ok" | "warn" | "danger"
 // orçamento tem um estado real de "chegando no limite" (≥80%) que sem ele
 // ficaria indistinguível do curso normal.
 const FILL: Record<ProgressTone, string> = {
-  gold: "var(--pk-grad)",
-  ok: "linear-gradient(90deg, var(--pk-ok), var(--pk-ok))",
-  warn: "linear-gradient(90deg, var(--pk-wn), var(--pk-wn))",
-  danger: "linear-gradient(90deg, var(--color-danger-solid), var(--color-danger-solid))",
+  gold: "var(--grad-action)",
+  ok: "linear-gradient(90deg, var(--success), var(--success))",
+  warn: "linear-gradient(90deg, var(--warning), var(--warning))",
+  danger: "linear-gradient(90deg, var(--color-danger), var(--color-danger))",
 }
 
 const track = tv({
-  base: "w-full overflow-hidden rounded-full bg-surface-container-highest",
+  base: "w-full overflow-hidden rounded-full bg-raised",
 })
 
 interface ProgressProps {
@@ -61,7 +61,7 @@ export function Progress({
         className="h-full rounded-full transition-[width] duration-300"
         style={{
           width: `${pct}%`,
-          backgroundImage: `var(--pk-trena), ${FILL[tone]}`,
+          backgroundImage: FILL[tone],
         }}
       />
     </div>

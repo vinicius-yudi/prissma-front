@@ -40,15 +40,15 @@ export function InvitePage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-surface p-4">
-      <div className="w-full max-w-md rounded-2xl border border-outline-variant bg-surface-container-low p-6 sm:p-8">
-        <h1 className="text-lg font-semibold text-on-surface">{t("invitePage.title")}</h1>
+    <main className="flex min-h-dvh items-center justify-center bg-bg p-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 sm:p-8">
+        <h1 className="text-lg font-semibold text-ink">{t("invitePage.title")}</h1>
 
         {!token && <p className="mt-4 text-sm text-danger">{t("invitePage.missingToken")}</p>}
 
         {token && status === "success" && (
           <div className="mt-4 space-y-4">
-            <p className="text-sm text-on-surface-variant">{t("invitePage.success")}</p>
+            <p className="text-sm text-ink-2">{t("invitePage.success")}</p>
             <Link to="/login">
               <Button className="w-full">{t("invitePage.goLogin")}</Button>
             </Link>
@@ -57,7 +57,7 @@ export function InvitePage() {
 
         {token && status !== "success" && (
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-            <p className="text-sm text-on-surface-variant">{t("invitePage.hint")}</p>
+            <p className="text-sm text-ink-2">{t("invitePage.hint")}</p>
 
             <Input
               value={fullName}
@@ -73,7 +73,7 @@ export function InvitePage() {
                 placeholder={t("invitePage.passwordLabel")}
                 aria-label={t("invitePage.passwordLabel")}
               />
-              <p className="mt-1 text-xs text-on-surface-faint">{t("invitePage.passwordHint")}</p>
+              <p className="mt-1 text-xs text-ink-3">{t("invitePage.passwordHint")}</p>
             </div>
 
             {error && <p className="text-sm text-danger">{error}</p>}

@@ -26,11 +26,11 @@ import {
 } from "../schemas/projectSchema"
 
 const formLabel = tv({
-  base: "block text-xs uppercase tracking-widest text-primary font-semibold",
+  base: "block text-xs uppercase tracking-widest text-gold font-semibold",
 })
 
 const formInput = tv({
-  base: "bg-surface-container-highest text-on-surface [&_option]:bg-surface-container-highest focus:ring-1",
+  base: "bg-raised text-ink [&_option]:bg-raised focus:ring-1",
 })
 
 function maskCep(raw: string): string {
@@ -173,7 +173,7 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
       variant="default"
       size="2xl"
     >
-      <div className="sticky top-0 bg-surface-container border-b border-outline-variant z-10">
+      <div className="sticky top-0 bg-surface border-b border-border z-10">
         <StepIndicator steps={steps} current={step} />
       </div>
 
@@ -262,11 +262,11 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
         {step === 2 && (
           <div className="px-6 pt-5 pb-2 space-y-5">
             {isEdit && project && (
-              <div className="flex items-start gap-2 px-3 py-2.5 bg-surface-container-low rounded-lg border border-outline-variant">
-                <MapPin size={14} className="text-on-surface-variant mt-0.5 flex-none" />
+              <div className="flex items-start gap-2 px-3 py-2.5 bg-surface rounded-lg border border-border">
+                <MapPin size={14} className="text-ink-2 mt-0.5 flex-none" />
                 <div>
-                  <p className="text-xs text-on-surface-variant mb-0.5">{t("projectModal.currentAddress")}</p>
-                  <p className="text-sm text-on-surface">{formatProjectAddress(project)}</p>
+                  <p className="text-xs text-ink-2 mb-0.5">{t("projectModal.currentAddress")}</p>
+                  <p className="text-sm text-ink">{formatProjectAddress(project)}</p>
                 </div>
               </div>
             )}
@@ -284,8 +284,8 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
                       placeholder={t("projectModal.cepPlaceholder")}
                       suffix={
                         isLookingUp
-                          ? <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          : <Search size={14} className="text-on-surface-variant" />
+                          ? <span className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                          : <Search size={14} className="text-ink-2" />
                       }
                       value={maskCep(field.value)}
                       onChange={(e) => {
@@ -362,7 +362,7 @@ export function ProjectStepModal({ open, onClose, project }: ProjectStepModalPro
         )}
 
         {/* ── Footer de navegação ── */}
-        <div className="flex items-center justify-between gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
+        <div className="flex items-center justify-between gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-border">
           {step === 1 ? (
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               {t("projectModal.cancel")}

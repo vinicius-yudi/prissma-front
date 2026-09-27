@@ -17,19 +17,19 @@ export function ScheduleEmptyState({ projectId }: ScheduleEmptyStateProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-outline bg-surface-container-low p-12 text-center">
-      <div className="rounded-2xl bg-primary/10 p-4 text-primary">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border-strong bg-surface p-12 text-center">
+      <div className="rounded-2xl bg-gold/10 p-4 text-gold">
         <Users size={28} />
       </div>
       <div className="space-y-1">
-        <h2 className="text-lg font-bold text-on-surface">{t("obra.schedule.empty.title")}</h2>
-        <p className="max-w-md text-sm text-on-surface-variant">
+        <h2 className="text-lg font-bold text-ink">{t("obra.schedule.empty.title")}</h2>
+        <p className="max-w-md text-sm text-ink-2">
           {t("obra.schedule.empty.description")}
         </p>
       </div>
       <Link
         to={`/obras/${projectId}/equipes`}
-        className="text-[12.5px] font-semibold text-gold-bright hover:underline"
+        className="text-[12.5px] font-semibold text-gold-hi hover:underline"
       >
         {t("obra.schedule.empty.cta")}
       </Link>

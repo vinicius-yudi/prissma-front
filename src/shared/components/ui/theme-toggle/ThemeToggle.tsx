@@ -18,8 +18,8 @@ function getKnobStyle(isDark: boolean): CSSProperties {
 }
 
 function ToggleIcon({ isDark }: { isDark: boolean }) {
-  if (isDark) return <Moon size={14} className="text-on-primary" />
-  return <Sun size={14} className="text-on-primary" />
+  if (isDark) return <Moon size={14} className="text-on-gold" />
+  return <Sun size={14} className="text-on-gold" />
 }
 
 export function ThemeToggle() {
@@ -32,10 +32,10 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       aria-label={getAriaLabel(isDark, t)}
-      className="relative flex h-8 w-[3.25rem] shrink-0 items-center rounded-full border border-outline-variant bg-surface-container-high p-0.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+      className="relative flex h-8 w-[3.25rem] shrink-0 items-center rounded-full border border-border bg-raised p-0.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold cursor-pointer"
     >
       <span
-        className="absolute left-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-primary shadow-sm transition-all duration-300"
+        className="absolute left-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-gold shadow-sm transition-all duration-300"
         style={getKnobStyle(isDark)}
       >
         <ToggleIcon isDark={isDark} />

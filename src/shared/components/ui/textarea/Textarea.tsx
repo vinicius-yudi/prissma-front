@@ -10,7 +10,7 @@ import { tv } from "tailwind-variants"
  * fundo.
  */
 const textarea = tv({
-  base: "w-full resize-y rounded-lg border border-outline-variant bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none transition-all placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary/30",
+  base: "w-full resize-y rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none transition-all placeholder:text-ink-2 focus:border-gold focus:ring-2 focus:ring-gold/30",
 })
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(

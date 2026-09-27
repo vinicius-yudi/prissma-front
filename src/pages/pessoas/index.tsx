@@ -82,13 +82,13 @@ export function PessoasPage() {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5">
+      <section className="rounded-2xl border border-border bg-surface p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-on-surface">
+            <h2 className="text-base font-semibold text-ink">
               {t("workspace.team.title")}
             </h2>
-            <p className="mt-1 text-sm text-on-surface-variant">{t("workspace.team.hint")}</p>
+            <p className="mt-1 text-sm text-ink-2">{t("workspace.team.hint")}</p>
           </div>
 
           {canManage && (
@@ -102,7 +102,7 @@ export function PessoasPage() {
         {team.isLoading && (
           <div className="mt-5 space-y-2">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-14 animate-pulse rounded-xl bg-surface-container-high" />
+              <div key={i} className="h-14 animate-pulse rounded-xl bg-raised" />
             ))}
           </div>
         )}
@@ -110,31 +110,31 @@ export function PessoasPage() {
         {team.isError && <p className="mt-6 text-sm text-danger">{t("workspace.team.error")}</p>}
 
         {!team.isLoading && !team.isError && visibleMembers.length === 0 && (
-          <p className="mt-6 text-sm text-on-surface-variant">{t("workspace.team.empty")}</p>
+          <p className="mt-6 text-sm text-ink-2">{t("workspace.team.empty")}</p>
         )}
 
-        <ul className="mt-4 divide-y divide-outline-variant">
+        <ul className="mt-4 divide-y divide-border">
           {visibleMembers.map((member) => (
             <li key={member.id} className="flex flex-wrap items-center gap-3 py-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface-container-high text-xs font-bold text-on-surface-variant">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-raised text-xs font-bold text-ink-2">
                 {(member.name ?? member.email ?? "?").slice(0, 2).toUpperCase()}
               </span>
 
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-on-surface">
+                <span className="block truncate text-sm font-semibold text-ink">
                   {member.name ?? member.email}
                   {!member.active && (
-                    <span className="ml-2 rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] font-medium text-on-surface-faint">
+                    <span className="ml-2 rounded-full bg-raised px-2 py-0.5 text-[10px] font-medium text-ink-3">
                       {t("workspace.team.inactive")}
                     </span>
                   )}
                   {member.active && !member.acceptedAt && (
-                    <span className="ml-2 rounded-full bg-tint px-2 py-0.5 text-[10px] font-medium text-gold-bright">
+                    <span className="ml-2 rounded-full bg-raised px-2 py-0.5 text-[10px] font-medium text-gold-hi">
                       {t("workspace.team.pending")}
                     </span>
                   )}
                 </span>
-                <span className="block truncate text-xs text-on-surface-variant">
+                <span className="block truncate text-xs text-ink-2">
                   {member.email}
                 </span>
               </span>
@@ -162,7 +162,7 @@ export function PessoasPage() {
                       title={t("workspace.team.deactivate")}
                       disabled={team.isMutating}
                       onClick={() => team.deactivate(member.id)}
-                      className="flex size-8 cursor-pointer items-center justify-center rounded-full text-on-surface-faint transition-colors hover:bg-surface-container-high hover:text-on-surface"
+                      className="flex size-8 cursor-pointer items-center justify-center rounded-full text-ink-3 transition-colors hover:bg-raised hover:text-ink"
                     >
                       <UserMinus size={15} />
                     </button>
@@ -173,13 +173,13 @@ export function PessoasPage() {
                     title={t("workspace.team.remove")}
                     disabled={team.isMutating}
                     onClick={() => setMemberToRemove(member)}
-                    className="flex size-8 cursor-pointer items-center justify-center rounded-full text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger"
+                    className="flex size-8 cursor-pointer items-center justify-center rounded-full text-ink-3 transition-colors hover:bg-danger-soft hover:text-danger"
                   >
                     <X size={15} />
                   </button>
                 </span>
               ) : (
-                <span className="rounded-full border border-outline-variant bg-surface-container-high px-3 py-1 text-[11px] font-semibold text-on-surface-variant">
+                <span className="rounded-full border border-border bg-raised px-3 py-1 text-[11px] font-semibold text-ink-2">
                   {t(`workspace.roles.${member.role}`)}
                 </span>
               )}

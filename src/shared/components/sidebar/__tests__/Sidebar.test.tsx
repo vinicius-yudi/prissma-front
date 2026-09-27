@@ -215,8 +215,8 @@ describe("<Sidebar /> — navegação", () => {
     renderWithProviders(<Sidebar />, { route: "/obras" })
     await expandir()
 
-    expect(screen.getByRole("link", { name: "Obras" })).toHaveClass("bg-tint")
-    expect(screen.getByRole("link", { name: "Início" })).not.toHaveClass("bg-tint")
+    expect(screen.getByRole("link", { name: "Obras" })).toHaveClass("bg-raised")
+    expect(screen.getByRole("link", { name: "Início" })).not.toHaveClass("bg-raised")
   })
 })
 

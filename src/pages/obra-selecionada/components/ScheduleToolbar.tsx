@@ -18,7 +18,7 @@ import { formatMonthLabel, weekRangeLabel } from "../utils/scheduleFormat"
  */
 
 const PERIOD_ARROW =
-  "flex size-8 cursor-pointer items-center justify-center rounded-lg text-on-surface-faint transition-colors hover:bg-surface-container-high hover:text-on-surface"
+  "flex size-8 cursor-pointer items-center justify-center rounded-lg text-ink-3 transition-colors hover:bg-raised hover:text-ink"
 
 interface ScheduleToolbarProps {
   schedule: TeamSchedule
@@ -41,7 +41,7 @@ export function ScheduleToolbar({
   return (
     <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div className="flex flex-col gap-2">
-        <div className="flex w-fit gap-0.5 rounded-full border border-outline-variant bg-surface-container-high p-1">
+        <div className="flex w-fit gap-0.5 rounded-full border border-border bg-raised p-1">
           <Button
             variant={isWeek ? "menuSelected" : "menu"}
             size="sm"
@@ -65,7 +65,7 @@ export function ScheduleToolbar({
         </div>
 
         {isWeek && (
-          <p className="font-mono text-[10.5px] tracking-[0.05em] text-on-surface-faint">
+          <p className="t-num text-[10.5px] tracking-[0.05em] text-ink-3">
             {t(`obra.schedule.period.${range.key}`, range.values)}
           </p>
         )}
@@ -80,7 +80,7 @@ export function ScheduleToolbar({
         >
           <ChevronLeft size={16} />
         </button>
-        <Num className="font-semibold text-on-surface">
+        <Num className="font-semibold text-ink">
           {formatMonthLabel(schedule.startDate, i18n.language)}
         </Num>
         <button

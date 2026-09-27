@@ -26,7 +26,7 @@ describe("<Num />", () => {
   it("desenha o valor em mono tabular", () => {
     render(<Num>R$ 1.240,00</Num>)
 
-    expect(screen.getByText("R$ 1.240,00")).toHaveClass("font-mono", "tabular-nums")
+    expect(screen.getByText("R$ 1.240,00")).toHaveClass("t-num")
   })
 
   it("repassa classe e atributos de quem monta", () => {
@@ -64,7 +64,7 @@ describe("<DimensionLine />", () => {
   it("desenha a legenda técnica em mono", () => {
     render(<DimensionLine>OBRA-042 · Rua das Palmeiras</DimensionLine>)
 
-    expect(screen.getByText("OBRA-042 · Rua das Palmeiras")).toHaveClass("font-mono")
+    expect(screen.getByText("OBRA-042 · Rua das Palmeiras")).toHaveClass("t-num")
   })
 
   it("aceita classe extra", () => {
@@ -78,7 +78,7 @@ describe("<ContrastCard />", () => {
   it("aplica a superfície invertida", () => {
     render(<ContrastCard data-testid="card">Tarefas de hoje</ContrastCard>)
 
-    expect(screen.getByTestId("card")).toHaveClass("bg-contrast", "text-on-contrast")
+    expect(screen.getByTestId("card")).toHaveClass("bg-inverse", "text-on-inverse")
   })
 
   it("repassa classe e atributos", () => {

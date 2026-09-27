@@ -21,8 +21,8 @@ const zone = tv({
   base: "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed px-6 py-9 text-center transition-all",
   variants: {
     over: {
-      true: "border-gold bg-surface-container-high shadow-glow",
-      false: "border-outline bg-surface-container-low hover:border-gold hover:shadow-glow",
+      true: "border-gold bg-raised shadow-soft",
+      false: "border-border-strong bg-surface hover:border-gold hover:shadow-soft",
     },
     disabled: {
       true: "pointer-events-none opacity-60",
@@ -90,13 +90,13 @@ export function AttachmentDropzone({
         onDragLeave={() => setIsOver(false)}
         onDrop={handleDrop}
       >
-        <UploadCloud size={26} strokeWidth={1.7} className="text-gold-bright" />
+        <UploadCloud size={26} strokeWidth={1.7} className="text-gold-hi" />
 
-        <p className="text-[13.5px] font-semibold text-on-surface">
+        <p className="text-[13.5px] font-semibold text-ink">
           {t("obra.documentos.dropzone.title")}
         </p>
 
-        <Num className="text-[11px] text-on-surface-faint">
+        <Num className="text-[11px] text-ink-3">
           {acceptLabel} · {t("obra.documentos.dropzone.maxSize", { max: maxSizeMb })}
         </Num>
 
@@ -111,13 +111,13 @@ export function AttachmentDropzone({
 
       {isUploading && (
         <div className="mt-3 space-y-1.5">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container-highest">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-raised">
             <div
               className="h-full w-full animate-pulse rounded-full"
-              style={{ backgroundImage: "var(--pk-trena), var(--pk-grad)" }}
+              style={{ backgroundImage: "var(--grad-action)" }}
             />
           </div>
-          <p className="text-[11px] font-semibold text-gold-bright">
+          <p className="text-[11px] font-semibold text-gold-hi">
             {t("obra.documentos.uploading")}
           </p>
         </div>

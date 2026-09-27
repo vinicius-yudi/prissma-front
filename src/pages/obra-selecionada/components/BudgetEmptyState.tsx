@@ -11,15 +11,15 @@ interface BudgetEmptyStateProps {
 export function BudgetEmptyState({ canMutate, onCreate }: BudgetEmptyStateProps) {
   const { t } = useTranslation()
   return (
-    <div className="bg-surface-container-low rounded-xl p-12 flex flex-col items-center justify-center text-center gap-4 border border-outline-variant/20">
-      <div className="p-4 rounded-2xl bg-primary/10 text-primary">
+    <div className="bg-surface rounded-xl p-12 flex flex-col items-center justify-center text-center gap-4 border border-border/20">
+      <div className="p-4 rounded-2xl bg-gold/10 text-gold">
         <Coins size={28} />
       </div>
       <div className="space-y-1">
-        <h2 className="text-lg font-bold text-on-surface">
+        <h2 className="text-lg font-bold text-ink">
           {t("obra.orcamento.empty.title")}
         </h2>
-        <p className="text-sm text-on-surface-variant max-w-md">
+        <p className="text-sm text-ink-2 max-w-md">
           {t("obra.orcamento.empty.description")}
         </p>
       </div>

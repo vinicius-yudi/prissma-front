@@ -3,7 +3,7 @@ import { LoginForm } from "./components/LoginForm"
 
 export function LoginPage() {
   return (
-    <main className="flex h-screen overflow-hidden bg-background">
+    <main className="flex h-screen overflow-hidden bg-bg">
       <BrandPanel />
       <LoginForm />
     </main>

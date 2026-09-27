@@ -21,7 +21,7 @@ export function MainLayout() {
 	const { pathname } = useLocation()
 
 	return (
-		<div className="flex h-dvh overflow-hidden bg-background">
+		<div className="flex h-dvh overflow-hidden bg-bg">
 			<PrimaryActionProvider>
 				<Sidebar />
 

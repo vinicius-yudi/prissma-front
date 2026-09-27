@@ -41,7 +41,7 @@ export function PerfilForm({ open, onClose, onDeleteAccount }: PerfilFormProps) 
 
   if (isLoading) {
     return (
-      <p className="py-8 text-center text-sm text-on-surface-variant">
+      <p className="py-8 text-center text-sm text-ink-2">
         {t("profile.loading")}
       </p>
     )
@@ -51,7 +51,7 @@ export function PerfilForm({ open, onClose, onDeleteAccount }: PerfilFormProps) 
     <button
       type="button"
       onClick={togglePassword}
-      className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+      className="text-ink-2 hover:text-ink transition-colors cursor-pointer"
     >
       {showPassword ? EyeOffIcon : EyeOnIcon}
     </button>
@@ -61,7 +61,7 @@ export function PerfilForm({ open, onClose, onDeleteAccount }: PerfilFormProps) 
     <button
       type="button"
       onClick={toggleConfirm}
-      className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+      className="text-ink-2 hover:text-ink transition-colors cursor-pointer"
     >
       {showConfirm ? EyeOffIcon : EyeOnIcon}
     </button>
@@ -120,7 +120,7 @@ export function PerfilForm({ open, onClose, onDeleteAccount }: PerfilFormProps) 
           type="button"
           variant="outline"
           onClick={onDeleteAccount}
-          className="flex-1 text-error border-error hover:bg-error/10"
+          className="flex-1 text-danger border-danger hover:bg-danger/10"
         >
           <Trash2 size={14} />
           {t("profile.deleteAccount")}

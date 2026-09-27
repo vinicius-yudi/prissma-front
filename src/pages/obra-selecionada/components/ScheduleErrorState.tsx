@@ -16,11 +16,11 @@ export function ScheduleErrorState({ onRetry }: ScheduleErrorStateProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-outline-variant bg-surface-container-low p-12 text-center">
-      <div className="rounded-2xl bg-danger-bg p-4 text-danger">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-border bg-surface p-12 text-center">
+      <div className="rounded-2xl bg-danger-soft p-4 text-danger">
         <AlertTriangle size={28} />
       </div>
-      <p className="text-sm text-on-surface-variant">{t("obra.schedule.error.title")}</p>
+      <p className="text-sm text-ink-2">{t("obra.schedule.error.title")}</p>
       <Button variant="outline" fullWidth={false} onClick={onRetry}>
         {t("obra.schedule.error.retry")}
       </Button>

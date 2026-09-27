@@ -18,19 +18,19 @@ export function BrandPanel() {
   const { t } = useTranslation()
 
   return (
-    <section className="relative hidden h-full flex-col justify-between overflow-hidden bg-background p-16 lg:flex lg:w-[55%]">
+    <section className="relative hidden h-full flex-col justify-between overflow-hidden bg-bg p-16 lg:flex lg:w-[55%]">
       <ConstructionHero />
-      <div className="pointer-events-none absolute inset-0 bg-blueprint-grid" />
+      <div className="pointer-events-none absolute inset-0 blueprint" />
       <div className="pointer-events-none absolute left-0 top-0 size-[480px] bg-brand-glow" />
 
       <div className="z-10">
-        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-primary">
+        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-gold">
           {t("brand.name")}
         </span>
-        <h1 className="text-4xl font-bold leading-tight text-on-surface">
+        <h1 className="text-4xl font-bold leading-tight text-ink">
           {t("brand.headline")}
           <br />
-          <span className="text-primary">{t("brand.headlineSuffix")}</span>
+          <span className="text-gold">{t("brand.headlineSuffix")}</span>
         </h1>
       </div>
 

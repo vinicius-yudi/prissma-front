@@ -24,7 +24,7 @@ function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () 
   const { t } = useTranslation()
 
   return (
-    <section className="flex flex-col items-center gap-3.5 rounded-2xl border border-outline-variant bg-surface-container-low px-5 py-14 text-center">
+    <section className="flex flex-col items-center gap-3.5 rounded-2xl border border-border bg-surface px-5 py-14 text-center">
       {/* Ambiente em planta, traço ouro — a ilustração de vazio do Style Guide
           v2 §4, no vocabulário desta tela. */}
       <svg
@@ -42,8 +42,8 @@ function EmptyState({ canMutate, onCreate }: { canMutate: boolean; onCreate: () 
         <path d="M20 44h14v10H20z" strokeDasharray="3 4" />
       </svg>
 
-      <p className="text-sm font-semibold text-on-surface">{t("obra.propostas.emptyTitle")}</p>
-      <p className="max-w-sm text-sm leading-relaxed text-on-surface-variant">
+      <p className="text-sm font-semibold text-ink">{t("obra.propostas.emptyTitle")}</p>
+      <p className="max-w-sm text-sm leading-relaxed text-ink-2">
         {t("obra.propostas.emptyDescription")}
       </p>
 
@@ -132,7 +132,7 @@ export function PropostasTab({ projectId }: PropostasTabProps) {
       return (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-80 animate-pulse rounded-2xl bg-surface-container-low" />
+            <div key={i} className="h-80 animate-pulse rounded-2xl bg-surface" />
           ))}
         </div>
       )
@@ -140,8 +140,8 @@ export function PropostasTab({ projectId }: PropostasTabProps) {
 
     if (error) {
       return (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-outline-variant bg-surface-container-low p-12">
-          <p className="text-sm text-on-surface-variant">{t("obra.acompError")}</p>
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-surface p-12">
+          <p className="text-sm text-ink-2">{t("obra.acompError")}</p>
           <Button variant="outline" fullWidth={false} onClick={() => window.location.reload()}>
             <RefreshCw size={14} />
             {t("obra.retry")}
@@ -176,9 +176,9 @@ export function PropostasTab({ projectId }: PropostasTabProps) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <h2 className="text-base font-semibold text-on-surface">{t("obra.propostas.title")}</h2>
+          <h2 className="text-base font-semibold text-ink">{t("obra.propostas.title")}</h2>
           {proposals.length > 0 && (
-            <Num className="text-[11.5px] text-on-surface-faint">
+            <Num className="text-[11.5px] text-ink-3">
               {t("obra.propostas.count", { count: proposals.length })}
             </Num>
           )}
@@ -201,8 +201,8 @@ export function PropostasTab({ projectId }: PropostasTabProps) {
       </div>
 
       {/* Aviso de IA no topo: vale para a tela toda, não só para o modal. */}
-      <p className="flex items-start gap-2 text-[11.5px] leading-relaxed text-on-surface-faint">
-        <Sparkles size={13} strokeWidth={1.8} className="mt-px shrink-0 text-gold-bright" />
+      <p className="flex items-start gap-2 text-[11.5px] leading-relaxed text-ink-3">
+        <Sparkles size={13} strokeWidth={1.8} className="mt-px shrink-0 text-gold-hi" />
         {t("obra.propostas.previa.warning")}
       </p>
 
@@ -241,7 +241,7 @@ export function PropostasTab({ projectId }: PropostasTabProps) {
         size="sm"
       >
         <div className="space-y-5 px-6 pb-6">
-          <p className="text-sm leading-relaxed text-on-surface-variant">
+          <p className="text-sm leading-relaxed text-ink-2">
             {t("obra.propostas.deleteModal.message", { title: pendingDelete?.title ?? "" })}
           </p>
           <div className="flex gap-3">

@@ -28,7 +28,7 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
   }
 
   return (
-    <section className="relative flex h-full w-full flex-col items-center overflow-y-auto bg-surface px-6 pb-10 pt-16 sm:px-16 lg:w-[45%] lg:px-24 lg:py-12">
+    <section className="relative flex h-full w-full flex-col items-center overflow-y-auto bg-bg px-6 pb-10 pt-16 sm:px-16 lg:w-[45%] lg:px-24 lg:py-12">
       <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
         <LanguageSelect />
         <ThemeToggle />
@@ -40,8 +40,8 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
         </div>
 
         <div className="enter-up space-y-2 text-center" style={{ animationDelay: "0.16s" }}>
-          <h2 className="text-2xl font-bold tracking-tight text-on-surface sm:text-3xl">{t("register.title")}</h2>
-          <p className="text-sm text-on-surface-variant">{t("register.subtitle")}</p>
+          <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t("register.title")}</h2>
+          <p className="text-sm text-ink-2">{t("register.subtitle")}</p>
         </div>
 
         <div className="enter-up space-y-4" style={{ animationDelay: "0.24s" }}>
@@ -56,9 +56,9 @@ export function CadastroType({ onTypeSelected }: CadastroTypeProps) {
           </SelectionButton>
         </div>
 
-        <p className="enter-up text-center text-sm text-on-surface-variant" style={{ animationDelay: "0.48s" }}>
+        <p className="enter-up text-center text-sm text-ink-2" style={{ animationDelay: "0.48s" }}>
           {t("register.hasAccount")}{" "}
-          <Link to="/login" className="ml-1 font-bold text-gold-bright underline-offset-4 hover:underline">
+          <Link to="/login" className="ml-1 font-bold text-gold-hi underline-offset-4 hover:underline">
             {t("register.login")}
           </Link>
         </p>

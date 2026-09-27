@@ -16,12 +16,12 @@ const button = tv({
   base: "inline-flex cursor-pointer items-center justify-center font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50",
   variants: {
     variant: {
-      primary: "bg-gold-grad text-on-primary hover:shadow-glow hover:brightness-110",
-      outline: "border border-outline bg-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface",
-      ghost: "bg-transparent text-gold-bright hover:bg-tint",
-      destructive: "bg-danger-bg text-danger hover:brightness-110",
-      menu: "text-on-surface-variant hover:bg-tint hover:text-on-surface",
-      menuSelected: "bg-tint text-on-surface",
+      primary: "bg-gold-grad text-on-gold hover:shadow-soft hover:brightness-110",
+      outline: "border border-border-strong bg-transparent text-ink-2 hover:bg-raised hover:text-ink",
+      ghost: "bg-transparent text-gold-hi hover:bg-raised",
+      destructive: "bg-danger-soft text-danger hover:brightness-110",
+      menu: "text-ink-2 hover:bg-raised hover:text-ink",
+      menuSelected: "bg-raised text-ink",
     },
     size: {
       // Altura 38–44px e raio 12px são do design.

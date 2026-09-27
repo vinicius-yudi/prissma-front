@@ -45,7 +45,7 @@ const metaValue = tv({
   base: "mt-1.5 block text-[18px] font-bold leading-tight",
   variants: {
     tone: {
-      default: "text-on-surface",
+      default: "text-ink",
       danger: "text-danger",
     },
   },
@@ -56,7 +56,7 @@ const categoryValue = tv({
   variants: {
     exceeded: {
       true: "text-danger",
-      false: "text-on-surface",
+      false: "text-ink",
     },
   },
 })
@@ -84,7 +84,7 @@ function ProgressRing({ percent }: { percent: number }) {
           r={RING_RADIUS}
           strokeWidth={RING_STROKE}
           fill="none"
-          stroke="var(--color-surface-container-highest)"
+          stroke="var(--color-raised)"
         />
         <circle
           cx={center}
@@ -92,7 +92,7 @@ function ProgressRing({ percent }: { percent: number }) {
           r={RING_RADIUS}
           strokeWidth={RING_STROKE}
           fill="none"
-          stroke="var(--pk-b1)"
+          stroke="var(--gold)"
           strokeDasharray={RING_CIRCUMFERENCE}
           strokeDashoffset={RING_CIRCUMFERENCE - (percent / 100) * RING_CIRCUMFERENCE}
           strokeLinecap="round"
@@ -100,10 +100,10 @@ function ProgressRing({ percent }: { percent: number }) {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <Num className="text-[30px] font-bold leading-none tracking-tight text-on-surface">
+        <Num className="text-[30px] font-bold leading-none tracking-tight text-ink">
           {percent}%
         </Num>
-        <span className="mt-1 text-[11px] text-on-surface-faint">
+        <span className="mt-1 text-[11px] text-ink-3">
           {t("obra.visaoGeral.completedLabel")}
         </span>
       </div>
@@ -125,13 +125,13 @@ function Meta({
 }) {
   return (
     <div className="min-w-0">
-      <div className="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-on-surface-faint">
+      <div className="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-ink-3">
         {label}
       </div>
       <Num className={metaValue({ tone })}>
         <span className="block truncate">{value}</span>
       </Num>
-      {hint && <div className="mt-1 truncate text-[11px] text-on-surface-faint">{hint}</div>}
+      {hint && <div className="mt-1 truncate text-[11px] text-ink-3">{hint}</div>}
     </div>
   )
 }
@@ -140,11 +140,11 @@ const node = tv({
   base: "relative z-10 flex size-[26px] shrink-0 items-center justify-center rounded-full",
   variants: {
     state: {
-      done: "bg-ok text-on-primary",
-      progress: "bg-gold text-on-primary",
-      late: "bg-danger-solid text-white",
-      paused: "bg-warn text-on-primary",
-      idle: "border border-dashed border-outline bg-surface-container-low text-on-surface-faint",
+      done: "bg-success text-on-gold",
+      progress: "bg-gold text-on-gold",
+      late: "bg-danger text-white",
+      paused: "bg-warning text-on-gold",
+      idle: "border border-dashed border-border-strong bg-surface text-ink-3",
     },
   },
 })
@@ -158,7 +158,7 @@ function CicloNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
 
   return (
     <li className="relative flex gap-3.5 pb-5 last:pb-0">
-      {!isLast && <span className="absolute left-[12.5px] top-7 h-full w-px bg-outline-variant" />}
+      {!isLast && <span className="absolute left-[12.5px] top-7 h-full w-px bg-border" />}
 
       <span className={node({ state })}>
         {state === "done" ? (
@@ -172,10 +172,10 @@ function CicloNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[14.5px] font-semibold text-on-surface">{stage.name}</span>
+          <span className="text-[14.5px] font-semibold text-ink">{stage.name}</span>
           <StatusBadge status={stage.status} plannedEndDate={stage.plannedEndDate} />
           {/* O intervalo fecha a linha à direita, como cota de prazo. */}
-          <Num className="ml-auto shrink-0 text-[11.5px] text-on-surface-faint">
+          <Num className="ml-auto shrink-0 text-[11.5px] text-ink-3">
             {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : NO_DATE}
             {" – "}
             {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : NO_DATE}
@@ -191,7 +191,7 @@ function CicloNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           />
           <Num
             className={`w-9 shrink-0 text-right text-[11.5px] font-semibold ${
-              late > 0 ? "text-danger" : "text-on-surface-variant"
+              late > 0 ? "text-danger" : "text-ink-2"
             }`}
           >
             {progress}%
@@ -218,9 +218,9 @@ function SectionCard({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5">
+    <section className="rounded-2xl border border-border bg-surface p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold text-on-surface">{title}</h2>
+        <h2 className="text-base font-semibold text-ink">{title}</h2>
         {action}
       </div>
       {children}
@@ -232,7 +232,7 @@ function ModuleLink({ to, children }: { to: string; children: React.ReactNode })
   return (
     <Link
       to={to}
-      className="shrink-0 whitespace-nowrap text-[12px] font-semibold text-gold-bright hover:underline"
+      className="shrink-0 whitespace-nowrap text-[12px] font-semibold text-gold-hi hover:underline"
     >
       {children} ›
     </Link>
@@ -267,8 +267,8 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
     <div className="flex flex-col gap-5">
       {/* HERO — identidade da obra, metas e andamento. O nome e o status não se
           repetem aqui: já são o H1 e o badge do cabeçalho da página. */}
-      <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-5 sm:p-6">
-        <p className="text-[13px] text-on-surface-variant">
+      <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+        <p className="text-[13px] text-ink-2">
           {formatProjectAddress(project)} · {project.builtArea} m²
         </p>
 
@@ -342,7 +342,7 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
             }
           >
             {ordered.length === 0 ? (
-              <p className="py-8 text-center text-sm text-on-surface-variant">
+              <p className="py-8 text-center text-sm text-ink-2">
                 {t("obra.etapas.empty")}
               </p>
             ) : (
@@ -376,14 +376,14 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
             }
           >
             {!budget ? (
-              <p className="text-sm text-on-surface-variant">{t("obra.visaoGeral.noBudget")}</p>
+              <p className="text-sm text-ink-2">{t("obra.visaoGeral.noBudget")}</p>
             ) : (
               <div className="space-y-3.5">
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <Num className="text-[26px] font-bold leading-none tracking-tight text-on-surface">
+                  <Num className="text-[26px] font-bold leading-none tracking-tight text-ink">
                     {formatCompactCurrency(budget.totalSpent)}
                   </Num>
-                  <Num className="text-[11.5px] text-on-surface-faint">
+                  <Num className="text-[11.5px] text-ink-3">
                     {t("obra.visaoGeral.ofPlanned", {
                       planned: formatCompactCurrency(budget.plannedTotal),
                     })}
@@ -402,10 +402,10 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
                     <li key={item.id} className="flex items-center gap-2 text-[12.5px]">
                       <span
                         className={`size-2 shrink-0 rounded-full ${
-                          item.exceeded ? "bg-danger-solid" : "bg-gold"
+                          item.exceeded ? "bg-danger" : "bg-gold"
                         }`}
                       />
-                      <span className="min-w-0 flex-1 truncate text-on-surface-variant">
+                      <span className="min-w-0 flex-1 truncate text-ink-2">
                         {item.category}
                       </span>
                       <Num className={categoryValue({ exceeded: item.exceeded })}>
@@ -427,15 +427,15 @@ export function VisaoGeral({ project }: VisaoGeralProps) {
             }
           >
             {resumo.membersCount === 0 ? (
-              <p className="text-sm text-on-surface-variant">{t("obra.visaoGeral.noTeam")}</p>
+              <p className="text-sm text-ink-2">{t("obra.visaoGeral.noTeam")}</p>
             ) : (
               <ul className="space-y-3">
                 {resumo.members?.slice(0, 6).map((member) => (
                   <li key={member.id} className="flex items-center gap-2.5">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-[10px] border border-outline bg-surface-container-high text-[10px] font-bold text-on-surface-variant">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-[10px] border border-border-strong bg-raised text-[10px] font-bold text-ink-2">
                       {member.user.name.slice(0, 2).toUpperCase()}
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-on-surface">
+                    <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
                       {member.user.name}
                     </span>
                     <RoleChip role={member.roleInProject} />

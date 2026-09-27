@@ -48,12 +48,12 @@ function BarTooltip({ active, payload }: BarTooltipProps) {
   const datum = payload[0]?.payload
   if (!datum) return null
   return (
-    <div className="rounded-lg bg-surface-container-highest border border-outline-variant px-3 py-2 shadow-lg">
-      <p className="text-xs font-semibold text-on-surface">{datum.name}</p>
-      <p className="text-xs text-on-surface-variant tabular-nums">
+    <div className="rounded-lg bg-raised border border-border px-3 py-2 shadow-lg">
+      <p className="text-xs font-semibold text-ink">{datum.name}</p>
+      <p className="text-xs text-ink-2 tabular-nums">
         {formatCurrency(datum.spent)} / {formatCurrency(datum.planned)}
       </p>
-      <p className="text-[10px] text-on-surface-variant mt-0.5 tabular-nums">
+      <p className="text-[10px] text-ink-2 mt-0.5 tabular-nums">
         {Math.round(datum.percent)}%
       </p>
     </div>
@@ -101,7 +101,7 @@ export function BudgetCategoryBarChart({ items }: BudgetCategoryBarChartProps) {
             tickFormatter={(v: number) => `${v}%`}
             tick={{ fontSize: 11, fill: "currentColor" }}
             stroke="currentColor"
-            className="text-on-surface-variant"
+            className="text-ink-2"
           />
           <YAxis
             type="category"
@@ -109,14 +109,14 @@ export function BudgetCategoryBarChart({ items }: BudgetCategoryBarChartProps) {
             width={100}
             tick={{ fontSize: 11, fill: "currentColor" }}
             stroke="currentColor"
-            className="text-on-surface-variant"
+            className="text-ink-2"
           />
-          <Tooltip cursor={{ fill: "var(--pk-tint)" }} content={<BarTooltip />} />
+          <Tooltip cursor={{ fill: "var(--raised)" }} content={<BarTooltip />} />
           <ReferenceLine
             x={100}
             stroke="currentColor"
             strokeDasharray="3 3"
-            className="text-on-surface-variant/60"
+            className="text-ink-2/60"
             label={{
               value: t("obra.orcamento.charts.limitLabel"),
               position: "top",

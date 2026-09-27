@@ -19,8 +19,8 @@ const dayHeader = tv({
   base: "px-3.5 py-3 text-center text-[11.5px] font-normal",
   variants: {
     weekend: {
-      true: "text-on-surface-faint",
-      false: "text-on-surface-variant",
+      true: "text-ink-3",
+      false: "text-ink-2",
     },
   },
 })
@@ -45,13 +45,13 @@ export function ScheduleGrid({
     isWeek ? formatWeekdayShort(iso, i18n.language) : formatDayOfMonth(iso)
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-outline-variant">
+    <div className="overflow-x-auto rounded-xl border border-border">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-outline-variant">
+          <tr className="border-b border-border">
             <th
               scope="col"
-              className="sticky left-0 z-10 w-[170px] min-w-[170px] bg-surface-container-low px-3.5 py-3 text-left text-[11px] font-normal uppercase tracking-[0.08em] text-on-surface-faint"
+              className="sticky left-0 z-10 w-[170px] min-w-[170px] bg-surface px-3.5 py-3 text-left text-[11px] font-normal uppercase tracking-[0.08em] text-ink-3"
             >
               {t("obra.schedule.columns.member")}
             </th>
@@ -63,7 +63,7 @@ export function ScheduleGrid({
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-outline-variant">
+        <tbody className="divide-y divide-border">
           {schedule.members.map((member) => (
             <tr key={member.userId}>
               <ScheduleMemberCell

@@ -34,7 +34,7 @@ export function BudgetCategoryList({
 
   if (items.length === 0) {
     return (
-      <div className="bg-surface-container-low rounded-xl p-12 text-center text-sm text-on-surface-variant">
+      <div className="bg-surface rounded-xl p-12 text-center text-sm text-ink-2">
         {t("obra.orcamento.category.empty")}
       </div>
     )

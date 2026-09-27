@@ -14,10 +14,10 @@ export function NotFoundPage() {
         autoplay
         style={{ width: "100%", height: "100%", maxWidth: "820px", maxHeight: "820px" }}
       />
-      <p className="text-3xl font-bold tracking-[0.3em] uppercase text-primary">
+      <p className="text-3xl font-bold tracking-[0.3em] uppercase text-gold">
         {t("notFound.code")}
       </p>
-      <h1 className="text-xs font-black tracking-[0.2em] uppercase text-on-surface">
+      <h1 className="text-xs font-black tracking-[0.2em] uppercase text-ink">
         {t("notFound.title")}
       </h1>
     </div>

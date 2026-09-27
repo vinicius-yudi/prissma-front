@@ -6,8 +6,8 @@ const connector = tv({
   base: "flex-1 h-0.5 mx-3 mb-5 transition-all",
   variants: {
     completed: {
-      true: "bg-primary",
-      false: "bg-outline-variant",
+      true: "bg-gold",
+      false: "bg-border",
     },
   },
 })
@@ -16,9 +16,9 @@ const circle = tv({
   base: "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all flex-none",
   variants: {
     state: {
-      completed: "bg-primary border-primary text-on-primary",
-      active: "bg-primary border-primary text-on-primary",
-      inactive: "bg-transparent border-outline-variant text-on-surface-variant",
+      completed: "bg-gold border-gold text-on-gold",
+      active: "bg-gold border-gold text-on-gold",
+      inactive: "bg-transparent border-border text-ink-2",
     },
   },
 })
@@ -27,8 +27,8 @@ const label = tv({
   base: "text-xs font-semibold uppercase tracking-widest transition-colors",
   variants: {
     active: {
-      true: "text-primary",
-      false: "text-on-surface-variant",
+      true: "text-gold",
+      false: "text-ink-2",
     },
   },
 })

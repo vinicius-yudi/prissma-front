@@ -21,19 +21,19 @@ const priorityPill = tv({
   base: "inline-flex items-center rounded-full px-2 py-[2px] text-[10px] font-bold uppercase tracking-[0.06em]",
   variants: {
     priority: {
-      HIGH: "bg-danger-bg text-danger",
-      MEDIUM: "bg-warn-bg text-warn",
-      LOW: "bg-tint text-on-surface-faint",
+      HIGH: "bg-danger-soft text-danger",
+      MEDIUM: "bg-warning-soft text-warning",
+      LOW: "bg-raised text-ink-3",
     },
   },
 })
 
 const card = tv({
-  base: "group relative rounded-xl border bg-surface-container-high p-3.5 transition-colors",
+  base: "group relative rounded-xl border bg-raised p-3.5 transition-colors",
   variants: {
     late: {
-      true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger-solid)]",
-      false: "border-outline-variant hover:border-outline",
+      true: "border-danger/50 shadow-[inset_3px_0_0_var(--color-danger)]",
+      false: "border-border hover:border-border-strong",
     },
     dragging: {
       true: "opacity-40",
@@ -51,7 +51,7 @@ const deadline = tv({
   variants: {
     late: {
       true: "text-danger",
-      false: "text-on-surface-variant",
+      false: "text-ink-2",
     },
   },
 })
@@ -96,7 +96,7 @@ export function TaskKanbanCard({
       {...listeners}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="min-w-0 flex-1 text-[13.5px] font-semibold leading-snug text-on-surface">
+        <p className="min-w-0 flex-1 text-[13.5px] font-semibold leading-snug text-ink">
           {tarefa.title}
         </p>
 
@@ -118,7 +118,7 @@ export function TaskKanbanCard({
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onEdit}
               aria-label={t("obra.tarefas.actions.edit")}
-              className="cursor-pointer rounded-lg p-1 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+              className="cursor-pointer rounded-lg p-1 text-ink-2 transition-colors hover:bg-raised hover:text-ink"
             >
               <Pencil size={13} />
             </button>
@@ -127,7 +127,7 @@ export function TaskKanbanCard({
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onDelete}
               aria-label={t("obra.tarefas.actions.delete")}
-              className="cursor-pointer rounded-lg p-1 text-danger/80 transition-colors hover:bg-danger-bg hover:text-danger"
+              className="cursor-pointer rounded-lg p-1 text-danger/80 transition-colors hover:bg-danger-soft hover:text-danger"
             >
               <Trash2 size={13} />
             </button>
@@ -148,7 +148,7 @@ export function TaskKanbanCard({
 
         <span
           title={assignee ?? t("obra.tarefas.unassigned")}
-          className="ml-auto flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container text-[9.5px] font-bold text-on-surface-variant"
+          className="ml-auto flex size-7 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface text-[9.5px] font-bold text-ink-2"
         >
           {initials}
         </span>

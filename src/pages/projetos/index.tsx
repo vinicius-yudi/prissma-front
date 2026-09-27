@@ -26,7 +26,7 @@ function LoadingState() {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="h-64 animate-pulse rounded-2xl bg-surface-container-low" />
+        <div key={i} className="h-64 animate-pulse rounded-2xl bg-surface" />
       ))}
     </div>
   )
@@ -36,8 +36,8 @@ function ErrorState() {
   const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center gap-1 py-24">
-      <p className="font-medium text-on-surface">{t("projects.errorTitle")}</p>
-      <p className="text-sm text-on-surface-variant">{t("projects.errorHint")}</p>
+      <p className="font-medium text-ink">{t("projects.errorTitle")}</p>
+      <p className="text-sm text-ink-2">{t("projects.errorHint")}</p>
     </div>
   )
 }
@@ -45,13 +45,13 @@ function ErrorState() {
 function EmptyState({ onCreate }: { onCreate: () => void }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-outline bg-surface-container-low py-20">
-      <div className="rounded-2xl border border-outline-variant bg-surface-container-high p-5">
-        <FolderOpen size={34} strokeWidth={1.6} className="text-gold-bright" />
+    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border-strong bg-surface py-20">
+      <div className="rounded-2xl border border-border bg-raised p-5">
+        <FolderOpen size={34} strokeWidth={1.6} className="text-gold-hi" />
       </div>
       <div className="text-center">
-        <p className="font-semibold text-on-surface">{t("projects.emptyTitle")}</p>
-        <p className="mt-1 text-sm text-on-surface-variant">{t("projects.emptyHint")}</p>
+        <p className="font-semibold text-ink">{t("projects.emptyTitle")}</p>
+        <p className="mt-1 text-sm text-ink-2">{t("projects.emptyHint")}</p>
       </div>
       <Button variant="primary" fullWidth={false} onClick={onCreate}>
         <Plus size={15} />
@@ -65,11 +65,11 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
 function GroupHeader({ label, count }: { label: string; count: number }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-surface-faint">
+      <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-3">
         {label}
       </span>
-      <Num className="text-[10.5px] font-bold text-on-surface-variant">{count}</Num>
-      <span className="h-px flex-1 bg-outline-variant" />
+      <Num className="text-[10.5px] font-bold text-ink-2">{count}</Num>
+      <span className="h-px flex-1 bg-border" />
     </div>
   )
 }
@@ -88,7 +88,7 @@ export function ProjetosPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-on-surface sm:text-[28px]">
+          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-[28px]">
             {t("projects.title")}
           </h1>
           <DimensionLine>

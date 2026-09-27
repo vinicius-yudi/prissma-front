@@ -43,7 +43,7 @@ export function BudgetDeleteConfirmModal({
       size="sm"
     >
       <div className="px-6 pb-6 space-y-5">
-        <p className="text-sm text-on-surface-variant leading-relaxed">
+        <p className="text-sm text-ink-2 leading-relaxed">
           {target ? t(MESSAGE_KEY[target.kind]) : ""}
         </p>
         <div className="flex gap-3">
@@ -53,7 +53,7 @@ export function BudgetDeleteConfirmModal({
           <Button
             onClick={onConfirm}
             disabled={isSubmitting}
-            className="bg-error text-on-error border-0 hover:brightness-[0.92]"
+            className="bg-danger text-on-inverse border-0 hover:brightness-[0.92]"
           >
             {isSubmitting
               ? t("obra.orcamento.actions.deleting")

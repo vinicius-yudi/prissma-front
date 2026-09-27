@@ -10,9 +10,9 @@ const accentBar = tv({
   base: "h-1.5 w-full flex-none",
   variants: {
     variant: {
-      default: "bg-primary",
-      danger: "bg-error",
-      warning: "bg-tertiary",
+      default: "bg-gold",
+      danger: "bg-danger",
+      warning: "bg-warning",
     },
   },
 })
@@ -21,9 +21,9 @@ const iconWrap = tv({
   base: "p-2.5 rounded-xl flex items-center justify-center flex-none",
   variants: {
     variant: {
-      default: "bg-primary/15 text-primary",
-      danger: "bg-error/15 text-error",
-      warning: "bg-tertiary/15 text-tertiary",
+      default: "bg-gold/15 text-gold",
+      danger: "bg-danger/15 text-danger",
+      warning: "bg-warning/15 text-warning",
     },
   },
 })
@@ -35,7 +35,7 @@ const iconWrap = tv({
  * e `90vh` continuaria contando a altura antiga.
  */
 const container = tv({
-  base: "w-full bg-surface-container border border-outline-variant rounded-t-2xl shadow-2xl flex flex-col max-h-[92dvh] pb-safe overflow-hidden sm:rounded-2xl sm:max-h-[90vh] sm:pb-0",
+  base: "w-full bg-surface border border-border rounded-t-2xl shadow-2xl flex flex-col max-h-[92dvh] pb-safe overflow-hidden sm:rounded-2xl sm:max-h-[90vh] sm:pb-0",
   variants: {
     size: {
       sm: "sm:max-w-sm",
@@ -97,21 +97,21 @@ export function Modal({
         <div className={accentBar({ variant })} />
 
         {/* Alça da folha: sinaliza que o painel é arrastável/descartável. */}
-        <div className="mx-auto mt-2 h-1 w-10 flex-none rounded-full bg-outline sm:hidden" />
+        <div className="mx-auto mt-2 h-1 w-10 flex-none rounded-full bg-border-strong sm:hidden" />
 
         <div className="px-6 pt-5 pb-4 flex items-start justify-between gap-4 flex-none">
           <div className="flex items-center gap-3 min-w-0">
             {icon && <div className={iconWrap({ variant })}>{icon}</div>}
             <div className="min-w-0">
-              <h2 className="text-base font-bold text-on-surface leading-snug">{title}</h2>
+              <h2 className="text-base font-bold text-ink leading-snug">{title}</h2>
               {description && (
-                <p className="text-sm text-on-surface-variant mt-0.5">{description}</p>
+                <p className="text-sm text-ink-2 mt-0.5">{description}</p>
               )}
             </div>
           </div>
           <button
             onClick={onClose}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors flex-none cursor-pointer sm:min-h-0 sm:min-w-0 sm:mt-0.5 sm:p-1.5"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-ink-2 hover:text-ink hover:bg-raised transition-colors flex-none cursor-pointer sm:min-h-0 sm:min-w-0 sm:mt-0.5 sm:p-1.5"
           >
             <X size={18} />
           </button>

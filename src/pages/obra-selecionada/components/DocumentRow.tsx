@@ -23,14 +23,14 @@ export function DocumentRow({ attachment, isDownloading, onDownload, onRemove }:
   }
 
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-outline-variant/20 last:border-0">
-      <div className="shrink-0 p-2 bg-primary/10 rounded-lg">
-        <FileText size={16} className="text-primary" />
+    <div className="flex items-center gap-3 py-3 border-b border-border/20 last:border-0">
+      <div className="shrink-0 p-2 bg-gold/10 rounded-lg">
+        <FileText size={16} className="text-gold" />
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-on-surface truncate">{attachment.fileName}</p>
-        <p className="text-xs text-on-surface-variant">{formatDate(attachment.uploadedAt)}</p>
+        <p className="text-sm font-medium text-ink truncate">{attachment.fileName}</p>
+        <p className="text-xs text-ink-2">{formatDate(attachment.uploadedAt)}</p>
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
@@ -38,7 +38,7 @@ export function DocumentRow({ attachment, isDownloading, onDownload, onRemove }:
           type="button"
           onClick={handleDownload}
           disabled={isDownloading}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-gold border border-gold/30 rounded-lg hover:bg-gold/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isDownloading && <Loader2 size={12} className="animate-spin" />}
           {!isDownloading && <Download size={12} />}
@@ -48,7 +48,7 @@ export function DocumentRow({ attachment, isDownloading, onDownload, onRemove }:
         <button
           type="button"
           onClick={handleRemove}
-          className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors"
+          className="p-1.5 text-ink-2 hover:text-danger hover:bg-danger/10 rounded-lg transition-colors"
         >
           <Trash2 size={14} />
         </button>

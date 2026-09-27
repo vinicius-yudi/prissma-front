@@ -1,16 +1,16 @@
 import { tv } from "tailwind-variants"
 
 /**
- * Valor de dado em JetBrains Mono.
+ * Valor de dado: Archivo estreito (`wdth` 94) e tabular.
  *
- * Moeda, datas, percentuais, horas, códigos de obra e contadores usam mono —
- * inclusive dentro de badges e tooltips. Texto corrido **nunca** usa mono
- * (Style Guide v2 §3). O alinhamento tabular mantém colunas estáveis quando o
- * valor muda.
+ * Moeda, datas, percentuais, horas, códigos de obra e contadores passam por
+ * aqui — inclusive dentro de badges e tooltips. Substitui a mono da v1: as
+ * colunas continuam alinhadas quando o valor muda, sem trocar de família no
+ * meio da frase.
  */
 
 const num = tv({
-  base: "font-mono tabular-nums",
+  base: "t-num",
 })
 
 interface NumProps extends React.HTMLAttributes<HTMLSpanElement> {

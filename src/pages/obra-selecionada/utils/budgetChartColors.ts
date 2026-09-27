@@ -4,7 +4,7 @@ import type { BudgetTone } from "./budgetMath"
  * Cores dos gráficos de orçamento.
  *
  * São referências a variáveis CSS, não hex: o SVG do Recharts aceita
- * `fill="var(--pk-b1)"`, então os gráficos passam a seguir a troca de tema
+ * `fill="var(--gold)"`, então os gráficos passam a seguir a troca de tema
  * junto com o resto da interface — antes ficavam congelados no modo escuro.
  *
  * A rampa categórica sai da família ouro e só depois recorre às semânticas,
@@ -14,13 +14,13 @@ import type { BudgetTone } from "./budgetMath"
  */
 
 export const DONUT_COLORS = [
-  "var(--pk-b1)",
-  "var(--pk-b2)",
-  "var(--pk-bl)",
-  "var(--pk-ok)",
-  "var(--pk-t3)",
-  "var(--pk-wn)",
-  "var(--color-danger-solid)",
+  "var(--gold)",
+  "var(--gold-deep)",
+  "var(--gold-hi)",
+  "var(--success)",
+  "var(--ink-3)",
+  "var(--warning)",
+  "var(--color-danger)",
 ] as const
 
 export function donutColor(index: number): string {
@@ -29,7 +29,7 @@ export function donutColor(index: number): string {
 
 /** Barras por categoria: aqui a cor é semântica, não categórica. */
 export const TONE_COLOR: Record<BudgetTone, string> = {
-  ok: "var(--pk-b1)",
-  warning: "var(--pk-wn)",
-  exceeded: "var(--color-danger-solid)",
+  ok: "var(--gold)",
+  warning: "var(--warning)",
+  exceeded: "var(--color-danger)",
 }

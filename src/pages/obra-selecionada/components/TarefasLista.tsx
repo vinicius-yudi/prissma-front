@@ -25,8 +25,8 @@ const pill = tv({
   base: "flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-[11.5px] font-semibold transition-colors",
   variants: {
     active: {
-      true: "bg-tint text-on-surface",
-      false: "text-on-surface-variant",
+      true: "bg-raised text-ink",
+      false: "text-ink-2",
     },
     tone: {
       default: "",
@@ -39,9 +39,9 @@ const priorityPill = tv({
   base: "inline-flex shrink-0 items-center rounded-full px-2 py-[2px] text-[10px] font-bold uppercase tracking-[0.06em]",
   variants: {
     priority: {
-      HIGH: "bg-danger-bg text-danger",
-      MEDIUM: "bg-warn-bg text-warn",
-      LOW: "bg-tint text-on-surface-faint",
+      HIGH: "bg-danger-soft text-danger",
+      MEDIUM: "bg-warning-soft text-warning",
+      LOW: "bg-raised text-ink-3",
     },
   },
 })
@@ -101,11 +101,11 @@ export function TarefasLista({ items, onOpen }: TarefasListaProps) {
       </div>
 
       {visible.length === 0 ? (
-        <p className="py-12 text-center text-[13px] text-on-surface-variant">
+        <p className="py-12 text-center text-[13px] text-ink-2">
           {t("obra.tarefas.emptyColumn")}
         </p>
       ) : (
-        <ul className="divide-y divide-outline-variant">
+        <ul className="divide-y divide-border">
           {visible.map((item) => {
             const { tarefa } = item
             const late = isLate(item)
@@ -120,7 +120,7 @@ export function TarefasLista({ items, onOpen }: TarefasListaProps) {
                 >
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-1.5">
-                      <span className="truncate text-[13px] font-semibold text-on-surface">
+                      <span className="truncate text-[13px] font-semibold text-ink">
                         {tarefa.title}
                       </span>
                       {late && (
@@ -140,7 +140,7 @@ export function TarefasLista({ items, onOpen }: TarefasListaProps) {
                       </span>
                       {tarefa.plannedEndDate && (
                         <Num
-                          className={`text-[10.5px] ${late ? "text-danger" : "text-on-surface-faint"}`}
+                          className={`text-[10.5px] ${late ? "text-danger" : "text-ink-3"}`}
                         >
                           {formatDate(tarefa.plannedEndDate)}
                         </Num>
@@ -150,7 +150,7 @@ export function TarefasLista({ items, onOpen }: TarefasListaProps) {
 
                   <span
                     title={assignee ?? t("obra.tarefas.unassigned")}
-                    className="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[9.5px] font-bold text-on-surface-variant"
+                    className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border-strong bg-raised text-[9.5px] font-bold text-ink-2"
                   >
                     {assignee ? assignee.slice(0, 2).toUpperCase() : "—"}
                   </span>

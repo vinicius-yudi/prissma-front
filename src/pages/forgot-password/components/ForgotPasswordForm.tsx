@@ -15,7 +15,7 @@ export function ForgotPasswordForm() {
 	const { t } = useTranslation()
 
 	return (
-		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-bg">
 			<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
 				<LanguageSelect />
 				<ThemeToggle />
@@ -28,16 +28,16 @@ export function ForgotPasswordForm() {
 				{submitted ? (
 					<div className="text-center space-y-6">
 						<div className="space-y-2">
-							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.sentTitle")}</h2>
-							<p className="text-sm text-on-surface-variant">
+							<h2 className="text-ink text-3xl font-bold tracking-tight">{t("forgotPassword.sentTitle")}</h2>
+							<p className="text-sm text-ink-2">
 								{t("forgotPassword.sentBefore")}{" "}
-								<span className="font-semibold text-gold-bright">{email}</span>{" "}
+								<span className="font-semibold text-gold-hi">{email}</span>{" "}
 								{t("forgotPassword.sentAfter")}
 							</p>
 						</div>
 						<Link
 							to="/login"
-							className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
+							className="flex items-center justify-center gap-2 text-sm font-medium text-gold-hi hover:underline underline-offset-4 transition-colors"
 						>
 							<ArrowLeft size={16} />
 							{t("forgotPassword.backToLogin")}
@@ -46,8 +46,8 @@ export function ForgotPasswordForm() {
 				) : (
 					<>
 						<div className="text-center space-y-2">
-							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.title")}</h2>
-							<p className="text-sm text-on-surface-variant">{t("forgotPassword.subtitle")}</p>
+							<h2 className="text-ink text-3xl font-bold tracking-tight">{t("forgotPassword.title")}</h2>
+							<p className="text-sm text-ink-2">{t("forgotPassword.subtitle")}</p>
 						</div>
 
 						<form className="space-y-6" onSubmit={handleSubmit}>
@@ -76,7 +76,7 @@ export function ForgotPasswordForm() {
 						<div className="text-center">
 							<Link
 								to="/login"
-								className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
+								className="flex items-center justify-center gap-2 text-sm font-medium text-gold-hi hover:underline underline-offset-4 transition-colors"
 							>
 								<ArrowLeft size={16} />
 								{t("forgotPassword.backToLogin")}

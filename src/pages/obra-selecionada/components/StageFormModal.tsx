@@ -23,11 +23,11 @@ import {
 import type { Stage } from "../services/stages.service"
 
 const formLabel = tv({
-  base: "block text-xs uppercase tracking-widest text-primary font-semibold",
+  base: "block text-xs uppercase tracking-widest text-gold font-semibold",
 })
 
 const formInput = tv({
-  base: "bg-surface-container-highest text-on-surface [&_option]:bg-surface-container-highest focus:ring-1",
+  base: "bg-raised text-ink [&_option]:bg-raised focus:ring-1",
 })
 
 interface StageFormModalProps {
@@ -185,7 +185,7 @@ export function StageFormModal({
               </Label>
               <textarea
                 rows={3}
-                className="w-full rounded-xl px-4 py-3 bg-surface-container-highest text-on-surface text-sm border border-outline-variant focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                className="w-full rounded-xl px-4 py-3 bg-raised text-ink text-sm border border-border focus:outline-none focus:ring-1 focus:ring-gold resize-none"
                 placeholder={t("obra.etapas.form.fields.descriptionPlaceholder")}
                 disabled={readOnly}
                 {...form.register("description")}
@@ -252,13 +252,13 @@ export function StageFormModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
+          <div className="flex items-center justify-between gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-border">
             <div>
               {isEdit && canMutate && (
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-error/40 text-error hover:bg-error/10 hover:border-error w-auto px-4"
+                  className="border-danger/40 text-danger hover:bg-danger/10 hover:border-danger w-auto px-4"
                   onClick={() => setConfirmDelete(true)}
                   disabled={isLoading}
                 >
@@ -298,7 +298,7 @@ export function StageFormModal({
         size="sm"
       >
         <div className="px-6 pb-6 space-y-5">
-          <p className="text-sm text-on-surface-variant leading-relaxed">
+          <p className="text-sm text-ink-2 leading-relaxed">
             {t("obra.etapas.deleteModal.message", { name: stage?.name ?? "" })}
           </p>
           <div className="flex gap-3">
@@ -312,7 +312,7 @@ export function StageFormModal({
             <Button
               onClick={handleConfirmDelete}
               disabled={isDeleting}
-              className="bg-error text-on-error border-0 hover:brightness-[0.92]"
+              className="bg-danger text-on-inverse border-0 hover:brightness-[0.92]"
             >
               {isDeleting
                 ? t("obra.etapas.deleteModal.deleting")

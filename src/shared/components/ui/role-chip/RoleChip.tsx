@@ -22,8 +22,8 @@ const chip = tv({
       OWNER: "bg-gold/15 text-gold",
       ENGINEER: "bg-gold/15 text-gold",
       ARCHITECT: "bg-gold-deep/15 text-gold-deep",
-      FOREMAN: "bg-ok/15 text-ok",
-      USER: "bg-tint text-on-surface-variant",
+      FOREMAN: "bg-success/15 text-success",
+      USER: "bg-raised text-ink-2",
     },
   },
 })

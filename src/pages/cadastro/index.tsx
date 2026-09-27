@@ -17,7 +17,7 @@ export function CadastroPage() {
   }
 
   return (
-    <main className="flex h-screen overflow-hidden bg-background">
+    <main className="flex h-screen overflow-hidden bg-bg">
       <BrandPanel />
       {!selectedType && <CadastroType onTypeSelected={setSelectedType} />}
       {selectedType === "arquiteto" && <CadastroArquiteto onBack={handleBack} />}

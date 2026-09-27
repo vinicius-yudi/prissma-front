@@ -33,9 +33,9 @@ function useObra(): Project {
 function ComingSoon({ module }: { module: string }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-outline bg-surface-container-low py-20 text-center">
-      <p className="text-sm font-semibold text-on-surface">{t(`sidebar.nav.${module}`)}</p>
-      <p className="text-sm text-on-surface-variant">{t("obra.comingSoon")}</p>
+    <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border-strong bg-surface py-20 text-center">
+      <p className="text-sm font-semibold text-ink">{t(`sidebar.nav.${module}`)}</p>
+      <p className="text-sm text-ink-2">{t("obra.comingSoon")}</p>
     </div>
   )
 }

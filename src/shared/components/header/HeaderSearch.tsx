@@ -57,7 +57,7 @@ function SearchField() {
     <form onSubmit={handleSubmit} role="search" className="relative min-w-0 flex-1 sm:max-w-sm">
       <Search
         size={15}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"
       />
       <input
         type="search"
@@ -67,14 +67,14 @@ function SearchField() {
         aria-label={t("header.search")}
         // `text-base` no celular: abaixo de 16px o Safari do iOS dá zoom na
         // página ao focar o campo, e o layout não volta sozinho.
-        className="w-full min-h-11 rounded-full border border-outline-variant bg-surface-container py-2 pl-9 pr-9 text-base text-on-surface placeholder:text-on-surface-faint focus:outline-none focus:ring-2 focus:ring-primary/40 sm:min-h-0 sm:text-sm [&::-webkit-search-cancel-button]:appearance-none"
+        className="w-full min-h-11 rounded-full border border-border bg-surface py-2 pl-9 pr-9 text-base text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-gold/40 sm:min-h-0 sm:text-sm [&::-webkit-search-cancel-button]:appearance-none"
       />
       {term && (
         <button
           type="button"
           onClick={() => setTerm("")}
           aria-label={t("header.searchClear")}
-          className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full p-1 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+          className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full p-1 text-ink-2 transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={14} />
         </button>

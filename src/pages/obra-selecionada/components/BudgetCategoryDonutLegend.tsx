@@ -38,9 +38,9 @@ export function BudgetCategoryDonutLegend({ items }: BudgetCategoryDonutLegendPr
               className="w-2.5 h-2.5 rounded-full flex-none"
               style={{ background: entry.color }}
             />
-            <span className="text-on-surface truncate">{entry.category}</span>
+            <span className="text-ink truncate">{entry.category}</span>
           </div>
-          <span className="text-on-surface-variant tabular-nums flex-none">
+          <span className="text-ink-2 tabular-nums flex-none">
             {entry.percent}%
           </span>
         </li>

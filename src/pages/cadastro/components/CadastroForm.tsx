@@ -48,14 +48,14 @@ export function CadastroForm({
       type="button"
       onClick={onTogglePassword}
       aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
-      className="cursor-pointer text-on-surface-variant transition-colors hover:text-on-surface"
+      className="cursor-pointer text-ink-2 transition-colors hover:text-ink"
     >
       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
     </button>
   )
 
   return (
-    <section className="relative flex h-full w-full flex-col items-center overflow-y-auto bg-surface px-6 pb-10 pt-20 sm:px-16 lg:w-[45%] lg:px-24 lg:py-12">
+    <section className="relative flex h-full w-full flex-col items-center overflow-y-auto bg-bg px-6 pb-10 pt-20 sm:px-16 lg:w-[45%] lg:px-24 lg:py-12">
       <div className="absolute left-4 top-4 z-10">
         <ReturnButton icon={Undo2} type="button" onClick={onBack}>
           {t("register.back")}
@@ -72,8 +72,8 @@ export function CadastroForm({
         </div>
 
         <div className="enter-up space-y-2 text-center" style={{ animationDelay: "0.16s" }}>
-          <h2 className="text-2xl font-bold tracking-tight text-on-surface sm:text-3xl">{title}</h2>
-          <p className="text-sm text-on-surface-variant">{t("register.formSubtitle")}</p>
+          <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h2>
+          <p className="text-sm text-ink-2">{t("register.formSubtitle")}</p>
         </div>
 
         <form className="enter-up space-y-6" onSubmit={onSubmit} noValidate style={{ animationDelay: "0.24s" }}>
@@ -143,9 +143,9 @@ export function CadastroForm({
           </div>
         </form>
 
-        <p className="enter-up pb-5 text-center text-sm text-on-surface-variant" style={{ animationDelay: "0.48s" }}>
+        <p className="enter-up pb-5 text-center text-sm text-ink-2" style={{ animationDelay: "0.48s" }}>
           {t("register.hasAccount")}{" "}
-          <Link to="/login" className="ml-1 font-bold text-gold-bright underline-offset-4 hover:underline">
+          <Link to="/login" className="ml-1 font-bold text-gold-hi underline-offset-4 hover:underline">
             {t("register.login")}
           </Link>
         </p>

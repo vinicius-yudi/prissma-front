@@ -28,8 +28,8 @@ const row = tv({
   base: "flex min-h-12 items-center gap-3 rounded-xl px-2 text-sm transition-colors",
   variants: {
     active: {
-      true: "bg-tint font-semibold text-on-surface",
-      false: "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface",
+      true: "bg-raised font-semibold text-ink",
+      false: "text-ink-2 hover:bg-raised hover:text-ink",
     },
   },
 })
@@ -38,15 +38,15 @@ const rowIcon = tv({
   base: "flex size-9 shrink-0 items-center justify-center rounded-[10px] border",
   variants: {
     active: {
-      true: "border-gold/40 bg-tint text-gold-bright",
-      false: "border-outline-variant bg-surface-container-high text-on-surface-variant",
+      true: "border-gold/40 bg-raised text-gold-hi",
+      false: "border-border bg-raised text-ink-2",
     },
   },
 })
 
 function GroupLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="px-2 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-on-surface-faint">
+    <p className="px-2 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-3">
       {children}
     </p>
   )
@@ -125,7 +125,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
               onClose()
               action.onClick()
             }}
-            className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gold-grad text-sm font-semibold text-on-primary shadow-glow disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gold-grad text-sm font-semibold text-on-gold shadow-soft disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Plus size={16} strokeWidth={2.2} />
             {action.label}
@@ -138,18 +138,18 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
             onClose()
             navigate("/perfil")
           }}
-          className="mt-3 flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-xl px-2 text-left transition-colors hover:bg-surface-container-high"
+          className="mt-3 flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-xl px-2 text-left transition-colors hover:bg-raised"
         >
           <img src={logoUrl} alt="" className="size-9 shrink-0 rounded-[10px] object-contain" />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold text-on-surface">
+            <span className="block truncate text-sm font-semibold text-ink">
               {user?.name ?? t("sidebar.user")}
             </span>
-            <span className="block text-[11px] text-on-surface-faint">
+            <span className="block text-[11px] text-ink-3">
               {t("sidebar.accountType")}
             </span>
           </span>
-          <ChevronRight size={16} className="shrink-0 text-on-surface-faint" />
+          <ChevronRight size={16} className="shrink-0 text-ink-3" />
         </button>
 
         <nav>

@@ -12,18 +12,18 @@ import { initialsOf } from "../utils/scheduleFormat"
  */
 
 const header = tv({
-  base: "sticky left-0 z-10 w-[170px] min-w-[170px] bg-surface-container-low px-3.5 py-3 text-left",
+  base: "sticky left-0 z-10 w-[170px] min-w-[170px] bg-surface px-3.5 py-3 text-left",
 })
 
 const avatar = tv({
-  base: "flex size-8 shrink-0 items-center justify-center rounded-full bg-gold-grad text-[11px] font-bold text-on-primary",
+  base: "flex size-8 shrink-0 items-center justify-center rounded-full bg-gold-grad text-[11px] font-bold text-on-gold",
 })
 
 const identity = tv({
   base: "flex w-full items-center gap-2.5 text-left",
   variants: {
     interactive: {
-      true: "cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+      true: "cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-gold/40",
       false: "",
     },
   },
@@ -48,10 +48,10 @@ export function ScheduleMemberCell({
         {initialsOf(member.userName)}
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-[13px] font-semibold text-on-surface">
+        <span className="block truncate text-[13px] font-semibold text-ink">
           {member.userName}
         </span>
-        <span className="block truncate text-[10.5px] text-on-surface-faint">
+        <span className="block truncate text-[10.5px] text-ink-3">
           {member.userResponsibility ?? t("obra.schedule.noResponsibility")}
         </span>
       </span>

@@ -39,8 +39,8 @@ const tab = tv({
   base: "flex min-h-14 flex-col items-center justify-center gap-1 text-[9px] font-semibold transition-colors",
   variants: {
     active: {
-      true: "text-gold-bright",
-      false: "text-on-surface-faint",
+      true: "text-gold-hi",
+      false: "text-ink-3",
     },
   },
 })
@@ -65,10 +65,10 @@ function Fab() {
       // pela borda inferior.
       className="flex h-full cursor-pointer flex-col items-center justify-end gap-1 pb-2.5 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <span className="flex size-[46px] items-center justify-center rounded-full bg-gold-grad text-on-primary shadow-glow">
+      <span className="flex size-[46px] items-center justify-center rounded-full bg-gold-grad text-on-gold shadow-soft">
         <Icon size={20} strokeWidth={2.2} />
       </span>
-      <span className="max-w-[72px] truncate text-[9px] font-semibold text-on-surface-variant">
+      <span className="max-w-[72px] truncate text-[9px] font-semibold text-ink-2">
         {action.shortLabel ?? action.label}
       </span>
     </button>
@@ -88,7 +88,7 @@ export function BottomTabBar() {
     <>
       <nav
         // `overflow-visible` + `z-30` porque o FAB sobe acima da borda da barra.
-        className="z-30 grid shrink-0 grid-cols-5 overflow-visible border-t border-outline-variant bg-surface-container-low pb-safe lg:hidden"
+        className="z-30 grid shrink-0 grid-cols-5 overflow-visible border-t border-border bg-surface pb-safe lg:hidden"
       >
         {visible.map((item) => {
           const Icon = item.icon

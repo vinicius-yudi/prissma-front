@@ -22,14 +22,14 @@ export function ExpenseRow({
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-wrap items-center gap-3 py-3 border-b border-outline-variant/15 last:border-0">
-      <div className="text-xs text-on-surface-variant tabular-nums w-20 flex-none">
+    <div className="flex flex-wrap items-center gap-3 py-3 border-b border-border/15 last:border-0">
+      <div className="text-xs text-ink-2 tabular-nums w-20 flex-none">
         {formatDate(expense.spentAt)}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-on-surface font-medium truncate">{expense.description}</p>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-surface-variant mt-0.5">
+        <p className="text-sm text-ink font-medium truncate">{expense.description}</p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-2 mt-0.5">
           <span>{expense.supplier?.trim() || t("obra.orcamento.expense.noSupplier")}</span>
           <span className="inline-flex items-center gap-1">
             <Layers size={11} />
@@ -40,7 +40,7 @@ export function ExpenseRow({
               href={expense.receiptUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-primary hover:underline"
+              className="inline-flex items-center gap-1 text-gold hover:underline"
             >
               <ExternalLink size={11} />
               {t("obra.orcamento.expense.receipt")}
@@ -49,7 +49,7 @@ export function ExpenseRow({
         </div>
       </div>
 
-      <div className="text-sm font-bold text-on-surface tabular-nums shrink-0 px-2">
+      <div className="text-sm font-bold text-ink tabular-nums shrink-0 px-2">
         {formatCurrency(expense.amount)}
       </div>
 
@@ -58,7 +58,7 @@ export function ExpenseRow({
           <button
             type="button"
             onClick={() => onEdit(expense)}
-            className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+            className="p-1.5 text-ink-2 hover:text-gold hover:bg-gold/10 rounded-lg transition-colors"
             aria-label={t("obra.orcamento.actions.editExpense")}
           >
             <Pencil size={14} />
@@ -66,7 +66,7 @@ export function ExpenseRow({
           <button
             type="button"
             onClick={() => onDelete(expense)}
-            className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors"
+            className="p-1.5 text-ink-2 hover:text-danger hover:bg-danger/10 rounded-lg transition-colors"
             aria-label={t("obra.orcamento.actions.deleteExpense")}
           >
             <Trash2 size={14} />

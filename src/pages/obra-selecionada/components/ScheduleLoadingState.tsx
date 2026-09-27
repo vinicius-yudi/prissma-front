@@ -13,22 +13,22 @@ export function ScheduleLoadingState() {
   return (
     <div className="animate-pulse" aria-hidden="true">
       <div className="mb-5 flex items-center justify-between">
-        <div className="h-9 w-40 rounded-full bg-surface-container-high" />
-        <div className="h-6 w-32 rounded-lg bg-surface-container-high" />
+        <div className="h-9 w-40 rounded-full bg-raised" />
+        <div className="h-6 w-32 rounded-lg bg-raised" />
       </div>
 
-      <div className="rounded-xl border border-outline-variant">
+      <div className="rounded-xl border border-border">
         {ROWS.map((row) => (
-          <div key={row} className="flex items-center gap-3 border-b border-outline-variant p-3 last:border-b-0">
+          <div key={row} className="flex items-center gap-3 border-b border-border p-3 last:border-b-0">
             <div className="flex w-[170px] min-w-[170px] items-center gap-2.5">
-              <div className="size-8 rounded-full bg-surface-container-high" />
+              <div className="size-8 rounded-full bg-raised" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-3 w-24 rounded bg-surface-container-high" />
-                <div className="h-2 w-16 rounded bg-surface-container-high" />
+                <div className="h-3 w-24 rounded bg-raised" />
+                <div className="h-2 w-16 rounded bg-raised" />
               </div>
             </div>
             {CELLS.map((cell) => (
-              <div key={cell} className="h-[34px] flex-1 rounded-lg bg-surface-container-high" />
+              <div key={cell} className="h-[34px] flex-1 rounded-lg bg-raised" />
             ))}
           </div>
         ))}

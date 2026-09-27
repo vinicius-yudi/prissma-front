@@ -34,7 +34,7 @@ export function BudgetExceededBanner({ budget, onReview }: BudgetExceededBannerP
   const deviation = worst.totalSpent - worst.plannedAmount
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-danger/40 bg-danger-bg p-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 rounded-2xl border border-danger/40 bg-danger-soft p-4 sm:flex-row sm:items-center">
       <AlertTriangle size={20} strokeWidth={1.9} className="shrink-0 text-danger" />
 
       <div className="min-w-0 flex-1">
@@ -42,16 +42,16 @@ export function BudgetExceededBanner({ budget, onReview }: BudgetExceededBannerP
           {t("obra.orcamento.exceededBanner.title", { category: worst.category })}
         </p>
 
-        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11.5px] text-on-surface-variant">
+        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11.5px] text-ink-2">
           <span>
             {t("obra.orcamento.kpi.planned")}{" "}
-            <Num className="font-semibold text-on-surface">
+            <Num className="font-semibold text-ink">
               {formatCurrency(worst.plannedAmount)}
             </Num>
           </span>
           <span>
             {t("obra.orcamento.kpi.spent")}{" "}
-            <Num className="font-semibold text-on-surface">
+            <Num className="font-semibold text-ink">
               {formatCurrency(worst.totalSpent)}
             </Num>
           </span>

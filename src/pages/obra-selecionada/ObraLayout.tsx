@@ -26,9 +26,9 @@ import { useObraSelecionada } from "./hooks/useObraSelecionada"
 function LoadingState() {
   return (
     <div className="animate-pulse space-y-4">
-      <div className="h-8 w-1/3 rounded-xl bg-surface-container-low" />
-      <div className="h-4 w-1/4 rounded bg-surface-container-low" />
-      <div className="mt-4 h-64 rounded-xl bg-surface-container-low" />
+      <div className="h-8 w-1/3 rounded-xl bg-surface" />
+      <div className="h-4 w-1/4 rounded bg-surface" />
+      <div className="mt-4 h-64 rounded-xl bg-surface" />
     </div>
   )
 }
@@ -37,8 +37,8 @@ function NotFoundState({ onBack }: { onBack: () => void }) {
   const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-24">
-      <h2 className="text-xl font-semibold text-on-surface">{t("obra.notFound")}</h2>
-      <p className="text-on-surface-variant">{t("obra.notFoundDesc")}</p>
+      <h2 className="text-xl font-semibold text-ink">{t("obra.notFound")}</h2>
+      <p className="text-ink-2">{t("obra.notFoundDesc")}</p>
       <Button variant="outline" fullWidth={false} onClick={onBack}>
         {t("obra.backToList")}
       </Button>
@@ -78,7 +78,7 @@ export function ObraLayout() {
           type="button"
           onClick={() => navigate(backTo)}
           aria-label={t("mobile.backTo", { target: backLabel })}
-          className="flex min-h-11 cursor-pointer items-center gap-1 self-start text-[12.5px] font-semibold text-gold-bright"
+          className="flex min-h-11 cursor-pointer items-center gap-1 self-start text-[12.5px] font-semibold text-gold-hi"
         >
           <ChevronLeft size={14} />
           <span className="max-w-[70vw] truncate">{backLabel}</span>
@@ -90,7 +90,7 @@ export function ObraLayout() {
       <header className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-start sm:justify-between lg:pb-6">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-on-surface sm:text-[28px]">
+            <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-[28px]">
               {project.title}
             </h1>
             <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} />

@@ -37,10 +37,10 @@ const columnDot = tv({
   base: "size-2 shrink-0 rounded-full",
   variants: {
     status: {
-      TODO: "bg-on-surface-faint",
-      IN_PROGRESS: "bg-gold-bright",
-      DONE: "bg-ok",
-      BLOCKED: "bg-warn",
+      TODO: "bg-ink-3",
+      IN_PROGRESS: "bg-gold-hi",
+      DONE: "bg-success",
+      BLOCKED: "bg-warning",
     },
   },
 })
@@ -49,8 +49,8 @@ const column = tv({
   base: "flex min-h-[340px] flex-col gap-3 rounded-2xl border p-4 transition-colors",
   variants: {
     over: {
-      true: "border-gold bg-surface-container-high",
-      false: "border-outline-variant bg-surface-container-low",
+      true: "border-gold bg-raised",
+      false: "border-border bg-surface",
     },
   },
 })
@@ -71,14 +71,14 @@ function KanbanColumn({ status, items, canMutate, onEdit, onDelete }: KanbanColu
     <div ref={setNodeRef} className={column({ over: isOver })}>
       <div className="flex items-center gap-2 px-1">
         <span className={columnDot({ status })} />
-        <span className="text-[13.5px] font-semibold text-on-surface">
+        <span className="text-[13.5px] font-semibold text-ink">
           {t(`obra.tarefas.columns.${status}`)}
         </span>
-        <Num className="ml-auto text-[11px] font-bold text-on-surface-faint">{items.length}</Num>
+        <Num className="ml-auto text-[11px] font-bold text-ink-3">{items.length}</Num>
       </div>
 
       {items.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-outline p-4 text-center text-[11.5px] text-on-surface-faint">
+        <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border-strong p-4 text-center text-[11.5px] text-ink-3">
           {t("obra.tarefas.emptyColumn")}
         </div>
       ) : (
@@ -123,7 +123,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {COLUMN_STATUSES.map((status) => (
-          <div key={status} className="h-56 animate-pulse rounded-2xl bg-surface-container-low" />
+          <div key={status} className="h-56 animate-pulse rounded-2xl bg-surface" />
         ))}
       </div>
     )
@@ -131,9 +131,9 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
 
   if (kanban.stages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-outline bg-surface-container-low py-20 text-center">
-        <p className="text-sm font-semibold text-on-surface">{t("obra.tarefas.noStagesTitle")}</p>
-        <p className="max-w-sm text-sm text-on-surface-variant">{t("obra.tarefas.noStagesHint")}</p>
+      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong bg-surface py-20 text-center">
+        <p className="text-sm font-semibold text-ink">{t("obra.tarefas.noStagesTitle")}</p>
+        <p className="max-w-sm text-sm text-ink-2">{t("obra.tarefas.noStagesHint")}</p>
       </div>
     )
   }
@@ -155,7 +155,7 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
           </Select>
         </div>
 
-        <Num className="hidden text-[11.5px] text-on-surface-variant md:block">
+        <Num className="hidden text-[11.5px] text-ink-2 md:block">
           {t("obra.tarefas.count", { count: kanban.visible.length })}
         </Num>
 

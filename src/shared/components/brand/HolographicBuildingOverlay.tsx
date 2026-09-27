@@ -63,18 +63,18 @@ export function HolographicBuildingOverlay() {
           </feMerge>
         </filter>
         <radialGradient id="pk-aura" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--pk-bl)" stopOpacity="0.2" />
-          <stop offset="60%" stopColor="var(--pk-b1)" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="var(--pk-bg)" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--gold-hi)" stopOpacity="0.2" />
+          <stop offset="60%" stopColor="var(--gold)" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="var(--bg)" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="pk-glass" x1="0" y1="0" x2="0.4" y2="1">
-          <stop offset="0%" stopColor="var(--pk-bl)" stopOpacity="0.16" />
-          <stop offset="45%" stopColor="var(--pk-b1)" stopOpacity="0.07" />
-          <stop offset="100%" stopColor="var(--pk-b2)" stopOpacity="0.03" />
+          <stop offset="0%" stopColor="var(--gold-hi)" stopOpacity="0.16" />
+          <stop offset="45%" stopColor="var(--gold)" stopOpacity="0.07" />
+          <stop offset="100%" stopColor="var(--gold-deep)" stopOpacity="0.03" />
         </linearGradient>
         <linearGradient id="pk-scan-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--pk-bl)" stopOpacity="0" />
-          <stop offset="100%" stopColor="var(--pk-bl)" stopOpacity="0.45" />
+          <stop offset="0%" stopColor="var(--gold-hi)" stopOpacity="0" />
+          <stop offset="100%" stopColor="var(--gold-hi)" stopOpacity="0.45" />
         </linearGradient>
       </defs>
 
@@ -102,7 +102,7 @@ export function HolographicBuildingOverlay() {
             cx={dot.x}
             cy={dot.y}
             r="2.6"
-            className="fill-gold-bright pulse-dot"
+            className="fill-gold-hi pulse-dot"
             style={{ animationDelay: `${i * 0.4}s` }}
           />
         ))}
@@ -142,7 +142,7 @@ export function HolographicBuildingOverlay() {
         <line x1="282" y1="232" x2="314" y2="232" strokeWidth="1.6" strokeOpacity="0.7" pathLength={1} className="draw-line" style={{ animationDelay: "1.7s" }} />
         <line x1="286" y1="226" x2="298" y2="226" strokeWidth="0.7" strokeOpacity="0.5" pathLength={1} className="draw-line" style={{ animationDelay: "1.65s" }} />
         <line x1="310" y1="226" x2="298" y2="226" strokeWidth="0.7" strokeOpacity="0.5" pathLength={1} className="draw-line" style={{ animationDelay: "1.65s" }} />
-        <circle cx="298" cy="110" r="2.4" stroke="none" className="fill-gold-bright pulse-dot" style={{ animationDelay: "1.8s" }} />
+        <circle cx="298" cy="110" r="2.4" stroke="none" className="fill-gold-hi pulse-dot" style={{ animationDelay: "1.8s" }} />
       </g>
 
       {/* ---- A torre ---- */}
@@ -151,10 +151,10 @@ export function HolographicBuildingOverlay() {
         <polygon
           points={`${FRONT_R},${ROOF} ${FRONT_R + DEPTH_DX},${ROOF - DEPTH_DY} ${FRONT_R + DEPTH_DX},${GROUND - DEPTH_DY} ${FRONT_R},${GROUND}`}
           fillOpacity="0.55"
-          className="fill-surface-container-low"
+          className="fill-surface"
         />
 
-        <g fill="none" filter="url(#pk-soft-glow)" className="stroke-gold-bright">
+        <g fill="none" filter="url(#pk-soft-glow)" className="stroke-gold-hi">
           {/* Painéis acesos da face lateral */}
           {sideLitFloors.map((i) => (
             <polygon
@@ -177,7 +177,7 @@ export function HolographicBuildingOverlay() {
               rx="1"
               fillOpacity={0.32 + ((i + k) % 3) * 0.18}
               stroke="none"
-              className="fill-gold-bright pulse-pane"
+              className="fill-gold-hi pulse-pane"
               style={{ animationDelay: `${((i + k) % 5) * 0.6}s` }}
             />
           ))}
@@ -227,9 +227,9 @@ export function HolographicBuildingOverlay() {
 
           {/* Nós pulsando no nível ativo da obra */}
           {columnXs.map((x, i) => (
-            <circle key={`node-${x.toFixed(0)}`} cx={x} cy={ROOF} r="3" stroke="none" className="fill-gold-bright pulse-dot" style={{ animationDelay: `${i * 0.3}s` }} />
+            <circle key={`node-${x.toFixed(0)}`} cx={x} cy={ROOF} r="3" stroke="none" className="fill-gold-hi pulse-dot" style={{ animationDelay: `${i * 0.3}s` }} />
           ))}
-          <circle cx={FRONT_R + DEPTH_DX} cy={ROOF - DEPTH_DY} r="2.6" stroke="none" className="fill-gold-bright pulse-dot" style={{ animationDelay: "0.6s" }} />
+          <circle cx={FRONT_R + DEPTH_DX} cy={ROOF - DEPTH_DY} r="2.6" stroke="none" className="fill-gold-hi pulse-dot" style={{ animationDelay: "0.6s" }} />
         </g>
       </g>
     </svg>

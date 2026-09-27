@@ -30,17 +30,17 @@ const badge = tv({
     },
   },
   compoundVariants: [
-    { state: "done", variant: "default", class: "bg-ok-bg text-ok" },
-    { state: "progress", variant: "default", class: "bg-tint text-gold-bright" },
-    { state: "late", variant: "default", class: "bg-danger-bg text-danger" },
-    { state: "paused", variant: "default", class: "bg-warn-bg text-warn" },
-    { state: "idle", variant: "default", class: "bg-tint text-on-surface-faint" },
+    { state: "done", variant: "default", class: "bg-success-soft text-success" },
+    { state: "progress", variant: "default", class: "bg-raised text-gold-hi" },
+    { state: "late", variant: "default", class: "bg-danger-soft text-danger" },
+    { state: "paused", variant: "default", class: "bg-warning-soft text-warning" },
+    { state: "idle", variant: "default", class: "bg-raised text-ink-3" },
     // Sobre a superfície invertida: fundo translúcido do tom, texto escuro.
-    { state: "done", variant: "light", class: "bg-ok/15 text-ok" },
-    { state: "progress", variant: "light", class: "bg-on-contrast/10 text-on-contrast" },
-    { state: "late", variant: "light", class: "bg-danger-solid/15 text-danger-solid" },
-    { state: "paused", variant: "light", class: "bg-warn/20 text-warn" },
-    { state: "idle", variant: "light", class: "bg-on-contrast/10 text-on-contrast/70" },
+    { state: "done", variant: "light", class: "bg-success/15 text-success" },
+    { state: "progress", variant: "light", class: "bg-on-inverse/10 text-on-inverse" },
+    { state: "late", variant: "light", class: "bg-danger/15 text-danger" },
+    { state: "paused", variant: "light", class: "bg-warning/20 text-warning" },
+    { state: "idle", variant: "light", class: "bg-on-inverse/10 text-on-inverse/70" },
   ],
   defaultVariants: { variant: "default" },
 })
@@ -49,11 +49,11 @@ const dot = tv({
   base: "size-1.5 flex-none rounded-full",
   variants: {
     state: {
-      done: "bg-ok",
-      progress: "bg-gold-bright",
+      done: "bg-success",
+      progress: "bg-gold-hi",
       late: "bg-danger",
-      paused: "bg-warn",
-      idle: "bg-on-surface-faint",
+      paused: "bg-warning",
+      idle: "bg-ink-3",
     },
     variant: {
       default: "",
@@ -61,9 +61,9 @@ const dot = tv({
     },
   },
   compoundVariants: [
-    { state: "progress", variant: "light", class: "bg-on-contrast" },
-    { state: "late", variant: "light", class: "bg-danger-solid" },
-    { state: "idle", variant: "light", class: "bg-on-contrast/50" },
+    { state: "progress", variant: "light", class: "bg-on-inverse" },
+    { state: "late", variant: "light", class: "bg-danger" },
+    { state: "idle", variant: "light", class: "bg-on-inverse/50" },
   ],
   defaultVariants: { variant: "default" },
 })

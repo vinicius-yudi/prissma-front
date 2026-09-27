@@ -97,14 +97,14 @@ export function AllocationModal({
             {t(errors.allocatedHours.message ?? "")}
           </p>
         ) : (
-          <p className="mt-1.5 text-xs text-on-surface-faint">
+          <p className="mt-1.5 text-xs text-ink-3">
             {t("obra.schedule.allocation.help")}
           </p>
         )}
 
         {confirmingClear ? (
-          <div className="mt-5 rounded-xl border border-outline bg-surface-container-high p-3.5">
-            <p className="text-[12.5px] text-on-surface-variant">
+          <div className="mt-5 rounded-xl border border-border-strong bg-raised p-3.5">
+            <p className="text-[12.5px] text-ink-2">
               {t("obra.schedule.allocation.confirmClear", { name: member.userName, date: dateLabel })}
             </p>
             <div className="mt-3 flex gap-2">

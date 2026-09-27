@@ -26,7 +26,7 @@ export function ResetPasswordForm() {
 	const { t } = useTranslation()
 
 	return (
-		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
+		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-bg">
 			<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
 				<LanguageSelect />
 				<ThemeToggle />
@@ -37,8 +37,8 @@ export function ResetPasswordForm() {
 				</div>
 
 				<div className="text-center space-y-2">
-					<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("resetPassword.title")}</h2>
-					<p className="text-sm text-on-surface-variant">{t("resetPassword.subtitle")}</p>
+					<h2 className="text-ink text-3xl font-bold tracking-tight">{t("resetPassword.title")}</h2>
+					<p className="text-sm text-ink-2">{t("resetPassword.subtitle")}</p>
 				</div>
 
 				<form className="space-y-6" onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ export function ResetPasswordForm() {
 								<button
 									type="button"
 									onClick={togglePassword}
-									className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+									className="text-ink-2 hover:text-ink transition-colors cursor-pointer"
 								>
 									{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
 								</button>
@@ -78,7 +78,7 @@ export function ResetPasswordForm() {
 								<button
 									type="button"
 									onClick={toggleConfirm}
-									className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+									className="text-ink-2 hover:text-ink transition-colors cursor-pointer"
 								>
 									{showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
 								</button>
@@ -97,7 +97,7 @@ export function ResetPasswordForm() {
 				<div className="text-center">
 					<Link
 						to="/login"
-						className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
+						className="flex items-center justify-center gap-2 text-sm font-medium text-gold-hi hover:underline underline-offset-4 transition-colors"
 					>
 						<ArrowLeft size={16} />
 						{t("resetPassword.backToLogin")}

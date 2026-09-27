@@ -20,11 +20,11 @@ import {
 } from "../schemas/budget.schema"
 
 const formLabel = tv({
-  base: "block text-xs uppercase tracking-widest text-primary font-semibold",
+  base: "block text-xs uppercase tracking-widest text-gold font-semibold",
 })
 
 const formInput = tv({
-  base: "bg-surface-container-highest text-on-surface focus:ring-1",
+  base: "bg-raised text-ink focus:ring-1",
 })
 
 interface BudgetItemFormModalProps {
@@ -115,7 +115,7 @@ export function BudgetItemFormModal({
             </Label>
             <textarea
               rows={3}
-              className="w-full rounded-xl px-4 py-3 bg-surface-container-highest text-on-surface text-sm border border-outline-variant focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+              className="w-full rounded-xl px-4 py-3 bg-raised text-ink text-sm border border-border focus:outline-none focus:ring-1 focus:ring-gold resize-none"
               placeholder={t("obra.orcamento.itemForm.descriptionPlaceholder")}
               {...form.register("description")}
             />
@@ -135,7 +135,7 @@ export function BudgetItemFormModal({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
+        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-border">
           <Button
             type="button"
             variant="outline"

@@ -10,8 +10,8 @@ const filterButton = tv({
   base: "shrink-0 flex cursor-pointer items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap",
   variants: {
     active: {
-      true: "bg-gold-grad text-on-primary shadow-glow",
-      false: "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high",
+      true: "bg-gold-grad text-on-gold shadow-soft",
+      false: "text-ink-2 hover:text-ink hover:bg-raised",
     },
   },
 })
@@ -20,8 +20,8 @@ const filterBadge = tv({
   base: "text-[10.5px] px-1.5 py-0.5 rounded-full font-bold",
   variants: {
     active: {
-      true: "bg-on-primary/15 text-on-primary",
-      false: "bg-outline-variant/50 text-on-surface-variant",
+      true: "bg-on-gold/15 text-on-gold",
+      false: "bg-border/50 text-ink-2",
     },
   },
 })
@@ -73,7 +73,7 @@ interface ProjectsFilterProps {
  */
 export function ProjectsFilter({ filter, onFilter, stats }: ProjectsFilterProps) {
   return (
-    <div className="flex w-full items-center gap-1 overflow-x-auto rounded-full border border-outline-variant bg-surface-container-low p-1 sm:w-auto">
+    <div className="flex w-full items-center gap-1 overflow-x-auto rounded-full border border-border bg-surface p-1 sm:w-auto">
       {FILTER_OPTIONS.map((option) => (
         <FilterButton
           key={option.value}

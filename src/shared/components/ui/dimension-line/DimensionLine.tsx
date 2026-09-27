@@ -13,7 +13,7 @@ import { useOncePerPage } from "../page-chrome/PageChrome"
  */
 
 const caption = tv({
-  base: "font-mono text-[10.5px] tracking-[0.05em] text-on-surface-faint",
+  base: "t-num text-[10.5px] tracking-[0.05em] text-ink-3",
 })
 
 interface DimensionLineProps {

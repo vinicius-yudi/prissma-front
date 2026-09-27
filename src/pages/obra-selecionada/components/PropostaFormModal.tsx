@@ -23,7 +23,7 @@ import {
 import { ENVIRONMENT_TYPES } from "../types/proposal"
 
 const formLabel = tv({
-  base: "block text-xs font-semibold uppercase tracking-widest text-primary",
+  base: "block text-xs font-semibold uppercase tracking-widest text-gold",
 })
 
 interface PropostaFormModalProps {
@@ -135,15 +135,15 @@ export function PropostaFormModal({ open, onClose, projectId }: PropostaFormModa
               id="proposta-arquivo"
               type="file"
               accept="image/png,image/jpeg,image/webp"
-              className="block w-full rounded-lg border border-outline-variant bg-surface-container px-4 py-2.5 text-sm text-on-surface-variant file:mr-3 file:rounded-md file:border-0 file:bg-surface-container-highest file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-on-surface"
+              className="block w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-ink-2 file:mr-3 file:rounded-md file:border-0 file:bg-raised file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-ink"
             />
-            <p className="text-[11px] text-on-surface-faint">
+            <p className="text-[11px] text-ink-3">
               {t("obra.propostas.form.fileHint")}
             </p>
           </div>
         </div>
 
-        <div className="mx-6 mb-6 mt-5 flex items-center justify-between gap-3 border-t border-outline-variant pt-5">
+        <div className="mx-6 mb-6 mt-5 flex items-center justify-between gap-3 border-t border-border pt-5">
           <Button type="button" variant="outline" fullWidth={false} onClick={onClose}>
             {t("obra.propostas.actions.cancel")}
           </Button>

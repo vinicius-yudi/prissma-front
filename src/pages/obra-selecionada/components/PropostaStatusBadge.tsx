@@ -18,10 +18,10 @@ const badge = tv({
   base: "inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[11px] font-semibold",
   variants: {
     status: {
-      APPROVED: "bg-ok-bg text-ok",
-      PENDING_REVIEW: "bg-tint text-gold-bright",
-      REJECTED: "bg-warn-bg text-warn",
-      DRAFT: "bg-tint text-on-surface-faint",
+      APPROVED: "bg-success-soft text-success",
+      PENDING_REVIEW: "bg-raised text-gold-hi",
+      REJECTED: "bg-warning-soft text-warning",
+      DRAFT: "bg-raised text-ink-3",
     },
   },
 })
@@ -30,10 +30,10 @@ const dot = tv({
   base: "size-1.5 rounded-full",
   variants: {
     status: {
-      APPROVED: "bg-ok",
-      PENDING_REVIEW: "bg-gold-bright",
-      REJECTED: "bg-warn",
-      DRAFT: "bg-on-surface-faint",
+      APPROVED: "bg-success",
+      PENDING_REVIEW: "bg-gold-hi",
+      REJECTED: "bg-warning",
+      DRAFT: "bg-ink-3",
     },
   },
 })

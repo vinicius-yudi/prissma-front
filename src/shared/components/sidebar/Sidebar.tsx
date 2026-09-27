@@ -48,7 +48,7 @@ const RAIL = 68
 const PANEL = 248
 
 const aside = tv({
-  base: "fixed inset-y-0 left-0 z-30 hidden h-dvh flex-col gap-5 overflow-hidden border-r border-outline-variant bg-surface-container-low py-5 transition-[width,padding] duration-200 ease-out lg:flex",
+  base: "fixed inset-y-0 left-0 z-30 hidden h-dvh flex-col gap-5 overflow-hidden border-r border-border bg-surface py-5 transition-[width,padding] duration-200 ease-out lg:flex",
   variants: {
     expanded: {
       true: "px-3.5",
@@ -61,8 +61,8 @@ const navLink = tv({
   base: "relative flex items-center gap-3 rounded-full py-2.5 text-[13px] font-medium transition-colors",
   variants: {
     active: {
-      true: "bg-tint text-on-surface",
-      false: "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface",
+      true: "bg-raised text-ink",
+      false: "text-ink-2 hover:bg-raised hover:text-ink",
     },
     expanded: {
       true: "pl-3.5 pr-3",
@@ -79,8 +79,8 @@ const accountButton = tv({
   base: "flex w-full cursor-pointer items-center gap-2.5 rounded-xl border transition-colors",
   variants: {
     open: {
-      true: "border-outline bg-surface-container-high",
-      false: "border-transparent hover:border-outline-variant hover:bg-surface-container-high",
+      true: "border-border-strong bg-raised",
+      false: "border-transparent hover:border-border hover:bg-raised",
     },
     expanded: {
       true: "p-2 text-left",
@@ -90,7 +90,7 @@ const accountButton = tv({
 })
 
 const contextCard = tv({
-  base: "mt-1.5 flex items-center gap-2 rounded-xl border border-outline bg-surface-container-high px-2.5 py-2",
+  base: "mt-1.5 flex items-center gap-2 rounded-xl border border-border-strong bg-raised px-2.5 py-2",
 })
 
 const menuItem = tv({
@@ -98,9 +98,9 @@ const menuItem = tv({
   variants: {
     variant: {
       default:
-        "cursor-pointer text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface",
-      danger: "cursor-pointer text-danger hover:bg-danger-bg",
-      disabled: "cursor-not-allowed text-on-surface-faint",
+        "cursor-pointer text-ink-2 hover:bg-raised hover:text-ink",
+      danger: "cursor-pointer text-danger hover:bg-danger-soft",
+      disabled: "cursor-not-allowed text-ink-3",
     },
   },
 })
@@ -161,10 +161,10 @@ function AccountButton({
         className="size-9 shrink-0 rounded-[10px] object-contain"
       />
       <Label expanded={expanded} className="min-w-0 flex-1">
-        <span className="block truncate text-[12.5px] font-semibold text-on-surface">{name}</span>
-        <span className="block truncate text-[10px] text-on-surface-faint">{subtitle}</span>
+        <span className="block truncate text-[12.5px] font-semibold text-ink">{name}</span>
+        <span className="block truncate text-[10px] text-ink-3">{subtitle}</span>
       </Label>
-      {expanded && <ChevronDown size={14} className="shrink-0 text-on-surface-faint" />}
+      {expanded && <ChevronDown size={14} className="shrink-0 text-ink-3" />}
     </button>
   )
 }
@@ -187,7 +187,7 @@ function ObraContextCard({ obraId, expanded }: { obraId: number; expanded: boole
   if (!expanded) {
     return (
       <div className="flex justify-center" title={project?.title ?? ""}>
-        <span className="flex size-9 items-center justify-center rounded-xl border border-outline bg-surface-container-high">
+        <span className="flex size-9 items-center justify-center rounded-xl border border-border-strong bg-raised">
           <span className="size-2 rounded-full bg-gold" />
         </span>
       </div>
@@ -199,7 +199,7 @@ function ObraContextCard({ obraId, expanded }: { obraId: number; expanded: boole
       <button
         type="button"
         onClick={() => navigate("/obras")}
-        className="flex cursor-pointer items-center gap-1.5 px-1.5 text-[11.5px] font-semibold text-gold-bright hover:underline"
+        className="flex cursor-pointer items-center gap-1.5 px-1.5 text-[11.5px] font-semibold text-gold-hi hover:underline"
       >
         <ChevronLeft size={13} />
         {t("sidebar.allObras")}
@@ -207,10 +207,10 @@ function ObraContextCard({ obraId, expanded }: { obraId: number; expanded: boole
 
       <div className={contextCard()}>
         <span className="size-2 shrink-0 rounded-full bg-gold" />
-        <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-on-surface">
+        <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
           {project?.title ?? "—"}
         </span>
-        <ChevronsUpDown size={12} className="shrink-0 text-on-surface-faint" />
+        <ChevronsUpDown size={12} className="shrink-0 text-ink-3" />
       </div>
     </div>
   )
@@ -248,19 +248,19 @@ function AccountMenu({
   const { t } = useTranslation()
 
   return (
-    <div className="absolute inset-x-0 top-full z-10 mt-2 overflow-hidden rounded-2xl border border-outline bg-surface-container-high py-1.5 shadow-xl">
-      <div className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-on-surface-faint">
+    <div className="absolute inset-x-0 top-full z-10 mt-2 overflow-hidden rounded-2xl border border-border-strong bg-raised py-1.5 shadow-xl">
+      <div className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-3">
         {t("sidebar.accountsLabel")}
       </div>
 
       {workspaces.length === 0 ? (
         // Rollout/carregando: mostra ao menos a identidade atual marcada.
-        <div className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-on-surface">
-          <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-primary">
+        <div className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-ink">
+          <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-gold">
             {name[0]?.toUpperCase() ?? "U"}
           </span>
           <span className="min-w-0 flex-1 truncate font-medium">{name}</span>
-          <Check size={14} className="shrink-0 text-gold-bright" />
+          <Check size={14} className="shrink-0 text-gold-hi" />
         </div>
       ) : (
         workspaces.map((workspace) => {
@@ -273,13 +273,13 @@ function AccountMenu({
               onClick={() => onSwitch(workspace.id)}
               className={menuItem({ variant: "default" })}
             >
-              <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-primary">
+              <span className="flex size-5 shrink-0 items-center justify-center rounded bg-gold-grad text-[9px] font-bold text-on-gold">
                 {workspace.name[0]?.toUpperCase() ?? "W"}
               </span>
-              <span className="min-w-0 flex-1 truncate text-left font-medium text-on-surface">
+              <span className="min-w-0 flex-1 truncate text-left font-medium text-ink">
                 {workspace.name}
               </span>
-              {active && <Check size={14} className="shrink-0 text-gold-bright" />}
+              {active && <Check size={14} className="shrink-0 text-gold-hi" />}
             </button>
           )
         })
@@ -290,7 +290,7 @@ function AccountMenu({
         {t("sidebar.accountsNew")}
       </button>
 
-      <div className="my-1.5 h-px bg-outline-variant" />
+      <div className="my-1.5 h-px bg-border" />
 
       <button
         type="button"
@@ -316,7 +316,7 @@ function AccountMenu({
         <UnavailableBadge />
       </button>
 
-      <div className="my-1.5 h-px bg-outline-variant" />
+      <div className="my-1.5 h-px bg-border" />
 
       <button type="button" className={menuItem({ variant: "danger" })} onClick={onLogout}>
         <LogOut size={15} strokeWidth={1.8} />
@@ -428,7 +428,7 @@ export function Sidebar() {
         <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overflow-x-hidden">
           <Label
             expanded={expanded}
-            className="mb-1.5 block px-3.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-surface-faint"
+            className="mb-1.5 block px-3.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-3"
           >
             {inObra ? t("sidebar.groupObra") : t("sidebar.groupWorkspace")}
           </Label>

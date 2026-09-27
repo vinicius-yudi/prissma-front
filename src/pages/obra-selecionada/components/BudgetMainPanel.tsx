@@ -25,14 +25,14 @@ export function BudgetMainPanel({
   const { t } = useTranslation()
 
   return (
-    <div className="bg-surface-container-low rounded-xl p-5 space-y-5">
+    <div className="bg-surface rounded-xl p-5 space-y-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-base font-bold text-on-surface">
+          <h2 className="text-base font-bold text-ink">
             {t("obra.orcamento.title")}
           </h2>
           {budget.description && (
-            <p className="text-sm text-on-surface-variant mt-0.5 truncate">
+            <p className="text-sm text-ink-2 mt-0.5 truncate">
               {budget.description}
             </p>
           )}

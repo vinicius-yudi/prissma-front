@@ -20,11 +20,11 @@ import {
 } from "../schemas/budget.schema"
 
 const formLabel = tv({
-  base: "block text-xs uppercase tracking-widest text-primary font-semibold",
+  base: "block text-xs uppercase tracking-widest text-gold font-semibold",
 })
 
 const formInput = tv({
-  base: "bg-surface-container-highest text-on-surface focus:ring-1",
+  base: "bg-raised text-ink focus:ring-1",
 })
 
 interface BudgetFormModalProps {
@@ -122,7 +122,7 @@ export function BudgetFormModal({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
+        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-border">
           <Button
             type="button"
             variant="outline"

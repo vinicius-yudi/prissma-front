@@ -1,287 +1,456 @@
-/* Fontes primeiro: `@import "tailwindcss"` expande em regras, e um @import
-   depois de regras é inválido (o build avisa e o navegador ignora). */
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   PRISSMA — Barroco ouro
-   Primitivas do Style Guide v2 §7. Nomes idênticos aos dos protótipos
-   (`PRISSMA App.dc.html`, `PRISSMA Design System.dc.html`).
+   Archivo variável — a única família do produto.
 
-   Só este arquivo conhece hex. Componentes referenciam os tokens semânticos
-   (--color-*) mapeados mais abaixo; o tema troca apenas os valores das
-   primitivas, e nenhum componente sabe em que modo está.
+   A largura (`wdth` 62–125) é o recurso de hierarquia do DS v2: títulos largos
+   e firmes, texto corrido normal, números estreitos e tabulares. Por isso o
+   arquivo é servido daqui, com os dois eixos, e não pelo Google Fonts, que só
+   entrega o eixo de peso.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Archivo";
+  src: url("../assets/fonts/Archivo-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+   PRISSMA — Barroco ouro, DS v2.
+
+   Os nomes são os do design system (`tokens.json`), sem prefixo, para que o
+   CSS de referência do DS (`var(--gold)`, `var(--raised)`…) funcione aqui sem
+   tradução. Só este arquivo conhece hex. Componentes usam os utilitários
+   gerados pelo `@theme` (`bg-surface`, `text-ink-2`…); o tema troca apenas os
+   valores abaixo, e nenhum componente sabe em que modo está.
+
+   Escuro (Barroco) é o padrão; claro (Canteiro / sol) é para o canteiro, sob
+   luz forte.
 --------------------------------------------------------------------------- */
 
 :root {
-  /* marca (ouro) */
-  --pk-b1: #c9932f;
-  --pk-b2: #8e5e22;
-  --pk-bl: #e2b457;
-  --pk-grad: linear-gradient(90deg, #c9932f, #8e5e22);
-  --pk-glow: 0 0 24px rgba(201, 147, 47, 0.35);
+  color-scheme: dark;
 
-  /* superfícies */
-  --pk-bg: #120e08;
-  --pk-sf: #0c0906;
-  --pk-rz: #241b10;
-  --pk-tint: rgba(255, 255, 255, 0.07);
-
-  /* superfície de contraste (invertida) */
-  --pk-lt: #faf3e4;
-  --pk-ltT: #1b1206;
-  --pk-ltA: #8c5f16;
-
-  /* texto */
-  --pk-t1: #fbf4e6;
-  --pk-t2: #dccdb0;
-  --pk-t3: #8a7a5f;
+  /* superfícies: no escuro o card é mais fundo que a página */
+  --bg: #120e08;
+  --surface: #0c0906;
+  --raised: #241b10;
 
   /* bordas */
-  --pk-bs: #2b2114;
-  --pk-bt: #43351f;
+  --border: #2b2114;
+  --border-strong: #43351f;
+
+  /* texto */
+  --ink: #fbf4e6;
+  --ink-2: #dccdb0;
+  --ink-3: #8a7a5f;
+
+  /* ouro */
+  --gold-hi: #e2b457;
+  --gold: #c9932f;
+  --gold-deep: #8e5e22;
+  --gold-soft: #32240e;
+  --on-gold: #120e08;
 
   /* semânticas */
-  --pk-ok: #3fbf95;
-  --pk-okBg: rgba(29, 158, 117, 0.16);
-  --pk-wn: #f2c155;
-  --pk-wnBg: rgba(224, 161, 27, 0.16);
-  --pk-dg: #ff8b8a;
-  --pk-dgBg: rgba(226, 75, 74, 0.16);
+  --success: #3fbf95;
+  --success-soft: #14261d;
+  --warning: #f2c155;
+  --warning-soft: #312713;
+  --danger: #ff8b8a;
+  --danger-soft: #331e1b;
 
-  /* hachura = previsto / indisponível */
-  --pk-hatch: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.055) 0 2px,
-    transparent 2px 7px
-  );
+  /* camadas transitórias (toast, tooltip) */
+  --inverse: #fbf4e6;
+  --on-inverse: #120e08;
 
-  /* texturas do painel de marca das telas públicas */
-  --pk-grid: rgba(201, 147, 47, 0.1);
-  --pk-glowTint: rgba(201, 147, 47, 0.1);
-  --pk-fade: rgba(142, 94, 34, 0.15);
+  /* texturas */
+  --hazard: #ff8b8a38;
+  --grid: #c9932f12;
 
-  /* trena = marcações do preenchimento de toda barra de progresso */
-  --pk-trena: repeating-linear-gradient(
-    90deg,
-    transparent 0 8px,
-    rgba(0, 0, 0, 0.32) 8px 9px
-  );
+  /* Gradiente de ação: a ação primária da vista e a trena. */
+  --grad-action: linear-gradient(90deg, var(--gold), var(--gold-deep));
+
+  --elev-soft: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 30px -14px rgba(0, 0, 0, 0.7);
+  --elev-lift: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+
+  /* Camadas fixas, de baixo para cima. Uso: `z-(--z-modal)`. */
+  --z-sticky: 20;
+  --z-topbar: 30;
+  --z-nav: 40;
+  --z-drawer: 70;
+  --z-modal: 80;
+  --z-palette: 90;
+  --z-toast: 120;
+
+  --blueprint-step: 24px;
+  --blueprint-fine: 14px;
 }
 
-/* Modo claro "pergaminho". Mesmos nomes, valores recalibrados para AA sobre
-   fundo claro. O danger sólido não muda: é compartilhado entre os modos. */
 [data-theme="light"] {
-  --pk-b1: #a5761f;
-  --pk-b2: #7a521a;
-  --pk-bl: #8c5f16;
-  --pk-grad: linear-gradient(90deg, #a5761f, #7a521a);
-  --pk-glow: 0 8px 22px rgba(165, 118, 31, 0.28);
+  color-scheme: light;
 
-  --pk-bg: #f2ebdb;
-  --pk-sf: #fbf7ec;
-  --pk-rz: #ede3cc;
-  --pk-tint: rgba(36, 27, 12, 0.07);
+  --bg: #f2ebdb;
+  --surface: #fbf7ec;
+  --raised: #ede3cc;
 
-  --pk-lt: #ffffff;
-  --pk-ltT: #241b0c;
-  --pk-ltA: #8c5f16;
+  --border: #e1d5b8;
+  --border-strong: #c8b389;
 
-  --pk-t1: #241b0c;
-  --pk-t2: #5a4c33;
-  --pk-t3: #8b7c60;
+  --ink: #241b0c;
+  --ink-2: #5a4c33;
+  --ink-3: #8b7c60;
 
-  --pk-bs: #e1d5b8;
-  --pk-bt: #c8b389;
+  --gold-hi: #8c5f16;
+  --gold: #a5761f;
+  --gold-deep: #7a521a;
+  --gold-soft: #f1e8d4;
+  --on-gold: #fbf7ec;
 
-  --pk-ok: #166b4c;
-  --pk-okBg: rgba(22, 107, 76, 0.13);
-  --pk-wn: #7e5e0c;
-  --pk-wnBg: rgba(126, 94, 12, 0.14);
-  --pk-dg: #a62b29;
-  --pk-dgBg: rgba(166, 43, 41, 0.1);
+  --success: #166b4c;
+  --success-soft: #dfe6d9;
+  --warning: #7e5e0c;
+  --warning-soft: #e9e2cd;
+  --danger: #a62b29;
+  --danger-soft: #f1dfd5;
 
-  --pk-hatch: repeating-linear-gradient(
-    45deg,
-    rgba(36, 27, 12, 0.09) 0 2px,
-    transparent 2px 7px
-  );
+  --inverse: #241b0c;
+  --on-inverse: #fbf7ec;
 
-  --pk-grid: rgba(165, 118, 31, 0.12);
-  --pk-glowTint: rgba(165, 118, 31, 0.1);
-  --pk-fade: rgba(122, 82, 26, 0.1);
+  --hazard: #a62b292e;
+  --grid: #7a521a14;
+
+  /* No claro o rótulo sobre `gold` fica em 3.8:1; começar em `gold-hi`
+     leva o início do botão primário acima de 4.5:1 (pendência do DS). */
+  --grad-action: linear-gradient(90deg, var(--gold-hi), var(--gold-deep));
+
+  --elev-soft: 0 1px 0 rgba(36, 27, 12, 0.04), 0 8px 24px -12px rgba(36, 27, 12, 0.18);
+  --elev-lift: 0 24px 64px -24px rgba(36, 27, 12, 0.35);
 }
 
 @theme {
   /* Apaga o palette default do Tailwind. `bg-blue-500`, `text-slate-400` e
      companhia deixam de compilar — a cor genérica fica inalcançável em vez de
-     desaconselhada. Só voltam branco e preto, que o design usa de fato: texto
-     sobre o gradiente ouro e o scrim dos modais. */
+     desaconselhada. Só voltam branco e preto. */
   --color-*: initial;
 
   --color-white: #ffffff;
   --color-black: #000000;
 
-  /* superfícies */
-  --color-background: var(--pk-bg);
-  --color-surface: var(--pk-bg);
-  --color-surface-dim: var(--pk-bg);
-  --color-surface-container-lowest: var(--pk-sf);
-  --color-surface-container-low: var(--pk-sf);
-  --color-surface-container: var(--pk-sf);
-  --color-surface-container-high: var(--pk-rz);
-  --color-surface-container-highest: var(--pk-rz);
-  --color-surface-bright: var(--pk-rz);
-  --color-surface-variant: var(--pk-rz);
-  --color-tint: var(--pk-tint);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
 
-  /* superfície de contraste — no máximo uma por tela (ver ContrastCard) */
-  --color-contrast: var(--pk-lt);
-  --color-on-contrast: var(--pk-ltT);
-  --color-contrast-action: var(--pk-ltA);
-  --color-inverse-surface: var(--pk-lt);
-  --color-inverse-on-surface: var(--pk-ltT);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
 
-  /* texto */
-  --color-on-background: var(--pk-t1);
-  --color-on-surface: var(--pk-t1);
-  --color-on-surface-variant: var(--pk-t2);
-  --color-on-surface-faint: var(--pk-t3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
 
-  /* bordas */
-  --color-outline-variant: var(--pk-bs);
-  --color-outline: var(--pk-bt);
+  --color-gold-hi: var(--gold-hi);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-gold-soft: var(--gold-soft);
+  --color-on-gold: var(--on-gold);
 
-  /* marca */
-  --color-primary: var(--pk-b1);
-  --color-on-primary: #ffffff;
-  --color-primary-container: var(--pk-rz);
-  --color-on-primary-container: var(--pk-bl);
-  --color-gold: var(--pk-b1);
-  --color-gold-deep: var(--pk-b2);
-  --color-gold-bright: var(--pk-bl);
-  --color-surface-tint: var(--pk-b1);
-  --color-inverse-primary: var(--pk-bl);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
 
-  /* semânticas — os nomes ok/warn/danger são os do design; secondary e
-     tertiary permanecem como aliases porque o código atual os usa. */
-  --color-ok: var(--pk-ok);
-  --color-ok-bg: var(--pk-okBg);
-  --color-warn: var(--pk-wn);
-  --color-warn-bg: var(--pk-wnBg);
-  --color-danger: var(--pk-dg);
-  --color-danger-bg: var(--pk-dgBg);
-  --color-danger-solid: #e24b4a;
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
 
-  --color-secondary: var(--pk-ok);
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: var(--pk-okBg);
-  --color-on-secondary-container: var(--pk-ok);
+  --color-hazard: var(--hazard);
+  --color-grid: var(--grid);
+  --color-focus: var(--gold);
 
-  --color-tertiary: var(--pk-wn);
-  --color-on-tertiary: #ffffff;
-  --color-tertiary-container: var(--pk-wnBg);
-  --color-on-tertiary-container: var(--pk-wn);
+  --font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --color-error: var(--pk-dg);
-  --color-on-error: #ffffff;
-  --color-error-container: var(--pk-dgBg);
-  --color-on-error-container: var(--pk-dg);
+  /* Raios do DS. Os nomes coincidem com a escala do Tailwind de propósito:
+     `rounded-md` é o raio de controle do PRISSMA, não o default de 6px. */
+  --radius-xs: 5px;
+  --radius-sm: 9px;
+  --radius-md: 11px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
 
-  /* tipografia — Bricolage é a voz do produto; mono é obrigatória para todo
-     valor de dado (ver o componente <Num>). Texto corrido nunca usa mono. */
-  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
+  /* Sombra só no que flutua: hover de card e item ativo do segmentado
+     (`soft`); modal, drawer, popover, toast e card arrastado (`lift`). */
+  --shadow-soft: var(--elev-soft);
+  --shadow-lift: var(--elev-lift);
 
-/* Assinaturas da marca como utilitários, para não vazarem gradiente cru pelo
-   código. A trena mora no componente <Progress>, que é o único lugar
-   autorizado a desenhar barra de progresso. */
-@utility bg-gold-grad {
-  background-image: var(--pk-grad);
-}
-
-@utility shadow-glow {
-  box-shadow: var(--pk-glow);
-}
-
-@utility bg-hatch {
-  background-image: var(--pk-hatch);
-}
-
-/* Grade técnica das telas públicas: papel milimetrado em traço ouro fino.
-   Vive aqui, e não como style inline no componente, porque é textura de marca
-   — mesma categoria da hachura — e estava duplicada em dois arquivos. */
-@utility bg-blueprint-grid {
-  background-image:
-    linear-gradient(to right, var(--pk-grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--pk-grid) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* Brilho difuso do canto superior do painel de marca. */
-@utility bg-brand-glow {
-  background-image: radial-gradient(circle, var(--pk-glowTint) 0%, transparent 70%);
-}
-
-/* Esmaecimento na base do painel, para o conteúdo não encostar na borda. */
-@utility bg-brand-fade {
-  background-image: linear-gradient(to top, var(--pk-fade), transparent);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ---------------------------------------------------------------------------
-   Cena da obra das telas públicas (<ConstructionHero>).
+   Tipografia do DS v2 como utilitários.
 
-   As quatro camadas de fundo do painel — céu, brilho do horizonte, silhueta e
-   o esmaecimento que funde a cena com o formulário ao lado. Vive aqui, e não
-   num `login.css` por página, pela mesma razão das texturas do <BrandPanel>
-   logo acima: é textura de marca, e §16 não admite CSS solto fora do Tailwind.
-
-   Os translúcidos saem de `color-mix` sobre as primitivas em vez de `rgba()`
-   fixo — assim a cena acompanha a troca de tema sem uma segunda tabela de
-   valores para o modo claro.
+   Cada papel carrega tamanho, altura de linha, peso, tracking e largura. A
+   largura vai em `font-variation-settings` porque é assim que o DS a define;
+   o peso continua em `font-weight`, que o navegador aplica ao eixo `wght`.
+   Todo número (moeda, data, percentual, contagem, código) usa `t-data` ou
+   `t-kpi`: Archivo estreito e tabular no lugar da mono da v1.
 --------------------------------------------------------------------------- */
+
+@utility t-hero {
+  font-size: 96px;
+  line-height: 0.92;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+  font-variation-settings: "wdth" 125;
+}
+
+@utility t-title-lg {
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 118;
+}
+
+@utility t-title {
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 118;
+}
+
+@utility t-title-sm {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 118;
+}
+
+@utility t-section {
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  font-variation-settings: "wdth" 108;
+}
+
+@utility t-body {
+  font-size: 14.5px;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+@utility t-body-sm {
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+@utility t-label {
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+@utility t-meta {
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-weight: 450;
+}
+
+@utility t-kpi {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wdth" 115;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility t-data {
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 560;
+  letter-spacing: -0.005em;
+  font-variation-settings: "wdth" 94;
+  font-variant-numeric: tabular-nums;
+  word-spacing: 0.06em;
+}
+
+/* Só a largura e os algarismos tabulares, sem tamanho: para número dentro de
+   pill, chip ou tooltip, que já tem o tamanho do contêiner. */
+@utility t-num {
+  font-variation-settings: "wdth" 94;
+  font-variant-numeric: tabular-nums;
+  word-spacing: 0.06em;
+}
+
+@utility t-wide {
+  font-variation-settings: "wdth" 108;
+}
+
+/* ---------------------------------------------------------------------------
+   Contornos, foco e gradiente.
+
+   `hairline` é o contorno de todo card e controle: sombra interna de 1px, para
+   o contorno não alterar tamanho. Vai pelo `inset-ring` do Tailwind para somar
+   com `shadow-soft` em vez de substituí-lo.
+--------------------------------------------------------------------------- */
+
+@utility hairline {
+  @apply inset-ring inset-ring-border;
+}
+
+@utility hairline-strong {
+  @apply inset-ring inset-ring-border-strong;
+}
+
+@utility focus-ring {
+  @apply ring-2 ring-focus ring-offset-2 ring-offset-bg;
+}
+
+@utility bg-gold-grad {
+  background-image: var(--grad-action);
+}
+
+/* ---------------------------------------------------------------------------
+   Assinaturas de desenho técnico.
+
+   - blueprint: papel quadriculado atrás da fachada, dos vazios e do upload.
+     Nunca como fundo de página.
+   - blueprint-fine: pontilhado fino das miniaturas da fachada.
+   - hazard: listras de sinalização, só para bloqueado e além do prazo.
+   - tape-ticks: marcações da trena, traço maior a cada 10% e menor a cada 2%
+     — dez traços grandes são 100% em qualquer largura.
+--------------------------------------------------------------------------- */
+
+@utility blueprint {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--blueprint-step) var(--blueprint-step);
+}
+
+@utility blueprint-fine {
+  background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+  background-size: var(--blueprint-fine) var(--blueprint-fine);
+}
+
+@utility hazard {
+  background-image: repeating-linear-gradient(-45deg, var(--hazard) 0 6px, transparent 6px 12px);
+}
+
+@utility tape-ticks {
+  background-image:
+    repeating-linear-gradient(90deg, var(--bg) 0 1px, transparent 1px 10%),
+    repeating-linear-gradient(90deg, var(--bg) 0 1px, transparent 1px 2%);
+  background-size:
+    100% 100%,
+    100% 45%;
+  background-repeat: no-repeat;
+}
+
+/* Hachura: v1 para "previsto / indisponível". O DS v2 separa em tracejado
+   (previsto) e `hazard` (bloqueado); fica até o último uso sair. */
+@utility bg-hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--ink) 6%, transparent) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Movimento de estado.
+
+   - live-dot: o ponto de "Em andamento" pulsa.
+   - march: o tracejado da fachada "anda" no hover do card da obra.
+--------------------------------------------------------------------------- */
+
+@keyframes pr-pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+@keyframes pr-march {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+@utility live-dot {
+  animation: pr-pulse 2s var(--ease-out-expo) infinite;
+}
+
+@utility march {
+  animation: pr-march 0.9s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Cena das telas públicas (<ConstructionHero>, <BrandPanel>).
+
+   Camadas de fundo e animações do painel de marca de login e cadastro. São
+   textura de marca, e §16 não admite CSS solto fora do Tailwind, então moram
+   aqui. Os translúcidos saem de `color-mix` sobre os tokens, para acompanhar
+   a troca de tema sem uma segunda tabela de valores.
+--------------------------------------------------------------------------- */
+
+@utility bg-brand-glow {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--gold) 10%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+@utility bg-brand-fade {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--gold-deep) 15%, transparent),
+    transparent
+  );
+}
 
 @utility bg-hero-sky {
   background-image: radial-gradient(
     120% 80% at 30% 15%,
-    var(--pk-rz) 0%,
-    var(--pk-sf) 38%,
-    var(--pk-bg) 72%
+    var(--raised) 0%,
+    var(--surface) 38%,
+    var(--bg) 72%
   );
 }
 
-/* Poente atrás da torre: o ouro da marca no lugar do laranja da referência. */
 @utility bg-hero-horizon {
   background-image: radial-gradient(
     60% 100% at 18% 100%,
-    color-mix(in srgb, var(--pk-b1) 28%, transparent) 0%,
-    color-mix(in srgb, var(--pk-b2) 10%, transparent) 35%,
+    color-mix(in srgb, var(--gold) 28%, transparent) 0%,
+    color-mix(in srgb, var(--gold-deep) 10%, transparent) 35%,
     transparent 70%
   );
 }
 
 @utility bg-hero-ground {
-  background-image: linear-gradient(to top, var(--pk-bg) 15%, transparent);
+  background-image: linear-gradient(to top, var(--bg) 15%, transparent);
 }
 
 @utility bg-hero-fuse {
   background-image: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--pk-bg) 85%, transparent) 0%,
-    color-mix(in srgb, var(--pk-bg) 25%, transparent) 55%,
-    color-mix(in srgb, var(--pk-bg) 65%, transparent) 100%
+    color-mix(in srgb, var(--bg) 85%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 25%, transparent) 55%,
+    color-mix(in srgb, var(--bg) 65%, transparent) 100%
   );
 }
-
-/* ---------------------------------------------------------------------------
-   Animações das telas públicas.
-
-   Traço que se desenha, painéis que pulsam, varredura BIM subindo a fachada e
-   a entrada escalonada do formulário. São keyframes e `stroke-dashoffset` —
-   nada disso se exprime como utilitário de composição, então é a exceção
-   legítima do §16, e por isso mora no arquivo de tokens junto do resto.
---------------------------------------------------------------------------- */
 
 @keyframes pk-draw {
   to {
@@ -380,8 +549,7 @@
 }
 
 /* Os traços declaram `pathLength={1}`, então um único comprimento de tracejado
-   serve para qualquer geometria — reta curta e polilinha longa se desenham no
-   mesmo tempo. */
+   serve para qualquer geometria. */
 @utility draw-line {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -426,10 +594,12 @@
   animation: pk-hero-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Acessibilidade §13: nada disso é informação, então some por inteiro para
-   quem pediu menos movimento — inclusive o traço, que precisa terminar
-   desenhado em vez de invisível. */
+/* Movimento reduzido: sem pulso, sem tracejado andando, sem cena. Nada disso é
+   informação — o traço termina desenhado em vez de invisível, e o conteúdo
+   que entrava deslizando já aparece no lugar. */
 @media (prefers-reduced-motion: reduce) {
+  .live-dot,
+  .march,
   .draw-line,
   .glow-line,
   .pulse-dot,
@@ -456,13 +626,11 @@
 /* ---------------------------------------------------------------------------
    Utilitários do shell mobile.
 
-   `pb-safe` reserva a faixa do indicador de home do iOS sob a barra de abas —
-   sem ela os rótulos ficam por baixo do gesto do sistema. Depende do
-   `viewport-fit=cover` no index.html; fora do iOS o inset é 0 e não custa nada.
+   `pb-safe` reserva a faixa do indicador de home do iOS sob a barra de abas.
+   Depende do `viewport-fit=cover` no index.html; fora do iOS o inset é 0.
 
-   `scrollbar-none` é para trilhos que rolam na horizontal (módulos da obra,
-   filtros): a barra do WebKit aparece por cima dos chips e não há o que rolar
-   verticalmente ali.
+   `scrollbar-none` é para trilhos que rolam na horizontal (abas da obra,
+   filtros): a barra do WebKit aparece por cima dos chips.
 --------------------------------------------------------------------------- */
 
 @utility pb-safe {
@@ -481,32 +649,41 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  background-color: var(--bg);
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: var(--color-background);
-  color: var(--color-on-surface);
+  font-variation-settings: "wdth" 100;
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Acessibilidade §6: foco sempre visível, com anel na cor da marca. */
+::selection {
+  background-color: color-mix(in srgb, var(--gold) 30%, transparent);
+}
+
+/* Foco sempre visível: 2px de fundo + 2px de ouro (`focus` do DS, ≥ 3:1 nos
+   dois temas). */
 :focus-visible {
-  outline: 2px solid var(--pk-b1);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 
 /* ---------------------------------------------------------------------------
    Scrollbar.
-   A barra nativa do Windows entra branca e larga, e era o único elemento da
-   interface que ignorava o tema — destoava especialmente na sidebar escura.
-   Fina, trilha transparente, polegar na cor de borda e ouro no hover.
+   A barra nativa do Windows entra branca e larga e ignora o tema. Fina,
+   trilha transparente, polegar na borda forte e ouro no hover.
 --------------------------------------------------------------------------- */
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--pk-bt) transparent;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 /* WebKit / Chromium */
@@ -520,7 +697,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--pk-bt);
+  background-color: var(--border-strong);
   border-radius: 999px;
   /* A borda transparente afina o polegar sem estreitar a área de clique. */
   border: 3px solid transparent;
@@ -528,7 +705,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--pk-b1);
+  background-color: var(--gold);
 }
 
 ::-webkit-scrollbar-corner {
@@ -538,9 +715,8 @@ body {
 /* ---------------------------------------------------------------------------
    Autofill.
    O Chrome repinta o fundo do campo preenchido com um creme próprio e ignora o
-   tema — nos formulários escuros o campo com valor salvo ficava claro ao lado
-   de um campo vazio escuro. A sombra interna é a única forma de recobrir esse
-   fundo, e a transição longa impede o flash claro no primeiro paint.
+   tema. A sombra interna é a única forma de recobrir esse fundo, e a
+   transição longa impede o flash claro no primeiro paint.
 --------------------------------------------------------------------------- */
 
 input:-webkit-autofill,
@@ -549,9 +725,9 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-container) inset;
-  -webkit-text-fill-color: var(--pk-t1);
-  caret-color: var(--pk-t1);
+  -webkit-box-shadow: 0 0 0 1000px var(--raised) inset;
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
   transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -561,44 +737,16 @@ select:-webkit-autofill {
 }
 
 /* ---------------------------------------------------------------------------
-   Transição de tema.
+   Troca de tema.
 
-   Trocar `data-theme` reescreve todas as primitivas de uma vez, e sem
-   transição a tela dá um salto seco de escuro para pergaminho. A classe é
-   posta pelo <ThemeProvider> só durante a troca e removida em seguida: manter
-   `transition` no CSS base deixaria hover e foco moles e faria o primeiro
-   paint entrar desbotando.
-
-   O `!important` é o que garante o esmaecimento em elementos que já declaram
-   uma `transition` própria (quase todo componente usa `transition-*` do
-   Tailwind). Como ele substitui — e não soma — a transição do elemento,
-   `transform` precisa entrar na lista: sem isso o botão do próprio toggle
-   saltaria de lado no clique em vez de deslizar.
+   O <ThemeProvider> troca `data-theme` dentro de `document.startViewTransition`
+   quando o navegador oferece, e o cross-fade é o padrão do navegador para a
+   raiz. Sem View Transitions, ou com movimento reduzido, a troca é
+   instantânea.
 --------------------------------------------------------------------------- */
 
-.theme-transition,
-.theme-transition *,
-.theme-transition *::before,
-.theme-transition *::after {
-  transition:
-    background-color 350ms ease,
-    background-image 350ms ease,
-    border-color 350ms ease,
-    color 350ms ease,
-    fill 350ms ease,
-    stroke 350ms ease,
-    box-shadow 350ms ease,
-    outline-color 350ms ease,
-    opacity 350ms ease,
-    transform 350ms ease !important;
-  transition-delay: 0s !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .theme-transition,
-  .theme-transition *,
-  .theme-transition *::before,
-  .theme-transition *::after {
-    transition: none !important;
-  }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: var(--ease-out-expo);
 }

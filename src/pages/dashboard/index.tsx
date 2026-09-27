@@ -10,11 +10,11 @@ import { STATIC_STATS } from "./constants"
 import { useDashboard } from "./hooks/useDashboard"
 
 const statCard = tv({
-  base: "rounded-xl border border-outline-variant border-t-3 p-5",
+  base: "rounded-xl border border-border border-t-3 p-5",
   variants: {
     tone: {
-      ok: "border-t-ok bg-ok/5",
-      warn: "border-t-warn bg-warn/5",
+      ok: "border-t-success bg-success/5",
+      warn: "border-t-warning bg-warning/5",
     },
   },
 })
@@ -23,8 +23,8 @@ const statIcon = tv({
   base: "flex h-10 w-10 items-center justify-center rounded-lg",
   variants: {
     tone: {
-      ok: "bg-ok/15 text-ok",
-      warn: "bg-warn/15 text-warn",
+      ok: "bg-success/15 text-success",
+      warn: "bg-warning/15 text-warning",
     },
   },
 })
@@ -33,8 +33,8 @@ const statValue = tv({
   base: "mt-1 text-3xl font-bold",
   variants: {
     tone: {
-      ok: "text-ok",
-      warn: "text-warn",
+      ok: "text-success",
+      warn: "text-warning",
     },
   },
 })
@@ -51,24 +51,24 @@ export function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-on-surface">{t("dashboard.title")}</h1>
-        <p className="text-sm text-on-surface-variant">{t("dashboard.subtitle")}</p>
+        <h1 className="text-2xl font-bold text-ink">{t("dashboard.title")}</h1>
+        <p className="text-sm text-ink-2">{t("dashboard.subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <button
           onClick={handleProjectsNav}
-          className="rounded-xl border border-outline-variant border-t-3 p-5 border-t-primary bg-primary/5 text-left hover:bg-primary/10 transition-colors cursor-pointer"
+          className="rounded-xl border border-border border-t-3 p-5 border-t-gold bg-gold/5 text-left hover:bg-gold/10 transition-colors cursor-pointer"
         >
           <div className="flex items-start justify-between">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold">
               <FolderKanban className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
+          <p className="mt-3 text-xs font-semibold tracking-wider text-ink-2">
             {t("dashboard.stats.activeProjects")}
           </p>
-          <Num className="mt-1 block text-3xl font-bold text-primary">
+          <Num className="mt-1 block text-3xl font-bold text-gold">
             {isLoading ? "—" : activeCount}
           </Num>
         </button>
@@ -82,29 +82,29 @@ export function DashboardPage() {
                   <Icon className="h-5 w-5" />
                 </div>
               </div>
-              <p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
+              <p className="mt-3 text-xs font-semibold tracking-wider text-ink-2">
                 {t(card.labelKey)}
               </p>
               <Num className={statValue({ tone: card.tone })}>{card.value}</Num>
-              <p className="mt-1 text-xs text-on-surface-variant">{t(card.detailKey)}</p>
+              <p className="mt-1 text-xs text-ink-2">{t(card.detailKey)}</p>
             </div>
           )
         })}
       </div>
 
       <div className="mt-8">
-        <h2 className="text-base font-semibold text-on-surface mb-4">
+        <h2 className="text-base font-semibold text-ink mb-4">
           {t("dashboard.inProgressTitle")}
         </h2>
         {isLoading && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2].map((n) => (
-              <div key={n} className="h-48 rounded-2xl bg-surface-container-low animate-pulse" />
+              <div key={n} className="h-48 rounded-2xl bg-surface animate-pulse" />
             ))}
           </div>
         )}
         {!isLoading && inProgressProjects.length === 0 && (
-          <p className="text-sm text-on-surface-variant">{t("dashboard.inProgressEmpty")}</p>
+          <p className="text-sm text-ink-2">{t("dashboard.inProgressEmpty")}</p>
         )}
         {!isLoading && inProgressProjects.length > 0 && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -8,11 +8,11 @@ import { BudgetCategoryHeader } from "./BudgetCategoryHeader"
 import { BudgetCategoryMenu } from "./BudgetCategoryMenu"
 
 const card = tv({
-  base: "bg-surface-container rounded-xl border overflow-hidden transition-colors",
+  base: "bg-surface rounded-xl border overflow-hidden transition-colors",
   variants: {
     exceeded: {
-      true: "border-error/40",
-      false: "border-outline-variant/20",
+      true: "border-danger/40",
+      false: "border-border/20",
     },
   },
 })

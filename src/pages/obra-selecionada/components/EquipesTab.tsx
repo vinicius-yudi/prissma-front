@@ -56,8 +56,8 @@ const userOption = tv({
   base: "rounded-2xl border p-4 text-left transition-colors",
   variants: {
     selected: {
-      true: "border-gold bg-tint",
-      false: "border-outline-variant bg-surface-container hover:border-outline",
+      true: "border-gold bg-raised",
+      false: "border-border bg-surface hover:border-border-strong",
     },
   },
 })
@@ -66,8 +66,8 @@ const sectionIcon = tv({
   base: "flex size-9 shrink-0 items-center justify-center rounded-[10px]",
   variants: {
     section: {
-      team: "bg-gold text-on-primary",
-      client: "bg-surface-container-high text-on-surface-variant",
+      team: "bg-gold text-on-gold",
+      client: "bg-raised text-ink-2",
     },
   },
 })
@@ -82,7 +82,7 @@ function MemberChip({ member, canRemove, onRemove }: MemberChipProps) {
   const { t } = useTranslation()
 
   return (
-    <span className="group flex max-w-full items-center gap-2 rounded-full border border-outline-variant bg-surface-container-high py-1.5 pl-1.5 pr-3">
+    <span className="group flex max-w-full items-center gap-2 rounded-full border border-border bg-raised py-1.5 pl-1.5 pr-3">
       {member.user.avatar ? (
         <img
           src={member.user.avatar}
@@ -90,12 +90,12 @@ function MemberChip({ member, canRemove, onRemove }: MemberChipProps) {
           className="size-7 shrink-0 rounded-full object-cover"
         />
       ) : (
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container text-[9.5px] font-bold text-on-surface-variant">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface text-[9.5px] font-bold text-ink-2">
           {member.user.name.slice(0, 2).toUpperCase()}
         </span>
       )}
 
-      <span className="min-w-0 truncate text-[12.5px] text-on-surface">{member.user.name}</span>
+      <span className="min-w-0 truncate text-[12.5px] text-ink">{member.user.name}</span>
       <RoleChip role={member.roleInProject} />
 
       {canRemove && (
@@ -105,7 +105,7 @@ function MemberChip({ member, canRemove, onRemove }: MemberChipProps) {
           aria-label={t("obra.equipes.actions.remove", { name: member.user.name })}
           // Sempre visível no toque, onde não existe hover; no desktop aparece
           // ao passar o mouse para o chip não virar uma fileira de ✕.
-          className="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+          className="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-3 transition-colors hover:bg-danger-soft hover:text-danger focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
         >
           <X size={13} />
         </button>
@@ -138,26 +138,26 @@ function MemberSection({
   const Chevron = expanded ? ChevronDown : ChevronRight
 
   return (
-    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-4 sm:p-5">
+    <section className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
         className="flex w-full cursor-pointer items-center gap-3 text-left"
       >
-        <Chevron size={14} className="shrink-0 text-on-surface-faint" />
+        <Chevron size={14} className="shrink-0 text-ink-3" />
         <span className={sectionIcon({ section })}>
           <Icon size={17} strokeWidth={1.8} />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold text-on-surface">
+          <span className="block text-[15px] font-semibold text-ink">
             {t(`obra.equipes.sections.${section}.title`)}
           </span>
-          <span className="block truncate text-[11.5px] text-on-surface-faint">
+          <span className="block truncate text-[11.5px] text-ink-3">
             {t(`obra.equipes.sections.${section}.hint`)}
           </span>
         </span>
-        <Num className="shrink-0 text-[11.5px] text-on-surface-variant">
+        <Num className="shrink-0 text-[11.5px] text-ink-2">
           {t("obra.equipes.memberCount", { count: members.length })}
         </Num>
       </button>
@@ -178,7 +178,7 @@ function MemberSection({
             <button
               type="button"
               onClick={onAdd}
-              className="flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-outline px-4 text-[12.5px] font-semibold text-gold-bright transition-colors hover:bg-tint"
+              className="flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-border-strong px-4 text-[12.5px] font-semibold text-gold-hi transition-colors hover:bg-raised"
             >
               <Plus size={14} />
               {t(`obra.equipes.sections.${section}.add`)}
@@ -186,7 +186,7 @@ function MemberSection({
           )}
 
           {members.length === 0 && !canManage && (
-            <p className="text-[13px] text-on-surface-variant">{t("obra.equipes.empty")}</p>
+            <p className="text-[13px] text-ink-2">{t("obra.equipes.empty")}</p>
           )}
         </div>
       )}
@@ -209,9 +209,9 @@ function RolePermissionsPanel({ projectId }: { projectId: number }) {
   const { permissions, isLoading, isError } = useRolePermissions(projectId, role)
 
   return (
-    <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-4 sm:p-5">
-      <h2 className="text-base font-semibold text-on-surface">{t("pessoas.permissionsTitle")}</h2>
-      <p className="mt-1 text-sm text-on-surface-variant">{t("pessoas.permissionsHint")}</p>
+    <section className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
+      <h2 className="text-base font-semibold text-ink">{t("pessoas.permissionsTitle")}</h2>
+      <p className="mt-1 text-sm text-ink-2">{t("pessoas.permissionsHint")}</p>
 
       <div className="mt-4 max-w-xs">
         <Select
@@ -230,7 +230,7 @@ function RolePermissionsPanel({ projectId }: { projectId: number }) {
 
       <div className="mt-4">
         {isLoading && (
-          <div className="flex items-center justify-center py-10 text-on-surface-variant">
+          <div className="flex items-center justify-center py-10 text-ink-2">
             <Loader className="animate-spin" size={22} />
           </div>
         )}
@@ -329,7 +329,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
     return (
       <div className="space-y-4">
         {[0, 1].map((i) => (
-          <div key={i} className="h-28 animate-pulse rounded-2xl bg-surface-container-low" />
+          <div key={i} className="h-28 animate-pulse rounded-2xl bg-surface" />
         ))}
       </div>
     )
@@ -408,7 +408,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
           />
 
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-on-surface">
+            <p className="text-sm font-semibold text-ink">
               {t("obra.equipes.addModal.available")}
             </p>
 
@@ -418,7 +418,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                   <Loader className="animate-spin" size={20} />
                 </div>
               ) : userList.length === 0 ? (
-                <p className="rounded-2xl border border-outline-variant bg-surface-container p-6 text-center text-sm text-on-surface-variant">
+                <p className="rounded-2xl border border-border bg-surface p-6 text-center text-sm text-ink-2">
                   {searchQuery
                     ? t(`obra.equipes.addModal.${selectedSection}.noResults`)
                     : t(`obra.equipes.addModal.${selectedSection}.noneAvailable`)}
@@ -440,15 +440,15 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                             className="size-10 shrink-0 rounded-full object-cover"
                           />
                         ) : (
-                          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-outline bg-surface-container-high text-[12px] font-bold text-on-surface-variant">
+                          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border-strong bg-raised text-[12px] font-bold text-ink-2">
                             {user.name.slice(0, 2).toUpperCase()}
                           </span>
                         )}
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-on-surface">
+                          <p className="truncate text-sm font-semibold text-ink">
                             {user.name}
                           </p>
-                          <p className="truncate text-xs text-on-surface-variant">{user.email}</p>
+                          <p className="truncate text-xs text-ink-2">{user.email}</p>
                         </div>
                       </div>
                     </button>
@@ -458,7 +458,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
                     <button
                       type="button"
                       onClick={loadMore}
-                      className="rounded-2xl border border-outline-variant bg-surface-container p-4 text-center text-sm font-semibold text-gold-bright transition-colors hover:bg-surface-container-high"
+                      className="rounded-2xl border border-border bg-surface p-4 text-center text-sm font-semibold text-gold-hi transition-colors hover:bg-raised"
                     >
                       {t("obra.equipes.addModal.loadMore")}
                     </button>
@@ -470,7 +470,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
 
           {selectedUserId && selectedSection === "team" && (
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-on-surface">
+              <p className="text-sm font-semibold text-ink">
                 {t("obra.equipes.addModal.roleLabel")}
               </p>
               <Select

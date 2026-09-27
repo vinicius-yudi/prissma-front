@@ -191,7 +191,7 @@ export function TaskFormModal({ open, onClose, stageId, stages, projectId, canMu
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-outline-variant">
+        <div className="flex items-center justify-end gap-3 mx-6 mt-5 mb-6 pt-5 border-t border-border">
           <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>
             {t("obra.tarefas.cancel")}
           </Button>

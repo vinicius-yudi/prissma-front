@@ -76,8 +76,8 @@ describe("<BottomTabBar />", () => {
   it("marca como ativa a aba da rota corrente", () => {
     renderWithProviders(<BottomTabBar />, { route: "/obras" })
 
-    expect(screen.getByRole("link", { name: "Obras" })).toHaveClass("text-gold-bright")
-    expect(screen.getByRole("link", { name: "Início" })).not.toHaveClass("text-gold-bright")
+    expect(screen.getByRole("link", { name: "Obras" })).toHaveClass("text-gold-hi")
+    expect(screen.getByRole("link", { name: "Início" })).not.toHaveClass("text-gold-hi")
   })
 })
 

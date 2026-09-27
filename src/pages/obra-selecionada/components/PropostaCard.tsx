@@ -41,7 +41,7 @@ export function PropostaCard({
   )
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 transition-all duration-200 hover:border-outline">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 transition-all duration-200 hover:border-border-strong">
       <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl">
         {url ? (
           <img
@@ -53,7 +53,7 @@ export function PropostaCard({
           // Hachura = previsto/indisponível. É o vocabulário do sistema para
           // "ainda não existe", e evita um placeholder cinza genérico.
           <Hatch className="flex size-full items-center justify-center rounded-xl">
-            <span className="px-4 text-center text-xs text-on-surface-faint">
+            <span className="px-4 text-center text-xs text-ink-3">
               {isLoading ? t("obra.propostas.loadingImage") : t("obra.propostas.noImage")}
             </span>
           </Hatch>
@@ -62,11 +62,11 @@ export function PropostaCard({
 
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
-          <h3 className="line-clamp-1 text-[17px] font-semibold leading-snug text-on-surface">
+          <h3 className="line-clamp-1 text-[17px] font-semibold leading-snug text-ink">
             {proposal.title}
           </h3>
           {latest && (
-            <Num className="shrink-0 text-xs font-semibold text-on-surface-variant">
+            <Num className="shrink-0 text-xs font-semibold text-ink-2">
               v{latest.version}
             </Num>
           )}
@@ -77,7 +77,7 @@ export function PropostaCard({
             onClick={() => onDelete(proposal)}
             aria-label={t("obra.propostas.actions.delete")}
             title={t("obra.propostas.actions.delete")}
-            className="shrink-0 rounded-lg p-1.5 text-on-surface-faint transition-colors hover:bg-surface-container hover:text-danger"
+            className="shrink-0 rounded-lg p-1.5 text-ink-3 transition-colors hover:bg-surface hover:text-danger"
           >
             <Trash2 size={15} strokeWidth={1.8} />
           </button>
@@ -87,7 +87,7 @@ export function PropostaCard({
       <div className="flex flex-wrap items-center gap-2">
         {latest && <PropostaStatusBadge status={latest.status} />}
         {latest?.generatedByAi && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-bright">
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-hi">
             <Sparkles size={11} strokeWidth={2} />
             {t("obra.propostas.aiBadge")}
           </span>
@@ -104,7 +104,7 @@ export function PropostaCard({
             className="animate-pulse"
             label={t("obra.propostas.generating")}
           />
-          <p className="text-center text-xs text-on-surface-variant">
+          <p className="text-center text-xs text-ink-2">
             {t("obra.propostas.generating")}
           </p>
         </div>
@@ -123,16 +123,16 @@ export function PropostaCard({
         </Button>
       )}
 
-      <div className="flex items-center justify-between border-t border-outline-variant pt-3">
+      <div className="flex items-center justify-between border-t border-border pt-3">
         <button
           type="button"
           onClick={() => onHistory(proposal)}
-          className="inline-flex items-center gap-1.5 text-xs text-gold-bright transition-colors hover:text-gold"
+          className="inline-flex items-center gap-1.5 text-xs text-gold-hi transition-colors hover:text-gold"
         >
           <History size={13} strokeWidth={1.8} />
           {t("obra.propostas.versions.history")}
         </button>
-        <Num className="text-[11px] text-on-surface-faint">
+        <Num className="text-[11px] text-ink-3">
           {t("obra.propostas.versions.count", { count: proposal.versionCount })}
         </Num>
       </div>

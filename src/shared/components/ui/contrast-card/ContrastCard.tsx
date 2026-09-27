@@ -14,7 +14,7 @@ import { useOncePerPage } from "../page-chrome/PageChrome"
  */
 
 const card = tv({
-  base: "rounded-2xl bg-contrast p-5 text-on-contrast",
+  base: "rounded-2xl bg-inverse p-5 text-on-inverse",
 })
 
 interface ContrastCardProps extends React.HTMLAttributes<HTMLDivElement> {
