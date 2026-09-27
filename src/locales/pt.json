@@ -729,15 +729,17 @@
         "cancel": "Cancelar",
         "save": "Salvar",
         "saving": "Salvando...",
-        "menu": "Ações da etapa",
-        "reorder": "Reordenar etapa"
+        "reorder": "Reordenar etapa",
+        "moveUp": "Mover para cima",
+        "moveDown": "Mover para baixo"
       },
       "card": {
         "progress": "Progresso",
         "tasksCount_one": "{{count}} tarefa",
         "tasksCount_other": "{{count}} tarefas",
         "photosCount_one": "{{count}} foto",
-        "photosCount_other": "{{count}} fotos"
+        "photosCount_other": "{{count}} fotos",
+        "progressOf": "Avanço de {{name}}"
       },
       "form": {
         "title": {
@@ -753,7 +755,15 @@
           "displayOrder": "Ordem",
           "plannedStartDate": "Início Planejado",
           "plannedEndDate": "Término Planejado"
-        }
+        },
+        "errors": {
+          "nameRequired": "Dê um nome à etapa.",
+          "orderInvalid": "Use um número inteiro a partir de 1.",
+          "startRequired": "Informe quando a etapa começa.",
+          "endRequired": "Informe quando a etapa termina.",
+          "endBeforeStart": "O término precisa ser no mesmo dia do início ou depois."
+        },
+        "orderHint": "Posição no ciclo da obra."
       },
       "deleteModal": {
         "title": "Excluir etapa",
@@ -796,8 +806,15 @@
       "emptyTitle": "Nenhuma etapa cadastrada",
       "emptyHint": "Crie as etapas do ciclo da obra para acompanhar prazos, progresso e atrasos.",
       "emptyCta": "Criar primeira etapa",
-      "reorderHint": "Arraste para reordenar ou solte em outra seção para mudar o status",
-      "emptySection": "Nenhuma etapa aqui"
+      "reorderHint": "Arraste pela alça para mudar a ordem de execução",
+      "summary": "{{done}} de {{total}} etapas concluídas",
+      "statusLabel": "Status da etapa {{name}}",
+      "viewLabel": "Forma de ver as etapas",
+      "views": {
+        "list": "Lista",
+        "gantt": "Cronograma"
+      },
+      "addAtEnd": "Adicionar etapa ao fim do ciclo"
     },
     "startedAt": "início {{date}}",
     "tarefas": {

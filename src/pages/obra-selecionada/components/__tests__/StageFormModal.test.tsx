@@ -79,21 +79,12 @@ function render({
   )
 }
 
-/**
- * Os campos são buscados por tipo, não por rótulo: os <Label> do formulário
- * não têm `htmlFor` nem envolvem o input, então `getByLabelText` não os
- * alcança — o mesmo motivo pelo qual um leitor de tela também não os associa.
- */
-function datas(): HTMLInputElement[] {
-  return Array.from(document.querySelectorAll<HTMLInputElement>('input[type="date"]'))
-}
-
 function inicio() {
-  return datas()[0]
+  return screen.getByLabelText("Início Planejado")
 }
 
 function fim() {
-  return datas()[1]
+  return screen.getByLabelText("Término Planejado")
 }
 
 function ordem() {
@@ -207,12 +198,16 @@ describe("<StageFormModal /> — gravação", () => {
     expect(editar.mock.calls[0][0]).toBe(1)
   })
 
-  it("avisa por toast quando o formulário é submetido inválido", async () => {
+  // Erro de campo fica no campo; toast é só para erro do servidor.
+  it("mostra o erro no próprio campo quando o formulário é inválido", async () => {
     render()
 
     await salvar()
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalled())
+    expect(await screen.findByText("Dê um nome à etapa.")).toBeInTheDocument()
+    expect(screen.getByText("Informe quando a etapa começa.")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("Ex.: Fundação")).toHaveAttribute("aria-invalid", "true")
+    expect(toast.error).not.toHaveBeenCalled()
     expect(criar).not.toHaveBeenCalled()
   })
 
@@ -249,11 +244,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo("2026-03-01", "2026-03-20")
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes do início da obra.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes do início da obra.")).toBeInTheDocument()
     expect(criar).not.toHaveBeenCalled()
   })
 
@@ -266,11 +257,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo()
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa anterior precisa ter uma data de início antes desta etapa.",
-      ),
-    )
+    expect(await screen.findByText("A etapa anterior precisa ter uma data de início antes desta etapa.")).toBeInTheDocument()
   })
 
   it("recusa etapa que começa antes da anterior", async () => {
@@ -282,11 +269,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo("2026-03-01", "2026-03-20")
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes da etapa anterior.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes da etapa anterior.")).toBeInTheDocument()
   })
 
   // A "anterior" é a de maior ordem ABAIXO desta, não a primeira da lista —
@@ -303,11 +286,7 @@ describe("<StageFormModal /> — cronologia", () => {
 
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes da etapa anterior.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes da etapa anterior.")).toBeInTheDocument()
   })
 
   it("aceita a primeira etapa da obra sem antecessora", async () => {

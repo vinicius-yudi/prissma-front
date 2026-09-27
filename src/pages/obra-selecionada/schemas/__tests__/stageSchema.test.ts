@@ -36,13 +36,13 @@ describe("stageSchema", () => {
   })
 
   it("exige nome", () => {
-    expect(fieldError(stageSchema, { ...etapaValida, name: "" }, "name")).toBe("Nome obrigatório")
+    expect(fieldError(stageSchema, { ...etapaValida, name: "" }, "name")).toBe("obra.etapas.form.errors.nameRequired")
   })
 
   // A ordem é 1-based porque alimenta o `displayOrder` do backend e o número
   // que aparece no card. Zero deixaria a primeira etapa sem rótulo.
   it("exige ordem inteira e positiva", () => {
-    expect(fieldError(stageSchema, { ...etapaValida, displayOrder: 0 }, "displayOrder")).toBe("Ordem inválida")
+    expect(fieldError(stageSchema, { ...etapaValida, displayOrder: 0 }, "displayOrder")).toBe("obra.etapas.form.errors.orderInvalid")
     expect(stageSchema.safeParse({ ...etapaValida, displayOrder: 1.5 }).success).toBe(false)
   })
 
@@ -54,16 +54,16 @@ describe("stageSchema", () => {
 
   it("exige as duas datas planejadas", () => {
     expect(fieldError(stageSchema, { ...etapaValida, plannedStartDate: "" }, "plannedStartDate")).toBe(
-      "Data de início planejada é obrigatória",
+      "obra.etapas.form.errors.startRequired",
     )
     expect(fieldError(stageSchema, { ...etapaValida, plannedEndDate: "" }, "plannedEndDate")).toBe(
-      "Data de término planejada é obrigatória",
+      "obra.etapas.form.errors.endRequired",
     )
   })
 
   it("rejeita término anterior ao início", () => {
     expect(fieldError(stageSchema, { ...etapaValida, plannedEndDate: "2026-02-01" }, "plannedEndDate")).toBe(
-      "Data final deve ser igual ou posterior à inicial",
+      "obra.etapas.form.errors.endBeforeStart",
     )
   })
 

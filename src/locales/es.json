@@ -729,15 +729,17 @@
         "cancel": "Cancelar",
         "save": "Guardar",
         "saving": "Guardando...",
-        "menu": "Acciones de la etapa",
-        "reorder": "Reordenar etapa"
+        "reorder": "Reordenar etapa",
+        "moveUp": "Mover hacia arriba",
+        "moveDown": "Mover hacia abajo"
       },
       "card": {
         "progress": "Progreso",
         "tasksCount_one": "{{count}} tarea",
         "tasksCount_other": "{{count}} tareas",
         "photosCount_one": "{{count}} foto",
-        "photosCount_other": "{{count}} fotos"
+        "photosCount_other": "{{count}} fotos",
+        "progressOf": "Avance de {{name}}"
       },
       "form": {
         "title": {
@@ -753,7 +755,15 @@
           "displayOrder": "Orden",
           "plannedStartDate": "Inicio Planificado",
           "plannedEndDate": "Fin Planificado"
-        }
+        },
+        "errors": {
+          "nameRequired": "Ponle un nombre a la etapa.",
+          "orderInvalid": "Usa un número entero desde 1.",
+          "startRequired": "Indica cuándo empieza la etapa.",
+          "endRequired": "Indica cuándo termina la etapa.",
+          "endBeforeStart": "El término debe ser el mismo día del inicio o después."
+        },
+        "orderHint": "Posición en el ciclo de la obra."
       },
       "deleteModal": {
         "title": "Eliminar etapa",
@@ -796,8 +806,15 @@
       "emptyTitle": "Ninguna etapa registrada",
       "emptyHint": "Crea las etapas del ciclo de la obra para seguir plazos, progreso y retrasos.",
       "emptyCta": "Crear primera etapa",
-      "reorderHint": "Arrastra para reordenar o suelta en otra sección para cambiar el estado",
-      "emptySection": "Sin etapas aquí"
+      "reorderHint": "Arrastra por el asa para cambiar el orden de ejecución",
+      "summary": "{{done}} de {{total}} etapas concluidas",
+      "statusLabel": "Estado de la etapa {{name}}",
+      "viewLabel": "Vista de las etapas",
+      "views": {
+        "list": "Lista",
+        "gantt": "Cronograma"
+      },
+      "addAtEnd": "Agregar etapa al final del ciclo"
     },
     "startedAt": "inicio {{date}}",
     "tarefas": {

@@ -729,15 +729,17 @@
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Saving...",
-        "menu": "Stage actions",
-        "reorder": "Reorder stage"
+        "reorder": "Reorder stage",
+        "moveUp": "Move up",
+        "moveDown": "Move down"
       },
       "card": {
         "progress": "Progress",
         "tasksCount_one": "{{count}} task",
         "tasksCount_other": "{{count}} tasks",
         "photosCount_one": "{{count}} photo",
-        "photosCount_other": "{{count}} photos"
+        "photosCount_other": "{{count}} photos",
+        "progressOf": "Progress of {{name}}"
       },
       "form": {
         "title": {
@@ -753,7 +755,15 @@
           "displayOrder": "Order",
           "plannedStartDate": "Planned Start",
           "plannedEndDate": "Planned End"
-        }
+        },
+        "errors": {
+          "nameRequired": "Give the stage a name.",
+          "orderInvalid": "Use a whole number starting at 1.",
+          "startRequired": "Enter when the stage starts.",
+          "endRequired": "Enter when the stage ends.",
+          "endBeforeStart": "The end must be on or after the start date."
+        },
+        "orderHint": "Position in the project cycle."
       },
       "deleteModal": {
         "title": "Delete stage",
@@ -796,8 +806,15 @@
       "emptyTitle": "No stages yet",
       "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
       "emptyCta": "Create first stage",
-      "reorderHint": "Drag to reorder or drop in another section to change status",
-      "emptySection": "No stages here"
+      "reorderHint": "Drag by the handle to change the execution order",
+      "summary": "{{done}} of {{total}} stages done",
+      "statusLabel": "Status of stage {{name}}",
+      "viewLabel": "Stages view",
+      "views": {
+        "list": "List",
+        "gantt": "Timeline"
+      },
+      "addAtEnd": "Add a stage at the end of the cycle"
     },
     "startedAt": "started {{date}}",
     "tarefas": {
