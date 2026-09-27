@@ -497,6 +497,17 @@
         "confirm": "Delete",
         "deleting": "Deleting..."
       },
+      "details": {
+        "open": "View {{type}} entry details",
+        "title": "Entry details",
+        "responsible": "Responsible",
+        "description": "Description",
+        "attachment": "Attachment",
+        "noAttachment": "No attachment on this entry.",
+        "attachmentUnavailable": "Attachment details are unavailable.",
+        "attachmentError": "Could not load the attachment.",
+        "download": "Download file"
+      },
       "toasts": {
         "created": "Entry saved successfully!",
         "errorCreating": "Could not save entry",

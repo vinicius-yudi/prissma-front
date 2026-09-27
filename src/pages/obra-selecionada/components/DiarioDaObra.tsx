@@ -1,14 +1,16 @@
-import { useRef, useState } from "react";
-import { AlertTriangle, HardHat, ImagePlus, Plus, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AlertTriangle, Download, FileText, HardHat, ImagePlus, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Modal } from "@/shared/components/ui/modal/Modal";
 import { Button } from "@/shared/components/ui/button/Button";
 import { useAccess } from "@/shared/hooks/useAccess";
 import { useAttachments } from "../hooks/useAttachments";
+import { downloadAttachment, triggerFileDownload } from "../services/attachments.service";
+import type { Attachment } from "@/shared/types/attachment";
 
 import { useDiario } from "../hooks/useDiario";
-import type { DiarioEntryType } from "../types/diario";
+import type { DiarioEntry, DiarioEntryType } from "../types/diario";
 
 const TAG_STYLES: Record<DiarioEntryType, string> = {
   OCCURRENCE: "bg-warn-bg text-warn border-warn/20",
@@ -51,7 +53,46 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{ id: number; description: string } | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<DiarioEntry | null>(null);
+  const [attachmentPreviewUrl, setAttachmentPreviewUrl] = useState<string | null>(null);
+  const [isLoadingAttachment, setIsLoadingAttachment] = useState(false);
+  const [attachmentError, setAttachmentError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectedAttachment = selectedEntry?.attachmentId
+    ? attachments.attachments.find((attachment) => attachment.id === selectedEntry.attachmentId) ?? null
+    : null;
+
+  useEffect(() => {
+    if (!selectedEntry?.attachmentId || !selectedAttachment?.fileType.toLowerCase().startsWith("image/")) {
+      setAttachmentPreviewUrl(null);
+      setAttachmentError(false);
+      setIsLoadingAttachment(false);
+      return;
+    }
+
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    setIsLoadingAttachment(true);
+    setAttachmentError(false);
+
+    downloadAttachment(projectId, selectedEntry.attachmentId)
+      .then((blob) => {
+        if (cancelled) return;
+        objectUrl = URL.createObjectURL(blob);
+        setAttachmentPreviewUrl(objectUrl);
+      })
+      .catch(() => {
+        if (!cancelled) setAttachmentError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingAttachment(false);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [projectId, selectedEntry, selectedAttachment]);
 
   const handleSave = () => {
     const description = draft.trim();
@@ -85,6 +126,15 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
     deleteEntry(pendingDelete.id, {
       onSuccess: () => setPendingDelete(null),
     });
+  };
+
+  const downloadSelectedAttachment = async (attachment: Attachment) => {
+    try {
+      const blob = await downloadAttachment(projectId, attachment.id);
+      triggerFileDownload(blob, attachment.fileName);
+    } catch {
+      setAttachmentError(true);
+    }
   };
 
   return (
@@ -131,31 +181,38 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
               {entries.map((entry) => {
                 const { date, time } = formatDate(entry.entryDate, i18n.language);
                 return (
-                  <div key={entry.id} className="group relative z-10 flex gap-3">
-                    <div className="w-20 shrink-0 pt-1 text-right">
-                      <div className="text-sm font-semibold text-on-surface">{date}</div>
-                      <div className="text-xs font-mono text-on-surface-variant">{time}</div>
-                    </div>
-                    <div className="relative flex-1 pt-1">
-                      <div className="relative mb-2 flex items-center gap-3 pl-6">
-                        <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface-container transition-transform group-hover:scale-125`} />
-                        <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[entry.entryType]}`}>
-                          {t(`obra.diario.types.${entry.entryType}`)}
-                        </span>
-                        <span className="text-sm text-on-surface-variant">{entry.responsibleName}</span>
-                        {!isReadOnly("diario") ? (
-                          <button
-                            type="button"
-                            onClick={() => setPendingDelete({ id: entry.id, description: entry.description })}
-                            aria-label={t("obra.diario.actions.delete")}
-                            className="ml-auto rounded-lg p-1.5 text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        ) : null}
+                  <div key={entry.id} className="group relative z-10 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedEntry(entry)}
+                      aria-label={t("obra.diario.details.open", { type: t(`obra.diario.types.${entry.entryType}`) })}
+                      className="flex min-w-0 flex-1 gap-3 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                    >
+                      <div className="w-20 shrink-0 pt-1 text-right">
+                        <div className="text-sm font-semibold text-on-surface">{date}</div>
+                        <div className="text-xs font-mono text-on-surface-variant">{time}</div>
                       </div>
-                      <p className="pl-6 text-sm leading-relaxed text-on-surface">{entry.description}</p>
-                    </div>
+                      <div className="relative min-w-0 flex-1 pt-1">
+                        <div className="relative mb-2 flex items-center gap-3 pl-6">
+                          <div className={`absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full ${DOT_COLOR[entry.entryType]} ring-4 ring-surface-container transition-transform group-hover:scale-125`} />
+                          <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[entry.entryType]}`}>
+                            {t(`obra.diario.types.${entry.entryType}`)}
+                          </span>
+                          <span className="truncate text-sm text-on-surface-variant">{entry.responsibleName}</span>
+                        </div>
+                        <p className="line-clamp-2 pl-6 text-sm leading-relaxed text-on-surface">{entry.description}</p>
+                      </div>
+                    </button>
+                    {!isReadOnly("diario") ? (
+                      <button
+                        type="button"
+                        onClick={() => setPendingDelete({ id: entry.id, description: entry.description })}
+                        aria-label={t("obra.diario.actions.delete")}
+                        className="shrink-0 self-start rounded-full p-1.5 text-on-surface-faint transition-colors hover:bg-danger-bg hover:text-danger"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    ) : null}
                   </div>
                 );
               })}
@@ -241,6 +298,72 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        open={selectedEntry !== null}
+        onClose={() => setSelectedEntry(null)}
+        title={t("obra.diario.details.title")}
+        icon={<FileText size={18} />}
+        size="lg"
+      >
+        {selectedEntry ? (
+          <div className="space-y-5 px-6 pb-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className={`rounded border px-2 py-0.5 text-xs font-medium ${TAG_STYLES[selectedEntry.entryType]}`}>
+                {t(`obra.diario.types.${selectedEntry.entryType}`)}
+              </span>
+              <span className="text-sm text-on-surface-variant">
+                {formatDate(selectedEntry.entryDate, i18n.language).date} · {formatDate(selectedEntry.entryDate, i18n.language).time}
+              </span>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-semibold uppercase text-on-surface-faint">{t("obra.diario.details.responsible")}</h3>
+              <p className="mt-1 text-sm text-on-surface">{selectedEntry.responsibleName}</p>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-semibold uppercase text-on-surface-faint">{t("obra.diario.details.description")}</h3>
+              <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-on-surface">{selectedEntry.description}</p>
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase text-on-surface-faint">{t("obra.diario.details.attachment")}</h3>
+              {!selectedEntry.attachmentId ? (
+                <p className="text-sm text-on-surface-variant">{t("obra.diario.details.noAttachment")}</p>
+              ) : !selectedAttachment ? (
+                <p className="text-sm text-on-surface-variant">{t("obra.diario.details.attachmentUnavailable")}</p>
+              ) : (
+                <div className="space-y-3 rounded-lg border border-outline-variant bg-surface-container-low p-3">
+                  {selectedAttachment.fileType.toLowerCase().startsWith("image/") ? (
+                    isLoadingAttachment ? (
+                      <div className="h-48 animate-pulse rounded bg-surface-container-high" />
+                    ) : attachmentPreviewUrl ? (
+                      <img src={attachmentPreviewUrl} alt={selectedAttachment.fileName} className="max-h-80 w-full rounded object-contain" />
+                    ) : (
+                      <p className="text-sm text-danger">{attachmentError ? t("obra.diario.details.attachmentError") : t("obra.diario.details.attachmentUnavailable")}</p>
+                    )
+                  ) : null}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-on-surface">{selectedAttachment.fileName}</p>
+                      <p className="text-xs text-on-surface-faint">{selectedAttachment.fileType}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => downloadSelectedAttachment(selectedAttachment)}
+                      className="flex shrink-0 items-center gap-2 rounded-lg border border-outline px-3 py-2 text-sm text-on-surface-variant hover:bg-surface-container-high"
+                    >
+                      <Download size={15} />
+                      {t("obra.diario.details.download")}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : null}
       </Modal>
 
       <Modal

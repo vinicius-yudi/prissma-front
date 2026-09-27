@@ -1,13 +1,18 @@
 import { screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import type { AppModule } from "@/shared/constants/access"
 import type { Attachment } from "@/shared/types/attachment"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
-import { listAttachments, uploadAttachment } from "../../services/attachments.service"
-import { createDiarioEntry, getDiarioEntries } from "../../services/diario.service"
+import {
+  downloadAttachment,
+  listAttachments,
+  triggerFileDownload,
+  uploadAttachment,
+} from "../../services/attachments.service"
+import { createDiarioEntry, deleteDiarioEntry, getDiarioEntries } from "../../services/diario.service"
 import type { DiarioEntry, DiarioEntryType, DiarioPage } from "../../types/diario"
 import DiarioDaObra from "../DiarioDaObra"
 
@@ -22,6 +27,7 @@ vi.mock("../../services/attachments.service", async (importOriginal) => ({
   uploadAttachment: vi.fn(),
   deleteAttachment: vi.fn(),
   downloadAttachment: vi.fn(),
+  triggerFileDownload: vi.fn(),
 }))
 vi.mock("@/shared/hooks/useAccess", () => ({
   useAccess: vi.fn(),
@@ -35,8 +41,11 @@ vi.mock("react-toastify", () => ({
 const { useAccess } = await import("@/shared/hooks/useAccess")
 const listar = vi.mocked(getDiarioEntries)
 const criar = vi.mocked(createDiarioEntry)
+const excluir = vi.mocked(deleteDiarioEntry)
 const listarAnexos = vi.mocked(listAttachments)
 const enviarAnexo = vi.mocked(uploadAttachment)
+const baixarAnexo = vi.mocked(downloadAttachment)
+const dispararDownload = vi.mocked(triggerFileDownload)
 const acesso = vi.mocked(useAccess)
 
 function mockAcesso(somenteLeitura = false) {
@@ -104,7 +113,13 @@ beforeEach(() => {
   listar.mockResolvedValue(pagina([]))
   listarAnexos.mockResolvedValue([])
   criar.mockResolvedValue(registro())
+  excluir.mockResolvedValue(undefined)
   enviarAnexo.mockResolvedValue(ANEXO)
+  baixarAnexo.mockResolvedValue(new Blob(["image-data"], { type: "image/png" }))
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
 })
 
 describe("<DiarioDaObra /> — linha do tempo", () => {
@@ -191,6 +206,72 @@ describe("<DiarioDaObra /> — paginação", () => {
 
     expect(await screen.findByText("Registro 2")).toBeInTheDocument()
     expect(screen.getByText("Registro 1")).toBeInTheDocument()
+  })
+})
+
+describe("<DiarioDaObra /> — detalhes do registro", () => {
+  it("abre os detalhes com responsável, descrição e indicação de anexo ausente", async () => {
+    listar.mockResolvedValue(pagina([registro()]))
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+
+    expect(await screen.findByRole("heading", { name: "Detalhes do registro" })).toBeInTheDocument()
+    expect(screen.getByText("Responsável")).toBeInTheDocument()
+    expect(screen.getAllByText("Ana Souza").length).toBeGreaterThanOrEqual(2)
+    expect(screen.getByText("Descrição")).toBeInTheDocument()
+    expect(screen.getAllByText("Chuva forte pela manhã").length).toBeGreaterThanOrEqual(2)
+    expect(screen.getByText("Nenhum anexo neste registro.")).toBeInTheDocument()
+  })
+
+  it("mostra os metadados e permite baixar um documento anexado", async () => {
+    const documento = { ...ANEXO, fileName: "relatorio.pdf", fileType: "application/pdf" }
+    listar.mockResolvedValue(pagina([registro({ attachmentId: documento.id })]))
+    listarAnexos.mockResolvedValue([documento])
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+
+    expect(await screen.findByText("relatorio.pdf")).toBeInTheDocument()
+    expect(screen.getByText("application/pdf")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Baixar arquivo" }))
+
+    await waitFor(() => expect(baixarAnexo).toHaveBeenCalledWith(7, documento.id))
+    expect(dispararDownload).toHaveBeenCalledWith(expect.any(Blob), "relatorio.pdf")
+  })
+
+  it("exibe preview de imagem anexada", async () => {
+    vi.stubGlobal("URL", {
+      createObjectURL: vi.fn(() => "blob:diario-image-preview"),
+      revokeObjectURL: vi.fn(),
+    } as unknown as typeof URL)
+    listar.mockResolvedValue(pagina([registro({ attachmentId: ANEXO.id })]))
+    listarAnexos.mockResolvedValue([ANEXO])
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Ver detalhes do registro de Ocorrência" }))
+
+    expect(await screen.findByRole("img", { name: "obra.png" })).toHaveAttribute(
+      "src",
+      "blob:diario-image-preview",
+    )
+    expect(baixarAnexo).toHaveBeenCalledWith(7, ANEXO.id)
+  })
+})
+
+describe("<DiarioDaObra /> — exclusão", () => {
+  it("pede confirmação antes de excluir o registro", async () => {
+    listar.mockResolvedValue(pagina([registro()]))
+    render()
+
+    await userEvent.click(await screen.findByRole("button", { name: "Excluir registro" }))
+
+    expect(await screen.findByRole("heading", { name: "Excluir registro" })).toBeInTheDocument()
+    expect(excluir).not.toHaveBeenCalled()
+
+    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
+
+    await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
   })
 })
 
@@ -293,11 +374,13 @@ describe("<DiarioDaObra /> — novo registro", () => {
 
 describe("<DiarioDaObra /> — somente leitura", () => {
   it("bloqueia o botão de novo registro", async () => {
+    listar.mockResolvedValue(pagina([registro()]))
     mockAcesso(true)
 
     render()
 
-    await screen.findByText("Nenhum registro encontrado.")
+    await screen.findByText("Chuva forte pela manhã")
     expect(screen.getByRole("button", { name: /Novo registro/ })).toBeDisabled()
+    expect(screen.queryByRole("button", { name: "Excluir registro" })).not.toBeInTheDocument()
   })
 })

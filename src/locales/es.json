@@ -497,6 +497,17 @@
         "confirm": "Eliminar",
         "deleting": "Eliminando..."
       },
+      "details": {
+        "open": "Ver detalles del registro de {{type}}",
+        "title": "Detalles del registro",
+        "responsible": "Responsable",
+        "description": "Descripción",
+        "attachment": "Adjunto",
+        "noAttachment": "Este registro no tiene archivos adjuntos.",
+        "attachmentUnavailable": "Los datos del archivo adjunto no están disponibles.",
+        "attachmentError": "No se pudo cargar el archivo adjunto.",
+        "download": "Descargar archivo"
+      },
       "toasts": {
         "created": "¡Registro guardado correctamente!",
         "errorCreating": "No se pudo guardar el registro",
