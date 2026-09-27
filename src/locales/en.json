@@ -301,7 +301,7 @@
   },
   "obra": {
     "back": "Back",
-    "edit": "Edit",
+    "edit": "Edit project",
     "delete": "Delete",
     "notFound": "Project not found",
     "notFoundDesc": "The requested project does not exist or has been removed.",
@@ -335,13 +335,13 @@
       "executed": "Executed",
       "team": "Members linked",
       "cycle": "Project cycle",
-      "manageStages": "Manage stages",
+      "manageStages": "Edit stages",
       "budget": "Budget",
-      "seeExpenses": "See expenses",
+      "seeExpenses": "Details",
       "noBudget": "No budget registered.",
       "ofPlanned": "of {{planned}} planned",
-      "allocatedTeams": "Allocated team",
-      "seeTeams": "See teams",
+      "allocatedTeams": "Team",
+      "seeTeams": "Manage",
       "noTeam": "No members linked.",
       "lateBy_one": "⚠ {{count}} day past due",
       "lateBy_other": "⚠ {{count}} days past due",
@@ -354,7 +354,31 @@
       "headcount_other": "{{count}} people on site",
       "recentDocs": "Recent documents",
       "seeAllDocs": "See all",
-      "noDocs": "No files uploaded yet."
+      "noDocs": "No files uploaded yet.",
+      "schedule": "Schedule",
+      "stagesDone": "{{done}}/{{total}} stages",
+      "used": "used",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "openDiary": "Open log",
+      "noDiary": "No entries yet.",
+      "attention": {
+        "stageLate": "Stage {{name}}",
+        "daysLate_one": "{{count}} day late",
+        "daysLate_other": "{{count}} days late",
+        "categoryOver": "{{category}} over plan",
+        "overBy": "{{over}} beyond {{planned}}",
+        "categoryNear": "{{category}} near the limit",
+        "used": "{{percent}}% of plan used",
+        "empty": "Everything on schedule and within budget."
+      },
+      "current": {
+        "label": "Current stage · {{position}} of {{total}}",
+        "progress": "Stage progress",
+        "daysLeft_one": "{{count}} day to finish",
+        "daysLeft_other": "{{count}} days to finish",
+        "tasks": "{{done}} of {{total}} tasks completed"
+      }
     },
     "documentos": {
       "title": "Documents",
@@ -967,7 +991,41 @@
         }
       }
     },
-    "sectionsLabel": "Project sections"
+    "sectionsLabel": "Project sections",
+    "header": {
+      "statusChanged": "Project marked as {{status}}",
+      "statusError": "Couldn't change the project status.",
+      "changeStatus": "Change project status",
+      "builtArea": "{{built}} m² built on {{land}} m²",
+      "pace": {
+        "onTrack": "On schedule",
+        "ahead_one": "{{count}} point ahead",
+        "ahead_other": "{{count}} points ahead",
+        "behind_one": "{{count}} point below expected",
+        "behind_other": "{{count}} points below expected"
+      },
+      "expectedHint": "The ▾ marker shows where the project should be today ({{value}}%).",
+      "deadline": "Deadline",
+      "until": "until {{date}}",
+      "budget": "Budget",
+      "budgetUsed": "{{percent}}% used",
+      "budgetUsedShort": "{{percent}}% used",
+      "budgetOf": "{{spent}} of {{planned}}",
+      "noBudget": "No budget",
+      "people_one": "{{count}} person on the project",
+      "people_other": "{{count}} people on the project"
+    },
+    "gantt": {
+      "empty": "No stage with planned dates yet.",
+      "today": "today",
+      "barLabel": "{{name}}: {{start}} to {{end}}, {{status}}",
+      "legend": {
+        "done": "Completed",
+        "inProgress": "In progress (filled = progress)",
+        "planned": "Planned",
+        "late": "Past due"
+      }
+    }
   },
   "profile": {
     "title": "Edit Profile",

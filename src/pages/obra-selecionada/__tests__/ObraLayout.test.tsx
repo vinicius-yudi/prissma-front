@@ -17,6 +17,13 @@ vi.mock("@/pages/projetos/services/projects.service", () => ({
   createProject: vi.fn(),
   updateProject: vi.fn(),
   deleteProject: vi.fn(),
+  getProjectAcompanhamento: vi.fn(() => new Promise(() => {})),
+}))
+// O cabeçalho lê orçamento e equipe; aqui só interessa que ele monta.
+vi.mock("../services/budget.service", () => ({ getProjectBudget: vi.fn(() => new Promise(() => {})) }))
+vi.mock("../hooks/useObraMembers", () => ({
+  useObraMembers: () => ({ members: [], list: [], count: 0, isLoading: false, isError: false }),
+  obraMembersKey: (id: number) => ["equipes", id],
 }))
 vi.mock("@/shared/hooks/useAccess", () => ({
   useAccess: vi.fn(),
@@ -127,19 +134,27 @@ describe("<ObraLayout />", () => {
     expect(screen.getByText("Em andamento")).toBeInTheDocument()
   })
 
-  // A legenda técnica é o subtítulo: código, endereço e início numa linha só.
-  it("monta a legenda com código, endereço e início", async () => {
-    render()
+  // A cota fica sob o título grande, só na Visão geral: código e início de
+  // um lado, a área do outro.
+  it("monta a cota com código e início no cabeçalho grande", async () => {
+    render("/obras/7/visao-geral")
 
     await screen.findByRole("heading", { name: "Residencial Alfa" })
     expect(screen.getByText(/OBRA-0007/)).toBeInTheDocument()
     expect(screen.getByText(/Rua das Palmeiras/)).toBeInTheDocument()
   })
 
-  it("omite o início da legenda quando a obra não tem data", async () => {
+  it("usa a barra compacta nos módulos, sem a cota", async () => {
+    render()
+
+    await screen.findByRole("heading", { name: "Residencial Alfa" })
+    expect(screen.queryByText(/OBRA-0007/)).not.toBeInTheDocument()
+  })
+
+  it("omite o início da cota quando a obra não tem data", async () => {
     buscarObra.mockResolvedValue({ ...OBRA, plannedStartDate: null })
 
-    render()
+    render("/obras/7/visao-geral")
 
     await screen.findByRole("heading", { name: "Residencial Alfa" })
     expect(screen.queryByText(/Início/)).not.toBeInTheDocument()

@@ -11,7 +11,7 @@ import { OrcamentoTab } from "./components/OrcamentoTab"
 import { PropostasTab } from "./components/PropostasTab"
 import { ScheduleTab } from "./components/ScheduleTab"
 import { TarefasTab } from "./components/TarefasTab"
-import { VisaoGeral } from "./components/visaoGeral"
+import { VisaoGeral } from "./components/visao-geral/VisaoGeral"
 
 /**
  * Módulos do nível 2, cada um em sua própria rota.

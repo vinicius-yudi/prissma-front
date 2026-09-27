@@ -23,7 +23,7 @@ import {
  * testes guardam é justamente esse repasse — as abas têm testes próprios, e
  * aqui elas entram mockadas para não arrastar a rede junto.
  */
-vi.mock("../components/visaoGeral", () => ({
+vi.mock("../components/visao-geral/VisaoGeral", () => ({
   VisaoGeral: ({ project }: { project: Project }) => <span>visao-geral-{project.id}</span>,
 }))
 vi.mock("../components/EtapasTab", () => ({

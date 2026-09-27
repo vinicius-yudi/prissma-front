@@ -302,7 +302,7 @@
   "obra": {
     "back": "Volver",
     "delete": "Eliminar",
-    "edit": "Editar",
+    "edit": "Editar obra",
     "notFound": "Obra no encontrada",
     "notFoundDesc": "La obra solicitada no existe o ha sido eliminada.",
     "backToList": "Volver a la lista",
@@ -335,13 +335,13 @@
       "executed": "Ejecutado",
       "team": "Personal vinculado",
       "cycle": "Ciclo de la obra",
-      "manageStages": "Gestionar etapas",
+      "manageStages": "Editar etapas",
       "budget": "Presupuesto",
-      "seeExpenses": "Ver movimientos",
+      "seeExpenses": "Detallar",
       "noBudget": "Ningún presupuesto registrado.",
       "ofPlanned": "de {{planned}} previsto",
-      "allocatedTeams": "Equipo asignado",
-      "seeTeams": "Ver equipos",
+      "allocatedTeams": "Equipo",
+      "seeTeams": "Gestionar",
       "noTeam": "Ningún integrante vinculado.",
       "lateBy_one": "⚠ plazo vencido hace {{count}} día",
       "lateBy_other": "⚠ plazo vencido hace {{count}} días",
@@ -354,7 +354,31 @@
       "headcount_other": "{{count}} personas en la obra",
       "recentDocs": "Documentos recientes",
       "seeAllDocs": "Ver todos",
-      "noDocs": "Aún no se subieron archivos."
+      "noDocs": "Aún no se subieron archivos.",
+      "schedule": "Cronograma",
+      "stagesDone": "{{done}}/{{total}} etapas",
+      "used": "utilizado",
+      "spent": "Gastado",
+      "remaining": "Saldo",
+      "openDiary": "Abrir diario",
+      "noDiary": "Aún no hay registros.",
+      "attention": {
+        "stageLate": "Etapa {{name}}",
+        "daysLate_one": "{{count}} día de retraso",
+        "daysLate_other": "{{count}} días de retraso",
+        "categoryOver": "{{category}} por encima de lo planificado",
+        "overBy": "{{over}} más allá de {{planned}}",
+        "categoryNear": "{{category}} cerca del límite",
+        "used": "{{percent}}% de lo planificado usado",
+        "empty": "Todo dentro del plazo y del presupuesto."
+      },
+      "current": {
+        "label": "Etapa actual · {{position}} de {{total}}",
+        "progress": "Avance de la etapa",
+        "daysLeft_one": "{{count}} día para concluir",
+        "daysLeft_other": "{{count}} días para concluir",
+        "tasks": "{{done}} de {{total}} tareas concluidas"
+      }
     },
     "documentos": {
       "title": "Documentos",
@@ -967,7 +991,41 @@
         }
       }
     },
-    "sectionsLabel": "Secciones de la obra"
+    "sectionsLabel": "Secciones de la obra",
+    "header": {
+      "statusChanged": "Obra marcada como {{status}}",
+      "statusError": "No fue posible cambiar el estado de la obra.",
+      "changeStatus": "Cambiar estado de la obra",
+      "builtArea": "{{built}} m² construidos en {{land}} m²",
+      "pace": {
+        "onTrack": "Al ritmo del cronograma",
+        "ahead_one": "{{count}} punto adelantada",
+        "ahead_other": "{{count}} puntos adelantada",
+        "behind_one": "{{count}} punto por debajo de lo esperado",
+        "behind_other": "{{count}} puntos por debajo de lo esperado"
+      },
+      "expectedHint": "El marcador ▾ indica dónde debería estar la obra hoy ({{value}}%).",
+      "deadline": "Plazo",
+      "until": "hasta {{date}}",
+      "budget": "Presupuesto",
+      "budgetUsed": "{{percent}}% utilizado",
+      "budgetUsedShort": "{{percent}}% usado",
+      "budgetOf": "{{spent}} de {{planned}}",
+      "noBudget": "Sin presupuesto",
+      "people_one": "{{count}} persona en la obra",
+      "people_other": "{{count}} personas en la obra"
+    },
+    "gantt": {
+      "empty": "Aún no hay etapas con fechas planificadas.",
+      "today": "hoy",
+      "barLabel": "{{name}}: {{start}} a {{end}}, {{status}}",
+      "legend": {
+        "done": "Concluida",
+        "inProgress": "En curso (relleno = avance)",
+        "planned": "Planificada",
+        "late": "Fuera de plazo"
+      }
+    }
   },
   "profile": {
     "title": "Edición de Perfil",
