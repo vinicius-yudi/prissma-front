@@ -25,8 +25,8 @@ vi.mock("@/lib/api", async () => {
   }
 })
 
-const get = vi.mocked(api.get)
-const del = vi.mocked(api.delete)
+const get = api.get as ReturnType<typeof vi.fn>
+const del = api.delete as ReturnType<typeof vi.fn>
 const fetchMock = vi.fn()
 
 const locationOriginal = window.location
@@ -55,6 +55,15 @@ function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json" },
+  })
+}
+
+function readBlob(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(reader.error)
+    reader.readAsText(blob)
   })
 }
 
@@ -150,7 +159,7 @@ describe("downloadAttachment", () => {
 
     const blob = await downloadAttachment(7, 4)
 
-    expect(await blob.text()).toBe("conteudo")
+    expect(await readBlob(blob)).toBe("conteudo")
     expect(fetchMock).toHaveBeenCalledWith("/api/projects/7/attachments/4/download", {
       headers: { Authorization: "Bearer jwt", "X-Workspace-Id": "3" },
     })
