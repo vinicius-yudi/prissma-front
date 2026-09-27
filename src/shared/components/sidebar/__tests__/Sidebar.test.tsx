@@ -1,8 +1,10 @@
 import { screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
+import { useLocation } from "react-router-dom"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import type { AppModule } from "@/shared/constants/access"
+import type { Project } from "@/shared/types/project"
 import type { Workspace } from "@/shared/types/workspace"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
@@ -15,33 +17,43 @@ vi.mock("@/shared/hooks/useAccess", () => ({
 }))
 vi.mock("@/shared/hooks/useWorkspaces", () => ({ useWorkspaces: vi.fn() }))
 vi.mock("@/contexts/AuthContext", () => ({ useAuth: vi.fn() }))
-vi.mock("@/pages/obra-selecionada/hooks/useObraSelecionada", () => ({
-  useObraSelecionada: vi.fn(),
-}))
+vi.mock("@/shared/hooks/useProjectList", () => ({ useProjectList: vi.fn() }))
 // Os três modais têm testes próprios e trazem consultas de rede junto; aqui
 // interessa apenas se a sidebar os abre.
+interface ModalDublê {
+  open: boolean
+  onClose: () => void
+  onDeleteAccount?: () => void
+}
 vi.mock("../NewWorkspaceModal", () => ({
-  NewWorkspaceModal: ({ open }: { open: boolean }) =>
-    open ? <div>modal-nova-conta</div> : null,
+  NewWorkspaceModal: ({ open, onClose }: ModalDublê) =>
+    open ? <button onClick={onClose}>modal-nova-conta</button> : null,
 }))
 vi.mock("@/pages/perfil/components/PerfilModal", () => ({
-  PerfilModal: ({ open }: { open: boolean }) => (open ? <div>modal-perfil</div> : null),
+  PerfilModal: ({ open, onClose, onDeleteAccount }: ModalDublê) =>
+    open ? (
+      <div>
+        modal-perfil
+        <button onClick={onClose}>fechar-perfil</button>
+        <button onClick={onDeleteAccount}>excluir-conta</button>
+      </div>
+    ) : null,
 }))
 vi.mock("@/pages/perfil/components/DeleteAccountModal", () => ({
-  DeleteAccountModal: ({ open }: { open: boolean }) =>
-    open ? <div>modal-excluir-conta</div> : null,
+  DeleteAccountModal: ({ open, onClose }: ModalDublê) =>
+    open ? <button onClick={onClose}>modal-excluir-conta</button> : null,
 }))
 
 const { useAccess, useObraIdFromPath } = await import("@/shared/hooks/useAccess")
 const { useWorkspaces } = await import("@/shared/hooks/useWorkspaces")
 const { useAuth } = await import("@/contexts/AuthContext")
-const { useObraSelecionada } = await import("@/pages/obra-selecionada/hooks/useObraSelecionada")
+const { useProjectList } = await import("@/shared/hooks/useProjectList")
 
 const acesso = vi.mocked(useAccess)
 const obraDaUrl = vi.mocked(useObraIdFromPath)
 const contas = vi.mocked(useWorkspaces)
 const auth = vi.mocked(useAuth)
-const obra = vi.mocked(useObraSelecionada)
+const obras = vi.mocked(useProjectList)
 
 const logout = vi.fn()
 const switchTo = vi.fn()
@@ -88,22 +100,22 @@ function painel() {
   return screen.getByRole("complementary")
 }
 
-/** A sidebar nasce recolhida e expande no hover — quase tudo depende disso. */
-async function expandir() {
-  await userEvent.hover(painel())
+function Url() {
+  const { pathname, search } = useLocation()
+  return <span data-testid="url">{pathname + search}</span>
 }
 
 function abrirMenuDaConta() {
   return userEvent.click(screen.getByRole("button", { expanded: false }))
 }
 
-/**
- * O menu de conta não tem papel ARIA próprio; o cabeçalho "Contas" é o único
- * ponto de ancoragem estável. Escopar importa porque o nome do usuário e o da
- * conta ativa também aparecem no botão do topo.
- */
+function obra(id: number, title: string, status: Project["status"], plannedEndDate = "2099-12-31"): Project {
+  return { id, title, status, plannedStartDate: "2020-01-01", plannedEndDate } as Project
+}
+
+/** Escopar importa: o nome do usuário e o da conta também aparecem no botão. */
 function menuDaConta() {
-  return within(screen.getByText("Contas").parentElement as HTMLElement)
+  return within(screen.getByRole("menu"))
 }
 
 beforeEach(() => {
@@ -116,154 +128,108 @@ beforeEach(() => {
     user: { id: 1, name: "Ana Souza" },
     activeWorkspace: { workspaceId: 1 },
   } as unknown as ReturnType<typeof useAuth>)
-  obra.mockReturnValue({
-    projectQuery: { data: { id: 7, title: "Residencial Alfa" } },
-  } as unknown as ReturnType<typeof useObraSelecionada>)
+  obras.mockReturnValue([
+    obra(7, "Residencial Alfa", "IN_PROGRESS"),
+    obra(8, "Café Prado", "IN_PROGRESS", "2020-06-01"),
+    obra(9, "Clínica Água Verde", "PLANNING"),
+  ])
 })
 
-describe("<Sidebar /> — trilho e expansão", () => {
-  /**
-   * Recolhida sobra o ícone: rótulo invisível mas ocupando largura empurrava o
-   * ícone para fora do centro do trilho. O nome do módulo migra para o
-   * `title`, então o link continua identificável sem texto na tela.
-   */
-  it("esconde os rótulos enquanto está recolhida, mantendo o título", () => {
+describe("<Sidebar /> — recolher e expandir", () => {
+  it("nasce aberta com os rótulos", () => {
     renderWithProviders(<Sidebar />)
 
-    expect(screen.queryByText("Início")).not.toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("title", "Início")
+    expect(within(painel()).getByText("Obras")).toBeInTheDocument()
   })
 
-  it("mostra os rótulos ao passar o mouse", async () => {
+  // Recolhida, sobra o trilho de ícones: o nome vai para o `title`.
+  it("recolhe para o trilho e lembra a escolha", async () => {
     renderWithProviders(<Sidebar />)
 
-    await expandir()
+    await userEvent.click(screen.getByRole("button", { name: "Recolher menu" }))
 
-    expect(screen.getByRole("link", { name: "Início" })).toBeInTheDocument()
+    expect(within(painel()).queryByText("Obras")).not.toBeInTheDocument()
+    expect(screen.getByTitle("Obras")).toBeInTheDocument()
+    expect(localStorage.getItem("prissma-sidebar-collapsed")).toBe("1")
   })
 
-  it("recolhe quando o mouse sai", async () => {
+  it("expande de novo pelo rodapé", async () => {
+    localStorage.setItem("prissma-sidebar-collapsed", "1")
     renderWithProviders(<Sidebar />)
-    await expandir()
 
-    await userEvent.unhover(painel())
+    await userEvent.click(screen.getByRole("button", { name: "Expandir menu" }))
 
-    expect(screen.queryByText("Início")).not.toBeInTheDocument()
-  })
-
-  // Sair do trilho recolhe E fecha o menu junto: um menu pendurado sobre o
-  // trilho de 68px ficaria maior que a própria sidebar.
-  it("fecha o menu de conta ao recolher", async () => {
-    renderWithProviders(<Sidebar />)
-    await expandir()
-    await abrirMenuDaConta()
-    expect(screen.getByRole("button", { name: "Sair" })).toBeInTheDocument()
-
-    await userEvent.unhover(painel())
-
-    expect(screen.queryByRole("button", { name: "Sair" })).not.toBeInTheDocument()
+    expect(within(painel()).getByText("Obras")).toBeInTheDocument()
   })
 })
 
 describe("<Sidebar /> — navegação", () => {
-  it("lista os módulos do workspace fora de uma obra", async () => {
+  it("lista os módulos do workspace", () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
 
-    expect(screen.getByText("Workspace")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Obras" })).toHaveAttribute("href", "/obras")
+    // A marca no topo também leva ao início; o item da navegação é o de texto.
+    const nav = within(screen.getByRole("navigation"))
+    expect(nav.getByRole("link", { name: /Início/ })).toHaveAttribute("href", "/dashboard")
+    expect(screen.getByRole("link", { name: /^Obras$/ })).toHaveAttribute("href", "/obras")
   })
 
-  // Os dois níveis se SUBSTITUEM no desktop: dentro de uma obra a nav vira a
-  // da obra, não uma lista somada.
-  it("troca para os módulos da obra ao entrar numa", async () => {
-    obraDaUrl.mockReturnValue(7)
+  it("esconde o módulo que a matriz oculta do papel", () => {
+    mockAcesso({ ocultos: ["pessoas"] })
 
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
+    renderWithProviders(<Sidebar />)
 
-    expect(screen.getByText("Nesta obra")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /Etapas/ })).toHaveAttribute(
-      "href",
-      "/obras/7/etapas",
-    )
-    expect(screen.queryByRole("link", { name: "Início" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /Pessoas/ })).not.toBeInTheDocument()
   })
 
-  it("esconde o módulo que a matriz oculta do papel", async () => {
-    obraDaUrl.mockReturnValue(7)
-    mockAcesso({ ocultos: ["orcamento"] })
+  it("marca com o olho o módulo que o papel só lê", () => {
+    mockAcesso({ somenteLeitura: ["obras"] })
 
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
+    renderWithProviders(<Sidebar />)
 
-    expect(screen.queryByRole("link", { name: /Orçamento/ })).not.toBeInTheDocument()
+    expect(screen.getByLabelText("Somente leitura no seu perfil")).toBeInTheDocument()
   })
 
-  // Acessibilidade §6.
-  it("marca com o olho o módulo que o papel só lê", async () => {
-    obraDaUrl.mockReturnValue(7)
-    mockAcesso({ somenteLeitura: ["orcamento"] })
-
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
-
-    expect(screen.getByRole("link", { name: /Orçamento/ })).toHaveTextContent("👁")
-  })
-
-  it("destaca o item da rota corrente", async () => {
+  it("destaca o item da rota corrente", () => {
     renderWithProviders(<Sidebar />, { route: "/obras" })
-    await expandir()
 
-    expect(screen.getByRole("link", { name: "Obras" })).toHaveClass("bg-raised")
-    expect(screen.getByRole("link", { name: "Início" })).not.toHaveClass("bg-raised")
+    expect(screen.getByRole("link", { name: /^Obras$/ })).toHaveAttribute("aria-current", "page")
   })
 })
 
-describe("<Sidebar /> — cartão de contexto da obra", () => {
-  it("não aparece fora de uma obra", () => {
+describe("<Sidebar /> — obras em andamento", () => {
+  it("lista só as obras em andamento, apontando para cada uma", () => {
     renderWithProviders(<Sidebar />)
 
-    expect(screen.queryByText("Residencial Alfa")).not.toBeInTheDocument()
+    expect(screen.getByRole("link", { name: /Residencial Alfa/ })).toHaveAttribute("href", "/obras/7")
+    expect(screen.getByRole("link", { name: /Café Prado/ })).toBeInTheDocument()
+    expect(screen.queryByText("Clínica Água Verde")).not.toBeInTheDocument()
   })
 
-  it("mostra o nome da obra aberta quando expandida", async () => {
-    obraDaUrl.mockReturnValue(7)
+  it("abre o cadastro de obra pelo atalho", async () => {
+    renderWithProviders(
+      <>
+        <Sidebar />
+        <Url />
+      </>,
+    )
 
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
+    await userEvent.click(screen.getByRole("button", { name: "Nova obra" }))
 
-    expect(screen.getByText("Residencial Alfa")).toBeInTheDocument()
+    expect(screen.getByTestId("url")).toHaveTextContent("/obras?nova=1")
   })
 
-  // Enquanto a obra carrega o cartão precisa de um placeholder: sem ele a
-  // linha colapsa e o layout dança quando o nome chega.
-  it("mostra um traço enquanto o nome da obra não chegou", async () => {
-    obraDaUrl.mockReturnValue(7)
-    obra.mockReturnValue({ projectQuery: { data: undefined } } as unknown as ReturnType<
-      typeof useObraSelecionada
-    >)
+  it("esconde o atalho de nova obra de quem só lê obras", () => {
+    mockAcesso({ somenteLeitura: ["obras"] })
 
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
+    renderWithProviders(<Sidebar />)
 
-    expect(screen.getByText("—")).toBeInTheDocument()
-  })
-
-  it("volta para a lista de obras pelo atalho do cartão", async () => {
-    obraDaUrl.mockReturnValue(7)
-
-    renderWithProviders(<Sidebar />, { route: "/obras/7/etapas" })
-    await expandir()
-
-    expect(screen.getByRole("button", { name: "Todas as obras" })).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Nova obra" })).not.toBeInTheDocument()
   })
 })
 
 describe("<Sidebar /> — menu de conta", () => {
   it("mostra o nome do usuário e a conta ativa", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
 
     expect(screen.getByText("Ana Souza")).toBeInTheDocument()
     expect(screen.getByText("Construtora Alfa")).toBeInTheDocument()
@@ -277,7 +243,6 @@ describe("<Sidebar /> — menu de conta", () => {
     } as unknown as ReturnType<typeof useAuth>)
 
     renderWithProviders(<Sidebar />)
-    await expandir()
 
     expect(screen.getByText("Usuário")).toBeInTheDocument()
     expect(screen.getByText("Conta pessoal")).toBeInTheDocument()
@@ -285,20 +250,18 @@ describe("<Sidebar /> — menu de conta", () => {
 
   it("lista as contas do usuário com a ativa marcada e desabilitada", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
 
     await abrirMenuDaConta()
 
-    expect(menuDaConta().getByRole("button", { name: /Construtora Alfa/ })).toBeDisabled()
-    expect(menuDaConta().getByRole("button", { name: /Construtora Beta/ })).toBeEnabled()
+    expect(menuDaConta().getByRole("menuitem", { name: /Construtora Alfa/ })).toBeDisabled()
+    expect(menuDaConta().getByRole("menuitem", { name: /Construtora Beta/ })).toBeEnabled()
   })
 
   it("troca de conta ao escolher outra", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
-    await userEvent.click(menuDaConta().getByRole("button", { name: /Construtora Beta/ }))
+    await userEvent.click(menuDaConta().getByRole("menuitem", { name: /Construtora Beta/ }))
 
     expect(switchTo).toHaveBeenCalledWith(2)
   })
@@ -309,7 +272,6 @@ describe("<Sidebar /> — menu de conta", () => {
     mockContas([])
 
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
     expect(menuDaConta().getByText("Ana Souza")).toBeInTheDocument()
@@ -317,20 +279,44 @@ describe("<Sidebar /> — menu de conta", () => {
 
   it("abre o modal de nova conta e fecha o menu", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
-    await userEvent.click(menuDaConta().getByRole("button", { name: "Nova conta" }))
+    await userEvent.click(menuDaConta().getByRole("menuitem", { name: "Nova conta" }))
 
     expect(screen.getByText("modal-nova-conta")).toBeInTheDocument()
   })
 
+  // Do perfil sai a exclusão de conta: um modal fecha para o outro abrir.
+  it("passa do perfil para a exclusão de conta e fecha cada modal", async () => {
+    renderWithProviders(<Sidebar />)
+    await abrirMenuDaConta()
+    await userEvent.click(screen.getByRole("menuitem", { name: "Perfil" }))
+
+    await userEvent.click(screen.getByRole("button", { name: "excluir-conta" }))
+    expect(screen.queryByText("modal-perfil")).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole("button", { name: "modal-excluir-conta" }))
+    expect(screen.queryByText("modal-excluir-conta")).not.toBeInTheDocument()
+  })
+
+  it("fecha o perfil e a nova conta", async () => {
+    renderWithProviders(<Sidebar />)
+    await abrirMenuDaConta()
+    await userEvent.click(screen.getByRole("menuitem", { name: "Perfil" }))
+    await userEvent.click(screen.getByRole("button", { name: "fechar-perfil" }))
+    expect(screen.queryByText("modal-perfil")).not.toBeInTheDocument()
+
+    await abrirMenuDaConta()
+    await userEvent.click(menuDaConta().getByRole("menuitem", { name: "Nova conta" }))
+    await userEvent.click(screen.getByRole("button", { name: "modal-nova-conta" }))
+    expect(screen.queryByText("modal-nova-conta")).not.toBeInTheDocument()
+  })
+
   it("abre o modal de perfil", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
-    await userEvent.click(screen.getByRole("button", { name: "Perfil" }))
+    await userEvent.click(screen.getByRole("menuitem", { name: "Perfil" }))
 
     expect(screen.getByText("modal-perfil")).toBeInTheDocument()
   })
@@ -339,36 +325,37 @@ describe("<Sidebar /> — menu de conta", () => {
   // item cinza sem explicação lê como bug.
   it("mantém configurações e ajuda desabilitados com o selo de indisponível", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
-    expect(screen.getByRole("button", { name: /Configurações/ })).toBeDisabled()
-    expect(screen.getByRole("button", { name: /Ajuda/ })).toBeDisabled()
+    expect(screen.getByRole("menuitem", { name: /Configurações/ })).toBeDisabled()
+    expect(screen.getByRole("menuitem", { name: /Ajuda/ })).toBeDisabled()
     expect(screen.getAllByText("Indisponível")).toHaveLength(2)
   })
 
   it("derruba a sessão no sair", async () => {
     renderWithProviders(<Sidebar />)
-    await expandir()
     await abrirMenuDaConta()
 
-    await userEvent.click(screen.getByRole("button", { name: "Sair" }))
+    await userEvent.click(screen.getByRole("menuitem", { name: "Sair" }))
 
     expect(logout).toHaveBeenCalled()
   })
 
   it("fecha o menu ao clicar fora dele", async () => {
-    renderWithProviders(
-      <>
-        <Sidebar />
-        <button type="button">Fora</button>
-      </>,
-    )
-    await expandir()
+    renderWithProviders(<Sidebar />)
     await abrirMenuDaConta()
 
-    await userEvent.click(screen.getByRole("button", { name: "Fora" }))
+    await userEvent.click(document.querySelector("[aria-hidden=true].fixed") as HTMLElement)
 
-    expect(screen.queryByRole("button", { name: "Sair" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument()
+  })
+
+  it("fecha o menu no Esc", async () => {
+    renderWithProviders(<Sidebar />)
+    await abrirMenuDaConta()
+
+    await userEvent.keyboard("{Escape}")
+
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument()
   })
 })

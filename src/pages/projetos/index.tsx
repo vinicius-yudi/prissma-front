@@ -1,6 +1,7 @@
 import { FolderOpen, Plus } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
 import { DimensionLine } from "@/shared/components/ui/dimension-line/DimensionLine"
@@ -11,6 +12,9 @@ import { ProjectCard } from "./components/ProjectCard"
 import { ProjectStepModal } from "./components/ProjectStepModal"
 import { ProjectsFilter } from "./components/ProjectsFilter"
 import { useProjects } from "./hooks/useProjects"
+
+/** Parâmetro que abre o cadastro de obra direto: `/obras?nova=1`. */
+const NEW_PARAM = "nova"
 
 /**
  * Obras (nível 1).
@@ -78,6 +82,23 @@ export function ProjetosPage() {
   const { projects, isLoading, isError, filter, setFilter, stats } = useProjects()
   const { t } = useTranslation()
   const [createOpen, setCreateOpen] = useState(false)
+  // Sidebar, barra superior e busca ⌘K abrem o cadastro por `?nova=1`: o
+  // atalho funciona de qualquer tela sem o shell conhecer este modal.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const isCreateOpen = createOpen || searchParams.get(NEW_PARAM) === "1"
+
+  function closeCreate() {
+    setCreateOpen(false)
+    if (!searchParams.has(NEW_PARAM)) return
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.delete(NEW_PARAM)
+        return next
+      },
+      { replace: true },
+    )
+  }
 
   // Antes do early return: é o que alimenta o FAB da barra de abas no celular.
   usePrimaryAction({ label: t("projects.newProject"), onClick: () => setCreateOpen(true) })
@@ -125,7 +146,7 @@ export function ProjetosPage() {
         </div>
       )}
 
-      <ProjectStepModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <ProjectStepModal open={isCreateOpen} onClose={closeCreate} />
     </div>
   )
 }

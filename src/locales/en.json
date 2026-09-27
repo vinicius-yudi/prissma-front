@@ -41,7 +41,13 @@
     "groupObra": "In this project",
     "accountsLabel": "Accounts",
     "unavailable": "Unavailable",
-    "accountsNew": "New account"
+    "accountsNew": "New account",
+    "label": "Sidebar",
+    "navLabel": "Main",
+    "collapse": "Collapse menu",
+    "expand": "Expand menu",
+    "inProgress": "In progress",
+    "newObra": "New project"
   },
   "dashboard": {
     "title": "Control Panel",
@@ -898,7 +904,8 @@
           "noneAvailable": "No client available to add."
         }
       }
-    }
+    },
+    "sectionsLabel": "Project sections"
   },
   "profile": {
     "title": "Edit Profile",
@@ -968,7 +975,10 @@
   "mobile": {
     "backTo": "Back to {{target}}",
     "menu": "Menu",
-    "menuTitle": "All sections"
+    "menuTitle": "All sections",
+    "nav": {
+      "pessoas": "People"
+    }
   },
   "workspace": {
     "newAccount": "New account",
@@ -1028,5 +1038,21 @@
     "undo": "Undo",
     "expectedToday": "Expected by today: {{value}}%",
     "facadeScale": "Elevation · scale 1:100"
+  },
+  "palette": {
+    "label": "Search",
+    "trigger": "Search all projects",
+    "triggerShort": "Search",
+    "placeholder": "Search projects, stages, tasks or actions",
+    "empty": "Nothing found for “{{term}}”.",
+    "toggleTheme": "Toggle light/dark theme",
+    "searchObras": "Search projects for “{{term}}”",
+    "groups": {
+      "actions": "Actions",
+      "goTo": "Go to",
+      "obras": "Projects",
+      "stages": "Stages",
+      "tasks": "Tasks"
+    }
   }
 }

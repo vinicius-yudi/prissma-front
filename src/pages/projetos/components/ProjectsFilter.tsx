@@ -68,8 +68,8 @@ interface ProjectsFilterProps {
 }
 
 /**
- * Pílulas de recorte da lista. A busca por texto saiu daqui para o header —
- * ver <HeaderSearch>.
+ * Pílulas de recorte da lista. A busca por texto chega pela URL (`?q=`), escrita
+ * pela busca ⌘K do shell.
  */
 export function ProjectsFilter({ filter, onFilter, stats }: ProjectsFilterProps) {
   return (

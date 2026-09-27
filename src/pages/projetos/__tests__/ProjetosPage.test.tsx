@@ -17,7 +17,8 @@ vi.mock("../services/projects.service", () => ({
 }))
 // O modal de duas etapas tem teste próprio e traz o react-hook-form junto.
 vi.mock("../components/ProjectStepModal", () => ({
-  ProjectStepModal: ({ open }: { open: boolean }) => (open ? <div>modal-nova-obra</div> : null),
+  ProjectStepModal: ({ open, onClose }: { open: boolean; onClose: () => void }) =>
+    open ? <button onClick={onClose}>modal-nova-obra</button> : null,
 }))
 
 const listar = vi.mocked(listProjects)
@@ -178,5 +179,19 @@ describe("<ProjetosPage /> — criar obra", () => {
     await userEvent.click(botoes[botoes.length - 1])
 
     expect(screen.getByText("modal-nova-obra")).toBeInTheDocument()
+  })
+})
+
+/**
+ * Sidebar, barra superior e busca ⌘K abrem o cadastro por `?nova=1` — o
+ * atalho funciona de qualquer tela sem o shell conhecer o modal.
+ */
+describe("<ProjetosPage /> — atalho ?nova=1", () => {
+  it("abre o cadastro direto pela URL e limpa o parâmetro ao fechar", async () => {
+    render("/obras?nova=1")
+
+    await userEvent.click(await screen.findByRole("button", { name: "modal-nova-obra" }))
+
+    expect(screen.queryByText("modal-nova-obra")).not.toBeInTheDocument()
   })
 })

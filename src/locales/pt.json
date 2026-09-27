@@ -41,7 +41,13 @@
     "groupObra": "Nesta obra",
     "accountsLabel": "Contas",
     "unavailable": "Indisponível",
-    "accountsNew": "Nova conta"
+    "accountsNew": "Nova conta",
+    "label": "Barra lateral",
+    "navLabel": "Principal",
+    "collapse": "Recolher menu",
+    "expand": "Expandir menu",
+    "inProgress": "Em andamento",
+    "newObra": "Nova obra"
   },
   "dashboard": {
     "title": "Painel de Controle",
@@ -898,7 +904,8 @@
           "noneAvailable": "Nenhum cliente disponível para adicionar."
         }
       }
-    }
+    },
+    "sectionsLabel": "Seções da obra"
   },
   "profile": {
     "title": "Edição de Perfil",
@@ -968,7 +975,10 @@
   "mobile": {
     "backTo": "Voltar para {{target}}",
     "menu": "Menu",
-    "menuTitle": "Todas as seções"
+    "menuTitle": "Todas as seções",
+    "nav": {
+      "pessoas": "Pessoas"
+    }
   },
   "workspace": {
     "newAccount": "Nova conta",
@@ -1028,5 +1038,21 @@
     "undo": "Desfazer",
     "expectedToday": "Esperado para hoje: {{value}}%",
     "facadeScale": "Fachada · esc. 1:100"
+  },
+  "palette": {
+    "label": "Buscar",
+    "trigger": "Buscar em todas as obras",
+    "triggerShort": "Buscar",
+    "placeholder": "Buscar obras, etapas, tarefas ou ações",
+    "empty": "Nada encontrado para “{{term}}”.",
+    "toggleTheme": "Alternar tema claro/escuro",
+    "searchObras": "Buscar obras por “{{term}}”",
+    "groups": {
+      "actions": "Ações",
+      "goTo": "Ir para",
+      "obras": "Obras",
+      "stages": "Etapas",
+      "tasks": "Tarefas"
+    }
   }
 }

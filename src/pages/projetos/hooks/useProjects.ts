@@ -24,8 +24,7 @@ function isProjectOverdue(project: Project): boolean {
 export function useProjects() {
   const [filter, setFilter] = useState<ProjectFilter>(ProjectFilter.ALL)
 
-  // O campo de busca vive no header, acima desta página. A URL é o meio-termo:
-  // quem escreve é o <HeaderSearch>, quem lê é aqui, e nenhum dos dois precisa
+  // O termo chega pela URL: quem escreve é a busca ⌘K do shell, quem lê é aqui, e nenhum dos dois precisa
   // conhecer o outro nem existir um contexto só para carregar uma string.
   const [searchParams] = useSearchParams()
   const search = searchParams.get(SEARCH_PARAM) ?? ""

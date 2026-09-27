@@ -8,7 +8,7 @@ import { StatusBadge } from "@/shared/components/ui/status-badge/StatusBadge"
 import { formatProjectAddress, type Project } from "@/shared/types/project"
 import { formatDate, formatObraCode } from "@/shared/utils/formatters"
 
-import { ObraModuleRail } from "./components/ObraModuleRail"
+import { ObraTabs } from "./components/ObraTabs"
 import { useObraSelecionada } from "./hooks/useObraSelecionada"
 
 /**
@@ -16,8 +16,8 @@ import { useObraSelecionada } from "./hooks/useObraSelecionada"
  *
  * Carrega a obra uma vez e a entrega aos módulos filhos pelo Outlet — antes
  * cada aba vivia dentro de um `useState` local, e o módulo aberto não existia
- * na URL. A navegação canônica é a sidebar no desktop (Fluxos v2 §1) e, no
- * celular, o par breadcrumb + <ObraModuleRail> daqui.
+ * na URL. Os módulos se navegam pelas abas fixas (<ObraTabs>), em todas as
+ * larguras.
  *
  * Editar e excluir a obra ficam na Visão geral, não neste cabeçalho: aqui elas
  * se repetiriam em todos os módulos.
@@ -67,25 +67,20 @@ export function ObraLayout() {
   const project = projectQuery.data
 
   // Na Visão geral o passo atrás é sair da obra; nos módulos, voltar para ela.
-  // No desktop quem faz esse papel é o cartão de contexto da sidebar.
   const backLabel = isVisaoGeral ? t("sidebar.nav.obras") : project.title
   const backTo = isVisaoGeral ? "/obras" : `/obras/${id}/visao-geral`
 
   return (
     <div>
-      <div className="mb-3 flex flex-col gap-2 lg:hidden">
-        <button
-          type="button"
-          onClick={() => navigate(backTo)}
-          aria-label={t("mobile.backTo", { target: backLabel })}
-          className="flex min-h-11 cursor-pointer items-center gap-1 self-start text-[12.5px] font-semibold text-gold-hi"
-        >
-          <ChevronLeft size={14} />
-          <span className="max-w-[70vw] truncate">{backLabel}</span>
-        </button>
-
-        <ObraModuleRail obraId={id} />
-      </div>
+      <button
+        type="button"
+        onClick={() => navigate(backTo)}
+        aria-label={t("mobile.backTo", { target: backLabel })}
+        className="mb-3 flex min-h-9 cursor-pointer items-center gap-1 text-[13px] font-semibold text-gold-hi"
+      >
+        <ChevronLeft size={14} />
+        <span className="max-w-[70vw] truncate">{backLabel}</span>
+      </button>
 
       <header className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-start sm:justify-between lg:pb-6">
         <div className="flex flex-col gap-2">
@@ -111,9 +106,9 @@ export function ObraLayout() {
         </div>
       </header>
 
-      <main>
-        <Outlet context={project satisfies Project} />
-      </main>
+      <ObraTabs obraId={id} />
+
+      <Outlet context={project satisfies Project} />
     </div>
   )
 }

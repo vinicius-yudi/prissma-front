@@ -56,6 +56,8 @@
   --gold-deep: #8e5e22;
   --gold-soft: #32240e;
   --on-gold: #120e08;
+  /* Marca: ouro sobre o escuro, ouro profundo sobre o claro. */
+  --logo: var(--gold);
 
   /* semânticas */
   --success: #3fbf95;
@@ -112,6 +114,7 @@
   --gold-deep: #7a521a;
   --gold-soft: #f1e8d4;
   --on-gold: #fbf7ec;
+  --logo: var(--gold-deep);
 
   --success: #166b4c;
   --success-soft: #dfe6d9;
@@ -160,6 +163,7 @@
   --color-gold-deep: var(--gold-deep);
   --color-gold-soft: var(--gold-soft);
   --color-on-gold: var(--on-gold);
+  --color-logo: var(--logo);
 
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
