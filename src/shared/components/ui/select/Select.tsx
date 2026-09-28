@@ -28,7 +28,7 @@ export function Select({ prefix, className, children, ...props }: InterfaceSelec
       <select className={select({ withPrefix: !!prefix, className })} {...props}>
         {children}
       </select>
-      <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-3">
+      <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-meta">
         <ChevronDown size={16} />
       </span>
     </div>

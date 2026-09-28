@@ -33,7 +33,7 @@ export function ObraView({ project, isVisaoGeral }: ObraViewProps) {
         type="button"
         onClick={() => navigate(backTo)}
         aria-label={t("mobile.backTo", { target: backLabel })}
-        className="group mb-4 flex min-h-9 cursor-pointer items-center gap-1 text-[13.5px] text-ink-3 transition-colors hover:text-ink"
+        className="group mb-4 flex min-h-9 cursor-pointer items-center gap-1 text-[13.5px] text-meta transition-colors hover:text-ink"
       >
         <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-0.5" />
         <span className="max-w-[70vw] truncate">{backLabel}</span>

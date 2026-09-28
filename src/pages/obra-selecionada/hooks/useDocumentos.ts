@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import { MAX_ATTACHMENT_SIZE_BYTES, MAX_ATTACHMENT_SIZE_MB } from "@/shared/constants/attachments"
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
 import type { Attachment } from "@/shared/types/attachment"
 
-import { downloadAttachment, triggerFileDownload } from "../services/attachments.service"
+import { deleteAttachment, downloadAttachment, triggerFileDownload } from "../services/attachments.service"
 import { isAcceptedFile } from "../utils/documentKind"
 import { DOCUMENTO_LABELS, useAttachments } from "./useAttachments"
 
@@ -25,8 +26,8 @@ interface UseDocumentosResult {
   pending: PendingUpload[]
   /** Valida e envia em sequência; o que não passa sai com o motivo. */
   submitFiles: (files: File[], stageId: number | null) => Promise<void>
-  remove: (id: number, onSuccess: () => void) => void
-  isDeleting: boolean
+  /** Some na hora; vai ao servidor depois da janela do Desfazer. */
+  remove: (attachment: Attachment) => void
   downloadingId: number | null
   download: (attachment: Attachment) => Promise<void>
 }
@@ -41,8 +42,15 @@ interface UseDocumentosResult {
  */
 export function useDocumentos(projectId: number): UseDocumentosResult {
   const { t } = useTranslation()
-  const { attachments, isLoading, uploadAsync, remove, isDeleting } = useAttachments(projectId, { labels: DOCUMENTO_LABELS })
+  const { attachments, isLoading, uploadAsync } = useAttachments(projectId, { labels: DOCUMENTO_LABELS })
   const [pending, setPending] = useState<PendingUpload[]>([])
+  const remove = useUndoableDelete<Attachment, Attachment[]>({
+    queryKey: () => ["attachments", projectId],
+    removeFrom: (list, attachment) => list.filter((a) => a.id !== attachment.id),
+    commit: (attachment) => deleteAttachment(projectId, attachment.id),
+    describe: (attachment) => ({ title: t(DOCUMENTO_LABELS.deleteSuccess), body: attachment.fileName }),
+    errorMessage: t(DOCUMENTO_LABELS.deleteError),
+  })
   const [downloadingId, setDownloadingId] = useState<number | null>(null)
 
   function accepts(file: File): boolean {
@@ -89,8 +97,7 @@ export function useDocumentos(projectId: number): UseDocumentosResult {
     isLoading,
     pending,
     submitFiles,
-    remove: (id, onSuccess) => remove(id, { onSuccess }),
-    isDeleting,
+    remove,
     downloadingId,
     download,
   }

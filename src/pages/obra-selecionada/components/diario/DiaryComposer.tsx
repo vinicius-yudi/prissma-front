@@ -88,7 +88,7 @@ export function DiaryComposer({ composer, authorName, isSaving, isUploading }: D
           <div className="flex items-center gap-2 rounded-[11px] bg-raised px-3 py-2 text-[13px] text-ink-2">
             <ImagePlus size={15} className="flex-none text-gold-hi" />
             <span className="min-w-0 flex-1 truncate">{attachment.fileName}</span>
-            <button type="button" onClick={composer.clearAttachment} aria-label={t("obra.diario.form.removeAttachment")} className="cursor-pointer rounded-[6px] p-1 text-ink-3 hover:text-ink">
+            <button type="button" onClick={composer.clearAttachment} aria-label={t("obra.diario.form.removeAttachment")} className="cursor-pointer rounded-[6px] p-1 text-meta hover:text-ink">
               <X size={14} />
             </button>
           </div>

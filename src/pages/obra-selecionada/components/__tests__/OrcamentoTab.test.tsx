@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { toast } from "react-toastify"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getProjectAcompanhamento } from "@/pages/projetos/services/projects.service"
 import { EtapaStatus } from "@/pages/projetos/types"
@@ -10,6 +10,7 @@ import type { BudgetItem, Expense, ProjectBudget } from "@/shared/types/budget"
 import { ProjectStatus } from "@/shared/types/project"
 import { GlobalRole } from "@/shared/types/user"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   createBudget,
@@ -321,11 +322,16 @@ describe("<OrcamentoTab /> — lançamentos", () => {
     await waitFor(() => expect(updateExpense).toHaveBeenCalledWith(1, expect.objectContaining({ amount: 1000 })))
   })
 
-  it("exclui despesa depois de confirmar", async () => {
+  it("exclui despesa com Desfazer", async () => {
+    relogioDoDesfazer()
     await renderCarregado()
     await waitFor(() => expect(screen.getAllByRole("button", { name: "Excluir despesa" })).toHaveLength(2))
+
     await userEvent.click(screen.getAllByRole("button", { name: "Excluir despesa" })[0])
-    await userEvent.click(within(await screen.findByRole("dialog")).getByRole("button", { name: "Excluir" }))
+
+    await waitFor(() => expect(screen.getAllByRole("button", { name: "Excluir despesa" })).toHaveLength(1))
+    expect(deleteExpense).not.toHaveBeenCalled()
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(deleteExpense).toHaveBeenCalledWith(2))
   })
 })
@@ -384,4 +390,8 @@ describe("<OrcamentoTab /> — categorias e orçamento", () => {
     expect(screen.queryByRole("button", { name: "Ações de Fundação" })).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Excluir despesa" })).not.toBeInTheDocument()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

@@ -39,7 +39,7 @@ const icon = tv({
   variants: {
     active: {
       true: "text-gold-hi",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })
@@ -49,7 +49,7 @@ const label = tv({
   variants: {
     active: {
       true: "text-ink",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })

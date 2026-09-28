@@ -18,7 +18,7 @@ export function SearchTrigger() {
       type="button"
       onClick={open}
       aria-label={t("palette.label")}
-      className="flex h-10 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-md bg-surface px-3.5 text-left text-[14px] text-ink-3 transition-shadow hairline hover:inset-ring-border-strong sm:max-w-[420px]"
+      className="flex h-10 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-md bg-surface px-3.5 text-left text-[14px] text-meta transition-shadow hairline hover:inset-ring-border-strong sm:max-w-[420px]"
     >
       <Search size={16} className="flex-none" />
       <span className="flex-1 truncate">

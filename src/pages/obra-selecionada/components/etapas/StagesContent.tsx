@@ -86,7 +86,7 @@ export function StagesContent(props: StagesContentProps) {
               <button
                 type="button"
                 onClick={props.onCreate}
-                className="mt-2.5 flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border-strong text-[14px] font-semibold text-ink-3 transition-colors hover:border-gold hover:text-gold-hi"
+                className="mt-2.5 flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border-strong text-[14px] font-semibold text-meta transition-colors hover:border-gold hover:text-gold-hi"
               >
                 <Plus size={16} />
                 {t("obra.etapas.addAtEnd")}

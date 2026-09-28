@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
+
 import { addEquipeMember, getAvailableUsers, getEquipeMembers, removeEquipeMember, updateMemberRole } from "../services/equipes.service"
 import type { AddMemberRequest, ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
 import { obraMembersKey } from "./useObraMembers"
@@ -51,13 +53,13 @@ export function useEquipes(obraId: number, usersEnabled = false) {
     onError: (error: Error) => toast.error(error.message || t("obra.equipes.toasts.roleError")),
   })
 
-  const removeMutation = useMutation({
-    mutationFn: (member: ConstructionProjectMember) => removeEquipeMember(obraId, member.id),
-    onSuccess: (_data, member) => {
-      invalidate()
-      toast.success(t("obra.equipes.toasts.removed", { name: member.user.name }))
-    },
-    onError: (error: Error) => toast.error(error.message || t("obra.equipes.toasts.removeError")),
+  // Sai da lista na hora e só é removido depois da janela do Desfazer.
+  const remove = useUndoableDelete<ConstructionProjectMember, ConstructionProjectMember[]>({
+    queryKey: () => membersKey,
+    removeFrom: (list, member) => list.filter((m) => m.id !== member.id),
+    commit: (member) => removeEquipeMember(obraId, member.id),
+    describe: (member) => ({ title: t("obra.equipes.toasts.removed", { name: member.user.name }) }),
+    errorMessage: t("obra.equipes.toasts.removeError"),
   })
 
   const memberIds = new Set((membersQuery.data ?? []).map((m) => m.user.id))
@@ -71,7 +73,7 @@ export function useEquipes(obraId: number, usersEnabled = false) {
     addAsync: addMutation.mutateAsync,
     isAdding: addMutation.isPending,
     changeRole: (member: ConstructionProjectMember, role: ProjectRoleInRequest) => roleMutation.mutate({ member, role }),
-    removeAsync: removeMutation.mutateAsync,
-    isRemoving: removeMutation.isPending,
+    /** Some na hora; sai do servidor depois da janela do Desfazer. */
+    remove,
   }
 }

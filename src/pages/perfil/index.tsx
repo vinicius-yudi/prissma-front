@@ -28,7 +28,7 @@ const row = tv({
     variant: {
       default: "cursor-pointer text-ink hover:bg-raised",
       danger: "cursor-pointer text-danger hover:bg-danger-soft",
-      disabled: "cursor-not-allowed text-ink-3",
+      disabled: "cursor-not-allowed text-meta",
       static: "text-ink",
     },
   },

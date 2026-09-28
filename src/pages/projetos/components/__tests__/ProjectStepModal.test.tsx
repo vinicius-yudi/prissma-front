@@ -147,7 +147,7 @@ describe("<ProjectStepModal /> — navegação entre passos", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
 
-    expect(await screen.findByText("O título deve ter pelo menos 3 caracteres")).toBeInTheDocument()
+    expect(await screen.findByText("O nome precisa de pelo menos 3 caracteres.")).toBeInTheDocument()
     expect(screen.getByPlaceholderText("Ex: Residencial Aurora")).toHaveAttribute("aria-invalid", "true")
     expect(screen.queryByPlaceholderText("00000-000")).not.toBeInTheDocument()
     expect(toast.error).not.toHaveBeenCalled()
@@ -219,8 +219,8 @@ describe("<ProjectStepModal /> — gravação", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Salvar" }))
 
-    expect(await screen.findByText("CEP deve ter 8 dígitos")).toBeInTheDocument()
-    expect(screen.getByText("Logradouro obrigatório")).toBeInTheDocument()
+    expect(await screen.findByText("O CEP tem 8 dígitos.")).toBeInTheDocument()
+    expect(screen.getByText("Informe o logradouro.")).toBeInTheDocument()
     expect(criar).not.toHaveBeenCalled()
   })
 
@@ -290,7 +290,7 @@ describe("<ProjectStepModal /> — CEP", () => {
     await userEvent.type(screen.getByPlaceholderText("00000-000"), "00000000")
     await vi.advanceTimersByTimeAsync(600)
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("CEP não encontrado"))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("CEP não encontrado."))
   })
 
   it("avisa quando a consulta de CEP falha", async () => {
@@ -300,7 +300,7 @@ describe("<ProjectStepModal /> — CEP", () => {
     await userEvent.type(screen.getByPlaceholderText("00000-000"), "01001000")
     await vi.advanceTimersByTimeAsync(600)
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Erro ao buscar CEP"))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível buscar o CEP."))
   })
 
   // Sem os oito dígitos não há o que consultar: disparar a cada tecla renderia

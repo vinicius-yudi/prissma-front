@@ -7,13 +7,11 @@ import { ATTACHMENT_ACCEPT_ATTRIBUTE, MAX_ATTACHMENT_SIZE_MB } from "@/shared/co
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
 import { Segmented } from "@/shared/components/ui/segmented/Segmented"
 import { useAccess } from "@/shared/hooks/useAccess"
-import type { Attachment } from "@/shared/types/attachment"
 
 import { MAX_BATCH, useDocumentos } from "../hooks/useDocumentos"
 import { useObraMembers } from "../hooks/useObraMembers"
 import { useStagesList } from "../hooks/useStages"
 import { DOC_KINDS, kindOf, type DocKind } from "../utils/documentKind"
-import { DeleteDocumentModal } from "./documentos/DeleteDocumentModal"
 import { DocumentList } from "./documentos/DocumentList"
 import { DocumentsDropzone } from "./documentos/DocumentsDropzone"
 import { UploadQueue } from "./documentos/UploadQueue"
@@ -39,7 +37,6 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
   const { stages } = useStagesList(projectId)
   const { list: members } = useObraMembers(projectId)
   const [stageId, setStageId] = useState<number | null>(null)
-  const [pendingDelete, setPendingDelete] = useState<Attachment | null>(null)
   const [params, setParams] = useSearchParams()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -61,11 +58,6 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
       },
       { replace: true },
     )
-  }
-
-  function confirmDelete() {
-    if (!pendingDelete) return
-    docs.remove(pendingDelete.id, () => setPendingDelete(null))
   }
 
   if (docs.isLoading) {
@@ -117,10 +109,8 @@ export function DocumentosTab({ projectId }: DocumentosTabProps) {
         canDelete={canWrite}
         onClearFilter={() => setFilter(ALL)}
         onDownload={(doc) => void docs.download(doc)}
-        onDelete={setPendingDelete}
+        onDelete={docs.remove}
       />
-
-      <DeleteDocumentModal attachment={pendingDelete} isDeleting={docs.isDeleting} onCancel={() => setPendingDelete(null)} onConfirm={confirmDelete} />
     </div>
   )
 }

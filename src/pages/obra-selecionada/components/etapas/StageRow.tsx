@@ -39,16 +39,16 @@ const rail = tv({
 
 const index = tv({
   base: "t-kpi text-[30px] leading-none",
-  variants: { done: { true: "text-ink-3", false: "text-ink" } },
+  variants: { done: { true: "text-meta", false: "text-ink" } },
 })
 
 const chevron = tv({
-  base: "flex-none text-ink-3 transition-transform",
+  base: "flex-none text-meta transition-transform",
   variants: { open: { true: "rotate-180" } },
 })
 
 const iconAction = tv({
-  base: "flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-ink-3 disabled:pointer-events-none disabled:opacity-30",
+  base: "flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-meta disabled:pointer-events-none disabled:opacity-30",
   variants: {
     danger: {
       true: "hover:bg-danger-soft hover:text-danger",
@@ -109,7 +109,7 @@ export function StageRow(props: StageRowProps) {
             <button
               type="button"
               aria-label={t("obra.etapas.actions.reorder")}
-              className="flex h-10 w-7 cursor-grab touch-none items-center justify-center rounded-[8px] text-ink-3 hover:bg-raised hover:text-ink active:cursor-grabbing"
+              className="flex h-10 w-7 cursor-grab touch-none items-center justify-center rounded-[8px] text-meta hover:bg-raised hover:text-ink active:cursor-grabbing"
               {...attributes}
               {...listeners}
             >

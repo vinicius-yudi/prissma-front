@@ -13,7 +13,7 @@ import { useOncePerPage } from "../page-chrome/PageChrome"
  */
 
 const cota = tv({
-  base: "t-data flex w-full max-w-[520px] items-center gap-2.5 text-[12px] font-medium text-ink-3",
+  base: "t-data flex w-full max-w-[520px] items-center gap-2.5 text-[12px] font-medium text-meta",
 })
 
 interface DimensionLineProps {

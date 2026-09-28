@@ -87,7 +87,7 @@ export function SidebarFooter({ collapsed, onExpand, onNewAccount, onProfile }: 
               <span className="block truncate text-[12px] text-meta">{workspaceName}</span>
             </span>
           )}
-          {!collapsed && <ChevronsUpDown size={14} className="flex-none text-ink-3" />}
+          {!collapsed && <ChevronsUpDown size={14} className="flex-none text-meta" />}
         </button>
 
         {!collapsed && <ThemeToggle />}

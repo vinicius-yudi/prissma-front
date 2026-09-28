@@ -50,7 +50,7 @@ export function WeekAgenda({ week }: { week: WeekDay[] }) {
                 <p className="t-data text-ink-2">{date.getDate()}</p>
               </div>
               <div className="min-w-0 space-y-1">
-                {tasks.length === 0 && <p className="pt-2 text-[12.5px] text-ink-3">—</p>}
+                {tasks.length === 0 && <p className="pt-2 text-[12.5px] text-meta">—</p>}
                 {tasks.map((task) => (
                   <Link
                     key={task.id}

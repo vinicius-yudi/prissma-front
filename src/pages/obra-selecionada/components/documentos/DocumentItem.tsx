@@ -11,7 +11,7 @@ import { kindOf } from "../../utils/documentKind"
 import { FileSheet } from "./FileSheet"
 
 const action = tv({
-  base: "flex size-9 cursor-pointer items-center justify-center rounded-[9px] text-ink-3 disabled:cursor-default",
+  base: "flex size-9 cursor-pointer items-center justify-center rounded-[9px] text-meta disabled:cursor-default",
   variants: {
     danger: { true: "hover:bg-danger-soft hover:text-danger", false: "hover:bg-surface hover:text-ink" },
   },

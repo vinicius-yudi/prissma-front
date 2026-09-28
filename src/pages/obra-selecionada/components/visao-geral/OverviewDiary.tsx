@@ -45,7 +45,7 @@ export function OverviewDiary({ projectId }: { projectId: number }) {
   return (
     <SectionCard title={t("obra.diario.title")} action={{ to: `/obras/${projectId}/diario`, label: t("obra.visaoGeral.openDiary") }}>
       {recent.length === 0 ? (
-        <p className="text-[14px] text-ink-3">{t("obra.visaoGeral.noDiary")}</p>
+        <p className="text-[14px] text-meta">{t("obra.visaoGeral.noDiary")}</p>
       ) : (
         <ol className="relative space-y-4 before:absolute before:top-2 before:bottom-2 before:left-[13px] before:w-px before:bg-border">
           {recent.map((entry) => {

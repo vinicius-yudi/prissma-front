@@ -30,7 +30,7 @@ const due = tv({
   variants: {
     tone: {
       late: "bg-danger-soft text-danger",
-      done: "text-ink-3",
+      done: "text-meta",
       soon: "bg-warning-soft text-warning",
       normal: "bg-raised text-ink-2",
     },

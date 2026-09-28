@@ -20,7 +20,7 @@ const langOption = tv({
   base: "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
   variants: {
     active: {
-      true: "bg-gold/10 text-gold font-medium",
+      true: "bg-gold-soft text-gold-hi font-medium",
       false: "text-ink-2 hover:bg-raised",
     },
   },

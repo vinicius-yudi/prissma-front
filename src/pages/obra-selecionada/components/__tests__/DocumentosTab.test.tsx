@@ -1,13 +1,14 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { toast } from "react-toastify"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { EtapaStatus } from "@/pages/projetos/types"
 import type { AppModule } from "@/shared/constants/access"
 import type { Attachment } from "@/shared/types/attachment"
 import { GlobalRole } from "@/shared/types/user"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   deleteAttachment,
@@ -248,17 +249,16 @@ describe("<DocumentosTab /> — ações", () => {
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível baixar o arquivo."))
   })
 
-  it("exclui depois de confirmar", async () => {
-    listar.mockResolvedValue([anexo()])
+  it("exclui com Desfazer: some da lista e vai ao servidor depois", async () => {
+    relogioDoDesfazer()
+    listar.mockResolvedValue([anexo(), anexo({ id: 2, fileName: "memorial.pdf" })])
     render()
 
     await userEvent.click(await screen.findByRole("button", { name: "Excluir planta.pdf" }))
-    const dialog = within(await screen.findByRole("dialog"))
-    await userEvent.click(dialog.getByRole("button", { name: "Cancelar" }))
-    expect(excluir).not.toHaveBeenCalled()
 
-    await userEvent.click(screen.getByRole("button", { name: "Excluir planta.pdf" }))
-    await userEvent.click(within(await screen.findByRole("dialog")).getByRole("button", { name: "Excluir" }))
+    await waitFor(() => expect(screen.queryByText("planta.pdf")).not.toBeInTheDocument())
+    expect(excluir).not.toHaveBeenCalled()
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
   })
 
@@ -271,4 +271,8 @@ describe("<DocumentosTab /> — ações", () => {
     expect(screen.queryByTestId("documents-dropzone")).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Excluir planta.pdf" })).not.toBeInTheDocument()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

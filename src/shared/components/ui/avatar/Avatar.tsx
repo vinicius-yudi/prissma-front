@@ -7,7 +7,7 @@ const avatar = tv({
   base: "inline-flex flex-none items-center justify-center rounded-full font-[680] [font-variation-settings:'wdth'_110]",
   variants: {
     empty: {
-      true: "border border-dashed border-border-strong text-ink-3",
+      true: "border border-dashed border-border-strong text-meta",
       false: "avatar-hue",
     },
     ring: {

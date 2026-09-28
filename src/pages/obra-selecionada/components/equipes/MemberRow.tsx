@@ -72,7 +72,7 @@ export function MemberRow({ member, isMe, dimmed, canManage, onRoleChange, onRem
             type="button"
             onClick={() => onRemove(member)}
             aria-label={t("obra.equipes.actions.remove", { name: member.user.name })}
-            className="flex size-8 flex-none cursor-pointer items-center justify-center rounded-[8px] text-ink-3 transition-opacity hover:bg-danger-soft hover:text-danger sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+            className="flex size-8 flex-none cursor-pointer items-center justify-center rounded-[8px] text-meta transition-opacity hover:bg-danger-soft hover:text-danger sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           >
             <X size={15} />
           </button>

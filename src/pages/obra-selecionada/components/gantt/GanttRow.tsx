@@ -68,7 +68,7 @@ export function GanttRow({ stage, index, scale, onSelect }: GanttRowProps) {
         onClick={() => onSelect?.(stage)}
         className="flex min-h-10 min-w-0 cursor-pointer items-center gap-2 pt-3 text-left sm:pt-0"
       >
-        <span className="t-num w-5 flex-none text-[11.5px] text-ink-3">{String(index + 1).padStart(2, "0")}</span>
+        <span className="t-num w-5 flex-none text-[11.5px] text-meta">{String(index + 1).padStart(2, "0")}</span>
         <span className={label({ late, hovered: hover })}>{stage.name}</span>
       </button>
 

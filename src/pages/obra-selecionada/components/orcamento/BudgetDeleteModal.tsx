@@ -9,13 +9,11 @@ import type { BudgetDeleteTarget } from "../../hooks/useBudgetModals"
 const TITLE_KEY: Record<BudgetDeleteTarget["kind"], string> = {
   budget: "obra.orcamento.delete.budgetTitle",
   item: "obra.orcamento.delete.itemTitle",
-  expense: "obra.orcamento.delete.expenseTitle",
 }
 
 const MESSAGE_KEY: Record<BudgetDeleteTarget["kind"], string> = {
   budget: "obra.orcamento.delete.budgetMessage",
   item: "obra.orcamento.delete.itemMessage",
-  expense: "obra.orcamento.delete.expenseMessage",
 }
 
 interface BudgetDeleteModalProps {

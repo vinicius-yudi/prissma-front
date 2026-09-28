@@ -20,7 +20,7 @@ export const Input = forwardRef<HTMLInputElement, InterfaceInputProps>(
     return (
       <div className="relative">
         {prefix && (
-          <span className="pointer-events-none absolute left-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center text-ink-3">
+          <span className="pointer-events-none absolute left-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center text-meta">
             {prefix}
           </span>
         )}

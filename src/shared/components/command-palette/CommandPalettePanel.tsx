@@ -73,7 +73,7 @@ export function CommandPalettePanel({ onClose }: CommandPalettePanelProps) {
         className="relative w-full max-w-[620px] overflow-hidden rounded-[18px] bg-surface shadow-lift outline-none hairline"
       >
         <div className="flex items-center gap-3 border-b border-border px-4">
-          <Search size={18} className="text-ink-3" />
+          <Search size={18} className="text-meta" />
           <input
             autoFocus
             value={query}
@@ -88,12 +88,12 @@ export function CommandPalettePanel({ onClose }: CommandPalettePanelProps) {
 
         <div className="max-h-[52vh] overflow-y-auto p-2" role="listbox" aria-label={t("palette.label")}>
           {results.length === 0 && (
-            <p className="px-3 py-10 text-center text-[14px] text-ink-3">{t("palette.empty", { term: query })}</p>
+            <p className="px-3 py-10 text-center text-[14px] text-meta">{t("palette.empty", { term: query })}</p>
           )}
           {results.map((command, i) => (
             <div key={command.id}>
               {command.group !== results[i - 1]?.group && (
-                <p className="px-3 pt-3 pb-1.5 text-[12px] font-semibold text-ink-3">{command.group}</p>
+                <p className="px-3 pt-3 pb-1.5 text-[12px] font-semibold text-meta">{command.group}</p>
               )}
               <CommandItem command={command} active={i === safeIndex} onHover={() => setIndex(i)} />
             </div>

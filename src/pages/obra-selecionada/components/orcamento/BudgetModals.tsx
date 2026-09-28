@@ -37,7 +37,6 @@ export function BudgetModals({ ops, modals, budget, stages, selectedItemId }: Bu
   const deleteByKind = {
     budget: (id: number) => ops.deleteBudget(id),
     item: (id: number) => ops.deleteItem(id),
-    expense: (id: number) => ops.deleteExpense(id),
   }
 
   function confirmDelete() {

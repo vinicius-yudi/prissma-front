@@ -3,12 +3,13 @@ import { act, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import type { ReactElement } from "react"
 import { toast } from "react-toastify"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { EtapaStatus } from "@/pages/projetos/types"
 import { getMyProfile } from "@/shared/services/user.service"
 import { GlobalRole } from "@/shared/types/user"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import { getEquipeMembers } from "../../services/equipes.service"
 import { ProjectPermission, ProjectRole, getRolePermissions } from "../../services/projectPermissions.service"
@@ -349,16 +350,17 @@ describe("<TarefasTab /> — drawer", () => {
     await waitFor(() => expect(editar).toHaveBeenCalledWith(1, 11, { title: "Escavar sapatas", priority: "HIGH" }))
   })
 
-  it("exclui pelo drawer depois de confirmar", async () => {
+  it("exclui pelo drawer com Desfazer: fecha, some do quadro e vai ao servidor depois", async () => {
+    relogioDoDesfazer()
     await renderCarregado()
     await userEvent.click(card("Escavar sapatas"))
     await userEvent.click(await screen.findByRole("button", { name: "Excluir tarefa" }))
 
-    const botoes = await screen.findAllByRole("button", { name: "Excluir" })
-    await userEvent.click(botoes[botoes.length - 1])
-
-    await waitFor(() => expect(excluir).toHaveBeenCalledWith(1, 11))
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Detalhes da tarefa" })).not.toBeInTheDocument())
+    expect(screen.queryByText("Escavar sapatas")).not.toBeInTheDocument()
+    expect(excluir).not.toHaveBeenCalled()
+    await passarJanelaDoDesfazer()
+    await waitFor(() => expect(excluir).toHaveBeenCalledWith(1, 11))
   })
 
   it("cria pelo botão de nova tarefa, na etapa escolhida", async () => {
@@ -419,7 +421,8 @@ describe("<TarefasTab /> — bordas", () => {
     expect(await dialog.findByText("A etapa vinculada precisa ter uma data de início.")).toBeInTheDocument()
   })
 
-  it("mantém aberto quando criar ou excluir falha", async () => {
+  it("mantém aberto quando criar falha e avisa quando excluir falha", async () => {
+    relogioDoDesfazer()
     criar.mockRejectedValue(new Error(""))
     excluir.mockRejectedValue(new Error(""))
     await renderCarregado()
@@ -431,10 +434,8 @@ describe("<TarefasTab /> — bordas", () => {
 
     await userEvent.click(card("Escavar sapatas"))
     await userEvent.click(await screen.findByRole("button", { name: "Excluir tarefa" }))
-    const botoes = await screen.findAllByRole("button", { name: "Excluir" })
-    await userEvent.click(botoes[botoes.length - 1])
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível excluir a tarefa."))
-    expect(screen.getByRole("dialog", { name: "Detalhes da tarefa" })).toBeInTheDocument()
   })
 })
 
@@ -466,4 +467,8 @@ describe("<TarefasTab /> — permissões", () => {
     expect(dialog.getByLabelText("Título")).toBeDisabled()
     expect(dialog.queryByRole("button", { name: "Excluir tarefa" })).not.toBeInTheDocument()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

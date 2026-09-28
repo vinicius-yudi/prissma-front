@@ -163,34 +163,3 @@ describe("useAttachments — envio", () => {
     await waitFor(() => expect(result.current.isUploading).toBe(false))
   })
 })
-
-describe("useAttachments — exclusão", () => {
-  it("exclui o anexo da obra", async () => {
-    const { result } = render()
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
-    expect(toast.success).toHaveBeenCalledWith("Foto removida.")
-  })
-
-  it("mostra a mensagem do backend ao falhar", async () => {
-    excluir.mockRejectedValue(new Error("Anexo referenciado no diário."))
-    const { result } = render()
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith("Anexo referenciado no diário."),
-    )
-  })
-
-  it("cai no rótulo da aba quando o erro de exclusão não tem texto", async () => {
-    excluir.mockRejectedValue(new Error(""))
-    const { result } = render(DOCUMENTO_LABELS)
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível remover o arquivo."))
-  })
-})

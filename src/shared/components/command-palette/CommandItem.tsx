@@ -19,7 +19,7 @@ const icon = tv({
   variants: {
     active: {
       true: "text-gold-hi",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })
@@ -53,7 +53,7 @@ export function CommandItem({ command, active, onHover }: CommandItemProps) {
       <Icon size={16} className={icon({ active })} />
       <span className="relative flex-1 truncate">{command.label}</span>
       {command.hint && <span className="relative truncate text-[12.5px] text-meta">{command.hint}</span>}
-      {active && <CornerDownLeft size={14} className="relative text-ink-3" />}
+      {active && <CornerDownLeft size={14} className="relative text-meta" />}
     </button>
   )
 }

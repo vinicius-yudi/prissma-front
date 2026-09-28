@@ -132,7 +132,7 @@ export function OrcamentoTab({ project }: OrcamentoTabProps) {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <SectionCard title={t("obra.orcamento.curve.title")}>
-          {curve ? <SCurve curve={curve} planned={budget.plannedTotal} /> : <p className="py-8 text-center text-[14px] text-ink-3">{t("obra.orcamento.curve.noDates")}</p>}
+          {curve ? <SCurve curve={curve} planned={budget.plannedTotal} /> : <p className="py-8 text-center text-[14px] text-meta">{t("obra.orcamento.curve.noDates")}</p>}
         </SectionCard>
         <CategoryPanel
           items={budget.items}
@@ -154,7 +154,7 @@ export function OrcamentoTab({ project }: OrcamentoTabProps) {
         canMutate={ops.canMutate}
         onClearFilter={() => selectCategory(null)}
         onEdit={(expense) => modals.openExpenseForm(expense)}
-        onDelete={(expense) => modals.requestDelete({ kind: "expense", id: expense.id, name: expense.description })}
+        onDelete={ops.removeExpense}
       />
 
       {dialogs}

@@ -80,7 +80,7 @@ export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: O
           </DimensionLine>
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[13.5px] text-ink-2">
             <span className="inline-flex items-center gap-1.5">
-              <MapPin size={14} className="text-ink-3" />
+              <MapPin size={14} className="text-meta" />
               {formatProjectAddress(project)}
             </span>
           </div>
@@ -98,7 +98,7 @@ export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: O
               className="w-full"
             />
           </motion.div>
-          <span className="t-data absolute top-4 left-4 text-[11.5px] text-ink-3">{t("common.facadeScale")}</span>
+          <span className="t-data absolute top-4 left-4 text-[11.5px] text-meta">{t("common.facadeScale")}</span>
           {data.members.length > 0 && (
             <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
               <AvatarStack people={data.members} size={30} max={5} />

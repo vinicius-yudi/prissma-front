@@ -37,7 +37,7 @@ export function ExpenseFields({ form, items, stages, lockCategory }: ExpenseFiel
       <Field label={t("obra.orcamento.expenseForm.amount")} error={errorOf(errors.amount?.message)}>
         {(id) => (
           <div className="relative">
-            <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[18px] font-[600] text-ink-3">R$</span>
+            <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[18px] font-[600] text-meta">R$</span>
             <Input
               id={id}
               inputMode="decimal"

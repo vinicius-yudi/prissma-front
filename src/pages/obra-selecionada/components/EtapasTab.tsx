@@ -15,7 +15,6 @@ import { useProjectPermissions } from "../hooks/useProjectPermissions"
 import { useStages, useStagesList } from "../hooks/useStages"
 import { ProjectPermission } from "../services/projectPermissions.service"
 import type { Stage } from "../services/stages.service"
-import { DeleteStageModal } from "./etapas/DeleteStageModal"
 import { StageList } from "./etapas/StageList"
 import { StagesContent } from "./etapas/StagesContent"
 import { StageFormModal } from "./StageFormModal"
@@ -48,7 +47,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
   const canMutate = can(ProjectPermission.MANAGE_STAGES)
   const { attachments } = useAttachments(projectId)
   const { stages, isLoading, isError, refetch } = useStagesList(projectId)
-  const { move, remove, isDeleting } = useStages(projectId)
+  const { move, remove } = useStages(projectId)
   const progress = useProjectProgress(projectId)
   const [searchParams, setSearchParams] = useSearchParams()
   const view: StagesView = searchParams.get(VIEW_PARAM) === GANTT ? GANTT : LIST
@@ -59,7 +58,6 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
   const [modal, setModal] = useState<ModalState>({ mode: "closed" })
   // Nova `key` a cada abertura: o formulário lê os valores iniciais no mount.
   const [formKey, setFormKey] = useState(0)
-  const [pendingDelete, setPendingDelete] = useState<Stage | null>(null)
 
   const summaries = new Map(progress.stages.map((s) => [s.id, s]))
   const photoCountByStage = new Map<number, number>()
@@ -119,11 +117,6 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
     if (stage && canMutate) openEdit(stage)
   }
 
-  function confirmDelete() {
-    if (!pendingDelete) return
-    remove(pendingDelete.id, { onSuccess: () => setPendingDelete(null) })
-  }
-
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -171,7 +164,7 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
             onReorder={handleReorder}
             onStatus={handleStatus}
             onEdit={openEdit}
-            onDelete={setPendingDelete}
+            onDelete={remove}
           />
         }
       />
@@ -186,13 +179,6 @@ export function EtapasTab({ projectId, projectStartDate }: EtapasTabProps) {
         stage={modal.mode === "edit" ? modal.stage : null}
         suggestedDisplayOrder={maxDisplayOrder + 1}
         canMutate={canMutate}
-      />
-
-      <DeleteStageModal
-        stage={pendingDelete}
-        isDeleting={isDeleting}
-        onCancel={() => setPendingDelete(null)}
-        onConfirm={confirmDelete}
       />
     </div>
   )

@@ -41,7 +41,7 @@ export function StageStatusSelect({ stage, canEdit, onChange }: StageStatusSelec
       </select>
       <span className="pointer-events-none inline-flex items-center gap-1">
         {pill}
-        <ChevronDown size={13} className="text-ink-3" />
+        <ChevronDown size={13} className="text-meta" />
       </span>
     </label>
   )

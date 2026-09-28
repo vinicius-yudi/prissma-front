@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import { ToastMessage } from "@/shared/components/ui/toast/ToastMessage"
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
 
 import { TASK_STATUS } from "../constants/kanban"
 import { createTarefa, deleteTarefa, updateTarefa } from "../services/tarefas.service"
@@ -108,13 +109,13 @@ export function useTaskActions(projectId: number) {
     onError: (error: Error) => toast.error(error.message || t("obra.tarefas.toasts.errorCreating")),
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (item: TarefaComEtapa) => deleteTarefa(item.stageId, item.tarefa.id),
-    onSuccess: (_data, item) => {
-      invalidate(item.stageId)
-      toast.success(t("obra.tarefas.toasts.deleted"))
-    },
-    onError: (error: Error) => toast.error(error.message || t("obra.tarefas.toasts.errorDeleting")),
+  const remove = useUndoableDelete<TarefaComEtapa, Tarefa[]>({
+    queryKey: (item) => tasksKey(item.stageId),
+    removeFrom: (list, item) => list.filter((x) => x.id !== item.tarefa.id),
+    commit: (item) => deleteTarefa(item.stageId, item.tarefa.id),
+    alsoInvalidate: () => [["stages", projectId], ["acompanhamento", projectId]],
+    describe: (item) => ({ title: t("obra.tarefas.toasts.deleted"), body: item.tarefa.title }),
+    errorMessage: t("obra.tarefas.toasts.errorDeleting"),
   })
 
   return {
@@ -124,7 +125,7 @@ export function useTaskActions(projectId: number) {
     patch: (item: TarefaComEtapa, patch: UpdateTarefaRequest) => patchMutation.mutate({ item, patch }),
     createAsync: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
-    removeAsync: deleteMutation.mutateAsync,
-    isDeleting: deleteMutation.isPending,
+    /** Some na hora; vai ao servidor depois da janela do Desfazer. */
+    remove,
   }
 }

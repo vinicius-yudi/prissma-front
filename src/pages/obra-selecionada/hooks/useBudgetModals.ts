@@ -11,7 +11,6 @@ export type BudgetModalState =
 export type BudgetDeleteTarget =
   | { kind: "budget"; id: number }
   | { kind: "item"; id: number; name: string }
-  | { kind: "expense"; id: number; name: string }
 
 /**
  * Qual modal do orçamento está aberto. `key` muda a cada abertura: o

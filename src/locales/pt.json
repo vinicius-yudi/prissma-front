@@ -1,7 +1,5 @@
 {
   "header": {
-    "search": "Buscar obras...",
-    "searchClear": "Limpar busca",
     "themeLight": "Ativar modo claro",
     "themeDark": "Ativar modo escuro",
     "readOnly": "Somente leitura no seu perfil"
@@ -36,9 +34,6 @@
       "logout": "Sair",
       "help": "Ajuda"
     },
-    "allObras": "Todas as obras",
-    "groupWorkspace": "Workspace",
-    "groupObra": "Nesta obra",
     "accountsLabel": "Contas",
     "unavailable": "Indisponível",
     "accountsNew": "Nova conta",
@@ -50,7 +45,6 @@
     "newObra": "Nova obra"
   },
   "dashboard": {
-    "title": "Painel de Controle",
     "inProgressTitle": "Obras em andamento",
     "inProgressEmpty": "Nenhuma obra em andamento",
     "greeting": {
@@ -125,13 +119,7 @@
       "lateStages_other": "{{count}} etapas atrasadas"
     },
     "editModal": {
-      "title": "Editar Obra",
-      "description": "Atualize as informações do projeto.",
-      "status": "Status",
-      "statusPlaceholder": "Selecione o status",
-      "save": "Salvar alterações",
-      "saving": "Salvando...",
-      "cancel": "Cancelar"
+      "status": "Status"
     },
     "deleteModal": {
       "title": "Excluir Obra",
@@ -164,6 +152,10 @@
     "newCard": {
       "title": "Começar uma nova obra",
       "body": "Dados e endereço em dois passos"
+    },
+    "toasts": {
+      "deleted": "Obra excluída.",
+      "deleteError": "Não foi possível excluir a obra."
     }
   },
   "login": {
@@ -172,7 +164,6 @@
     "email": "E-mail",
     "emailPlaceholder": "nome@empresa.com.br",
     "password": "Senha",
-    "passwordPlaceholder": "Digite sua senha",
     "showPassword": "Mostrar senha",
     "hidePassword": "Ocultar senha",
     "forgotPassword": "Esqueci a senha",
@@ -217,12 +208,8 @@
     }
   },
   "registerWork": {
-    "title": "Cadastro de Obra",
-    "subtitle": "Defina as informações estruturais e cronológicos para o seu novo projeto.",
     "name": "Nome da Obra",
     "namePlaceholder": "Ex: Residencial Aurora",
-    "address": "Endereço Completo",
-    "addressPlaceholder": "Rua, Número, Bairro, Cidade - UF",
     "type": "Tipo de Obra",
     "typePlaceholder": "Selecione o tipo",
     "typeResidential": "Residencial",
@@ -235,10 +222,7 @@
     "landArea": "Área do Terreno (m²)",
     "builtArea": "Área de Construção (m²)",
     "startDate": "Data Planejada para Início",
-    "endDate": "Data Planejada para Fim",
-    "save": "Salvar Obra",
-    "saving": "Salvando...",
-    "cancel": "Cancelar"
+    "endDate": "Data Planejada para Fim"
   },
   "projectModal": {
     "createTitle": "Nova Obra",
@@ -267,7 +251,9 @@
     "cidadePlaceholder": "Nome da cidade",
     "uf": "UF",
     "currentAddress": "Endereço atual",
-    "cepLooking": "Buscando CEP"
+    "cepLooking": "Buscando CEP",
+    "cepNotFound": "CEP não encontrado.",
+    "cepError": "Não foi possível buscar o CEP."
   },
   "forgotPassword": {
     "title": "Recuperar senha",
@@ -286,21 +272,17 @@
     "subtitle": "Crie uma nova senha para sua conta.",
     "newPassword": "Nova senha",
     "confirmPassword": "Confirme a senha",
-    "passwordPlaceholder": "••••••••",
     "submit": "Redefinir senha",
     "submitting": "Salvando",
-    "backToLogin": "Voltar ao login",
     "success": "Senha redefinida. Entre com a senha nova."
   },
   "notFound": {
     "code": "404",
     "title": "Página não encontrada",
-    "description": "A página que você está procurando não existe ou foi movida.",
     "action": "Voltar ao início",
     "body": "O endereço pode ter mudado ou a página foi removida."
   },
   "obra": {
-    "back": "Voltar",
     "edit": "Editar obra",
     "delete": "Excluir",
     "notFound": "Obra não encontrada",
@@ -319,39 +301,13 @@
       "chat": "Chat"
     },
     "visaoGeral": {
-      "title": "Resumo do Projeto",
-      "totalProgress": "Progresso Total",
-      "location": "Localização",
-      "deadline": "Prazo final",
-      "deadlineOverdue": "Prazo vencido",
-      "areas": "Áreas",
-      "landArea": "Terreno",
-      "stages": "Etapas",
-      "stagesProgress": "Progresso das Etapas",
-      "total": "Total",
-      "inProgress": "Em andamento",
-      "completed": "Concluídas",
-      "currentStage": "Frente atual",
-      "executed": "Executado",
-      "team": "Efetivo vinculado",
-      "cycle": "Ciclo da obra",
       "manageStages": "Editar etapas",
       "budget": "Orçamento",
       "seeExpenses": "Detalhar",
       "noBudget": "Nenhum orçamento cadastrado.",
-      "ofPlanned": "de {{planned}} previsto",
       "allocatedTeams": "Equipe",
       "seeTeams": "Gerenciar",
       "noTeam": "Nenhum integrante vinculado.",
-      "lateBy_one": "⚠ prazo expirado há {{count}} dia",
-      "lateBy_other": "⚠ prazo expirado há {{count}} dias",
-      "completedLabel": "concluído",
-      "deadlineDeviation_one": "{{count}} dia de desvio previsto",
-      "deadlineDeviation_other": "{{count}} dias de desvio previsto",
-      "stageOf": "etapa {{index}} de {{total}}",
-      "ofBudget": "{{percent}}% do orçamento",
-      "headcount_one": "{{count}} pessoa na obra",
-      "headcount_other": "{{count}} pessoas na obra",
       "recentDocs": "Documentos recentes",
       "seeAllDocs": "Ver todos",
       "noDocs": "Nenhum arquivo enviado ainda.",
@@ -415,13 +371,7 @@
       "emptyFiltered": "Nenhum arquivo desse tipo.",
       "showAll": "Mostrar todos",
       "downloadFile": "Baixar {{name}}",
-      "deleteFile": "Excluir {{name}}",
-      "deleteModal": {
-        "title": "Excluir arquivo",
-        "message": "Excluir \"{{name}}\"? O arquivo sai da obra e não pode ser recuperado.",
-        "cancel": "Cancelar",
-        "confirm": "Excluir"
-      }
+      "deleteFile": "Excluir {{name}}"
     },
     "propostas": {
       "title": "Propostas",
@@ -622,14 +572,7 @@
         "shortcut": "Ctrl + Enter também registra"
       },
       "actions": {
-        "delete": "Excluir registro",
-        "cancel": "Cancelar"
-      },
-      "deleteModal": {
-        "title": "Excluir registro",
-        "message": "Excluir este registro do diário? Esta ação não pode ser desfeita.",
-        "confirm": "Excluir",
-        "deleting": "Excluindo..."
+        "delete": "Excluir registro"
       },
       "toasts": {
         "created": "Registro salvo com sucesso!",
@@ -640,8 +583,6 @@
       "details": {
         "open": "Ver detalhes do registro de {{type}}",
         "title": "Detalhes do registro",
-        "responsible": "Responsável",
-        "description": "Descrição",
         "attachment": "Anexo",
         "noAttachment": "Nenhum anexo neste registro.",
         "attachmentUnavailable": "Os dados do anexo não estão disponíveis.",
@@ -680,7 +621,6 @@
       }
     },
     "orcamento": {
-      "title": "Orçamento",
       "empty": {
         "title": "Nenhum orçamento criado",
         "description": "Defina o valor planejado total para começar a acompanhar os gastos da obra.",
@@ -772,15 +712,14 @@
         "expenseDeleted": "Despesa removida.",
         "categoryExceededWarning": "Atenção: esta categoria ultrapassou o valor planejado.",
         "budgetExceededWarning": "Atenção: o orçamento total foi ultrapassado.",
-        "alreadyExists": "Este projeto já possui um orçamento."
+        "alreadyExists": "Este projeto já possui um orçamento.",
+        "expenseDeleteError": "Não foi possível excluir a despesa."
       },
       "delete": {
         "budgetTitle": "Excluir orçamento",
         "budgetMessage": "Tem certeza? Todas as categorias e despesas vinculadas serão removidas.",
         "itemTitle": "Excluir categoria",
-        "itemMessage": "Excluir \"{{name}}\" remove também todas as despesas dela.",
-        "expenseTitle": "Excluir despesa",
-        "expenseMessage": "Excluir \"{{name}}\"? Esta ação não pode ser desfeita."
+        "itemMessage": "Excluir \"{{name}}\" remove também todas as despesas dela."
       },
       "errors": {
         "loadFailed": "Não foi possível carregar o orçamento.",
@@ -827,10 +766,7 @@
       }
     },
     "etapas": {
-      "title": "Etapas",
-      "empty": "Nenhuma etapa cadastrada.",
       "tasksEmpty": "Nenhuma tarefa nesta etapa.",
-      "tasks": "Tarefas",
       "actions": {
         "create": "Nova Etapa",
         "edit": "Editar",
@@ -843,9 +779,6 @@
         "moveDown": "Mover para baixo"
       },
       "card": {
-        "progress": "Progresso",
-        "tasksCount_one": "{{count}} tarefa",
-        "tasksCount_other": "{{count}} tarefas",
         "photosCount_one": "{{count}} foto",
         "photosCount_other": "{{count}} fotos",
         "progressOf": "Avanço de {{name}}"
@@ -874,12 +807,6 @@
         },
         "orderHint": "Posição no ciclo da obra."
       },
-      "deleteModal": {
-        "title": "Excluir etapa",
-        "message": "Tem certeza que deseja excluir a etapa \"{{name}}\"? Esta ação não pode ser desfeita.",
-        "confirm": "Excluir",
-        "deleting": "Excluindo..."
-      },
       "toasts": {
         "createSuccess": "Etapa criada com sucesso!",
         "createError": "Erro ao criar etapa",
@@ -900,17 +827,6 @@
         "IN_PROGRESS": "Em andamento",
         "DONE": "Concluída",
         "BLOCKED": "Bloqueada"
-      },
-      "tarefaStatus": {
-        "TODO": "A fazer",
-        "IN_PROGRESS": "Em andamento",
-        "DONE": "Concluída",
-        "BLOCKED": "Bloqueada"
-      },
-      "priority": {
-        "HIGH": "Alta",
-        "MEDIUM": "Média",
-        "LOW": "Baixa"
       },
       "emptyTitle": "Nenhuma etapa cadastrada",
       "emptyHint": "Crie as etapas do ciclo da obra para acompanhar prazos, progresso e atrasos.",
@@ -959,10 +875,7 @@
       "unassigned": "Sem responsável",
       "noStagesTitle": "Nenhuma etapa cadastrada",
       "noStagesHint": "As tarefas pendem das etapas da obra. Cadastre a primeira frente de trabalho para começar a lançar tarefas.",
-      "deleteTitle": "Excluir tarefa",
-      "deleteDescription": "Tem certeza que deseja excluir a tarefa \"{{title}}\"?",
       "cancel": "Cancelar",
-      "confirmDelete": "Excluir",
       "filters": {
         "LATE": "Atrasadas",
         "mine": "Atribuídas a mim",
@@ -1090,12 +1003,6 @@
         "cancel": "Cancelar",
         "remove": "Remover {{name}} da obra",
         "addMemberShort": "Pessoa"
-      },
-      "removeModal": {
-        "title": "Remover pessoa",
-        "message": "Tem certeza que deseja remover {{name}} desta obra?",
-        "confirm": "Remover",
-        "removing": "Removendo..."
       },
       "addModal": {
         "searchPlaceholder": "Pesquise por nome ou e-mail...",
@@ -1239,22 +1146,13 @@
     "description": "Seu papel nesta obra não alcança este módulo. Fale com o responsável se precisar de acesso.",
     "action": "Voltar para as obras"
   },
-  "pessoas": {
-    "membersTitle": "Vinculados à obra",
-    "membersHint": "Quem tem acesso a esta frente de trabalho e com que papel.",
-    "membersEmpty": "Nenhum integrante vinculado ainda.",
-    "membersError": "Não foi possível carregar os vinculados."
-  },
   "mobile": {
     "backTo": "Voltar para {{target}}",
-    "menu": "Menu",
-    "menuTitle": "Todas as seções",
     "nav": {
       "pessoas": "Pessoas"
     }
   },
   "workspace": {
-    "newAccount": "Nova conta",
     "createTitle": "Criar nova conta",
     "createHint": "Uma conta separa as obras, a equipe e os clientes de outro workspace.",
     "nameLabel": "Nome do workspace",
@@ -1262,7 +1160,6 @@
     "create": "Criar conta",
     "creating": "Criando…",
     "createError": "Não foi possível criar a conta.",
-    "switchError": "Não foi possível trocar de conta.",
     "roles": {
       "OWNER": "Proprietário",
       "ADMIN": "Administrador",
@@ -1310,7 +1207,6 @@
     "close": "Fechar",
     "dismiss": "Dispensar",
     "undo": "Desfazer",
-    "expectedToday": "Esperado para hoje: {{value}}%",
     "facadeScale": "Fachada · esc. 1:100"
   },
   "palette": {
@@ -1337,7 +1233,22 @@
     "nameMin": "Digite o nome completo.",
     "passwordRules": "A senha ainda não cumpre todas as regras abaixo.",
     "confirmRequired": "Repita a senha para confirmar.",
-    "passwordMismatch": "As senhas não coincidem."
+    "passwordMismatch": "As senhas não coincidem.",
+    "project": {
+      "titleMin": "O nome precisa de pelo menos 3 caracteres.",
+      "typeRequired": "Escolha o tipo de obra.",
+      "categoryRequired": "Escolha a categoria.",
+      "areaPositive": "A área precisa ser maior que zero.",
+      "startRequired": "Informe o início planejado.",
+      "endRequired": "Informe o término planejado.",
+      "cepLength": "O CEP tem 8 dígitos.",
+      "streetRequired": "Informe o logradouro.",
+      "numberRequired": "Informe o número.",
+      "districtRequired": "Informe o bairro.",
+      "cityRequired": "Informe a cidade.",
+      "stateInvalid": "Use a sigla do estado (ex.: PR).",
+      "endAfterStart": "O término precisa ser depois do início."
+    }
   },
   "auth": {
     "passwordRules": {
@@ -1351,8 +1262,17 @@
   "brand": {
     "name": "PRISSMA",
     "headline": "Controle total",
-    "headlineSuffix": "de suas obras.",
-    "tagline": "Do orçamento inicial",
-    "taglineSuffix": "à entrega das chaves."
+    "headlineSuffix": "de suas obras."
+  },
+  "perfil": {
+    "toasts": {
+      "success": "Perfil atualizado.",
+      "noChanges": "Nenhuma alteração para salvar.",
+      "passwordMismatch": "As senhas não coincidem.",
+      "passwordUppercase": "A senha precisa de pelo menos uma letra maiúscula.",
+      "passwordLowercase": "A senha precisa de pelo menos uma letra minúscula.",
+      "passwordDigit": "A senha precisa de pelo menos um número.",
+      "passwordSpecial": "A senha precisa de pelo menos um caractere especial."
+    }
   }
 }

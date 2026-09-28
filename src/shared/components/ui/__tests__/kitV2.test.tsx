@@ -10,7 +10,6 @@ import { AttentionCard } from "../alert-row/AttentionCard"
 import { Avatar } from "../avatar/Avatar"
 import { avatarHue, initials } from "../avatar/avatarHue"
 import { AvatarStack } from "../avatar/AvatarStack"
-import { Card } from "../card/Card"
 import { Donut } from "../donut/Donut"
 import { EmptyState } from "../empty-state/EmptyState"
 import { Field } from "../field/Field"
@@ -53,25 +52,6 @@ describe("<Field />", () => {
 
     expect(screen.getByRole("alert")).toHaveTextContent("O término precisa ser depois do início.")
     expect(screen.queryByText("Data de término")).not.toBeInTheDocument()
-  })
-})
-
-describe("<Card />", () => {
-  it("é superfície com contorno e padding por padrão", () => {
-    renderWithProviders(<Card data-testid="card">Conteúdo</Card>)
-
-    expect(screen.getByTestId("card")).toHaveClass("bg-surface", "hairline", "p-5")
-  })
-
-  it("sobe no hover quando é interativo e aceita sem padding", () => {
-    renderWithProviders(
-      <Card data-testid="card" interactive padded={false}>
-        Obra
-      </Card>,
-    )
-
-    expect(screen.getByTestId("card")).toHaveClass("hover:shadow-soft")
-    expect(screen.getByTestId("card")).not.toHaveClass("p-5")
   })
 })
 

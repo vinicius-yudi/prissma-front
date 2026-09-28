@@ -10,8 +10,6 @@ import { GlobalRole } from "@/shared/types/user"
 import { COLUMN_STATUSES } from "../constants/kanban"
 import { useObraMembers } from "../hooks/useObraMembers"
 import { useTarefasKanban } from "../hooks/useTarefasKanban"
-import type { TarefaComEtapa } from "../types/tarefas"
-import { DeleteTaskModal } from "./tarefas/DeleteTaskModal"
 import { TaskBoard } from "./tarefas/TaskBoard"
 import { TaskDrawer } from "./tarefas/TaskDrawer"
 import { TaskToolbar } from "./tarefas/TaskToolbar"
@@ -33,7 +31,6 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
   const kanban = useTarefasKanban(projectId)
   const { list: members } = useObraMembers(projectId)
   const [drawer, setDrawer] = useState<DrawerState>({ mode: "closed" })
-  const [pendingDelete, setPendingDelete] = useState<TarefaComEtapa | null>(null)
 
   // O item vem sempre do cache vivo: o drawer enxerga o que o otimista mudou.
   const openItem = drawer.mode === "edit" ? (kanban.all.find((i) => i.tarefa.id === drawer.id) ?? null) : null
@@ -48,15 +45,10 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
   // Antes dos early returns: alimenta a ação flutuante do celular.
   usePrimaryAction(canCreate ? { label: t("obra.tarefas.newTask"), onClick: openCreate } : null)
 
-  function confirmDelete() {
-    if (!pendingDelete) return
-    kanban.actions.removeAsync(pendingDelete).then(
-      () => {
-        setPendingDelete(null)
-        setDrawer({ mode: "closed" })
-      },
-      () => undefined,
-    )
+  function handleDelete() {
+    if (!openItem) return
+    setDrawer({ mode: "closed" })
+    kanban.actions.remove(openItem)
   }
 
   if (kanban.isLoading) {
@@ -98,20 +90,13 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
       <TaskDrawer
         open={drawer.mode === "create" || openItem !== null}
         onClose={() => setDrawer({ mode: "closed" })}
-        onDelete={() => setPendingDelete(openItem)}
+        onDelete={handleDelete}
         item={openItem}
         stages={kanban.stages}
         defaultStage={kanban.targetStage}
         assignees={assignees}
         actions={kanban.actions}
         canMutate={kanban.canMutate}
-      />
-
-      <DeleteTaskModal
-        item={pendingDelete}
-        isDeleting={kanban.actions.isDeleting}
-        onCancel={() => setPendingDelete(null)}
-        onConfirm={confirmDelete}
       />
     </div>
   )

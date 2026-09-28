@@ -28,7 +28,7 @@ export function TaskToolbar({ filterState, stages, lateCount, visibleCount, onCr
   return (
     <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center">
       <label className="relative lg:w-64">
-        <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-3" />
+        <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-meta" />
         <span className="sr-only">{t("obra.tarefas.search")}</span>
         <Input
           type="search"

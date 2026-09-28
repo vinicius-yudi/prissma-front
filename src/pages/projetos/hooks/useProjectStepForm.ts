@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import type { UseFormReturn } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import type { Project } from "@/shared/types/project"
@@ -84,6 +85,7 @@ function payloadFrom(data: ProjectFormData) {
  * retorno do viacep.
  */
 export function useProjectStepForm({ open, project, onClose }: UseProjectStepFormArgs): UseProjectStepFormResult {
+  const { t } = useTranslation()
   const [step, setStep] = useState<ProjectStep>(1)
   const numeroRef = useRef<HTMLInputElement | null>(null)
   const cepUserEditedRef = useRef(false)
@@ -107,8 +109,8 @@ export function useProjectStepForm({ open, project, onClose }: UseProjectStepFor
   const { cepData, isLookingUp, cepError } = useCepLookup(form.watch("cep"))
 
   useEffect(() => {
-    if (cepError) toast.error(cepError)
-  }, [cepError])
+    if (cepError) toast.error(t(cepError))
+  }, [cepError, t])
 
   useEffect(() => {
     if (!cepData || !cepUserEditedRef.current) return

@@ -9,7 +9,7 @@ interface SettingsSectionProps {
 export function SettingsSection({ title, children }: SettingsSectionProps) {
   return (
     <section className="rounded-lg bg-surface p-2 hairline">
-      <h2 className="t-label px-3 pt-2 pb-1 text-ink-3">{title}</h2>
+      <h2 className="t-label px-3 pt-2 pb-1 text-meta">{title}</h2>
       {children}
     </section>
   )

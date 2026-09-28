@@ -11,7 +11,7 @@ const circle = tv({
     state: {
       completed: "bg-gold text-on-gold",
       active: "bg-gold-soft text-gold-hi inset-ring-2 inset-ring-gold",
-      inactive: "bg-raised text-ink-3",
+      inactive: "bg-raised text-meta",
     },
   },
 })
@@ -21,7 +21,7 @@ const label = tv({
   variants: {
     active: {
       true: "text-ink",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })

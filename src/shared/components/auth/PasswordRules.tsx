@@ -21,7 +21,7 @@ const rule = tv({
   variants: {
     passed: {
       true: "text-ink",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })

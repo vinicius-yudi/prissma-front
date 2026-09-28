@@ -26,7 +26,7 @@ export function CandidateList({ users, isLoading, searching, selectedId, onSelec
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-8 text-ink-3" aria-busy="true">
+      <div className="flex justify-center py-8 text-meta" aria-busy="true">
         <Loader2 className="animate-spin" size={20} />
       </div>
     )

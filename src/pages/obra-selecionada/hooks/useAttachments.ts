@@ -6,7 +6,6 @@ import { MAX_ATTACHMENT_SIZE_MB } from "@/shared/constants/attachments"
 
 import {
   AttachmentRequestError,
-  deleteAttachment,
   listAttachments,
   uploadAttachment,
 } from "../services/attachments.service"
@@ -75,24 +74,11 @@ export function useAttachments(projectId: number, options: UseAttachmentsOptions
     },
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteAttachment(projectId, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
-      toast.success(t(labels.deleteSuccess))
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || t(labels.deleteError))
-    },
-  })
-
   return {
     attachments: query.data ?? [],
     isLoading: query.isLoading,
     upload: uploadMutation.mutate,
     uploadAsync: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
-    remove: deleteMutation.mutate,
-    isDeleting: deleteMutation.isPending,
   }
 }

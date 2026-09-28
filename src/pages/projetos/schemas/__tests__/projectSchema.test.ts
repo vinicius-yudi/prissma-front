@@ -44,13 +44,13 @@ describe("projectSchema — dados da obra", () => {
 
   it("exige título com pelo menos 3 caracteres", () => {
     expect(fieldError(projectSchema, { ...valido, title: "AB" }, "title")).toBe(
-      "O título deve ter pelo menos 3 caracteres",
+      "validation.project.titleMin",
     )
   })
 
   it("exige tipo e categoria selecionados", () => {
-    expect(fieldError(projectSchema, { ...valido, projectType: "" }, "projectType")).toBe("Selecione o tipo de projeto")
-    expect(fieldError(projectSchema, { ...valido, category: "" }, "category")).toBe("Selecione a categoria")
+    expect(fieldError(projectSchema, { ...valido, projectType: "" }, "projectType")).toBe("validation.project.typeRequired")
+    expect(fieldError(projectSchema, { ...valido, category: "" }, "category")).toBe("validation.project.categoryRequired")
   })
 
   it("aceita os cinco status de obra", () => {
@@ -66,22 +66,22 @@ describe("projectSchema — dados da obra", () => {
   // Área zero passaria despercebida e viraria divisão por zero em qualquer
   // indicador por m².
   it("exige áreas maiores que zero", () => {
-    expect(fieldError(projectSchema, { ...valido, landArea: 0 }, "landArea")).toBe("Área deve ser maior que zero")
-    expect(fieldError(projectSchema, { ...valido, builtArea: -1 }, "builtArea")).toBe("Área deve ser maior que zero")
+    expect(fieldError(projectSchema, { ...valido, landArea: 0 }, "landArea")).toBe("validation.project.areaPositive")
+    expect(fieldError(projectSchema, { ...valido, builtArea: -1 }, "builtArea")).toBe("validation.project.areaPositive")
   })
 
   it("exige as duas datas", () => {
     expect(fieldError(projectSchema, { ...valido, plannedStartDate: "" }, "plannedStartDate")).toBe(
-      "Data de início é obrigatória",
+      "validation.project.startRequired",
     )
     expect(fieldError(projectSchema, { ...valido, plannedEndDate: "" }, "plannedEndDate")).toBe(
-      "Data de término é obrigatória",
+      "validation.project.endRequired",
     )
   })
 
   it("rejeita término anterior ao início", () => {
     expect(fieldError(projectSchema, { ...valido, plannedEndDate: "2026-01-01" }, "plannedEndDate")).toBe(
-      "A data de término deve ser posterior à data de início",
+      "validation.project.endAfterStart",
     )
   })
 
@@ -95,19 +95,19 @@ describe("projectSchema — dados da obra", () => {
 
 describe("projectSchema — endereço", () => {
   it("exige CEP com exatamente 8 dígitos", () => {
-    expect(fieldError(projectSchema, { ...valido, cep: "0131010" }, "cep")).toBe("CEP deve ter 8 dígitos")
-    expect(fieldError(projectSchema, { ...valido, cep: "01310-100" }, "cep")).toBe("CEP deve ter 8 dígitos")
+    expect(fieldError(projectSchema, { ...valido, cep: "0131010" }, "cep")).toBe("validation.project.cepLength")
+    expect(fieldError(projectSchema, { ...valido, cep: "01310-100" }, "cep")).toBe("validation.project.cepLength")
   })
 
   it("exige UF com duas letras", () => {
-    expect(fieldError(projectSchema, { ...valido, uf: "SPO" }, "uf")).toBe("UF inválida")
+    expect(fieldError(projectSchema, { ...valido, uf: "SPO" }, "uf")).toBe("validation.project.stateInvalid")
   })
 
   it("exige logradouro, número, bairro e cidade", () => {
-    expect(fieldError(projectSchema, { ...valido, logradouro: "" }, "logradouro")).toBe("Logradouro obrigatório")
-    expect(fieldError(projectSchema, { ...valido, numero: "" }, "numero")).toBe("Número obrigatório")
-    expect(fieldError(projectSchema, { ...valido, bairro: "" }, "bairro")).toBe("Bairro obrigatório")
-    expect(fieldError(projectSchema, { ...valido, cidade: "" }, "cidade")).toBe("Cidade obrigatória")
+    expect(fieldError(projectSchema, { ...valido, logradouro: "" }, "logradouro")).toBe("validation.project.streetRequired")
+    expect(fieldError(projectSchema, { ...valido, numero: "" }, "numero")).toBe("validation.project.numberRequired")
+    expect(fieldError(projectSchema, { ...valido, bairro: "" }, "bairro")).toBe("validation.project.districtRequired")
+    expect(fieldError(projectSchema, { ...valido, cidade: "" }, "cidade")).toBe("validation.project.cityRequired")
   })
 
   it("aceita endereço sem complemento", () => {

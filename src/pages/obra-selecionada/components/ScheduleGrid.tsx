@@ -19,7 +19,7 @@ const dayHeader = tv({
   base: "t-num px-3.5 py-3 text-center text-[12px] font-[560] first-letter:uppercase",
   variants: {
     weekend: {
-      true: "text-ink-3",
+      true: "text-meta",
       false: "text-ink-2",
     },
   },

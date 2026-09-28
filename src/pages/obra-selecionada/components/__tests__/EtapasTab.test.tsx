@@ -1,7 +1,9 @@
 import type { DragEndEvent } from "@dnd-kit/core"
-import { screen, waitFor } from "@testing-library/react"
+import { act, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import type { ReactElement } from "react"
+import { toast } from "react-toastify"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getProjectAcompanhamento } from "@/pages/projetos/services/projects.service"
 import { EtapaStatus } from "@/pages/projetos/types"
@@ -10,6 +12,7 @@ import { ProjectStatus } from "@/shared/types/project"
 import { GlobalRole } from "@/shared/types/user"
 import type { Attachment } from "@/shared/types/attachment"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import { listAttachments } from "../../services/attachments.service"
 import { getEquipeMembers } from "../../services/equipes.service"
@@ -516,30 +519,33 @@ describe("<EtapasTab /> — formulário e exclusão", () => {
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument()
   })
 
-  it("pede confirmação antes de excluir e exclui ao confirmar", async () => {
+  it("exclui pela linha com Desfazer: some na hora, vai ao servidor depois", async () => {
+    relogioDoDesfazer()
+    listar.mockResolvedValue([etapa(), etapa({ id: 2, name: "Alvenaria", displayOrder: 2 })])
     await renderCarregado()
 
-    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
+    await userEvent.click(screen.getAllByRole("button", { name: "Excluir" })[0])
 
-    expect(screen.getByRole("heading", { name: "Excluir etapa" })).toBeInTheDocument()
-    expect(screen.getByText(/"Fundação"/)).toBeInTheDocument()
+    await waitFor(() => expect(nomes()).toEqual(["Alvenaria"]))
     expect(excluir).not.toHaveBeenCalled()
-
-    const botoes = screen.getAllByRole("button", { name: "Excluir" })
-    await userEvent.click(botoes[botoes.length - 1])
-
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(excluir).toHaveBeenCalledWith(1))
   })
 
-  it("desiste sem excluir no cancelar", async () => {
+  it("desfazer devolve a etapa e não exclui", async () => {
+    relogioDoDesfazer()
     await renderCarregado()
+
     await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
+    const calls = vi.mocked(toast.success).mock.calls
+    act(() => (calls[calls.length - 1][0] as ReactElement<{ action: { onClick: () => void } }>).props.action.onClick())
+    await passarJanelaDoDesfazer()
 
-    await userEvent.click(screen.getByRole("button", { name: "Cancelar" }))
-
-    await waitFor(() =>
-      expect(screen.queryByRole("heading", { name: "Excluir etapa" })).not.toBeInTheDocument(),
-    )
+    await waitFor(() => expect(nomes()).toEqual(["Fundação"]))
     expect(excluir).not.toHaveBeenCalled()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

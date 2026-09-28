@@ -53,7 +53,7 @@ export function ObraHeaderStats({ project, data }: ObraHeaderStatsProps) {
         </div>
         <p className="t-kpi mt-1 text-[44px] text-ink">
           {data.progress.progress === null ? "—" : <Ticker value={progress} />}
-          <span className="text-[22px] text-ink-3">%</span>
+          <span className="text-[22px] text-meta">%</span>
         </p>
         <Progress value={progress} expected={data.expected} height={12} className="mt-3" label={t("projects.card.progress")} />
         {data.expected !== undefined && (
@@ -66,7 +66,7 @@ export function ObraHeaderStats({ project, data }: ObraHeaderStatsProps) {
         <ProjectDeadline project={project} className="t-section mt-1 block text-[19px]" />
         {project.plannedEndDate && (
           <p className="mt-1 inline-flex items-center gap-1.5 text-[12.5px] text-ink-2">
-            <CalendarRange size={13} className="text-ink-3" />
+            <CalendarRange size={13} className="text-meta" />
             {t("obra.header.until", { date: formatDate(project.plannedEndDate) })}
           </p>
         )}
@@ -87,7 +87,7 @@ export function ObraHeaderStats({ project, data }: ObraHeaderStatsProps) {
             </p>
           </>
         ) : (
-          <p className="t-section mt-1 text-[19px] text-ink-3">{t("obra.header.noBudget")}</p>
+          <p className="t-section mt-1 text-[19px] text-meta">{t("obra.header.noBudget")}</p>
         )}
       </div>
     </div>

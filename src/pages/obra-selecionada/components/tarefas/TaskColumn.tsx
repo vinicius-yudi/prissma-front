@@ -63,7 +63,7 @@ export function TaskColumn({ status, count, children, footer }: TaskColumnProps)
       </header>
       <div ref={setNodeRef} className="flex min-h-[120px] flex-1 flex-col">
         {count === 0 ? (
-          <div className="flex flex-1 items-center justify-center rounded-[13px] border border-dashed border-border-strong py-8 text-[12.5px] text-ink-3">
+          <div className="flex flex-1 items-center justify-center rounded-[13px] border border-dashed border-border-strong py-8 text-[12.5px] text-meta">
             {t("obra.tarefas.emptyColumn")}
           </div>
         ) : (

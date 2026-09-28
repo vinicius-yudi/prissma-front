@@ -13,7 +13,7 @@ const menuItem = tv({
     variant: {
       default: "cursor-pointer text-ink-2 hover:bg-raised hover:text-ink disabled:cursor-default",
       danger: "cursor-pointer text-danger hover:bg-danger-soft",
-      disabled: "cursor-not-allowed text-ink-3",
+      disabled: "cursor-not-allowed text-meta",
     },
   },
 })
@@ -58,7 +58,7 @@ export function AccountMenu({
       transition={SPRING}
       className="absolute inset-x-0 bottom-full z-10 mb-2 min-w-[232px] overflow-hidden rounded-lg bg-surface py-1.5 shadow-lift hairline"
     >
-      <p className="px-3 pt-1 pb-1 text-[12px] font-semibold text-ink-3">{t("sidebar.accountsLabel")}</p>
+      <p className="px-3 pt-1 pb-1 text-[12px] font-semibold text-meta">{t("sidebar.accountsLabel")}</p>
 
       {workspaces.length === 0 && (
         // Rollout/carregando: mostra ao menos a identidade atual marcada.

@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
+
 import type {
   BudgetItemRequest,
   Expense,
@@ -154,15 +156,14 @@ export function useBudget(projectId: number) {
     },
   })
 
-  const deleteExpenseMutation = useMutation({
-    mutationFn: (id: number) => deleteExpense(id),
-    onSuccess: () => {
-      invalidate()
-      toast.success(t("obra.orcamento.toasts.expenseDeleted"))
-    },
-    onError: (error: Error) => {
-      toast.error(error.message)
-    },
+  // Despesa some na hora e vai ao servidor depois da janela do Desfazer.
+  const removeExpense = useUndoableDelete<Expense, Expense[]>({
+    queryKey: () => ["budget", projectId, "expenses", query.data?.id ?? null],
+    removeFrom: (list, expense) => list.filter((e) => e.id !== expense.id),
+    commit: (expense) => deleteExpense(expense.id),
+    alsoInvalidate: () => [queryKey],
+    describe: (expense) => ({ title: t("obra.orcamento.toasts.expenseDeleted"), body: expense.description }),
+    errorMessage: t("obra.orcamento.toasts.expenseDeleteError"),
   })
 
   const isMutating =
@@ -173,8 +174,7 @@ export function useBudget(projectId: number) {
     updateItemMutation.isPending ||
     deleteItemMutation.isPending ||
     createExpenseMutation.isPending ||
-    updateExpenseMutation.isPending ||
-    deleteExpenseMutation.isPending
+    updateExpenseMutation.isPending
 
   return {
     budget: query.data ?? null as ProjectBudget | null,
@@ -194,6 +194,6 @@ export function useBudget(projectId: number) {
 
     createExpense: createExpenseMutation.mutateAsync,
     updateExpense: updateExpenseMutation.mutateAsync,
-    deleteExpense: deleteExpenseMutation.mutateAsync,
+    removeExpense,
   }
 }

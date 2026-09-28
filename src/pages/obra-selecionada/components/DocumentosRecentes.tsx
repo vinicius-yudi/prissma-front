@@ -73,7 +73,7 @@ export function DocumentosRecentes({ projectId }: { projectId: number }) {
             <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
               {file.fileName}
             </span>
-            <Num className="shrink-0 text-[11px] text-ink-3">
+            <Num className="shrink-0 text-[11px] text-meta">
               {formatDate(file.uploadedAt)}
             </Num>
           </li>

@@ -8,6 +8,7 @@ import { getMyProfile } from "@/shared/services/user.service"
 import type { Attachment } from "@/shared/types/attachment"
 import { GlobalRole } from "@/shared/types/user"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import { downloadAttachment, listAttachments, uploadAttachment } from "../../services/attachments.service"
 import { createDiarioEntry, deleteDiarioEntry, getDiarioEntries } from "../../services/diario.service"
@@ -297,14 +298,17 @@ describe("<DiarioDaObra /> — novo registro", () => {
 })
 
 describe("<DiarioDaObra /> — exclusão e leitura", () => {
-  it("pede confirmação antes de excluir", async () => {
-    listar.mockResolvedValue(pagina([registro()]))
+  it("exclui com Desfazer: some da linha do tempo e vai ao servidor depois", async () => {
+    relogioDoDesfazer()
+    listar.mockResolvedValue(pagina([registro(), registro({ id: 2, description: "Outro registro" })]))
     render()
-    await userEvent.click(await screen.findByRole("button", { name: "Excluir registro" }))
-    const dialog = within(await screen.findByRole("dialog"))
+
+    await userEvent.click((await screen.findAllByRole("button", { name: "Excluir registro" }))[0])
+
+    await waitFor(() => expect(screen.getAllByRole("button", { name: "Excluir registro" })).toHaveLength(1))
     expect(excluir).not.toHaveBeenCalled()
-    await userEvent.click(dialog.getByRole("button", { name: "Excluir" }))
-    await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
+    await passarJanelaDoDesfazer()
+    await waitFor(() => expect(excluir).toHaveBeenCalled())
   })
 
   it("só leitura: sem compositor nem excluir", async () => {
@@ -315,4 +319,8 @@ describe("<DiarioDaObra /> — exclusão e leitura", () => {
     expect(screen.queryByLabelText("O que aconteceu")).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Excluir registro" })).not.toBeInTheDocument()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

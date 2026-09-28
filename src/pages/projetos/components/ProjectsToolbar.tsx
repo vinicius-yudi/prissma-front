@@ -15,7 +15,7 @@ const viewButton = tv({
   variants: {
     active: {
       true: "text-ink",
-      false: "text-ink-3 hover:text-ink-2",
+      false: "text-meta hover:text-ink-2",
     },
   },
 })
@@ -60,7 +60,7 @@ export function ProjectsToolbar(props: ProjectsToolbarProps) {
 
       <div className="flex items-center gap-2">
         <label className="relative flex-1 lg:w-64 lg:flex-none">
-          <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-3" />
+          <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-meta" />
           <input
             type="search"
             value={props.search}
@@ -75,7 +75,7 @@ export function ProjectsToolbar(props: ProjectsToolbarProps) {
               type="button"
               onClick={() => props.onSearch("")}
               aria-label={t("projects.searchClear")}
-              className="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-ink-3 hover:bg-raised"
+              className="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-meta hover:bg-raised"
             >
               <X size={13} />
             </button>

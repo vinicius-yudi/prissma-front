@@ -9,11 +9,10 @@ import { useEquipes } from "../hooks/useEquipes"
 import { usePermissionMatrix } from "../hooks/usePermissionMatrix"
 import { useProjectPermissions } from "../hooks/useProjectPermissions"
 import { ALL_PROJECT_PERMISSIONS, ProjectPermission, type ProjectRole } from "../services/projectPermissions.service"
-import { RoleInProject, type ConstructionProjectMember, type ProjectRoleInRequest } from "../types/equipes"
+import { RoleInProject, type ProjectRoleInRequest } from "../types/equipes"
 import { AddMemberModal } from "./equipes/AddMemberModal"
 import { MembersPanel } from "./equipes/MembersPanel"
 import { PermissionMatrix } from "./equipes/PermissionMatrix"
-import { RemoveMemberModal } from "./equipes/RemoveMemberModal"
 
 interface EquipesTabProps {
   obraId: number
@@ -33,7 +32,6 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   const [addOpen, setAddOpen] = useState(false)
   // Nova `key` a cada abertura: o modal remonta com a busca e a escolha zeradas.
   const [addKey, setAddKey] = useState(0)
-  const [pendingRemove, setPendingRemove] = useState<ConstructionProjectMember | null>(null)
   const [focusRole, setFocusRole] = useState<RoleInProject | null>(null)
   const equipes = useEquipes(obraId, addOpen && canManage)
   // Editar a matriz exige gerir membros — a mesma permissão que o PUT cobra.
@@ -51,11 +49,6 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
   function permissionSummary(role: ProjectRoleInRequest): string | null {
     if (role === RoleInProject.USER || matrix.isLoading || matrix.isError) return null
     return t("obra.equipes.addModal.permissionCount", { count: matrix.matrix[role as ProjectRole].size, total: ALL_PROJECT_PERMISSIONS.length })
-  }
-
-  function confirmRemove() {
-    if (!pendingRemove) return
-    equipes.removeAsync(pendingRemove).then(() => setPendingRemove(null), () => undefined)
   }
 
   if (equipes.isLoadingMembers) {
@@ -76,7 +69,7 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
         canManage={canManage}
         onInvite={openAdd}
         onRoleChange={equipes.changeRole}
-        onRemove={setPendingRemove}
+        onRemove={equipes.remove}
       />
 
       {canManage && (
@@ -98,7 +91,6 @@ export function EquipesTab({ obraId }: EquipesTabProps) {
         permissionSummary={permissionSummary}
         onAdd={(userId, role) => equipes.addAsync({ userId, roleInProject: role })}
       />
-      <RemoveMemberModal member={pendingRemove} isRemoving={equipes.isRemoving} onCancel={() => setPendingRemove(null)} onConfirm={confirmRemove} />
     </div>
   )
 }

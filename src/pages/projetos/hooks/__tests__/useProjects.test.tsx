@@ -285,7 +285,7 @@ describe("mutations de obra", () => {
 
     act(() => result.current.handleDelete(7))
 
-    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Obra excluída com sucesso!"))
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Obra excluída."))
     expect(vi.mocked(deleteProject).mock.calls[0][0]).toBe(7)
   })
 

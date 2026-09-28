@@ -25,7 +25,7 @@ const item = tv({
     },
     active: {
       true: "text-ink",
-      false: "text-ink-3 hover:text-ink-2",
+      false: "text-meta hover:text-ink-2",
     },
   },
 })
@@ -35,7 +35,7 @@ const count = tv({
   variants: {
     active: {
       true: "text-gold-hi",
-      false: "text-ink-3",
+      false: "text-meta",
     },
   },
 })

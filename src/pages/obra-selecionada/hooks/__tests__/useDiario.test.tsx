@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { createHookWrapper } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   createDiarioEntry,
@@ -137,23 +138,33 @@ describe("useDiario — gravações", () => {
     expect(toast.success).toHaveBeenCalledWith("Registro salvo com sucesso!")
   })
 
-  it("exclui o registro da obra", async () => {
+  it("exclui o registro da obra depois da janela do Desfazer", async () => {
+    relogioDoDesfazer()
     const { result } = render()
 
-    act(() => result.current.delete(3))
+    act(() => result.current.remove(registro(3)))
+    expect(excluir).not.toHaveBeenCalled()
 
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 3))
-    expect(toast.success).toHaveBeenCalledWith("Registro excluído com sucesso!")
   })
 
-  it.each([
-    ["criação", () => criar.mockRejectedValue(new Error("Data futura.")), "create" as const],
-    ["exclusão", () => excluir.mockRejectedValue(new Error("Data futura.")), "delete" as const],
-  ])("mostra a mensagem do backend quando a %s falha", async (_caso, prepara, acao) => {
-    prepara()
+  it("avisa quando a exclusão falha", async () => {
+    relogioDoDesfazer()
+    excluir.mockRejectedValue(new Error("Data futura."))
     const { result } = render()
 
-    act(() => (acao === "create" ? result.current.create(PAYLOAD) : result.current.delete(3)))
+    act(() => result.current.remove(registro(3)))
+    await passarJanelaDoDesfazer()
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Data futura."))
+  })
+
+  it("mostra a mensagem do backend quando a criação falha", async () => {
+    criar.mockRejectedValue(new Error("Data futura."))
+    const { result } = render()
+
+    act(() => result.current.create(PAYLOAD))
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Data futura."))
   })
@@ -167,4 +178,8 @@ describe("useDiario — gravações", () => {
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Erro ao salvar registro"))
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

@@ -1,12 +1,13 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { toast } from "react-toastify"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getMyProfile } from "@/shared/services/user.service"
 import { GlobalRole, type Role } from "@/shared/types/user"
 import { WorkspaceRole } from "@/shared/types/workspace"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import { addEquipeMember, getAvailableUsers, getEquipeMembers, removeEquipeMember, updateMemberRole } from "../../services/equipes.service"
 import {
@@ -129,15 +130,16 @@ describe("<EquipesTab /> — pessoas", () => {
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Carlos agora é arquiteto."))
   })
 
-  it("remove depois de confirmar", async () => {
+  it("remove com Desfazer: sai da lista e do servidor depois", async () => {
+    relogioDoDesfazer()
     await renderCarregado()
 
     await userEvent.click(screen.getByRole("button", { name: "Remover Carlos Lima da obra" }))
-    const dialog = within(await screen.findByRole("dialog"))
-    await userEvent.click(dialog.getByRole("button", { name: "Remover" }))
 
+    await waitFor(() => expect(screen.queryByText("Carlos Lima")).not.toBeInTheDocument())
+    expect(remover).not.toHaveBeenCalled()
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(remover).toHaveBeenCalledWith(7, 2))
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument())
   })
 
   it("mostra o erro do servidor ao trocar papel", async () => {
@@ -252,14 +254,14 @@ describe("<EquipesTab /> — falhas", () => {
   })
 
   it("usa a mensagem padrão quando o servidor não explica", async () => {
+    relogioDoDesfazer()
     adicionar.mockRejectedValue(new Error(""))
     remover.mockRejectedValue(new Error(""))
     await renderCarregado()
 
     await userEvent.click(screen.getByRole("button", { name: "Remover Carlos Lima da obra" }))
-    await userEvent.click(within(await screen.findByRole("dialog")).getByRole("button", { name: "Remover" }))
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível remover da obra."))
-    await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Cancelar" }))
 
     await userEvent.click(within(screen.getByRole("region", { name: "Pessoas" })).getByRole("button", { name: /Adicionar pessoa/ }))
     const dialog = within(await screen.findByRole("dialog", { name: "Adicionar à obra" }))
@@ -278,4 +280,8 @@ describe("<EquipesTab /> — sem gestão", () => {
     expect(screen.queryByRole("region", { name: "Papéis e permissões" })).not.toBeInTheDocument()
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument()
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

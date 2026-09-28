@@ -20,7 +20,7 @@ const OPTIONS: ProjectStatus[] = [
 ]
 
 const chevron = tv({
-  base: "text-ink-3 transition-transform",
+  base: "text-meta transition-transform",
   variants: { open: { true: "rotate-180" } },
 })
 

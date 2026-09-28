@@ -73,7 +73,7 @@ export function AddMemberModal({ open, onClose, candidates, isLoading, isAdding,
     >
       <div className="grid gap-5 px-6 pt-5 pb-6">
         <label className="relative block">
-          <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-3" />
+          <Search size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-meta" />
           <span className="sr-only">{t("obra.equipes.addModal.searchPlaceholder")}</span>
           <Input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("obra.equipes.addModal.searchPlaceholder")} className="pl-9" />
         </label>

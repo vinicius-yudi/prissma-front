@@ -78,7 +78,7 @@ export function DiaryEntryCard({ entry, canDelete, onOpen, onDelete }: DiaryEntr
             type="button"
             onClick={() => onDelete(entry)}
             aria-label={t("obra.diario.actions.delete")}
-            className="absolute top-2.5 right-2.5 flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-ink-3 transition-opacity hover:bg-danger-soft hover:text-danger sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+            className="absolute top-2.5 right-2.5 flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-meta transition-opacity hover:bg-danger-soft hover:text-danger sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           >
             <Trash2 size={14} />
           </button>

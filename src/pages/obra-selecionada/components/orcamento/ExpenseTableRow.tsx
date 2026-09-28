@@ -7,7 +7,7 @@ import type { Expense } from "@/shared/types/budget"
 import { formatCurrency, formatDate } from "@/shared/utils/formatters"
 
 const action = tv({
-  base: "flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-ink-3 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100",
+  base: "flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-meta transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100",
   variants: {
     danger: { true: "hover:bg-danger-soft hover:text-danger", false: "hover:bg-raised hover:text-ink" },
   },

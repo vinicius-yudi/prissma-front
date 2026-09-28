@@ -23,7 +23,7 @@ export function Gantt({ stages, onSelect }: GanttProps) {
   const { t, i18n } = useTranslation()
   const scale = ganttScale(stages)
 
-  if (!scale) return <p className="py-8 text-center text-[14px] text-ink-3">{t("obra.gantt.empty")}</p>
+  if (!scale) return <p className="py-8 text-center text-[14px] text-meta">{t("obra.gantt.empty")}</p>
 
   return (
     <div>
@@ -34,7 +34,7 @@ export function Gantt({ stages, onSelect }: GanttProps) {
             {scale.months.map((m) => (
               <span
                 key={m.x}
-                className="t-num absolute bottom-1.5 -translate-x-1/2 text-[11px] text-ink-3 first-letter:uppercase"
+                className="t-num absolute bottom-1.5 -translate-x-1/2 text-[11px] text-meta first-letter:uppercase"
                 style={{ left: `${m.x}%` }}
               >
                 {m.date.toLocaleDateString(i18n.language, { month: "short" }).replace(".", "")}

@@ -42,7 +42,7 @@ export function AlertRow({ tone, icon, title, meta, to }: AlertRowProps) {
         <span className="block truncate text-[14.5px] font-[580] text-ink">{title}</span>
         <span className="t-num mt-px block truncate text-[12.5px] text-meta">{meta}</span>
       </span>
-      <ChevronRight size={16} className="flex-none text-ink-3 transition-transform group-hover:translate-x-0.5" />
+      <ChevronRight size={16} className="flex-none text-meta transition-transform group-hover:translate-x-0.5" />
     </Link>
   )
 }

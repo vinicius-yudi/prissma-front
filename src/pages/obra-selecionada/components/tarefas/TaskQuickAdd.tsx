@@ -74,7 +74,7 @@ export function TaskQuickAdd({ stageName, isSaving, onAdd }: TaskQuickAddProps) 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={() => setOpen(true)}
-          className="mt-2 flex h-10 w-full cursor-pointer items-center gap-2 rounded-[11px] px-2.5 text-[13px] text-ink-3 transition-colors hover:bg-surface hover:text-ink"
+          className="mt-2 flex h-10 w-full cursor-pointer items-center gap-2 rounded-[11px] px-2.5 text-[13px] text-meta transition-colors hover:bg-surface hover:text-ink"
         >
           <Plus size={14} />
           {t("obra.tarefas.quickAdd.open")}

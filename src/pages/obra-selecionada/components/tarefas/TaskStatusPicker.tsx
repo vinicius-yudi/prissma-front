@@ -9,7 +9,7 @@ import type { TarefaStatus } from "../../types/tarefas"
 
 const option = tv({
   base: "relative flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] text-[13px] font-[600] disabled:cursor-default",
-  variants: { selected: { true: "text-ink", false: "text-ink-3 hairline hover:text-ink" } },
+  variants: { selected: { true: "text-ink", false: "text-meta hairline hover:text-ink" } },
 })
 
 const highlight = tv({

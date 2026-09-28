@@ -70,7 +70,7 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
                 <Icon size={18} className={icon({ active: isActive })} />
                 {!collapsed && <span className="relative flex-1 truncate">{label}</span>}
                 {!collapsed && isReadOnly(entry.module) && (
-                  <Eye size={14} className="relative text-ink-3" aria-label={t("header.readOnly")} />
+                  <Eye size={14} className="relative text-meta" aria-label={t("header.readOnly")} />
                 )}
               </span>
             )}

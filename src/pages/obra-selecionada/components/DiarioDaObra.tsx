@@ -14,7 +14,6 @@ import { useAttachments } from "../hooks/useAttachments"
 import { useDiario } from "../hooks/useDiario"
 import { useDiarioComposer } from "../hooks/useDiarioComposer"
 import type { DiarioEntry, DiarioEntryType } from "../types/diario"
-import { DeleteDiaryModal } from "./diario/DeleteDiaryModal"
 import { DiaryComposer } from "./diario/DiaryComposer"
 import { DiaryEntryModal } from "./diario/DiaryEntryModal"
 import { DiaryTimeline } from "./diario/DiaryTimeline"
@@ -45,7 +44,6 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
   const composer = useDiarioComposer({ create: diario.create, upload: attachments.upload })
   const [params, setParams] = useSearchParams()
   const [opened, setOpened] = useState<DiarioEntry | null>(null)
-  const [pendingDelete, setPendingDelete] = useState<DiarioEntry | null>(null)
 
   const filter = readFilter(params.get(TYPE_PARAM))
   const visible = filter === ALL_TYPES ? diario.entries : diario.entries.filter((entry) => entry.entryType === filter)
@@ -61,11 +59,6 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
       },
       { replace: true },
     )
-  }
-
-  function confirmDelete() {
-    if (!pendingDelete) return
-    diario.delete(pendingDelete.id, { onSuccess: () => setPendingDelete(null) })
   }
 
   return (
@@ -98,7 +91,7 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
           onRetry={() => diario.refetch()}
           onClearFilter={() => setFilter(ALL_TYPES)}
           onOpen={setOpened}
-          onDelete={setPendingDelete}
+          onDelete={diario.remove}
         />
 
         {diario.hasNextPage && (
@@ -109,7 +102,6 @@ export default function DiarioDaObra({ projectId }: { projectId: number }) {
       </div>
 
       <DiaryEntryModal projectId={projectId} entry={opened} attachment={openedAttachment} onClose={() => setOpened(null)} />
-      <DeleteDiaryModal entry={pendingDelete} isDeleting={diario.isDeleting} onCancel={() => setPendingDelete(null)} onConfirm={confirmDelete} />
     </div>
   )
 }

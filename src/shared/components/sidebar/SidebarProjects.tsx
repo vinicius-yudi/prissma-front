@@ -34,7 +34,7 @@ export function SidebarProjects({ canCreate }: SidebarProjectsProps) {
 
   return (
     <div className="mt-8 min-h-0 flex-1 overflow-y-auto px-3">
-      <p className="px-3 pb-2 text-[12px] font-semibold text-ink-3">{t("sidebar.inProgress")}</p>
+      <p className="px-3 pb-2 text-[12px] font-semibold text-meta">{t("sidebar.inProgress")}</p>
 
       {active.map((project) => {
         const late =
@@ -55,7 +55,7 @@ export function SidebarProjects({ canCreate }: SidebarProjectsProps) {
         <button
           type="button"
           onClick={() => navigate("/obras?nova=1")}
-          className="mt-1 flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 text-[13.5px] text-ink-3 transition-colors hover:bg-raised hover:text-ink"
+          className="mt-1 flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 text-[13.5px] text-meta transition-colors hover:bg-raised hover:text-ink"
         >
           <Plus size={16} />
           {t("sidebar.newObra")}

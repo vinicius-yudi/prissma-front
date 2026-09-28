@@ -1,7 +1,5 @@
 {
   "header": {
-    "search": "Search projects...",
-    "searchClear": "Clear search",
     "themeLight": "Switch to light mode",
     "themeDark": "Switch to dark mode",
     "readOnly": "Read-only for your role"
@@ -36,9 +34,6 @@
       "logout": "Logout",
       "help": "Help"
     },
-    "allObras": "All projects",
-    "groupWorkspace": "Workspace",
-    "groupObra": "In this project",
     "accountsLabel": "Accounts",
     "unavailable": "Unavailable",
     "accountsNew": "New account",
@@ -50,7 +45,6 @@
     "newObra": "New project"
   },
   "dashboard": {
-    "title": "Control Panel",
     "inProgressTitle": "Projects in progress",
     "inProgressEmpty": "No projects in progress",
     "greeting": {
@@ -125,13 +119,7 @@
       "lateStages_other": "{{count}} stages late"
     },
     "editModal": {
-      "title": "Edit Project",
-      "description": "Update the project information.",
-      "status": "Status",
-      "statusPlaceholder": "Select a status",
-      "save": "Save changes",
-      "saving": "Saving...",
-      "cancel": "Cancel"
+      "status": "Status"
     },
     "deleteModal": {
       "title": "Delete Project",
@@ -164,6 +152,10 @@
     "newCard": {
       "title": "Start a new project",
       "body": "Details and address in two steps"
+    },
+    "toasts": {
+      "deleted": "Project deleted.",
+      "deleteError": "Could not delete the project."
     }
   },
   "login": {
@@ -172,7 +164,6 @@
     "email": "Email",
     "emailPlaceholder": "name@company.com",
     "password": "Password",
-    "passwordPlaceholder": "Enter your password",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "forgotPassword": "Forgot password",
@@ -217,12 +208,8 @@
     }
   },
   "registerWork": {
-    "title": "Project Registration",
-    "subtitle": "Define the structural and chronological information for your new project.",
     "name": "Project Name",
     "namePlaceholder": "E.g.: Aurora Residential",
-    "address": "Full Address",
-    "addressPlaceholder": "Street, Number, District, City - State",
     "type": "Project Type",
     "typePlaceholder": "Select a type",
     "typeResidential": "Residential",
@@ -235,10 +222,7 @@
     "landArea": "Land Area (m²)",
     "builtArea": "Built Area (m²)",
     "startDate": "Planned Start Date",
-    "endDate": "Planned End Date",
-    "save": "Save Project",
-    "saving": "Saving...",
-    "cancel": "Cancel"
+    "endDate": "Planned End Date"
   },
   "projectModal": {
     "createTitle": "New Project",
@@ -267,7 +251,9 @@
     "cidadePlaceholder": "City name",
     "uf": "State",
     "currentAddress": "Current address",
-    "cepLooking": "Looking up postal code"
+    "cepLooking": "Looking up postal code",
+    "cepNotFound": "ZIP code not found.",
+    "cepError": "Could not look up the ZIP code."
   },
   "forgotPassword": {
     "title": "Reset password",
@@ -286,21 +272,17 @@
     "subtitle": "Create a new password for your account.",
     "newPassword": "New password",
     "confirmPassword": "Confirm password",
-    "passwordPlaceholder": "••••••••",
     "submit": "Reset password",
     "submitting": "Saving",
-    "backToLogin": "Back to login",
     "success": "Password reset. Sign in with the new password."
   },
   "notFound": {
     "code": "404",
     "title": "Page not found",
-    "description": "The page you are looking for does not exist or has been moved.",
     "action": "Back to home",
     "body": "The address may have changed or the page was removed."
   },
   "obra": {
-    "back": "Back",
     "edit": "Edit project",
     "delete": "Delete",
     "notFound": "Project not found",
@@ -319,39 +301,13 @@
       "chat": "Chat"
     },
     "visaoGeral": {
-      "title": "Project Summary",
-      "totalProgress": "Total Progress",
-      "location": "Location",
-      "deadline": "Final deadline",
-      "deadlineOverdue": "Overdue",
-      "areas": "Areas",
-      "landArea": "Land",
-      "stages": "Stages",
-      "stagesProgress": "Stage Progress",
-      "total": "Total",
-      "inProgress": "In progress",
-      "completed": "Completed",
-      "currentStage": "Current work front",
-      "executed": "Executed",
-      "team": "Members linked",
-      "cycle": "Project cycle",
       "manageStages": "Edit stages",
       "budget": "Budget",
       "seeExpenses": "Details",
       "noBudget": "No budget registered.",
-      "ofPlanned": "of {{planned}} planned",
       "allocatedTeams": "Team",
       "seeTeams": "Manage",
       "noTeam": "No members linked.",
-      "lateBy_one": "⚠ {{count}} day past due",
-      "lateBy_other": "⚠ {{count}} days past due",
-      "completedLabel": "completed",
-      "deadlineDeviation_one": "{{count}} day of projected slippage",
-      "deadlineDeviation_other": "{{count}} days of projected slippage",
-      "stageOf": "stage {{index}} of {{total}}",
-      "ofBudget": "{{percent}}% of the budget",
-      "headcount_one": "{{count}} person on site",
-      "headcount_other": "{{count}} people on site",
       "recentDocs": "Recent documents",
       "seeAllDocs": "See all",
       "noDocs": "No files uploaded yet.",
@@ -415,13 +371,7 @@
       "emptyFiltered": "No files of this type.",
       "showAll": "Show all",
       "downloadFile": "Download {{name}}",
-      "deleteFile": "Delete {{name}}",
-      "deleteModal": {
-        "title": "Delete file",
-        "message": "Delete \"{{name}}\"? The file leaves the project and cannot be recovered.",
-        "cancel": "Cancel",
-        "confirm": "Delete"
-      }
+      "deleteFile": "Delete {{name}}"
     },
     "propostas": {
       "title": "Proposals",
@@ -622,14 +572,7 @@
         "shortcut": "Ctrl + Enter also logs it"
       },
       "actions": {
-        "delete": "Delete entry",
-        "cancel": "Cancel"
-      },
-      "deleteModal": {
-        "title": "Delete entry",
-        "message": "Delete this diary entry? This cannot be undone.",
-        "confirm": "Delete",
-        "deleting": "Deleting..."
+        "delete": "Delete entry"
       },
       "toasts": {
         "created": "Entry saved successfully!",
@@ -640,8 +583,6 @@
       "details": {
         "open": "View {{type}} entry details",
         "title": "Entry details",
-        "responsible": "Responsible",
-        "description": "Description",
         "attachment": "Attachment",
         "noAttachment": "No attachment on this entry.",
         "attachmentUnavailable": "Attachment details are unavailable.",
@@ -680,7 +621,6 @@
       }
     },
     "orcamento": {
-      "title": "Budget",
       "empty": {
         "title": "No budget created yet",
         "description": "Define the planned total to start tracking expenses for this project.",
@@ -772,15 +712,14 @@
         "expenseDeleted": "Expense removed.",
         "categoryExceededWarning": "Warning: this category exceeded its planned amount.",
         "budgetExceededWarning": "Warning: the total budget was exceeded.",
-        "alreadyExists": "This project already has a budget."
+        "alreadyExists": "This project already has a budget.",
+        "expenseDeleteError": "Could not delete the expense."
       },
       "delete": {
         "budgetTitle": "Delete budget",
         "budgetMessage": "Are you sure? All linked categories and expenses will be removed.",
         "itemTitle": "Delete category",
-        "itemMessage": "Deleting \"{{name}}\" also removes all its expenses.",
-        "expenseTitle": "Delete expense",
-        "expenseMessage": "Delete \"{{name}}\"? This cannot be undone."
+        "itemMessage": "Deleting \"{{name}}\" also removes all its expenses."
       },
       "errors": {
         "loadFailed": "Failed to load the budget.",
@@ -827,10 +766,7 @@
       }
     },
     "etapas": {
-      "title": "Stages",
-      "empty": "No stages registered.",
       "tasksEmpty": "No tasks in this stage.",
-      "tasks": "Tasks",
       "actions": {
         "create": "New Stage",
         "edit": "Edit",
@@ -843,9 +779,6 @@
         "moveDown": "Move down"
       },
       "card": {
-        "progress": "Progress",
-        "tasksCount_one": "{{count}} task",
-        "tasksCount_other": "{{count}} tasks",
         "photosCount_one": "{{count}} photo",
         "photosCount_other": "{{count}} photos",
         "progressOf": "Progress of {{name}}"
@@ -874,12 +807,6 @@
         },
         "orderHint": "Position in the project cycle."
       },
-      "deleteModal": {
-        "title": "Delete stage",
-        "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-        "confirm": "Delete",
-        "deleting": "Deleting..."
-      },
       "toasts": {
         "createSuccess": "Stage created successfully!",
         "createError": "Failed to create stage",
@@ -900,17 +827,6 @@
         "IN_PROGRESS": "In progress",
         "DONE": "Done",
         "BLOCKED": "Blocked"
-      },
-      "tarefaStatus": {
-        "TODO": "To do",
-        "IN_PROGRESS": "In progress",
-        "DONE": "Done",
-        "BLOCKED": "Blocked"
-      },
-      "priority": {
-        "HIGH": "High",
-        "MEDIUM": "Medium",
-        "LOW": "Low"
       },
       "emptyTitle": "No stages yet",
       "emptyHint": "Create the stages of the build cycle to track deadlines, progress and delays.",
@@ -959,10 +875,7 @@
       "unassigned": "Unassigned",
       "noStagesTitle": "No stages yet",
       "noStagesHint": "Tasks hang off the project stages. Create the first work front to start logging tasks.",
-      "deleteTitle": "Delete task",
-      "deleteDescription": "Are you sure you want to delete the task \"{{title}}\"?",
       "cancel": "Cancel",
-      "confirmDelete": "Delete",
       "filters": {
         "LATE": "Late",
         "mine": "Assigned to me",
@@ -1090,12 +1003,6 @@
         "cancel": "Cancel",
         "remove": "Remove {{name}} from the project",
         "addMemberShort": "Person"
-      },
-      "removeModal": {
-        "title": "Remove person",
-        "message": "Are you sure you want to remove {{name}} from this project?",
-        "confirm": "Remove",
-        "removing": "Removing..."
       },
       "addModal": {
         "searchPlaceholder": "Search by name or e-mail...",
@@ -1239,22 +1146,13 @@
     "description": "Your role in this project does not reach this module. Ask the project owner if you need access.",
     "action": "Back to projects"
   },
-  "pessoas": {
-    "membersTitle": "Project members",
-    "membersHint": "Who has access to this work front, and with which role.",
-    "membersEmpty": "No members linked yet.",
-    "membersError": "Could not load members."
-  },
   "mobile": {
     "backTo": "Back to {{target}}",
-    "menu": "Menu",
-    "menuTitle": "All sections",
     "nav": {
       "pessoas": "People"
     }
   },
   "workspace": {
-    "newAccount": "New account",
     "createTitle": "Create new account",
     "createHint": "An account keeps projects, team and clients separate from other workspaces.",
     "nameLabel": "Workspace name",
@@ -1262,7 +1160,6 @@
     "create": "Create account",
     "creating": "Creating…",
     "createError": "Could not create the account.",
-    "switchError": "Could not switch accounts.",
     "roles": {
       "OWNER": "Owner",
       "ADMIN": "Administrator",
@@ -1310,7 +1207,6 @@
     "close": "Close",
     "dismiss": "Dismiss",
     "undo": "Undo",
-    "expectedToday": "Expected by today: {{value}}%",
     "facadeScale": "Elevation · scale 1:100"
   },
   "palette": {
@@ -1337,7 +1233,22 @@
     "nameMin": "Enter your full name.",
     "passwordRules": "The password doesn't meet all the rules below yet.",
     "confirmRequired": "Repeat the password to confirm.",
-    "passwordMismatch": "Passwords don't match."
+    "passwordMismatch": "Passwords don't match.",
+    "project": {
+      "titleMin": "The name needs at least 3 characters.",
+      "typeRequired": "Pick the project type.",
+      "categoryRequired": "Pick the category.",
+      "areaPositive": "The area must be greater than zero.",
+      "startRequired": "Enter the planned start.",
+      "endRequired": "Enter the planned end.",
+      "cepLength": "The ZIP code has 8 digits.",
+      "streetRequired": "Enter the street.",
+      "numberRequired": "Enter the number.",
+      "districtRequired": "Enter the district.",
+      "cityRequired": "Enter the city.",
+      "stateInvalid": "Use the state abbreviation (e.g. PR).",
+      "endAfterStart": "The end must be after the start."
+    }
   },
   "auth": {
     "passwordRules": {
@@ -1351,8 +1262,17 @@
   "brand": {
     "name": "PRISSMA",
     "headline": "Total control",
-    "headlineSuffix": "of your projects.",
-    "tagline": "From the initial budget",
-    "taglineSuffix": "to the handover."
+    "headlineSuffix": "of your projects."
+  },
+  "perfil": {
+    "toasts": {
+      "success": "Profile updated.",
+      "noChanges": "No changes to save.",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordUppercase": "The password needs at least one uppercase letter.",
+      "passwordLowercase": "The password needs at least one lowercase letter.",
+      "passwordDigit": "The password needs at least one number.",
+      "passwordSpecial": "The password needs at least one special character."
+    }
   }
 }
