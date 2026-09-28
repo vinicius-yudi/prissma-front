@@ -1,5 +1,6 @@
-import { screen, waitFor, within } from "@testing-library/react"
+import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
+import { toast } from "react-toastify"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getMyProfile } from "@/shared/services/user.service"
@@ -7,31 +8,23 @@ import { GlobalRole, type Role } from "@/shared/types/user"
 import { WorkspaceRole } from "@/shared/types/workspace"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
-import {
-  addEquipeMember,
-  getAvailableUsers,
-  getEquipeMembers,
-  removeEquipeMember,
-} from "../../services/equipes.service"
+import { addEquipeMember, getAvailableUsers, getEquipeMembers, removeEquipeMember, updateMemberRole } from "../../services/equipes.service"
 import {
   ProjectPermission,
   ProjectRole,
   getRolePermissions,
   updateRolePermissions,
+  type ProjectPermission as Permission,
 } from "../../services/projectPermissions.service"
-import {
-  RoleInProject,
-  type AvailableUser,
-  type ConstructionProjectMember,
-} from "../../types/equipes"
+import { RoleInProject, type AvailableUser, type ConstructionProjectMember } from "../../types/equipes"
 import { EquipesTab } from "../EquipesTab"
-import { RolePermissionsEditor } from "../RolePermissionsEditor"
 
 vi.mock("../../services/equipes.service", () => ({
   getEquipeMembers: vi.fn(),
   addEquipeMember: vi.fn(),
   removeEquipeMember: vi.fn(),
   getAvailableUsers: vi.fn(),
+  updateMemberRole: vi.fn(),
 }))
 vi.mock("@/shared/services/user.service", () => ({ getMyProfile: vi.fn() }))
 vi.mock("../../services/projectPermissions.service", async (importOriginal) => ({
@@ -46,19 +39,14 @@ vi.mock("react-toastify", () => ({
 const listarMembros = vi.mocked(getEquipeMembers)
 const adicionar = vi.mocked(addEquipeMember)
 const remover = vi.mocked(removeEquipeMember)
-const listarDisponiveis = vi.mocked(getAvailableUsers)
-const perfil = vi.mocked(getMyProfile)
+const trocarPapel = vi.mocked(updateMemberRole)
+const disponiveis = vi.mocked(getAvailableUsers)
 const permissoes = vi.mocked(getRolePermissions)
 const salvarPermissoes = vi.mocked(updateRolePermissions)
 
 const EU = { id: 1, name: "Ana Souza", email: "ana@alfa.com", role: GlobalRole.ENG }
 
-function membro(
-  id: number,
-  nome: string,
-  role: Role = GlobalRole.ENG,
-  roleInProject: RoleInProject = RoleInProject.ENGINEER,
-): ConstructionProjectMember {
+function membro(id: number, nome: string, roleInProject: RoleInProject = RoleInProject.ENGINEER, role: Role = GlobalRole.ENG): ConstructionProjectMember {
   return {
     id,
     constructionProjectId: 7,
@@ -69,428 +57,225 @@ function membro(
   }
 }
 
-function disponivel(id: number, nome: string, role: WorkspaceRole): AvailableUser {
-  return { id, name: nome, email: `${id}@alfa.com`, role }
+function disponivel(id: number, nome: string, role: WorkspaceRole = WorkspaceRole.MEMBER): AvailableUser {
+  return { id, name: nome, email: `${nome.toLowerCase()}@alfa.com`, role }
+}
+
+/** Permissões padrão por papel, como o backend devolve. */
+const PADRAO: Record<ProjectRole, Permission[]> = {
+  OWNER: [ProjectPermission.VIEW_PROJECT, ProjectPermission.MANAGE_MEMBERS],
+  ENGINEER: [ProjectPermission.VIEW_PROJECT, ProjectPermission.MANAGE_MEMBERS, ProjectPermission.MANAGE_DIARY],
+  ARCHITECT: [ProjectPermission.VIEW_PROJECT],
+  FOREMAN: [ProjectPermission.VIEW_PROJECT, ProjectPermission.MANAGE_TASKS],
 }
 
 function render() {
   return renderWithProviders(<EquipesTab obraId={7} />)
 }
 
-/** Monta e espera sair do esqueleto de carregamento dos membros. */
 async function renderCarregado() {
   const view = render()
-  await screen.findByText("Equipe da obra")
+  await screen.findByRole("region", { name: "Pessoas" })
   return view
 }
 
-function secao(titulo: string) {
-  return within(screen.getByText(titulo).closest("section") as HTMLElement)
+function linhas() {
+  return within(screen.getByRole("region", { name: "Pessoas" })).getAllByRole("listitem")
 }
 
 beforeEach(() => {
   vi.resetAllMocks()
-  // EU entra como membro por padrão: é do vínculo dele com a obra que
-  // `useProjectPermissions` deriva o papel — sem isso a query de permissões
-  // nem dispara e a tela cai no perfil sem ação nenhuma.
-  listarMembros.mockResolvedValue([membro(1, "Ana Souza")])
-  listarDisponiveis.mockResolvedValue([])
-  perfil.mockResolvedValue(EU)
-  permissoes.mockResolvedValue({
-    role: ProjectRole.ENGINEER,
-    permissions: [ProjectPermission.VIEW_PROJECT, ProjectPermission.MANAGE_MEMBERS],
-  })
-  adicionar.mockResolvedValue({
-    id: 99,
-    constructionProjectId: 7,
-    user: { id: 2, name: "Bia", email: "bia@alfa.com", role: GlobalRole.ENG },
-    roleInProject: RoleInProject.ENGINEER,
-    membershipStatus: "ACTIVE",
-    joinedAt: "2026-01-01T00:00:00Z",
-  })
+  vi.mocked(getMyProfile).mockResolvedValue(EU)
+  listarMembros.mockResolvedValue([
+    membro(1, "Ana Souza"),
+    membro(2, "Carlos Lima", RoleInProject.FOREMAN),
+    membro(3, "Dona Marta", RoleInProject.OWNER),
+    { ...membro(4, "Rui Cliente", RoleInProject.USER, GlobalRole.USER), membershipStatus: "PENDING" },
+  ])
+  permissoes.mockImplementation(async (_id, role) => ({ role, permissions: PADRAO[role] }))
+  disponiveis.mockResolvedValue([disponivel(8, "Beatriz"), disponivel(9, "Caio", WorkspaceRole.CLIENT)])
+  adicionar.mockImplementation(async (_id, data) => ({ ...membro(data.userId, "Beatriz"), membershipStatus: "ACTIVE" }))
+  trocarPapel.mockImplementation(async (_id, memberId, role) => membro(memberId, "x", role))
   remover.mockResolvedValue(undefined)
-  salvarPermissoes.mockResolvedValue({ role: ProjectRole.ENGINEER, permissions: [] })
+  salvarPermissoes.mockImplementation(async (_id, role, perms) => ({ role, permissions: perms }))
 })
 
-describe("<EquipesTab /> — seções", () => {
-  it("mostra o esqueleto enquanto os membros carregam", () => {
+describe("<EquipesTab /> — pessoas", () => {
+  it("mostra o esqueleto enquanto carrega", () => {
     listarMembros.mockImplementation(() => new Promise(() => {}))
-
     const { container } = render()
-
-    expect(container.querySelectorAll(".animate-pulse")).toHaveLength(2)
+    expect(container.querySelector(".animate-pulse")).toBeInTheDocument()
   })
 
-  it("desenha os dois grupos", async () => {
+  it("ordena pelo papel, marca você e o convite pendente", async () => {
     await renderCarregado()
 
-    expect(screen.getByText("Equipe da obra")).toBeInTheDocument()
-    expect(screen.getByText("Clientes")).toBeInTheDocument()
+    const nomes = linhas().map((li) => li.querySelector("p")?.textContent)
+    expect(nomes[0]).toContain("Dona Marta")
+    expect(nomes[1]).toContain("Ana Souza")
+    expect(nomes[1]).toContain("você")
+    expect(nomes[3]).toContain("Rui Cliente")
+    expect(screen.getByText("Convite pendente")).toBeInTheDocument()
   })
 
-  /**
-   * O grupo é decidido pelo papel GLOBAL da conta, não pelo papel na obra:
-   * cliente é quem tem conta de cliente, mesmo que esteja vinculado à obra
-   * com outro papel.
-   */
-  it("separa colaboradores de clientes pelo papel da conta", async () => {
-    listarMembros.mockResolvedValue([
-      membro(1, "Ana Souza", GlobalRole.ENG),
-      membro(2, "Caio Reis", GlobalRole.ARQ),
-      membro(3, "Cliente Alfa", GlobalRole.USER, RoleInProject.USER),
-    ])
-
+  it("troca o papel pelo select, mas não o seu nem o do responsável", async () => {
     await renderCarregado()
 
-    expect(secao("Equipe da obra").getByText("Ana Souza")).toBeInTheDocument()
-    expect(secao("Equipe da obra").getByText("Caio Reis")).toBeInTheDocument()
-    expect(secao("Clientes").queryByText("Ana Souza")).not.toBeInTheDocument()
+    expect(screen.queryByRole("combobox", { name: "Papel de Ana Souza" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("combobox", { name: "Papel de Dona Marta" })).not.toBeInTheDocument()
+
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "Papel de Carlos Lima" }), RoleInProject.ARCHITECT)
+    await waitFor(() => expect(trocarPapel).toHaveBeenCalledWith(7, 2, RoleInProject.ARCHITECT))
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Carlos agora é arquiteto."))
   })
 
-  // A equipe abre por padrão; clientes fica recolhido — é a lista que se
-  // consulta menos.
-  it("abre a equipe e mantém clientes recolhido", async () => {
-    listarMembros.mockResolvedValue([
-      membro(1, "Ana Souza"),
-      membro(3, "Cliente Alfa", GlobalRole.USER, RoleInProject.USER),
-    ])
-
+  it("remove depois de confirmar", async () => {
     await renderCarregado()
 
-    expect(screen.getByText("Ana Souza")).toBeInTheDocument()
-    expect(screen.queryByText("Cliente Alfa")).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Remover Carlos Lima da obra" }))
+    const dialog = within(await screen.findByRole("dialog"))
+    await userEvent.click(dialog.getByRole("button", { name: "Remover" }))
+
+    await waitFor(() => expect(remover).toHaveBeenCalledWith(7, 2))
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument())
   })
 
-  it("abre o grupo de clientes no clique", async () => {
-    listarMembros.mockResolvedValue([
-      membro(3, "Cliente Alfa", GlobalRole.USER, RoleInProject.USER),
-    ])
+  it("mostra o erro do servidor ao trocar papel", async () => {
+    trocarPapel.mockRejectedValue(new Error("Sem permissão."))
     await renderCarregado()
-
-    await userEvent.click(screen.getByText("Clientes"))
-
-    expect(screen.getByText("Cliente Alfa")).toBeInTheDocument()
-  })
-
-  it("conta as pessoas de cada grupo", async () => {
-    listarMembros.mockResolvedValue([membro(1, "Ana Souza"), membro(2, "Caio Reis")])
-
-    await renderCarregado()
-
-    expect(secao("Equipe da obra").getByText("2 pessoas")).toBeInTheDocument()
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "Papel de Carlos Lima" }), RoleInProject.USER)
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Sem permissão."))
   })
 })
 
-describe("<EquipesTab /> — remover integrante", () => {
-  beforeEach(() => {
-    listarMembros.mockResolvedValue([
-      membro(1, "Ana Souza"),
-      membro(2, "Dono Beta", GlobalRole.ENG, RoleInProject.OWNER),
-    ])
+describe("<EquipesTab /> — adicionar", () => {
+  it("busca, escolhe a pessoa e o papel e adiciona", async () => {
+    await renderCarregado()
+    await userEvent.click(within(screen.getByRole("region", { name: "Pessoas" })).getByRole("button", { name: /Adicionar pessoa/ }))
+    const dialog = within(await screen.findByRole("dialog", { name: "Adicionar à obra" }))
+
+    await dialog.findByRole("option", { name: /Beatriz/ })
+    await userEvent.type(dialog.getByPlaceholderText(/Pesquise/), "zzz")
+    expect(dialog.getByText("Ninguém encontrado com essa busca.")).toBeInTheDocument()
+    await userEvent.clear(dialog.getByPlaceholderText(/Pesquise/))
+
+    await userEvent.click(dialog.getByRole("option", { name: /Beatriz/ }))
+    expect(dialog.getByRole("radio", { name: /Mestre de obras/ })).toHaveTextContent("2 de 10 permissões")
+    await userEvent.click(dialog.getByRole("radio", { name: /Mestre de obras/ }))
+    await userEvent.click(dialog.getByRole("button", { name: "Adicionar" }))
+
+    await waitFor(() => expect(adicionar).toHaveBeenCalledWith(7, { userId: 8, roleInProject: RoleInProject.FOREMAN }))
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument())
   })
 
-  // O dono não se remove da própria obra — a obra ficaria sem responsável.
-  it("não oferece remover o dono", async () => {
+  it("cliente da conta só entra como cliente", async () => {
     await renderCarregado()
+    await userEvent.click(within(screen.getByRole("region", { name: "Pessoas" })).getByRole("button", { name: /Adicionar pessoa/ }))
+    const dialog = within(await screen.findByRole("dialog"))
 
-    expect(
-      screen.queryByRole("button", { name: "Remover Dono Beta da obra" }),
-    ).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Remover Ana Souza da obra" })).toBeInTheDocument()
+    await userEvent.click(await dialog.findByRole("option", { name: /Caio/ }))
+    expect(dialog.getByRole("radio", { name: /Cliente/ })).toHaveAttribute("aria-checked", "true")
+    expect(dialog.getByRole("radio", { name: /Engenheiro/ })).toBeDisabled()
   })
 
-  it("pede confirmação antes de remover", async () => {
+  it("avisa quando todos da conta já estão na obra", async () => {
+    disponiveis.mockResolvedValue([disponivel(1, "Ana Souza")])
     await renderCarregado()
-
-    await userEvent.click(screen.getByRole("button", { name: "Remover Ana Souza da obra" }))
-
-    expect(screen.getByRole("heading", { name: "Remover pessoa" })).toBeInTheDocument()
-    expect(remover).not.toHaveBeenCalled()
-  })
-
-  it("remove pelo id do vínculo ao confirmar", async () => {
-    await renderCarregado()
-    await userEvent.click(screen.getByRole("button", { name: "Remover Ana Souza da obra" }))
-
-    await userEvent.click(screen.getByRole("button", { name: "Remover" }))
-
-    await waitFor(() => expect(remover).toHaveBeenCalledWith(7, 1))
-  })
-
-  it("desiste sem remover no cancelar", async () => {
-    await renderCarregado()
-    await userEvent.click(screen.getByRole("button", { name: "Remover Ana Souza da obra" }))
-
-    await userEvent.click(screen.getByRole("button", { name: "Cancelar" }))
-
-    expect(screen.queryByRole("heading", { name: "Remover pessoa" })).not.toBeInTheDocument()
-    expect(remover).not.toHaveBeenCalled()
+    await userEvent.click(within(screen.getByRole("region", { name: "Pessoas" })).getByRole("button", { name: /Adicionar pessoa/ }))
+    expect(await screen.findByText("Todos da conta já estão nesta obra.")).toBeInTheDocument()
   })
 })
 
-describe("<EquipesTab /> — adicionar integrante", () => {
-  beforeEach(() => {
-    listarDisponiveis.mockResolvedValue([
-      disponivel(2, "Bia Lima", WorkspaceRole.MEMBER),
-      disponivel(3, "Construtora Beta", WorkspaceRole.CLIENT),
-    ])
-  })
-
-  /**
-   * O grupo de clientes nasce recolhido, então o botão de adicionar dele só
-   * existe depois de abrir a seção.
-   */
-  async function abrirModal(secaoLabel = "adicionar integrante") {
+describe("<EquipesTab /> — papéis e permissões", () => {
+  it("mostra a matriz com as 10 permissões e quantos ocupam cada papel", async () => {
     await renderCarregado()
-    if (secaoLabel !== "adicionar integrante") {
-      await userEvent.click(screen.getByText("Clientes"))
-    }
-    await userEvent.click(screen.getByRole("button", { name: new RegExp(secaoLabel, "i") }))
-  }
+    const matriz = within(await screen.findByRole("region", { name: "Papéis e permissões" }))
 
-  /** O último combobox é o do modal; o primeiro é o seletor de papel do painel. */
-  function seletorDoModal() {
-    const todos = screen.getAllByRole("combobox")
-    return todos[todos.length - 1]
-  }
+    expect(await matriz.findAllByRole("row")).toHaveLength(11)
+    expect(matriz.getByRole("button", { name: "Engenheiro: Escrever no diário da obra" })).toHaveAttribute("aria-pressed", "true")
+    expect(matriz.getByRole("columnheader", { name: /Mestre de obras/ })).toHaveTextContent("1")
+  })
 
-  // /workspaces/members é vetado a CLIENT: só busca quando o modal abre.
-  it("só busca os disponíveis ao abrir o modal", async () => {
+  it("salva só os papéis alterados, preservando o que já tinham", async () => {
     await renderCarregado()
+    const matriz = within(await screen.findByRole("region", { name: "Papéis e permissões" }))
 
-    expect(listarDisponiveis).not.toHaveBeenCalled()
+    await userEvent.click(await matriz.findByRole("button", { name: "Arquiteto: Criar e atualizar tarefas" }))
+    await userEvent.click(matriz.getByRole("button", { name: "Salvar alterações" }))
 
-    await userEvent.click(screen.getByRole("button", { name: /adicionar integrante/i }))
-
-    await waitFor(() => expect(listarDisponiveis).toHaveBeenCalled())
+    await waitFor(() => expect(salvarPermissoes).toHaveBeenCalledTimes(1))
+    expect(salvarPermissoes).toHaveBeenCalledWith(7, ProjectRole.ARCHITECT, [ProjectPermission.VIEW_PROJECT, ProjectPermission.MANAGE_TASKS])
   })
 
-  it("lista só colaboradores no modal da equipe", async () => {
-    await abrirModal()
+  it("descarta o rascunho", async () => {
+    await renderCarregado()
+    const matriz = within(await screen.findByRole("region", { name: "Papéis e permissões" }))
+    const celula = await matriz.findByRole("button", { name: "Arquiteto: Criar e atualizar tarefas" })
 
-    expect(await screen.findByText("Bia Lima")).toBeInTheDocument()
-    expect(screen.queryByText("Construtora Beta")).not.toBeInTheDocument()
+    await userEvent.click(celula)
+    expect(celula).toHaveAttribute("aria-pressed", "true")
+    await userEvent.click(matriz.getByRole("button", { name: "Descartar" }))
+    expect(celula).toHaveAttribute("aria-pressed", "false")
+    expect(salvarPermissoes).not.toHaveBeenCalled()
   })
 
-  it("lista só clientes no modal de clientes", async () => {
-    await abrirModal("adicionar cliente")
+  it("esmaece quem não ocupa o papel em foco", async () => {
+    await renderCarregado()
+    const matriz = within(await screen.findByRole("region", { name: "Papéis e permissões" }))
 
-    expect(await screen.findByText("Construtora Beta")).toBeInTheDocument()
-    expect(screen.queryByText("Bia Lima")).not.toBeInTheDocument()
+    fireEvent.mouseEnter(await matriz.findByRole("columnheader", { name: /Mestre de obras/ }))
+    const carlos = linhas().find((li) => li.textContent?.includes("Carlos Lima"))
+    const ana = linhas().find((li) => li.textContent?.includes("Ana Souza"))
+    expect(carlos).not.toHaveClass("opacity-40")
+    expect(ana).toHaveClass("opacity-40")
   })
 
-  it("mantém o confirmar travado até alguém ser escolhido", async () => {
-    await abrirModal()
-    await screen.findByText("Bia Lima")
-
-    expect(screen.getByRole("button", { name: "Adicionar" })).toBeDisabled()
-  })
-
-  it("adiciona com o papel escolhido no seletor", async () => {
-    await abrirModal()
-    await userEvent.click(await screen.findByText("Bia Lima"))
-
-    await userEvent.selectOptions(seletorDoModal(), RoleInProject.FOREMAN)
-    await userEvent.click(screen.getByRole("button", { name: "Adicionar" }))
-
-    await waitFor(() =>
-      expect(adicionar).toHaveBeenCalledWith(7, {
-        userId: 2,
-        roleInProject: RoleInProject.FOREMAN,
-      }),
-    )
-  })
-
-  // Pelo grupo de clientes o papel é fixo: quem entra por ali é cliente, e o
-  // seletor de papel nem aparece.
-  it("adiciona cliente com papel fixo, sem oferecer o seletor", async () => {
-    await abrirModal("adicionar cliente")
-    await userEvent.click(await screen.findByText("Construtora Beta"))
-
-    expect(screen.queryByText("Papel na obra")).not.toBeInTheDocument()
-
-    await userEvent.click(screen.getByRole("button", { name: "Adicionar" }))
-
-    await waitFor(() =>
-      expect(adicionar).toHaveBeenCalledWith(7, {
-        userId: 3,
-        roleInProject: RoleInProject.USER,
-      }),
-    )
-  })
-
-  it("filtra a lista pela busca", async () => {
-    listarDisponiveis.mockResolvedValue([
-      disponivel(2, "Bia Lima", WorkspaceRole.MEMBER),
-      disponivel(4, "Caio Reis", WorkspaceRole.MEMBER),
-    ])
-    await abrirModal()
-    await screen.findByText("Bia Lima")
-
-    await userEvent.type(screen.getByPlaceholderText(/Pesquise por nome/), "Caio")
-
-    expect(screen.getByText("Caio Reis")).toBeInTheDocument()
-    expect(screen.queryByText("Bia Lima")).not.toBeInTheDocument()
-  })
-
-  it("avisa quando a busca não encontra ninguém", async () => {
-    await abrirModal()
-    await screen.findByText("Bia Lima")
-
-    await userEvent.type(screen.getByPlaceholderText(/Pesquise por nome/), "zzz")
-
-    expect(
-      screen.getByText("Nenhum colaborador encontrado com este critério."),
-    ).toBeInTheDocument()
-  })
-
-  it("avisa quando não há ninguém disponível", async () => {
-    listarDisponiveis.mockResolvedValue([])
-
-    await abrirModal()
-
-    expect(
-      await screen.findByText("Nenhum colaborador disponível para adicionar."),
-    ).toBeInTheDocument()
-  })
-
-  it("carrega mais resultados quando passam de cinco", async () => {
-    listarDisponiveis.mockResolvedValue(
-      Array.from({ length: 8 }, (_, i) =>
-        disponivel(i + 10, `Colaborador ${i + 1}`, WorkspaceRole.MEMBER),
-      ),
-    )
-    await abrirModal()
-    await screen.findByText("Colaborador 1")
-
-    await userEvent.click(screen.getByRole("button", { name: "Carregar mais resultados" }))
-
-    expect(screen.getByText("Colaborador 8")).toBeInTheDocument()
+  it("avisa quando a gravação falha", async () => {
+    salvarPermissoes.mockRejectedValue(new Error(""))
+    await renderCarregado()
+    const matriz = within(await screen.findByRole("region", { name: "Papéis e permissões" }))
+    await userEvent.click(await matriz.findByRole("button", { name: "Arquiteto: Criar e atualizar tarefas" }))
+    await userEvent.click(matriz.getByRole("button", { name: "Salvar alterações" }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível salvar as permissões."))
   })
 })
 
-describe("<EquipesTab /> — permissão de gerir", () => {
-  it("esconde adicionar e remover de quem não gerencia membros", async () => {
-    listarMembros.mockResolvedValue([membro(1, "Ana Souza")])
-    permissoes.mockResolvedValue({ role: ProjectRole.ENGINEER, permissions: [] })
-
+describe("<EquipesTab /> — falhas", () => {
+  it("avisa quando as permissões não carregam", async () => {
+    // O próprio papel (engenheiro) carrega — é o que dá acesso à matriz; os outros falham.
+    permissoes.mockImplementation(async (_id, role) => {
+      if (role !== ProjectRole.ENGINEER) throw new Error("falhou")
+      return { role, permissions: PADRAO.ENGINEER }
+    })
     await renderCarregado()
-
-    await waitFor(() =>
-      expect(
-        screen.queryByRole("button", { name: /adicionar integrante/i }),
-      ).not.toBeInTheDocument(),
-    )
-    expect(
-      screen.queryByRole("button", { name: "Remover Ana Souza da obra" }),
-    ).not.toBeInTheDocument()
+    expect(await screen.findByText("Não foi possível carregar as permissões.")).toBeInTheDocument()
   })
 
-  // O editor de permissões da obra exige a mesma permissão que o backend
-  // cobra no PUT.
-  it("esconde o editor de permissões de quem não gerencia membros", async () => {
-    permissoes.mockResolvedValue({ role: ProjectRole.ENGINEER, permissions: [] })
-
+  it("usa a mensagem padrão quando o servidor não explica", async () => {
+    adicionar.mockRejectedValue(new Error(""))
+    remover.mockRejectedValue(new Error(""))
     await renderCarregado()
 
-    await waitFor(() =>
-      expect(screen.queryByText("Permissões do papel")).not.toBeInTheDocument(),
-    )
-  })
+    await userEvent.click(screen.getByRole("button", { name: "Remover Carlos Lima da obra" }))
+    await userEvent.click(within(await screen.findByRole("dialog")).getByRole("button", { name: "Remover" }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível remover da obra."))
+    await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Cancelar" }))
 
-  it("libera tudo para o admin da plataforma, mesmo sem papel na obra", async () => {
-    perfil.mockResolvedValue({ ...EU, role: GlobalRole.ADMIN })
-    listarMembros.mockResolvedValue([])
-
-    await renderCarregado()
-
-    expect(
-      await screen.findByRole("button", { name: /adicionar integrante/i }),
-    ).toBeInTheDocument()
+    await userEvent.click(within(screen.getByRole("region", { name: "Pessoas" })).getByRole("button", { name: /Adicionar pessoa/ }))
+    const dialog = within(await screen.findByRole("dialog", { name: "Adicionar à obra" }))
+    await userEvent.click(await dialog.findByRole("option", { name: /Beatriz/ }))
+    await userEvent.click(dialog.getByRole("button", { name: "Adicionar" }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível adicionar à obra."))
   })
 })
 
-describe("<EquipesTab /> — permissões por papel", () => {
-  it("mostra o editor do papel selecionado", async () => {
+describe("<EquipesTab /> — sem gestão", () => {
+  it("quem não gerencia só vê as pessoas", async () => {
+    permissoes.mockImplementation(async (_id, role) => ({ role, permissions: [ProjectPermission.VIEW_PROJECT] }))
     await renderCarregado()
 
-    expect(await screen.findByText("Permissões do papel")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Salvar permissões" })).toBeInTheDocument()
-  })
-
-  it("recarrega as permissões ao trocar de papel", async () => {
-    await renderCarregado()
-    await screen.findByText("Permissões do papel")
-
-    const [seletorDePapel] = screen.getAllByRole("combobox")
-    await userEvent.selectOptions(seletorDePapel, ProjectRole.FOREMAN)
-
-    await waitFor(() => expect(permissoes).toHaveBeenCalledWith(7, ProjectRole.FOREMAN))
-  })
-
-  // Admin da plataforma para o painel aparecer mesmo com a consulta de
-  // permissões falhando — é ela que normalmente libera a tela.
-  it("avisa quando as permissões do papel não carregam", async () => {
-    perfil.mockResolvedValue({ ...EU, role: GlobalRole.ADMIN })
-    permissoes.mockRejectedValue(new Error("Erro 500"))
-
-    await renderCarregado()
-
-    expect(
-      await screen.findByText("Não foi possível carregar as permissões deste papel."),
-    ).toBeInTheDocument()
-  })
-})
-
-describe("<RolePermissionsEditor />", () => {
-  it("marca as permissões que o papel já tem", () => {
-    renderWithProviders(
-      <RolePermissionsEditor
-        projectId={7}
-        role={ProjectRole.ENGINEER}
-        initialPermissions={[ProjectPermission.MANAGE_TASKS]}
-      />,
-    )
-
-    expect(screen.getByRole("checkbox", { name: "Gerenciar tarefas" })).toBeChecked()
-    expect(screen.getByRole("checkbox", { name: "Gerenciar orçamento" })).not.toBeChecked()
-  })
-
-  // O PUT manda a lista COMPLETA, não um diff: desmarcar precisa sair do
-  // payload, senão a permissão nunca é revogada.
-  it("manda a lista completa depois de marcar e desmarcar", async () => {
-    renderWithProviders(
-      <RolePermissionsEditor
-        projectId={7}
-        role={ProjectRole.ENGINEER}
-        initialPermissions={[ProjectPermission.MANAGE_TASKS]}
-      />,
-    )
-
-    await userEvent.click(screen.getByRole("checkbox", { name: "Gerenciar tarefas" }))
-    await userEvent.click(screen.getByRole("checkbox", { name: "Visualizar projeto" }))
-    await userEvent.click(screen.getByRole("button", { name: "Salvar permissões" }))
-
-    await waitFor(() =>
-      expect(salvarPermissoes).toHaveBeenCalledWith(7, ProjectRole.ENGINEER, [
-        ProjectPermission.VIEW_PROJECT,
-      ]),
-    )
-  })
-
-  it("avisa o pai quando a gravação conclui", async () => {
-    const onSaved = vi.fn()
-    renderWithProviders(
-      <RolePermissionsEditor
-        projectId={7}
-        role={ProjectRole.ENGINEER}
-        initialPermissions={[]}
-        onSaved={onSaved}
-      />,
-    )
-
-    await userEvent.click(screen.getByRole("button", { name: "Salvar permissões" }))
-
-    await waitFor(() => expect(onSaved).toHaveBeenCalled())
+    await waitFor(() => expect(screen.queryByRole("button", { name: /Adicionar pessoa/ })).not.toBeInTheDocument())
+    expect(screen.queryByRole("region", { name: "Papéis e permissões" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument()
   })
 })

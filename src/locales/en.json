@@ -1076,27 +1076,12 @@
       }
     },
     "equipes": {
-      "rolesLink": "Roles and permissions",
-      "empty": "Nobody linked yet.",
-      "memberCount_one": "{{count}} person",
-      "memberCount_other": "{{count}} people",
-      "sections": {
-        "team": {
-          "title": "Project team",
-          "hint": "Engineers, architects and site foremen",
-          "add": "add member"
-        },
-        "client": {
-          "title": "Clients",
-          "hint": "Who follows the project on the client side",
-          "add": "add client"
-        }
-      },
+      "empty": "No one linked to the project yet.",
       "actions": {
-        "addMember": "Add member",
+        "addMember": "Add person",
         "cancel": "Cancel",
         "remove": "Remove {{name}} from the project",
-        "addMemberShort": "Member"
+        "addMemberShort": "Person"
       },
       "removeModal": {
         "title": "Remove person",
@@ -1106,22 +1091,48 @@
       },
       "addModal": {
         "searchPlaceholder": "Search by name or e-mail...",
-        "available": "Available users",
-        "loadMore": "Load more results",
+        "available": "Account members",
         "roleLabel": "Role on the project",
         "confirm": "Add",
-        "adding": "Adding...",
-        "team": {
-          "title": "Add member",
-          "hint": "Find and select who joins the project team.",
-          "noResults": "No collaborator matches this search.",
-          "noneAvailable": "No collaborator available to add."
-        },
-        "client": {
-          "title": "Add client",
-          "hint": "Find and select the client following this project.",
-          "noResults": "No client matches this search.",
-          "noneAvailable": "No client available to add."
+        "title": "Add to project",
+        "hint": "Pick someone from your account and their role on this project. You can change it later.",
+        "noResults": "No one matches this search.",
+        "noneAvailable": "Everyone in the account is already on this project.",
+        "permissionCount": "{{count}} of {{total}} permissions"
+      },
+      "people": "People",
+      "you": "you",
+      "pending": "Invite pending",
+      "roleOf": "{{name}}'s role",
+      "toasts": {
+        "added": "{{name}} joined the project.",
+        "addError": "Could not add to the project.",
+        "roleChanged": "{{name}} is now {{role}}.",
+        "roleError": "Could not change the role.",
+        "removed": "{{name}} left the project.",
+        "removeError": "Could not remove from the project."
+      },
+      "permissions": {
+        "title": "Roles and permissions",
+        "hint": "Hover a role to see who holds it on this project. Clients can only view.",
+        "permission": "Permission",
+        "cell": "{{role}}: {{permission}}",
+        "save": "Save changes",
+        "discard": "Discard",
+        "saved": "Permissions updated.",
+        "saveError": "Could not save the permissions.",
+        "loadError": "Could not load the permissions.",
+        "labels": {
+          "VIEW_PROJECT": "View project, schedule and progress",
+          "MANAGE_PROJECT": "Edit and delete the project",
+          "MANAGE_MEMBERS": "Add people and set roles",
+          "MANAGE_BUDGET": "Edit budget and log expenses",
+          "MANAGE_STAGES": "Create and edit stages",
+          "MANAGE_TEAMS": "Manage team schedule",
+          "MANAGE_TASKS": "Create and update tasks",
+          "MANAGE_ATTACHMENTS": "Upload documents and photos",
+          "MANAGE_DIARY": "Write in the project diary",
+          "MANAGE_PROPOSALS": "Submit design proposals"
         }
       }
     },
@@ -1221,10 +1232,7 @@
     "membersTitle": "Project members",
     "membersHint": "Who has access to this work front, and with which role.",
     "membersEmpty": "No members linked yet.",
-    "membersError": "Could not load members.",
-    "permissionsTitle": "Role permissions",
-    "permissionsHint": "Applies to every member holding the selected role.",
-    "permissionsError": "Could not load permissions for this role."
+    "membersError": "Could not load members."
   },
   "mobile": {
     "backTo": "Back to {{target}}",

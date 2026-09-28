@@ -1076,27 +1076,12 @@
       }
     },
     "equipes": {
-      "rolesLink": "Roles y permisos",
-      "empty": "Nadie vinculado todavía.",
-      "memberCount_one": "{{count}} persona",
-      "memberCount_other": "{{count}} personas",
-      "sections": {
-        "team": {
-          "title": "Equipo de la obra",
-          "hint": "Ingenieros, arquitectos y maestros de obra",
-          "add": "agregar integrante"
-        },
-        "client": {
-          "title": "Clientes",
-          "hint": "Quien sigue la obra por parte del contratante",
-          "add": "agregar cliente"
-        }
-      },
+      "empty": "Nadie vinculado a la obra todavía.",
       "actions": {
-        "addMember": "Agregar integrante",
+        "addMember": "Agregar persona",
         "cancel": "Cancelar",
         "remove": "Quitar a {{name}} de la obra",
-        "addMemberShort": "Integrante"
+        "addMemberShort": "Persona"
       },
       "removeModal": {
         "title": "Quitar persona",
@@ -1106,22 +1091,48 @@
       },
       "addModal": {
         "searchPlaceholder": "Busca por nombre o correo...",
-        "available": "Usuarios disponibles",
-        "loadMore": "Cargar más resultados",
+        "available": "Personas de la cuenta",
         "roleLabel": "Rol en la obra",
         "confirm": "Agregar",
-        "adding": "Agregando...",
-        "team": {
-          "title": "Agregar integrante",
-          "hint": "Busca y selecciona quién entra al equipo de la obra.",
-          "noResults": "Ningún colaborador coincide con la búsqueda.",
-          "noneAvailable": "Ningún colaborador disponible para agregar."
-        },
-        "client": {
-          "title": "Agregar cliente",
-          "hint": "Busca y selecciona al cliente que sigue la obra.",
-          "noResults": "Ningún cliente coincide con la búsqueda.",
-          "noneAvailable": "Ningún cliente disponible para agregar."
+        "title": "Agregar a la obra",
+        "hint": "Elige a alguien de tu cuenta y su rol en esta obra. Se puede cambiar después.",
+        "noResults": "Nadie coincide con esta búsqueda.",
+        "noneAvailable": "Todos en la cuenta ya están en esta obra.",
+        "permissionCount": "{{count}} de {{total}} permisos"
+      },
+      "people": "Personas",
+      "you": "tú",
+      "pending": "Invitación pendiente",
+      "roleOf": "Rol de {{name}}",
+      "toasts": {
+        "added": "{{name}} se unió a la obra.",
+        "addError": "No se pudo agregar a la obra.",
+        "roleChanged": "{{name}} ahora es {{role}}.",
+        "roleError": "No se pudo cambiar el rol.",
+        "removed": "{{name}} salió de la obra.",
+        "removeError": "No se pudo quitar de la obra."
+      },
+      "permissions": {
+        "title": "Roles y permisos",
+        "hint": "Pasa el cursor sobre un rol para ver quién lo ocupa en esta obra. El cliente solo visualiza.",
+        "permission": "Permiso",
+        "cell": "{{role}}: {{permission}}",
+        "save": "Guardar cambios",
+        "discard": "Descartar",
+        "saved": "Permisos actualizados.",
+        "saveError": "No se pudieron guardar los permisos.",
+        "loadError": "No se pudieron cargar los permisos.",
+        "labels": {
+          "VIEW_PROJECT": "Ver obra, cronograma y avance",
+          "MANAGE_PROJECT": "Editar y eliminar la obra",
+          "MANAGE_MEMBERS": "Agregar personas y definir roles",
+          "MANAGE_BUDGET": "Editar presupuesto y registrar gastos",
+          "MANAGE_STAGES": "Crear y editar etapas",
+          "MANAGE_TEAMS": "Gestionar la escala del equipo",
+          "MANAGE_TASKS": "Crear y actualizar tareas",
+          "MANAGE_ATTACHMENTS": "Subir documentos y fotos",
+          "MANAGE_DIARY": "Escribir en el diario de la obra",
+          "MANAGE_PROPOSALS": "Enviar propuestas de diseño"
         }
       }
     },
@@ -1221,10 +1232,7 @@
     "membersTitle": "Vinculados a la obra",
     "membersHint": "Quién tiene acceso a este frente de trabajo y con qué rol.",
     "membersEmpty": "Todavía no hay integrantes vinculados.",
-    "membersError": "No se pudieron cargar los vinculados.",
-    "permissionsTitle": "Permisos del rol",
-    "permissionsHint": "Se aplica a todos los vinculados que ejercen el rol seleccionado.",
-    "permissionsError": "No se pudieron cargar los permisos de este rol."
+    "membersError": "No se pudieron cargar los vinculados."
   },
   "mobile": {
     "backTo": "Volver a {{target}}",

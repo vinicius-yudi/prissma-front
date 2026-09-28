@@ -1,157 +1,77 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useState, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
-import {
-  addEquipeMember,
-  getEquipeMembers,
-  removeEquipeMember,
-  getAvailableUsers,
-} from "../services/equipes.service"
-import { WorkspaceRole } from "@/shared/types/workspace"
 
-import { RoleInProject, type AddMemberRequest, type ProjectRoleInRequest } from "../types/equipes"
+import { addEquipeMember, getAvailableUsers, getEquipeMembers, removeEquipeMember, updateMemberRole } from "../services/equipes.service"
+import type { AddMemberRequest, ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
 import { obraMembersKey } from "./useObraMembers"
 
-const RESULTS_PER_PAGE = 5
-
-// Papéis de WORKSPACE (a lista de disponíveis vem de /workspaces/members).
-function isClient(role: WorkspaceRole): boolean {
-  return role === WorkspaceRole.CLIENT
+interface RoleChange {
+  member: ConstructionProjectMember
+  role: ProjectRoleInRequest
 }
 
-function isCollaborator(role: WorkspaceRole): boolean {
-  return role === WorkspaceRole.MEMBER
-}
-
+/**
+ * Equipe da obra: membros, quem da conta pode entrar, e as três escritas —
+ * adicionar, trocar o papel e remover.
+ */
 export function useEquipes(obraId: number, usersEnabled = false) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
-  const [selectedRole, setSelectedRole] = useState<ProjectRoleInRequest>(RoleInProject.ENGINEER)
-  const [clientOffset, setClientOffset] = useState(0)
-  const [collaboratorOffset, setCollaboratorOffset] = useState(0)
+  const membersKey = obraMembersKey(obraId)
 
-  const {
-    data: members = [],
-    isLoading: isLoadingMembers,
-    error: membersError,
-  } = useQuery({
-    queryKey: obraMembersKey(obraId),
-    queryFn: () => getEquipeMembers(obraId),
-  })
-
-  const {
-    data: availableUsers = [],
-    isLoading: isLoadingUsers,
-  } = useQuery({
+  const membersQuery = useQuery({ queryKey: membersKey, queryFn: () => getEquipeMembers(obraId) })
+  const usersQuery = useQuery({
     queryKey: ["availableUsers"],
     queryFn: getAvailableUsers,
-    // /workspaces/members é vetado a CLIENT no backend; só busca quando o
-    // modal abre e o usuário pode gerenciar membros (opt-in do chamador).
+    // /workspaces/members é vetado a CLIENT no backend: só busca quando o
+    // modal abre e quem abre pode gerenciar membros.
     enabled: usersEnabled,
   })
 
-  const baseFilteredUsers = useMemo(() => {
-    const memberIds = new Set(members.map((m) => m.user.id))
-    return availableUsers.filter(
-      (user) =>
-        !memberIds.has(user.id) && user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  }, [availableUsers, members, searchQuery])
-  const clientUsers = useMemo(() => {
-    return baseFilteredUsers.filter((user) => isClient(user.role))
-  }, [baseFilteredUsers])
-
-  const collaboratorUsers = useMemo(() => {
-    return baseFilteredUsers.filter((user) => isCollaborator(user.role))
-  }, [baseFilteredUsers])
-  const paginatedClientUsers = clientUsers.slice(0, clientOffset + RESULTS_PER_PAGE)
-  const paginatedCollaboratorUsers = collaboratorUsers.slice(0, collaboratorOffset + RESULTS_PER_PAGE)
-
-  // Retorna os resultados com base na seção selecionada
-  const filteredAvailableUsers = {
-    clients: paginatedClientUsers,
-    collaborators: paginatedCollaboratorUsers,
-    allClients: clientUsers,
-    allCollaborators: collaboratorUsers,
+  function invalidate() {
+    void queryClient.invalidateQueries({ queryKey: membersKey })
   }
 
-  const loadMoreClients = () => {
-    setClientOffset((prev) => prev + RESULTS_PER_PAGE)
-  }
-
-  const loadMoreCollaborators = () => {
-    setCollaboratorOffset((prev) => prev + RESULTS_PER_PAGE)
-  }
-
-  // Reset pagination when search query changes
-  const handleSearchQuery = (query: string) => {
-    setSearchQuery(query)
-    setClientOffset(0)
-    setCollaboratorOffset(0)
-  }
-
-  const addMemberMutation = useMutation({
+  const addMutation = useMutation({
     mutationFn: (data: AddMemberRequest) => addEquipeMember(obraId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: obraMembersKey(obraId) })
-      toast.success("Membro adicionado à equipe com sucesso!")
-      setSelectedUserId(null)
-      setSearchQuery("")
+    onSuccess: (added) => {
+      invalidate()
+      toast.success(t("obra.equipes.toasts.added", { name: added.user.name }))
     },
-    onError: (error: Error) => {
-      toast.error(`Erro ao adicionar membro: ${error.message}`)
-    },
+    onError: (error: Error) => toast.error(error.message || t("obra.equipes.toasts.addError")),
   })
 
-  const removeMemberMutation = useMutation({
-    mutationFn: (memberId: number) => removeEquipeMember(obraId, memberId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: obraMembersKey(obraId) })
-      toast.success("Membro removido da equipe com sucesso!")
+  const roleMutation = useMutation({
+    mutationFn: ({ member, role }: RoleChange) => updateMemberRole(obraId, member.id, role),
+    onSuccess: (_data, { member, role }) => {
+      invalidate()
+      toast.success(t("obra.equipes.toasts.roleChanged", { name: member.user.name.split(" ")[0], role: t(`roles.${role}`).toLowerCase() }))
     },
-    onError: (error: Error) => {
-      toast.error(`Erro ao remover membro: ${error.message}`)
-    },
+    onError: (error: Error) => toast.error(error.message || t("obra.equipes.toasts.roleError")),
   })
 
-  function handleAddMember(role?: ProjectRoleInRequest) {
-    if (!selectedUserId) {
-      toast.error("Selecione um usuário")
-      return
-    }
+  const removeMutation = useMutation({
+    mutationFn: (member: ConstructionProjectMember) => removeEquipeMember(obraId, member.id),
+    onSuccess: (_data, member) => {
+      invalidate()
+      toast.success(t("obra.equipes.toasts.removed", { name: member.user.name }))
+    },
+    onError: (error: Error) => toast.error(error.message || t("obra.equipes.toasts.removeError")),
+  })
 
-    const roleToSend = role ?? selectedRole
-
-    addMemberMutation.mutate({
-      userId: selectedUserId,
-      roleInProject: roleToSend,
-    })
-  }
-
-  function handleRemoveMember(memberId: number) {
-    removeMemberMutation.mutate(memberId)
-  }
+  const memberIds = new Set((membersQuery.data ?? []).map((m) => m.user.id))
 
   return {
-    members,
-    isLoadingMembers,
-    membersError,
-    filteredAvailableUsers,
-    isLoadingUsers,
-    searchQuery,
-    setSearchQuery: handleSearchQuery,
-    selectedUserId,
-    setSelectedUserId,
-    selectedRole,
-    setSelectedRole,
-    handleAddMember,
-    handleRemoveMember,
-    isAddingMember: addMemberMutation.isPending,
-    isRemovingMember: removeMemberMutation.isPending,
-    loadMoreClients,
-    loadMoreCollaborators,
-    clientsHasMore: paginatedClientUsers.length < clientUsers.length,
-    collaboratorsHasMore: paginatedCollaboratorUsers.length < collaboratorUsers.length,
+    members: membersQuery.data ?? [],
+    isLoadingMembers: membersQuery.isLoading,
+    /** Quem da conta ainda não está na obra. */
+    candidates: (usersQuery.data ?? []).filter((user) => !memberIds.has(user.id)),
+    isLoadingUsers: usersQuery.isLoading,
+    addAsync: addMutation.mutateAsync,
+    isAdding: addMutation.isPending,
+    changeRole: (member: ConstructionProjectMember, role: ProjectRoleInRequest) => roleMutation.mutate({ member, role }),
+    removeAsync: removeMutation.mutateAsync,
+    isRemoving: removeMutation.isPending,
   }
 }

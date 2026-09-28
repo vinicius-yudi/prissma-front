@@ -1,7 +1,7 @@
 import { api } from "@/lib/api"
 import { getWorkspaceMembers } from "@/shared/services/workspace.service"
 import { isWorkspaceManager } from "@/shared/types/workspace"
-import type { AddMemberRequest, AddMemberResponse, AvailableUser, ConstructionProjectMember } from "../types/equipes"
+import type { AddMemberRequest, AddMemberResponse, AvailableUser, ConstructionProjectMember, ProjectRoleInRequest } from "../types/equipes"
 
 export async function getEquipeMembers(obraId: number): Promise<ConstructionProjectMember[]> {
   return api.get<ConstructionProjectMember[]>(`/projects/${obraId}/members`)
@@ -31,4 +31,12 @@ export async function getAvailableUsers(): Promise<AvailableUser[]> {
       email: m.email ?? "",
       role: m.role,
     }))
+}
+
+export async function updateMemberRole(
+  obraId: number,
+  memberId: number,
+  roleInProject: ProjectRoleInRequest,
+): Promise<ConstructionProjectMember> {
+  return api.patch<ConstructionProjectMember>(`/projects/${obraId}/members/${memberId}/role`, { roleInProject })
 }

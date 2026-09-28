@@ -162,6 +162,16 @@ describe("<DocumentosTab /> — lista", () => {
   })
 })
 
+describe("<DocumentosTab /> — filtro vazio", () => {
+  it("oferece mostrar todos quando o tipo filtrado não tem arquivo", async () => {
+    listar.mockResolvedValue([anexo()])
+    render("/?tipo=img")
+    expect(await screen.findByText("Nenhum arquivo desse tipo.")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Mostrar todos" }))
+    expect(screen.getByText("planta.pdf")).toBeInTheDocument()
+  })
+})
+
 describe("<DocumentosTab /> — envio", () => {
   it("envia vários arquivos, vinculando à etapa escolhida", async () => {
     render()

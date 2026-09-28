@@ -1076,27 +1076,12 @@
       }
     },
     "equipes": {
-      "rolesLink": "Papéis e permissões",
-      "empty": "Ninguém vinculado ainda.",
-      "memberCount_one": "{{count}} pessoa",
-      "memberCount_other": "{{count}} pessoas",
-      "sections": {
-        "team": {
-          "title": "Equipe da obra",
-          "hint": "Engenheiros, arquitetos e mestres de obras",
-          "add": "adicionar integrante"
-        },
-        "client": {
-          "title": "Clientes",
-          "hint": "Quem acompanha a obra pelo lado do contratante",
-          "add": "adicionar cliente"
-        }
-      },
+      "empty": "Ninguém vinculado à obra ainda.",
       "actions": {
-        "addMember": "Adicionar integrante",
+        "addMember": "Adicionar pessoa",
         "cancel": "Cancelar",
         "remove": "Remover {{name}} da obra",
-        "addMemberShort": "Integrante"
+        "addMemberShort": "Pessoa"
       },
       "removeModal": {
         "title": "Remover pessoa",
@@ -1106,22 +1091,48 @@
       },
       "addModal": {
         "searchPlaceholder": "Pesquise por nome ou e-mail...",
-        "available": "Usuários disponíveis",
-        "loadMore": "Carregar mais resultados",
+        "available": "Pessoas da conta",
         "roleLabel": "Papel na obra",
         "confirm": "Adicionar",
-        "adding": "Adicionando...",
-        "team": {
-          "title": "Adicionar integrante",
-          "hint": "Procure e selecione quem entra na equipe da obra.",
-          "noResults": "Nenhum colaborador encontrado com este critério.",
-          "noneAvailable": "Nenhum colaborador disponível para adicionar."
-        },
-        "client": {
-          "title": "Adicionar cliente",
-          "hint": "Procure e selecione o cliente que acompanha a obra.",
-          "noResults": "Nenhum cliente encontrado com este critério.",
-          "noneAvailable": "Nenhum cliente disponível para adicionar."
+        "title": "Adicionar à obra",
+        "hint": "Escolha alguém da sua conta e o papel dele nesta obra. Dá para mudar depois.",
+        "noResults": "Ninguém encontrado com essa busca.",
+        "noneAvailable": "Todos da conta já estão nesta obra.",
+        "permissionCount": "{{count}} de {{total}} permissões"
+      },
+      "people": "Pessoas",
+      "you": "você",
+      "pending": "Convite pendente",
+      "roleOf": "Papel de {{name}}",
+      "toasts": {
+        "added": "{{name}} entrou na obra.",
+        "addError": "Não foi possível adicionar à obra.",
+        "roleChanged": "{{name}} agora é {{role}}.",
+        "roleError": "Não foi possível trocar o papel.",
+        "removed": "{{name}} saiu da obra.",
+        "removeError": "Não foi possível remover da obra."
+      },
+      "permissions": {
+        "title": "Papéis e permissões",
+        "hint": "Passe o cursor sobre um papel para ver quem o ocupa nesta obra. Cliente só visualiza.",
+        "permission": "Permissão",
+        "cell": "{{role}}: {{permission}}",
+        "save": "Salvar alterações",
+        "discard": "Descartar",
+        "saved": "Permissões atualizadas.",
+        "saveError": "Não foi possível salvar as permissões.",
+        "loadError": "Não foi possível carregar as permissões.",
+        "labels": {
+          "VIEW_PROJECT": "Ver obra, cronograma e progresso",
+          "MANAGE_PROJECT": "Editar e excluir a obra",
+          "MANAGE_MEMBERS": "Adicionar pessoas e definir papéis",
+          "MANAGE_BUDGET": "Editar orçamento e lançar despesas",
+          "MANAGE_STAGES": "Criar e editar etapas",
+          "MANAGE_TEAMS": "Gerenciar escala da equipe",
+          "MANAGE_TASKS": "Criar e atualizar tarefas",
+          "MANAGE_ATTACHMENTS": "Enviar documentos e fotos",
+          "MANAGE_DIARY": "Escrever no diário da obra",
+          "MANAGE_PROPOSALS": "Submeter propostas de design"
         }
       }
     },
@@ -1221,10 +1232,7 @@
     "membersTitle": "Vinculados à obra",
     "membersHint": "Quem tem acesso a esta frente de trabalho e com que papel.",
     "membersEmpty": "Nenhum integrante vinculado ainda.",
-    "membersError": "Não foi possível carregar os vinculados.",
-    "permissionsTitle": "Permissões do papel",
-    "permissionsHint": "Vale para todos os vinculados que exercem o papel selecionado.",
-    "permissionsError": "Não foi possível carregar as permissões deste papel."
+    "membersError": "Não foi possível carregar os vinculados."
   },
   "mobile": {
     "backTo": "Voltar para {{target}}",
