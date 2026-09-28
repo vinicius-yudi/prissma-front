@@ -574,7 +574,14 @@
         "statusError": "Could not update the status.",
         "previewSuccess": "Preview ready — new version created.",
         "previewError": "Preview generation failed."
-      }
+      },
+      "validation": {
+        "titleRequired": "Give the proposal a title.",
+        "tooLong": "Text is too long.",
+        "colorsMin": "Pick at least one color.",
+        "colorsMax": "At most 5 colors."
+      },
+      "loadError": "Could not load the proposals."
     },
     "attachments": {
       "fileTooLarge": "File exceeds the {{max}} MB limit.",
@@ -1073,7 +1080,8 @@
         "editResponsibility": "Edit the work front of {{name}}",
         "previousPeriod": "Previous period",
         "nextPeriod": "Next period"
-      }
+      },
+      "viewLabel": "Schedule period"
     },
     "equipes": {
       "empty": "No one linked to the project yet.",
@@ -1170,6 +1178,9 @@
         "planned": "Planned",
         "late": "Past due"
       }
+    },
+    "comingSoonBody": {
+      "indicadores": "Progress curves, crew productivity and schedule and cost deviations, gathered in one project dashboard."
     }
   },
   "profile": {

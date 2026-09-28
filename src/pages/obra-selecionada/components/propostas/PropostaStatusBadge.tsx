@@ -1,27 +1,22 @@
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import type { ProposalStatus } from "../types/proposal"
+import type { ProposalStatus } from "../../types/proposal"
 
 /**
- * Badge de aprovação da proposta (Telas §19).
- *
- * Quatro estados, cada um com o token que a spec designou: Aprovada em `ok`,
- * Em análise no realce sobre tint, Ajustes pedidos em `warn`, Rascunho neutro.
- * Não existe Badge genérico no design system — `StatusBadge` cobre o enum de
- * obras e etapas, que é outro.
- *
- * Sempre ponto **e** texto: status nunca se comunica só por cor.
+ * Selo de aprovação da versão (Telas §19): Aprovada em `success`, Em análise
+ * em ouro, Ajustes pedidos em `warning`, Rascunho neutro. `StatusBadge` cobre
+ * obra/etapa/tarefa, que é outro vocabulário. Sempre ponto **e** texto.
  */
 
 const badge = tv({
-  base: "inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[11px] font-semibold",
+  base: "inline-flex h-6 items-center gap-1.5 rounded-pill px-2.5 text-[11.5px] font-[620]",
   variants: {
     status: {
       APPROVED: "bg-success-soft text-success",
-      PENDING_REVIEW: "bg-raised text-gold-hi",
+      PENDING_REVIEW: "bg-gold-soft text-gold-hi",
       REJECTED: "bg-warning-soft text-warning",
-      DRAFT: "bg-raised text-ink-3",
+      DRAFT: "bg-raised text-ink-2 hairline",
     },
   },
 })
@@ -29,25 +24,16 @@ const badge = tv({
 const dot = tv({
   base: "size-1.5 rounded-full",
   variants: {
-    status: {
-      APPROVED: "bg-success",
-      PENDING_REVIEW: "bg-gold-hi",
-      REJECTED: "bg-warning",
-      DRAFT: "bg-ink-3",
-    },
+    status: { APPROVED: "bg-success", PENDING_REVIEW: "bg-gold", REJECTED: "bg-warning", DRAFT: "bg-ink-3" },
   },
 })
 
-interface PropostaStatusBadgeProps {
-  status: ProposalStatus
-}
-
-export function PropostaStatusBadge({ status }: PropostaStatusBadgeProps) {
+export function PropostaStatusBadge({ status }: { status: ProposalStatus }) {
   const { t } = useTranslation()
 
   return (
     <span className={badge({ status })}>
-      <span className={dot({ status })} aria-hidden />
+      <span className={dot({ status })} aria-hidden="true" />
       {t(`obra.propostas.status.${status}`)}
     </span>
   )

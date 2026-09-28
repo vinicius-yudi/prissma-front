@@ -495,24 +495,19 @@ describe("caminhos de desistência", () => {
   })
 
   it("oferece recarregar quando a listagem falha", async () => {
-    const recarregar = vi.fn()
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      writable: true,
-      value: { ...window.location, reload: recarregar },
-    })
+    // Refaz a consulta — não recarrega a página inteira.
     listar.mockRejectedValue(new Error("timeout"))
     const user = userEvent.setup()
     render()
 
-    await user.click(await screen.findByRole("button", { name: /Tentar novamente|Recarregar/i }))
+    await user.click(await screen.findByRole("button", { name: /Tentar novamente/i }))
 
-    expect(recarregar).toHaveBeenCalled()
+    await waitFor(() => expect(listar).toHaveBeenCalledTimes(2))
   })
 })
 
 describe("formulário de nova proposta", () => {
-  it("recusa arquivo que não é imagem antes de subir", async () => {
+  it("recusa arquivo que não é imagem na escolha e cria sem ele", async () => {
     const user = userEvent.setup()
     const { toast } = await import("react-toastify")
     render()
@@ -520,14 +515,16 @@ describe("formulário de nova proposta", () => {
     await user.click(screen.getByRole("button", { name: /Nova proposta/i }))
     await user.type(await screen.findByLabelText(/Nome da proposta/i), "Cozinha")
 
-    const entrada = document.getElementById("proposta-arquivo") as HTMLInputElement
+    const entrada = screen.getByLabelText(/Imagem inicial/) as HTMLInputElement
     fireEvent.change(entrada, {
       target: { files: [new File(["x"], "planta.pdf", { type: "application/pdf" })] },
     })
+    expect(toast.error).toHaveBeenCalled()
+    expect(entrada.value).toBe("")
     await user.click(screen.getByRole("button", { name: "Criar proposta" }))
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalled())
-    expect(criar).not.toHaveBeenCalled()
+    await waitFor(() => expect(criar).toHaveBeenCalled())
+    expect(criar.mock.calls[0]).toContain(null)
   })
 
   it("sobe a imagem inicial junto com os dados", async () => {
@@ -538,7 +535,7 @@ describe("formulário de nova proposta", () => {
     await user.type(await screen.findByLabelText(/Nome da proposta/i), "Cozinha")
     await user.type(screen.getByLabelText(/Descrição/i), "bancada em L")
 
-    const entrada = document.getElementById("proposta-arquivo") as HTMLInputElement
+    const entrada = screen.getByLabelText(/Imagem inicial/) as HTMLInputElement
     fireEvent.change(entrada, {
       target: { files: [new File(["x"], "cozinha.png", { type: "image/png" })] },
     })
@@ -555,7 +552,6 @@ describe("formulário de nova proposta", () => {
 
   it("reclama do título vazio sem chamar o servidor", async () => {
     const user = userEvent.setup()
-    const { toast } = await import("react-toastify")
     render()
     await aguardarGrade()
     await user.click(screen.getByRole("button", { name: /Nova proposta/i }))
@@ -563,7 +559,7 @@ describe("formulário de nova proposta", () => {
 
     await user.click(screen.getByRole("button", { name: "Criar proposta" }))
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Título obrigatório"))
+    expect(await screen.findByText("Dê um título à proposta.")).toBeInTheDocument()
     expect(criar).not.toHaveBeenCalled()
   })
 })

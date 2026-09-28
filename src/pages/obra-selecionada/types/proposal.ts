@@ -8,8 +8,25 @@
 export const PROPOSAL_STATUS = ["DRAFT", "PENDING_REVIEW", "APPROVED", "REJECTED"] as const
 export type ProposalStatus = (typeof PROPOSAL_STATUS)[number]
 
+/** Os mesmos valores como constantes — nada de comparar com o literal solto. */
+export const ProposalState = {
+  DRAFT: "DRAFT",
+  PENDING_REVIEW: "PENDING_REVIEW",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const satisfies Record<ProposalStatus, ProposalStatus>
+
 export const PREVIEW_STATUS = ["PROCESSING", "READY", "FAILED"] as const
 export type PreviewStatus = (typeof PREVIEW_STATUS)[number]
+
+export const PreviewState = {
+  PROCESSING: "PROCESSING",
+  READY: "READY",
+  FAILED: "FAILED",
+} as const satisfies Record<PreviewStatus, PreviewStatus>
+
+export const GENERATION_MODES = ["PREVIEW", "FINAL"] as const
+export type GenerationMode = (typeof GENERATION_MODES)[number]
 
 export const ENVIRONMENT_TYPES = [
   "LIVING_ROOM",
@@ -137,6 +154,6 @@ export interface PreviewOptions {
   colors: ColorPalette[]
   lighting: Lighting
   flooring: Flooring
-  generationMode: "PREVIEW" | "FINAL"
+  generationMode: GenerationMode
   additionalInstructions?: string
 }

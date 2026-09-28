@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next"
 import { useOutletContext } from "react-router-dom"
 
 import type { Project } from "@/shared/types/project"
 
+import { ComingSoon } from "./components/ComingSoon"
 import { DocumentosTab } from "./components/DocumentosTab"
 import DiarioDaObra from "./components/DiarioDaObra"
 import { EquipesTab } from "./components/EquipesTab"
@@ -23,21 +23,6 @@ import { VisaoGeral } from "./components/visao-geral/VisaoGeral"
 
 function useObra(): Project {
   return useOutletContext<Project>()
-}
-
-/**
- * Placeholder dos módulos que o design especifica mas que ficaram para a fase
- * seguinte (Indicadores). Melhor uma tela honesta que um item de menu que não
- * abre.
- */
-function ComingSoon({ module }: { module: string }) {
-  const { t } = useTranslation()
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border-strong bg-surface py-20 text-center">
-      <p className="text-sm font-semibold text-ink">{t(`sidebar.nav.${module}`)}</p>
-      <p className="text-sm text-ink-2">{t("obra.comingSoon")}</p>
-    </div>
-  )
 }
 
 export function VisaoGeralModule() {

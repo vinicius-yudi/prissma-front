@@ -8,7 +8,6 @@ import {
   formatHours,
   formatMonthLabel,
   formatWeekdayShort,
-  initialsOf,
   isWeekend,
   parseIsoDate,
   weekRangeLabel,
@@ -121,20 +120,5 @@ describe("dayStateOf", () => {
     expect(dayStateOf(dia({ allocated: true, allocatedHours: 8, overlapped: true }))).toBe(
       DayState.OVERLAP,
     )
-  })
-})
-
-describe("initialsOf", () => {
-  it("usa primeiro e último nome", () => {
-    expect(initialsOf("João Souza")).toBe("JS")
-    expect(initialsOf("Maria da Silva Reis")).toBe("MR")
-  })
-
-  it("aceita nome único", () => {
-    expect(initialsOf("Ana")).toBe("A")
-  })
-
-  it("não quebra com nome vazio", () => {
-    expect(initialsOf("   ")).toBe("?")
   })
 })

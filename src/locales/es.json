@@ -574,7 +574,14 @@
         "statusError": "No fue posible actualizar el estado.",
         "previewSuccess": "Vista previa lista — nueva versión creada.",
         "previewError": "La generación de la vista previa falló."
-      }
+      },
+      "validation": {
+        "titleRequired": "Ponle un título a la propuesta.",
+        "tooLong": "Texto demasiado largo.",
+        "colorsMin": "Elige al menos un color.",
+        "colorsMax": "Como máximo 5 colores."
+      },
+      "loadError": "No se pudieron cargar las propuestas."
     },
     "attachments": {
       "fileTooLarge": "El archivo supera el límite de {{max}} MB.",
@@ -1073,7 +1080,8 @@
         "editResponsibility": "Editar el frente de trabajo de {{name}}",
         "previousPeriod": "Período anterior",
         "nextPeriod": "Período siguiente"
-      }
+      },
+      "viewLabel": "Período de la escala"
     },
     "equipes": {
       "empty": "Nadie vinculado a la obra todavía.",
@@ -1170,6 +1178,9 @@
         "planned": "Planificada",
         "late": "Fuera de plazo"
       }
+    },
+    "comingSoonBody": {
+      "indicadores": "Curvas de avance, productividad por equipo y desvíos de plazo y costo, reunidos en un panel de la obra."
     }
   },
   "profile": {

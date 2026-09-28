@@ -164,6 +164,7 @@ export function usePropostas(projectId: number) {
     proposals,
     isLoading: query.isLoading,
     error: query.error,
+    refetch: query.refetch,
     validateImage,
     create: createMutation.mutate,
     createAsync: createMutation.mutateAsync,

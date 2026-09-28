@@ -1,30 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { LayoutGrid } from "lucide-react"
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { LayoutGrid, Loader2 } from "lucide-react"
+import type { ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
-import { toast } from "react-toastify"
-import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { Field } from "@/shared/components/ui/field/Field"
 import { Input } from "@/shared/components/ui/input/Input"
-import { Label } from "@/shared/components/ui/label/Label"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import { Select } from "@/shared/components/ui/select/Select"
 import { Textarea } from "@/shared/components/ui/textarea/Textarea"
-import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
-import { usePropostas } from "../hooks/usePropostas"
-import {
-  PROPOSTA_FORM_DEFAULTS,
-  propostaSchema,
-  type PropostaFormData,
-} from "../schemas/propostaSchema"
-import { ENVIRONMENT_TYPES } from "../types/proposal"
-
-const formLabel = tv({
-  base: "block text-xs font-semibold uppercase tracking-widest text-gold",
-})
+import { usePropostaForm } from "../../hooks/usePropostaForm"
+import { ENVIRONMENT_TYPES } from "../../types/proposal"
 
 interface PropostaFormModalProps {
   open: boolean
@@ -32,52 +18,15 @@ interface PropostaFormModalProps {
   projectId: number
 }
 
-/**
- * "+ Nova proposta" (Telas §19).
- *
- * O arquivo é opcional: a proposta pode nascer só com nome e ambiente e receber
- * a imagem depois, pela prévia da IA. O campo "versão" que a spec lista não
- * existe aqui — quem numera é o servidor, e deixar o usuário escolher só
- * abriria espaço para v3 vir antes de v2.
- */
+/** Criar proposta: título, ambiente, descrição e imagem opcional. */
 export function PropostaFormModal({ open, onClose, projectId }: PropostaFormModalProps) {
   const { t } = useTranslation()
-  const { createAsync, isCreating, validateImage } = usePropostas(projectId)
+  const { form, pickFile, handleSave, isSaving } = usePropostaForm(projectId, onClose)
+  const { errors } = form.formState
 
-  const form = useForm<PropostaFormData>({
-    resolver: zodResolver(propostaSchema),
-    defaultValues: PROPOSTA_FORM_DEFAULTS,
-  })
-
-  useEffect(() => {
-    if (open) form.reset(PROPOSTA_FORM_DEFAULTS)
-  }, [open, form])
-
-  async function onSubmit(data: PropostaFormData) {
-    const input = document.getElementById("proposta-arquivo") as HTMLInputElement | null
-    const file = input?.files?.[0] ?? null
-    if (file && !validateImage(file)) return
-
-    try {
-      await createAsync({
-        payload: {
-          title: data.title,
-          description: data.description || null,
-          environmentType: data.environmentType,
-        },
-        file,
-      })
-      onClose()
-    } catch {
-      // O toast já saiu no hook.
-    }
-  }
-
-  // Os erros vêm pelo argumento, não de `form.formState.errors`: naquele
-  // render o formState ainda é o anterior ao submit e o toast sairia vazio.
-  function onInvalid(errors: typeof form.formState.errors) {
-    const message = getFirstFormErrorMessage(errors)
-    if (message) toast.error(message)
+  function handleFile(event: ChangeEvent<HTMLInputElement>) {
+    // Recusado, o campo volta vazio: a tela não mostra um arquivo que não vai subir.
+    if (!pickFile(event.target.files?.[0] ?? null)) event.target.value = ""
   }
 
   return (
@@ -88,69 +37,55 @@ export function PropostaFormModal({ open, onClose, projectId }: PropostaFormModa
       description={t("obra.propostas.form.description")}
       icon={<LayoutGrid size={18} />}
       size="lg"
+      footer={
+        <>
+          <Button variant="outline" fullWidth={false} onClick={onClose}>
+            {t("obra.propostas.actions.cancel")}
+          </Button>
+          <Button fullWidth={false} onClick={handleSave} disabled={isSaving}>
+            {isSaving && <Loader2 size={16} className="animate-spin" />}
+            {isSaving ? t("obra.propostas.actions.saving") : t("obra.propostas.actions.submit")}
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="flex flex-col">
-        <div className="mx-6 mt-5 space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="proposta-titulo" className={formLabel()}>
-              {t("obra.propostas.form.fields.title")}
-            </Label>
-            <Input
-              id="proposta-titulo"
-              placeholder={t("obra.propostas.form.placeholders.title")}
-              {...form.register("title")}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="proposta-ambiente" className={formLabel()}>
-              {t("obra.propostas.form.fields.environment")}
-            </Label>
-            <Select id="proposta-ambiente" {...form.register("environmentType")}>
+      <form
+        noValidate
+        className="grid gap-4 px-6 pt-5 pb-6"
+        onSubmit={(event) => {
+          event.preventDefault()
+          handleSave()
+        }}
+      >
+        <Field label={t("obra.propostas.form.fields.title")} error={errors.title?.message && t(errors.title.message)}>
+          {(id) => <Input id={id} placeholder={t("obra.propostas.form.placeholders.title")} aria-invalid={!!errors.title} {...form.register("title")} />}
+        </Field>
+        <Field label={t("obra.propostas.form.fields.environment")}>
+          {(id) => (
+            <Select id={id} {...form.register("environmentType")}>
               {ENVIRONMENT_TYPES.map((environment) => (
                 <option key={environment} value={environment}>
                   {t(`obra.propostas.environments.${environment}`)}
                 </option>
               ))}
             </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="proposta-descricao" className={formLabel()}>
-              {t("obra.propostas.form.fields.description")}
-            </Label>
-            <Textarea
-              id="proposta-descricao"
-              rows={3}
-              placeholder={t("obra.propostas.form.placeholders.description")}
-              {...form.register("description")}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="proposta-arquivo" className={formLabel()}>
-              {t("obra.propostas.form.fields.file")}
-            </Label>
+          )}
+        </Field>
+        <Field label={t("obra.propostas.form.fields.description")} error={errors.description?.message && t(errors.description.message)}>
+          {(id) => <Textarea id={id} rows={3} placeholder={t("obra.propostas.form.placeholders.description")} {...form.register("description")} />}
+        </Field>
+        <Field label={t("obra.propostas.form.fields.file")} hint={t("obra.propostas.form.fileHint")}>
+          {(id) => (
             <input
-              id="proposta-arquivo"
+              id={id}
               type="file"
               accept="image/png,image/jpeg,image/webp"
-              className="block w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-ink-2 file:mr-3 file:rounded-md file:border-0 file:bg-raised file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-ink"
+              onChange={handleFile}
+              className="block w-full cursor-pointer rounded-md bg-raised px-3.5 py-2.5 text-[13.5px] text-ink-2 hairline file:mr-3 file:cursor-pointer file:rounded-sm file:border-0 file:bg-surface file:px-3 file:py-1.5 file:text-[12.5px] file:font-[620] file:text-ink"
             />
-            <p className="text-[11px] text-ink-3">
-              {t("obra.propostas.form.fileHint")}
-            </p>
-          </div>
-        </div>
-
-        <div className="mx-6 mb-6 mt-5 flex items-center justify-between gap-3 border-t border-border pt-5">
-          <Button type="button" variant="outline" fullWidth={false} onClick={onClose}>
-            {t("obra.propostas.actions.cancel")}
-          </Button>
-          <Button type="submit" className="w-auto px-4" disabled={isCreating}>
-            {isCreating ? t("obra.propostas.actions.saving") : t("obra.propostas.actions.submit")}
-          </Button>
-        </div>
+          )}
+        </Field>
+        <button type="submit" hidden aria-hidden="true" tabIndex={-1} />
       </form>
     </Modal>
   )

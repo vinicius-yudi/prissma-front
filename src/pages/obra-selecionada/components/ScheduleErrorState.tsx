@@ -1,7 +1,8 @@
-import { AlertTriangle } from "lucide-react"
+import { RefreshCw } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
 
 /**
  * Falha ao carregar a grade. O retry refaz a consulta e **não navega** — erro
@@ -16,14 +17,14 @@ export function ScheduleErrorState({ onRetry }: ScheduleErrorStateProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-border bg-surface p-12 text-center">
-      <div className="rounded-2xl bg-danger-soft p-4 text-danger">
-        <AlertTriangle size={28} />
-      </div>
-      <p className="text-sm text-ink-2">{t("obra.schedule.error.title")}</p>
-      <Button variant="outline" fullWidth={false} onClick={onRetry}>
-        {t("obra.schedule.error.retry")}
-      </Button>
-    </div>
+    <EmptyState
+      title={t("obra.schedule.error.title")}
+      action={
+        <Button variant="outline" fullWidth={false} onClick={onRetry}>
+          <RefreshCw size={14} />
+          {t("obra.schedule.error.retry")}
+        </Button>
+      }
+    />
   )
 }

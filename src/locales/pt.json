@@ -574,7 +574,14 @@
         "statusError": "Não foi possível atualizar o status.",
         "previewSuccess": "Prévia pronta — nova versão criada.",
         "previewError": "A geração da prévia falhou."
-      }
+      },
+      "validation": {
+        "titleRequired": "Dê um título à proposta.",
+        "tooLong": "Texto longo demais.",
+        "colorsMin": "Escolha ao menos uma cor.",
+        "colorsMax": "No máximo 5 cores."
+      },
+      "loadError": "Não foi possível carregar as propostas."
     },
     "attachments": {
       "fileTooLarge": "Arquivo acima do limite de {{max}} MB.",
@@ -1073,7 +1080,8 @@
         "editResponsibility": "Editar a frente de trabalho de {{name}}",
         "previousPeriod": "Período anterior",
         "nextPeriod": "Próximo período"
-      }
+      },
+      "viewLabel": "Período da escala"
     },
     "equipes": {
       "empty": "Ninguém vinculado à obra ainda.",
@@ -1170,6 +1178,9 @@
         "planned": "Planejada",
         "late": "Além do prazo"
       }
+    },
+    "comingSoonBody": {
+      "indicadores": "Curvas de avanço, produtividade por equipe e desvios de prazo e custo, reunidos num painel da obra."
     }
   },
   "profile": {

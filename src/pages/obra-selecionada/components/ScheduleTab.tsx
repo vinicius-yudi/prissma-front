@@ -52,7 +52,7 @@ export function ScheduleTab({ projectId }: { projectId: number }) {
   }
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-[22px]">
+    <section className="rounded-lg bg-surface p-5 hairline sm:p-6">
       <ScheduleToolbar
         schedule={data}
         onViewChange={schedule.setView}

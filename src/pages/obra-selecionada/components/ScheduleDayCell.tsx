@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import { Num } from "@/shared/components/ui/num/Num"
-
 import { DayState, type DaySchedule } from "../types/schedule"
 import { dayStateOf, formatFullDate, formatHours, isWeekend } from "../utils/scheduleFormat"
 
@@ -16,12 +14,12 @@ import { dayStateOf, formatFullDate, formatHours, isWeekend } from "../utils/sch
  */
 
 const block = tv({
-  base: "flex h-[34px] w-full items-center justify-center rounded-lg transition-colors",
+  base: "flex h-[34px] w-full items-center justify-center rounded-[8px] transition-colors",
   variants: {
     state: {
-      FREE: "border border-dashed border-border bg-transparent",
+      FREE: "border border-dashed border-border-strong bg-transparent hover:border-gold",
       ALLOCATED: "bg-gold-grad text-on-gold",
-      OVERLAP: "bg-warning-soft text-warning",
+      OVERLAP: "bg-warning-soft text-warning inset-ring-1 inset-ring-warning/50",
     },
     interactive: {
       true: "cursor-pointer",
@@ -41,7 +39,7 @@ const cell = tv({
 })
 
 const trigger = tv({
-  base: "block w-full rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-gold/40",
+  base: "block w-full cursor-pointer rounded-[8px] outline-none focus-visible:ring-2 focus-visible:ring-gold",
 })
 
 interface ScheduleDayCellProps {
@@ -78,7 +76,7 @@ export function ScheduleDayCell({ day, memberName, canMutate, onSelect }: Schedu
 
   const content = (
     <div className={block({ state, interactive: canMutate })}>
-      {day.allocated && <Num className="text-[10.5px] font-semibold">{hours}</Num>}
+      {day.allocated && <span className="t-num text-[12px] font-[650]">{hours}</span>}
     </div>
   )
 

@@ -97,10 +97,7 @@ describe("estados da tela", () => {
     renderWithProviders(<ScheduleTab projectId={7} />)
 
     expect(await screen.findByText("Nenhum integrante na obra")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /Ir para Equipes/ })).toHaveAttribute(
-      "href",
-      "/obras/7/equipes",
-    )
+    expect(screen.getByRole("button", { name: /Ir para Equipes/ })).toBeInTheDocument()
     expect(screen.queryByRole("table")).not.toBeInTheDocument()
   })
 })
@@ -133,7 +130,7 @@ describe("grade carregada", () => {
     })
     await screen.findByRole("table")
 
-    await userEvent.click(screen.getByRole("button", { name: "Mês" }))
+    await userEvent.click(screen.getByRole("tab", { name: "Mês" }))
 
     await waitFor(() =>
       expect(buscar).toHaveBeenCalledWith(7, { view: ScheduleView.MONTH, date: undefined }),
@@ -226,7 +223,7 @@ describe("gravação", () => {
     })
     await screen.findByRole("table")
 
-    await userEvent.click(screen.getByRole("button", { name: "Semana" }))
+    await userEvent.click(screen.getByRole("tab", { name: "Semana" }))
 
     await waitFor(() =>
       expect(buscar).toHaveBeenCalledWith(7, { view: ScheduleView.WEEK, date: undefined }),
