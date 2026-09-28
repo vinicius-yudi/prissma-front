@@ -1,4 +1,4 @@
-import { api } from "@/lib/api"
+import { api, buildHeaders } from "@/lib/api"
 import type { Attachment } from "@/shared/types/attachment"
 
 const BASE_URL = "/api"
@@ -12,10 +12,9 @@ export class AttachmentRequestError extends Error {
   }
 }
 
+/** Delegado ao api.ts: Authorization + X-Workspace-Id sempre juntos. */
 function buildAuthHeader(): HeadersInit {
-  const token = localStorage.getItem("token")
-  if (!token) return {}
-  return { Authorization: `Bearer ${token}` }
+  return buildHeaders()
 }
 
 async function handleRawResponse(response: Response): Promise<void> {

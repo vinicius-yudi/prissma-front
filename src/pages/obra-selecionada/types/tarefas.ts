@@ -35,3 +35,16 @@ export interface UpdateTarefaRequest {
   plannedEndDate?: string
   assigneeUserId?: number
 }
+
+/**
+ * Tarefa com a etapa de origem.
+ *
+ * As tarefas pendem de etapas no backend (`/stages/{id}/tasks`), então o
+ * kanban — que agrupa por status e não por etapa — precisa carregar de qual
+ * coleção cada card veio para saber onde aplicar o `PATCH`.
+ */
+export interface TarefaComEtapa {
+  tarefa: Tarefa
+  stageId: number
+  stageName: string
+}

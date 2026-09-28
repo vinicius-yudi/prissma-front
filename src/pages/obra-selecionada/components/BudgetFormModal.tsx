@@ -3,6 +3,7 @@ import { Coins } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 import { tv } from "tailwind-variants"
 
 import { Button } from "@/shared/components/ui/button/Button"
@@ -10,6 +11,7 @@ import { Input } from "@/shared/components/ui/input/Input"
 import { Label } from "@/shared/components/ui/label/Label"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 import type { ProjectBudget } from "@/shared/types/budget"
+import { getFirstFormErrorMessage } from "@/shared/utils/formValidation"
 
 import {
   BUDGET_FORM_DEFAULTS,
@@ -75,7 +77,10 @@ export function BudgetFormModal({
     }
   }
 
-  const errors = form.formState.errors
+  function onInvalid(errors: typeof form.formState.errors) {
+    const message = getFirstFormErrorMessage(errors)
+    if (message) toast.error(message)
+  }
 
   return (
     <Modal
@@ -90,7 +95,7 @@ export function BudgetFormModal({
       variant="default"
       size="lg"
     >
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         <div className="px-6 pt-5 pb-2 space-y-5">
           <div className="space-y-1.5">
             <Label className={formLabel()}>
@@ -101,9 +106,6 @@ export function BudgetFormModal({
               placeholder={t("obra.orcamento.budgetForm.descriptionPlaceholder")}
               {...form.register("description")}
             />
-            {errors.description && (
-              <p className="text-xs text-error mt-1">{errors.description.message}</p>
-            )}
           </div>
 
           <div className="space-y-1.5">
@@ -117,9 +119,6 @@ export function BudgetFormModal({
               min={0}
               {...form.register("plannedTotal", { valueAsNumber: true })}
             />
-            {errors.plannedTotal && (
-              <p className="text-xs text-error mt-1">{errors.plannedTotal.message}</p>
-            )}
           </div>
         </div>
 

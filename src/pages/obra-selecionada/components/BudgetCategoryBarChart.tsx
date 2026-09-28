@@ -111,7 +111,7 @@ export function BudgetCategoryBarChart({ items }: BudgetCategoryBarChartProps) {
             stroke="currentColor"
             className="text-on-surface-variant"
           />
-          <Tooltip cursor={{ fill: "rgba(127,127,127,0.08)" }} content={<BarTooltip />} />
+          <Tooltip cursor={{ fill: "var(--pk-tint)" }} content={<BarTooltip />} />
           <ReferenceLine
             x={100}
             stroke="currentColor"

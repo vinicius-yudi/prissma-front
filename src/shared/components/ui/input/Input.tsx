@@ -19,7 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InterfaceInputProps>(
     return (
       <div className="relative">
         {prefix && (
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 flex items-center justify-center">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-faint flex items-center justify-center">
             {prefix}
           </span>
         )}

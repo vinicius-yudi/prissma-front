@@ -32,3 +32,8 @@ export function todayIsoDate(): string {
   const dd = String(d.getDate()).padStart(2, "0")
   return `${yyyy}-${mm}-${dd}`
 }
+
+/** Código da obra em mono, como no protótipo: OBRA-0142. */
+export function formatObraCode(id: number): string {
+  return `OBRA-${String(id).padStart(4, "0")}`
+}

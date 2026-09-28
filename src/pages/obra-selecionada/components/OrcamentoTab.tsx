@@ -1,3 +1,7 @@
+import { useTranslation } from "react-i18next"
+
+import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+
 import { useBudget } from "../hooks/useBudget"
 import { useBudgetModals } from "../hooks/useBudgetModals"
 import { useExpandedCategories } from "../hooks/useExpandedCategories"
@@ -12,6 +16,7 @@ import { BudgetCharts } from "./BudgetCharts"
 import { BudgetDeleteConfirmModal } from "./BudgetDeleteConfirmModal"
 import { BudgetEmptyState } from "./BudgetEmptyState"
 import { BudgetErrorState } from "./BudgetErrorState"
+import { BudgetExceededBanner } from "./BudgetExceededBanner"
 import { BudgetFormModal } from "./BudgetFormModal"
 import { BudgetItemFormModal } from "./BudgetItemFormModal"
 import { BudgetLoadingState } from "./BudgetLoadingState"
@@ -23,6 +28,7 @@ interface OrcamentoTabProps {
 }
 
 export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
+  const { t } = useTranslation()
   const {
     budget,
     isLoading,
@@ -54,6 +60,30 @@ export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
     requestDeleteExpense,
   } = useBudgetModals()
   const { toggle, isExpanded } = useExpandedCategories()
+
+  // A ação primária do celular muda com o estado da tela: sem orçamento, criar
+  // o orçamento; com ele, a próxima categoria. Precisa vir antes dos returns de
+  // loading/erro.
+  usePrimaryAction(
+    !canMutate
+      ? null
+      : budget
+        ? {
+            label: t("obra.orcamento.actions.addCategory"),
+            shortLabel: t("obra.orcamento.actions.addCategoryShort"),
+            onClick: () => openItemForm(null),
+          }
+        : { label: t("obra.orcamento.empty.cta"), onClick: openBudgetForm },
+  )
+
+  /** O banner leva à categoria estourada abrindo-a na lista. */
+  function handleReviewCategory(itemId: number) {
+    if (!isExpanded(itemId)) toggle(itemId)
+    document.getElementById(`budget-category-${itemId}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    })
+  }
 
   async function handleConfirmDelete() {
     if (!deleteTarget) return
@@ -89,6 +119,8 @@ export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
   return (
     <>
       <div className="space-y-6">
+        <BudgetExceededBanner budget={budget} onReview={handleReviewCategory} />
+
         <BudgetMainPanel
           budget={budget}
           canMutate={canMutate}

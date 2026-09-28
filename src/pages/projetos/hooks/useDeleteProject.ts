@@ -17,9 +17,8 @@ export function useDeleteProject({ onSuccess }: UseDeleteProjectOptions = {}) {
       toast.success("Obra excluída com sucesso!")
       onSuccess?.()
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.message || error.message || "Erro ao excluir obra"
-      toast.error(message)
+    onError: (error: Error) => {
+      toast.error(error.message || "Erro ao excluir obra")
     },
   })
 
