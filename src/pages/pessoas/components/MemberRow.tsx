@@ -74,10 +74,13 @@ export function MemberRow({
             </Select>
           </div>
 
-          {member.active && (
+          {member.active ? (
             <IconButton label={t("workspace.team.deactivate")} disabled={isMutating} onClick={() => onDeactivate(member.id)}>
               <UserMinus size={15} />
             </IconButton>
+          ) : (
+            // Reserva o lugar do botão (40×40) para o select ficar alinhado com as outras linhas.
+            <span aria-hidden="true" className="size-10 flex-none" />
           )}
 
           <IconButton

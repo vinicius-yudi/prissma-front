@@ -1,13 +1,12 @@
 import { Search } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-import { Kbd } from "@/shared/components/ui/kbd/Kbd"
-
 import { useCommandPalette } from "../command-palette/commandPaletteContext"
 
 /**
  * Gatilho da busca global na barra superior (DS v2, Search): 40px, `surface`
- * com hairline, atalho ⌘K. No mobile o texto encurta e o atalho some.
+ * com hairline. No mobile o texto encurta. O atalho ⌘K/Ctrl+K continua ativo,
+ * só não é exibido.
  */
 export function SearchTrigger() {
   const { t } = useTranslation()
@@ -24,10 +23,6 @@ export function SearchTrigger() {
       <span className="flex-1 truncate">
         <span className="sm:hidden">{t("palette.triggerShort")}</span>
         <span className="hidden sm:inline">{t("palette.trigger")}</span>
-      </span>
-      <span className="hidden items-center gap-1 sm:flex" aria-hidden="true">
-        <Kbd>⌘</Kbd>
-        <Kbd>K</Kbd>
       </span>
     </button>
   )

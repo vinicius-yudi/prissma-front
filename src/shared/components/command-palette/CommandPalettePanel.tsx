@@ -81,7 +81,9 @@ export function CommandPalettePanel({ onClose }: CommandPalettePanelProps) {
             onKeyDown={handleInputKeyDown}
             placeholder={t("palette.placeholder")}
             aria-label={t("palette.label")}
-            className="h-14 flex-1 bg-transparent text-[16px] text-ink outline-none placeholder:text-ink-3"
+            // outline-none! vence o anel global de :focus-visible (index.css), que
+            // fica fora das camadas do Tailwind: o painel inteiro já é o destaque.
+            className="h-14 flex-1 bg-transparent text-[16px] text-ink outline-none! placeholder:text-ink-3"
           />
           <Kbd>esc</Kbd>
         </div>
