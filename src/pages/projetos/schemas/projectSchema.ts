@@ -1,29 +1,29 @@
 import { z } from "zod"
 
 const step1Fields = z.object({
-  title: z.string().min(3, "O título deve ter pelo menos 3 caracteres"),
-  projectType: z.string().min(1, "Selecione o tipo de projeto"),
-  category: z.string().min(1, "Selecione a categoria"),
+  title: z.string().min(3, "validation.project.titleMin"),
+  projectType: z.string().min(1, "validation.project.typeRequired"),
+  category: z.string().min(1, "validation.project.categoryRequired"),
   status: z.enum(["PLANNING", "IN_PROGRESS", "PAUSED", "COMPLETED", "CANCELLED"]),
-  landArea: z.number().positive("Área deve ser maior que zero"),
-  builtArea: z.number().positive("Área deve ser maior que zero"),
-  plannedStartDate: z.string().min(1, "Data de início é obrigatória"),
-  plannedEndDate: z.string().min(1, "Data de término é obrigatória"),
+  landArea: z.number().positive("validation.project.areaPositive"),
+  builtArea: z.number().positive("validation.project.areaPositive"),
+  plannedStartDate: z.string().min(1, "validation.project.startRequired"),
+  plannedEndDate: z.string().min(1, "validation.project.endRequired"),
 })
 
 const step2Fields = z.object({
-  cep: z.string().length(8, "CEP deve ter 8 dígitos"),
-  logradouro: z.string().min(1, "Logradouro obrigatório"),
-  numero: z.string().min(1, "Número obrigatório"),
+  cep: z.string().length(8, "validation.project.cepLength"),
+  logradouro: z.string().min(1, "validation.project.streetRequired"),
+  numero: z.string().min(1, "validation.project.numberRequired"),
   complemento: z.string().optional(),
-  bairro: z.string().min(1, "Bairro obrigatório"),
-  cidade: z.string().min(1, "Cidade obrigatória"),
-  uf: z.string().length(2, "UF inválida"),
+  bairro: z.string().min(1, "validation.project.districtRequired"),
+  cidade: z.string().min(1, "validation.project.cityRequired"),
+  uf: z.string().length(2, "validation.project.stateInvalid"),
 })
 
 export const projectSchema = step1Fields.merge(step2Fields).refine(
   (d) => new Date(d.plannedEndDate) > new Date(d.plannedStartDate),
-  { message: "A data de término deve ser posterior à data de início", path: ["plannedEndDate"] },
+  { message: "validation.project.endAfterStart", path: ["plannedEndDate"] },
 )
 
 export type ProjectFormData = z.infer<typeof projectSchema>

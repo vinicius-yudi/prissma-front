@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next"
 import { useOutletContext } from "react-router-dom"
 
 import type { Project } from "@/shared/types/project"
 
+import { ComingSoon } from "./components/ComingSoon"
 import { DocumentosTab } from "./components/DocumentosTab"
 import DiarioDaObra from "./components/DiarioDaObra"
 import { EquipesTab } from "./components/EquipesTab"
@@ -11,7 +11,7 @@ import { OrcamentoTab } from "./components/OrcamentoTab"
 import { PropostasTab } from "./components/PropostasTab"
 import { ScheduleTab } from "./components/ScheduleTab"
 import { TarefasTab } from "./components/TarefasTab"
-import { VisaoGeral } from "./components/visaoGeral"
+import { VisaoGeral } from "./components/visao-geral/VisaoGeral"
 
 /**
  * Módulos do nível 2, cada um em sua própria rota.
@@ -23,21 +23,6 @@ import { VisaoGeral } from "./components/visaoGeral"
 
 function useObra(): Project {
   return useOutletContext<Project>()
-}
-
-/**
- * Placeholder dos módulos que o design especifica mas que ficaram para a fase
- * seguinte (Indicadores). Melhor uma tela honesta que um item de menu que não
- * abre.
- */
-function ComingSoon({ module }: { module: string }) {
-  const { t } = useTranslation()
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-outline bg-surface-container-low py-20 text-center">
-      <p className="text-sm font-semibold text-on-surface">{t(`sidebar.nav.${module}`)}</p>
-      <p className="text-sm text-on-surface-variant">{t("obra.comingSoon")}</p>
-    </div>
-  )
 }
 
 export function VisaoGeralModule() {
@@ -62,7 +47,7 @@ export function ScheduleModule() {
 }
 
 export function OrcamentoModule() {
-  return <OrcamentoTab projectId={useObra().id} />
+  return <OrcamentoTab project={useObra()} />
 }
 
 export function DocumentosModule() {

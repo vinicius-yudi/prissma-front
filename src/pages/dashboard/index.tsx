@@ -1,119 +1,81 @@
-import { FolderKanban } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
-import { tv } from "tailwind-variants"
+import { Link } from "react-router-dom"
 
+import { useAuth } from "@/contexts/AuthContext"
 import { ProjectCard } from "@/pages/projetos/components/ProjectCard"
-import { Num } from "@/shared/components/ui/num/Num"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
+import { KpiCard } from "@/shared/components/ui/kpi-card/KpiCard"
+import { KpiStrip } from "@/shared/components/ui/kpi-card/KpiStrip"
+import { PageHeader } from "@/shared/components/ui/page-header/PageHeader"
+import { Ticker } from "@/shared/components/ui/ticker/Ticker"
 
-import { STATIC_STATS } from "./constants"
+import { DashboardAttention } from "./components/DashboardAttention"
+import { WeekAgenda } from "./components/WeekAgenda"
 import { useDashboard } from "./hooks/useDashboard"
 
-const statCard = tv({
-  base: "rounded-xl border border-outline-variant border-t-3 p-5",
-  variants: {
-    tone: {
-      ok: "border-t-ok bg-ok/5",
-      warn: "border-t-warn bg-warn/5",
-    },
-  },
-})
+function greetingKey(hour: number): string {
+  if (hour < 12) return "dashboard.greeting.morning"
+  if (hour < 18) return "dashboard.greeting.afternoon"
+  return "dashboard.greeting.evening"
+}
 
-const statIcon = tv({
-  base: "flex h-10 w-10 items-center justify-center rounded-lg",
-  variants: {
-    tone: {
-      ok: "bg-ok/15 text-ok",
-      warn: "bg-warn/15 text-warn",
-    },
-  },
-})
-
-const statValue = tv({
-  base: "mt-1 text-3xl font-bold",
-  variants: {
-    tone: {
-      ok: "text-ok",
-      warn: "text-warn",
-    },
-  },
-})
-
+/**
+ * Início (DS v2): saudação, faixa de KPIs, o que precisa de decisão, a semana
+ * e as obras em andamento. Tudo vem das obras da conta e das tarefas
+ * atribuídas a mim.
+ */
 export function DashboardPage() {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const { activeCount, inProgressProjects, isLoading } = useDashboard()
-
-  function handleProjectsNav() {
-    navigate("/obras")
-  }
+  const { t, i18n } = useTranslation()
+  const { user } = useAuth()
+  const data = useDashboard()
+  const firstName = user?.name.split(" ")[0] ?? ""
+  const today = new Date().toLocaleDateString(i18n.language, { weekday: "long", day: "numeric", month: "long" })
+  const lateCount = data.alerts.length
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-on-surface">{t("dashboard.title")}</h1>
-        <p className="text-sm text-on-surface-variant">{t("dashboard.subtitle")}</p>
+      <PageHeader
+        eyebrow={today}
+        title={t(greetingKey(new Date().getHours()), { name: firstName })}
+        subtitle={lateCount > 0 ? t("dashboard.summaryLate", { count: lateCount }) : t("dashboard.summaryClear")}
+      />
+
+      <KpiStrip className="mb-6">
+        <KpiCard bare label={t("dashboard.kpi.inProgress")} value={<Ticker value={data.inProgress.length} />}>
+          {t("dashboard.kpi.planning", { count: data.planningCount })}
+        </KpiCard>
+        <KpiCard bare label={t("dashboard.kpi.openTasks")} value={<Ticker value={data.openTaskCount} />}>
+          {t("dashboard.kpi.dueThisWeek", { count: data.weekTaskCount })}
+        </KpiCard>
+        <KpiCard bare danger={lateCount > 0} label={t("dashboard.kpi.late")} value={<Ticker value={lateCount} />}>
+          {t("dashboard.kpi.lateHint")}
+        </KpiCard>
+        <KpiCard bare label={t("dashboard.kpi.completed")} value={<Ticker value={data.completedCount} />}>
+          {t("dashboard.kpi.ofTotal", { count: data.totalCount })}
+        </KpiCard>
+      </KpiStrip>
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <DashboardAttention alerts={data.alerts} />
+        <WeekAgenda week={data.week} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <button
-          onClick={handleProjectsNav}
-          className="rounded-xl border border-outline-variant border-t-3 p-5 border-t-primary bg-primary/5 text-left hover:bg-primary/10 transition-colors cursor-pointer"
-        >
-          <div className="flex items-start justify-between">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-primary">
-              <FolderKanban className="h-5 w-5" />
-            </div>
-          </div>
-          <p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
-            {t("dashboard.stats.activeProjects")}
-          </p>
-          <Num className="mt-1 block text-3xl font-bold text-primary">
-            {isLoading ? "—" : activeCount}
-          </Num>
-        </button>
-
-        {STATIC_STATS.map((card) => {
-          const Icon = card.icon
-          return (
-            <div key={card.labelKey} className={statCard({ tone: card.tone })}>
-              <div className="flex items-start justify-between">
-                <div className={statIcon({ tone: card.tone })}>
-                  <Icon className="h-5 w-5" />
-                </div>
-              </div>
-              <p className="mt-3 text-xs font-semibold tracking-wider text-on-surface-variant">
-                {t(card.labelKey)}
-              </p>
-              <Num className={statValue({ tone: card.tone })}>{card.value}</Num>
-              <p className="mt-1 text-xs text-on-surface-variant">{t(card.detailKey)}</p>
-            </div>
-          )
-        })}
+      <div className="mt-10 mb-4 flex items-end justify-between">
+        <h2 className="t-section text-[20px] text-ink">{t("dashboard.inProgressTitle")}</h2>
+        <Link to="/obras" className="text-[13px] font-[620] text-gold-hi hover:underline">
+          {t("dashboard.allProjects")}
+        </Link>
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-base font-semibold text-on-surface mb-4">
-          {t("dashboard.inProgressTitle")}
-        </h2>
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2].map((n) => (
-              <div key={n} className="h-48 rounded-2xl bg-surface-container-low animate-pulse" />
-            ))}
-          </div>
-        )}
-        {!isLoading && inProgressProjects.length === 0 && (
-          <p className="text-sm text-on-surface-variant">{t("dashboard.inProgressEmpty")}</p>
-        )}
-        {!isLoading && inProgressProjects.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {inProgressProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        )}
-      </div>
+      {data.inProgress.length === 0 ? (
+        <EmptyState title={t("dashboard.inProgressEmpty")} body={t("dashboard.inProgressEmptyHint")} />
+      ) : (
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {data.inProgress.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

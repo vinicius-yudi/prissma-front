@@ -1,10 +1,10 @@
 import { api } from "@/lib/api"
-import type { LoginFormData } from "../types"
+import type { LoginFormSchema } from "../schemas/login.schema"
 
 interface LoginResponse {
   token: string
 }
 
-export async function login(credentials: LoginFormData): Promise<LoginResponse> {
+export async function login(credentials: LoginFormSchema): Promise<LoginResponse> {
   return api.post<LoginResponse>("/auth/login", credentials)
 }

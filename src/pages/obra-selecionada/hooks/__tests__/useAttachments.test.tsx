@@ -79,17 +79,17 @@ describe("useAttachments — rótulos por aba", () => {
   it("usa o texto de foto por padrão", async () => {
     const { result } = renderHook(() => useAttachments(7), { wrapper: createHookWrapper() })
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
-    await waitFor(() => expect(toast.success).toHaveBeenCalledWith(FOTO_LABELS.uploadSuccess))
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Foto adicionada."))
   })
 
   it("usa o texto de documento quando a aba pede", async () => {
     const { result } = render(DOCUMENTO_LABELS)
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
-    await waitFor(() => expect(toast.success).toHaveBeenCalledWith(DOCUMENTO_LABELS.uploadSuccess))
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Arquivo anexado."))
   })
 })
 
@@ -97,9 +97,9 @@ describe("useAttachments — envio", () => {
   it("envia o arquivo para a obra", async () => {
     const { result } = render()
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
-    await waitFor(() => expect(enviar).toHaveBeenCalledWith(7, ARQUIVO))
+    await waitFor(() => expect(enviar).toHaveBeenCalledWith(7, ARQUIVO, undefined))
   })
 
   /**
@@ -111,7 +111,7 @@ describe("useAttachments — envio", () => {
     enviar.mockRejectedValue(new AttachmentRequestError(413, "Payload Too Large"))
     const { result } = render()
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith("Arquivo acima do limite de 50 MB."),
@@ -122,7 +122,7 @@ describe("useAttachments — envio", () => {
     enviar.mockRejectedValue(new AttachmentRequestError(415, "Unsupported Media Type"))
     const { result } = render()
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
@@ -135,7 +135,7 @@ describe("useAttachments — envio", () => {
     enviar.mockRejectedValue(new AttachmentRequestError(500, "Falha no storage."))
     const { result } = render()
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Falha no storage."))
   })
@@ -144,9 +144,9 @@ describe("useAttachments — envio", () => {
     enviar.mockRejectedValue(new Error(""))
     const { result } = render(DOCUMENTO_LABELS)
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith(DOCUMENTO_LABELS.uploadError))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível enviar o arquivo."))
   })
 
   it("sinaliza o envio em andamento", async () => {
@@ -154,43 +154,12 @@ describe("useAttachments — envio", () => {
     enviar.mockImplementation(() => new Promise((resolve) => { liberar = () => resolve(ANEXO) }))
     const { result } = render()
 
-    act(() => result.current.upload(ARQUIVO))
+    act(() => result.current.upload({ file: ARQUIVO }))
 
     await waitFor(() => expect(result.current.isUploading).toBe(true))
 
     await act(async () => { liberar() })
 
     await waitFor(() => expect(result.current.isUploading).toBe(false))
-  })
-})
-
-describe("useAttachments — exclusão", () => {
-  it("exclui o anexo da obra", async () => {
-    const { result } = render()
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() => expect(excluir).toHaveBeenCalledWith(7, 1))
-    expect(toast.success).toHaveBeenCalledWith(FOTO_LABELS.deleteSuccess)
-  })
-
-  it("mostra a mensagem do backend ao falhar", async () => {
-    excluir.mockRejectedValue(new Error("Anexo referenciado no diário."))
-    const { result } = render()
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith("Anexo referenciado no diário."),
-    )
-  })
-
-  it("cai no rótulo da aba quando o erro de exclusão não tem texto", async () => {
-    excluir.mockRejectedValue(new Error(""))
-    const { result } = render(DOCUMENTO_LABELS)
-
-    act(() => result.current.remove(1))
-
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith(DOCUMENTO_LABELS.deleteError))
   })
 })

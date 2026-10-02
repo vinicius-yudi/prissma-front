@@ -1,129 +1,61 @@
-import { DndContext, useDroppable } from "@dnd-kit/core"
-import { Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { tv } from "tailwind-variants"
+import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/shared/components/ui/button/Button"
-import { Modal } from "@/shared/components/ui/modal/Modal"
-import { Num } from "@/shared/components/ui/num/Num"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
-import { Select } from "@/shared/components/ui/select/Select"
-import { useMediaQuery } from "@/shared/hooks/useMediaQuery"
+import { GlobalRole } from "@/shared/types/user"
 
-import { ALL_STAGES, COLUMN_STATUSES } from "../constants/kanban"
+import { COLUMN_STATUSES } from "../constants/kanban"
+import { useObraMembers } from "../hooks/useObraMembers"
 import { useTarefasKanban } from "../hooks/useTarefasKanban"
-import type { TarefaComEtapa, TarefaStatus } from "../types/tarefas"
-import { TarefasLista } from "./TarefasLista"
-import { TaskFormModal } from "./TaskFormModal"
-import { TaskKanbanCard } from "./TaskKanbanCard"
+import { TaskBoard } from "./tarefas/TaskBoard"
+import { TaskDrawer } from "./tarefas/TaskDrawer"
+import { TaskToolbar } from "./tarefas/TaskToolbar"
 
-/**
- * Tarefas em kanban de quatro colunas (Telas §13).
- *
- * Antes era uma lista agrupada por etapa, com filtro e ordenação próprios em
- * cada grupo. O kanban troca a estrutura: a coluna **é** o status, e arrastar
- * é a forma de mudá-lo.
- *
- * Estado, mutations e o handler de drop vivem em `useTarefasKanban`; aqui só
- * há desenho.
- *
- * Abaixo de `md` o kanban dá lugar a <TarefasLista>. A troca é por
- * `useMediaQuery`, e não por `hidden md:block`: esconder por CSS ainda montaria
- * o `DndContext` no celular, onde ele só atrapalha a rolagem.
- */
-
-const columnDot = tv({
-  base: "size-2 shrink-0 rounded-full",
-  variants: {
-    status: {
-      TODO: "bg-on-surface-faint",
-      IN_PROGRESS: "bg-gold-bright",
-      DONE: "bg-ok",
-      BLOCKED: "bg-warn",
-    },
-  },
-})
-
-const column = tv({
-  base: "flex min-h-[340px] flex-col gap-3 rounded-2xl border p-4 transition-colors",
-  variants: {
-    over: {
-      true: "border-gold bg-surface-container-high",
-      false: "border-outline-variant bg-surface-container-low",
-    },
-  },
-})
-
-interface KanbanColumnProps {
-  status: TarefaStatus
-  items: TarefaComEtapa[]
-  canMutate: boolean
-  onEdit: (item: TarefaComEtapa) => void
-  onDelete: (item: TarefaComEtapa) => void
-}
-
-function KanbanColumn({ status, items, canMutate, onEdit, onDelete }: KanbanColumnProps) {
-  const { t } = useTranslation()
-  const { setNodeRef, isOver } = useDroppable({ id: status })
-
-  return (
-    <div ref={setNodeRef} className={column({ over: isOver })}>
-      <div className="flex items-center gap-2 px-1">
-        <span className={columnDot({ status })} />
-        <span className="text-[13.5px] font-semibold text-on-surface">
-          {t(`obra.tarefas.columns.${status}`)}
-        </span>
-        <Num className="ml-auto text-[11px] font-bold text-on-surface-faint">{items.length}</Num>
-      </div>
-
-      {items.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-outline p-4 text-center text-[11.5px] text-on-surface-faint">
-          {t("obra.tarefas.emptyColumn")}
-        </div>
-      ) : (
-        items.map((item) => (
-          <TaskKanbanCard
-            key={item.tarefa.id}
-            tarefa={item.tarefa}
-            stageId={item.stageId}
-            canMutate={canMutate}
-            onEdit={() => onEdit(item)}
-            onDelete={() => onDelete(item)}
-          />
-        ))
-      )}
-    </div>
-  )
-}
+/** O que o drawer mostra: nada, uma tarefa (pelo id) ou o formulário de criar. */
+type DrawerState = { mode: "closed" } | { mode: "create" } | { mode: "edit"; id: number }
 
 interface TarefasTabProps {
   projectId: number
 }
 
+/**
+ * Tarefas em kanban (redesign): a coluna é o status, arrastar muda o status,
+ * o card abre um drawer que salva sozinho. Filtros ficam na URL.
+ */
 export function TarefasTab({ projectId }: TarefasTabProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const kanban = useTarefasKanban(projectId)
+  const { list: members } = useObraMembers(projectId)
+  const [drawer, setDrawer] = useState<DrawerState>({ mode: "closed" })
 
-  const [createForStage, setCreateForStage] = useState<number | null>(null)
-  const [editing, setEditing] = useState<TarefaComEtapa | null>(null)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
+  // O item vem sempre do cache vivo: o drawer enxerga o que o otimista mudou.
+  const openItem = drawer.mode === "edit" ? (kanban.all.find((i) => i.tarefa.id === drawer.id) ?? null) : null
+  // O backend só aceita engenheiro como responsável de tarefa (TaskService).
+  const assignees = members.filter((m) => m.user.role === GlobalRole.ENG).map((m) => ({ id: m.user.id, name: m.user.name }))
+  const canCreate = kanban.canMutate && kanban.stages.length > 0
 
-  const canCreate = kanban.canMutate && kanban.firstStageId !== null
   function openCreate() {
-    setCreateForStage(
-      kanban.stageFilter === ALL_STAGES ? kanban.firstStageId : Number(kanban.stageFilter),
-    )
+    setDrawer({ mode: "create" })
   }
 
-  // Antes dos early returns: é o que alimenta o FAB da barra de abas.
+  // Antes dos early returns: alimenta a ação flutuante do celular.
   usePrimaryAction(canCreate ? { label: t("obra.tarefas.newTask"), onClick: openCreate } : null)
+
+  function handleDelete() {
+    if (!openItem) return
+    setDrawer({ mode: "closed" })
+    kanban.actions.remove(openItem)
+  }
 
   if (kanban.isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-busy="true">
         {COLUMN_STATUSES.map((status) => (
-          <div key={status} className="h-56 animate-pulse rounded-2xl bg-surface-container-low" />
+          <div key={status} className="h-64 animate-pulse rounded-[18px] bg-raised/70" />
         ))}
       </div>
     )
@@ -131,112 +63,41 @@ export function TarefasTab({ projectId }: TarefasTabProps) {
 
   if (kanban.stages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-outline bg-surface-container-low py-20 text-center">
-        <p className="text-sm font-semibold text-on-surface">{t("obra.tarefas.noStagesTitle")}</p>
-        <p className="max-w-sm text-sm text-on-surface-variant">{t("obra.tarefas.noStagesHint")}</p>
-      </div>
+      <EmptyState
+        title={t("obra.tarefas.noStagesTitle")}
+        body={t("obra.tarefas.noStagesHint")}
+        action={
+          <Button variant="outline" fullWidth={false} onClick={() => navigate("../etapas", { relative: "path" })}>
+            {t("obra.tarefas.goToStages")}
+          </Button>
+        }
+      />
     )
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="w-full sm:max-w-[260px]">
-          <Select
-            value={kanban.stageFilter}
-            onChange={(e) => kanban.setStageFilter(e.currentTarget.value)}
-          >
-            <option value={ALL_STAGES}>{t("obra.tarefas.allStages")}</option>
-            {kanban.stages.map(({ stage }) => (
-              <option key={stage.id} value={String(stage.id)}>
-                {stage.name}
-              </option>
-            ))}
-          </Select>
-        </div>
-
-        <Num className="hidden text-[11.5px] text-on-surface-variant md:block">
-          {t("obra.tarefas.count", { count: kanban.visible.length })}
-        </Num>
-
-        {canCreate && (
-          <Button
-            variant="primary"
-            size="sm"
-            fullWidth={false}
-            onClick={openCreate}
-            // No celular quem cria é o FAB da barra de abas.
-            className="ml-auto hidden lg:inline-flex"
-          >
-            <Plus size={15} />
-            {t("obra.tarefas.newTask")}
-          </Button>
-        )}
-      </div>
-
-      {isDesktop ? (
-        <DndContext sensors={kanban.sensors} onDragEnd={kanban.handleDragEnd}>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {COLUMN_STATUSES.map((status) => (
-              <KanbanColumn
-                key={status}
-                status={status}
-                items={kanban.byStatus(status)}
-                canMutate={kanban.canMutate}
-                onEdit={setEditing}
-                onDelete={kanban.requestDelete}
-              />
-            ))}
-          </div>
-        </DndContext>
-      ) : (
-        <TarefasLista items={kanban.visible} onOpen={setEditing} />
-      )}
-
-      <TaskFormModal
-        open={createForStage !== null}
-        onClose={() => setCreateForStage(null)}
-        stageId={createForStage}
-        stages={kanban.stages.map(({ stage }) => stage)}
-        projectId={projectId}
-        canMutate={kanban.canMutate}
+    <div>
+      <TaskToolbar
+        filterState={kanban.filterState}
+        stages={kanban.stages}
+        lateCount={kanban.lateCount}
+        visibleCount={kanban.visible.length}
+        onCreate={canCreate ? openCreate : undefined}
       />
 
-      <TaskFormModal
-        open={editing !== null}
-        onClose={() => setEditing(null)}
-        stageId={editing?.stageId ?? null}
-        stages={kanban.stages.map(({ stage }) => stage)}
-        projectId={projectId}
-        canMutate={kanban.canMutate}
-        tarefaToEdit={editing?.tarefa ?? null}
-        onSaved={() => setEditing(null)}
-      />
+      <TaskBoard kanban={kanban} onOpen={(item) => setDrawer({ mode: "edit", id: item.tarefa.id })} />
 
-      <Modal
-        open={!!kanban.deleting}
-        onClose={kanban.cancelDelete}
-        title={t("obra.tarefas.deleteTitle")}
-        description={t("obra.tarefas.deleteDescription", {
-          title: kanban.deleting?.tarefa.title ?? "",
-        })}
-        icon={<Trash2 size={20} />}
-        variant="danger"
-        size="sm"
-      >
-        <div className="flex gap-2 px-6 pb-6">
-          <Button variant="outline" onClick={kanban.cancelDelete}>
-            {t("obra.tarefas.cancel")}
-          </Button>
-          <Button
-            variant="destructive"
-            disabled={kanban.isDeleting}
-            onClick={kanban.confirmDelete}
-          >
-            {t("obra.tarefas.confirmDelete")}
-          </Button>
-        </div>
-      </Modal>
+      <TaskDrawer
+        open={drawer.mode === "create" || openItem !== null}
+        onClose={() => setDrawer({ mode: "closed" })}
+        onDelete={handleDelete}
+        item={openItem}
+        stages={kanban.stages}
+        defaultStage={kanban.targetStage}
+        assignees={assignees}
+        actions={kanban.actions}
+        canMutate={kanban.canMutate}
+      />
     </div>
   )
 }

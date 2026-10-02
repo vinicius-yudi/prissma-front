@@ -6,7 +6,6 @@ import { MAX_ATTACHMENT_SIZE_MB } from "@/shared/constants/attachments"
 
 import {
   AttachmentRequestError,
-  deleteAttachment,
   listAttachments,
   uploadAttachment,
 } from "../services/attachments.service"
@@ -22,18 +21,25 @@ interface UseAttachmentsOptions {
   labels: AttachmentLabels
 }
 
+/** Chaves de i18n dos toasts — foto e documento falam diferente. */
 export const FOTO_LABELS: AttachmentLabels = {
-  uploadSuccess: "Foto adicionada com sucesso!",
-  uploadError: "Erro ao enviar foto",
-  deleteSuccess: "Foto removida com sucesso!",
-  deleteError: "Erro ao remover foto",
+  uploadSuccess: "obra.attachments.toasts.photoUploaded",
+  uploadError: "obra.attachments.toasts.photoUploadError",
+  deleteSuccess: "obra.attachments.toasts.photoDeleted",
+  deleteError: "obra.attachments.toasts.photoDeleteError",
 }
 
 export const DOCUMENTO_LABELS: AttachmentLabels = {
-  uploadSuccess: "Documento adicionado com sucesso!",
-  uploadError: "Erro ao enviar documento",
-  deleteSuccess: "Documento removido com sucesso!",
-  deleteError: "Erro ao remover documento",
+  uploadSuccess: "obra.attachments.toasts.documentUploaded",
+  uploadError: "obra.attachments.toasts.documentUploadError",
+  deleteSuccess: "obra.attachments.toasts.documentDeleted",
+  deleteError: "obra.attachments.toasts.documentDeleteError",
+}
+
+export interface UploadInput {
+  file: File
+  /** Vincula o anexo a uma etapa. */
+  stageId?: number | null
 }
 
 export function useAttachments(projectId: number, options: UseAttachmentsOptions = { labels: FOTO_LABELS }) {
@@ -48,10 +54,10 @@ export function useAttachments(projectId: number, options: UseAttachmentsOptions
   })
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => uploadAttachment(projectId, file),
+    mutationFn: ({ file, stageId }: UploadInput) => uploadAttachment(projectId, file, stageId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey })
-      toast.success(labels.uploadSuccess)
+      toast.success(t(labels.uploadSuccess))
     },
     onError: (error: Error) => {
       if (error instanceof AttachmentRequestError) {
@@ -64,18 +70,7 @@ export function useAttachments(projectId: number, options: UseAttachmentsOptions
           return
         }
       }
-      toast.error(error.message || labels.uploadError)
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteAttachment(projectId, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
-      toast.success(labels.deleteSuccess)
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || labels.deleteError)
+      toast.error(error.message || t(labels.uploadError))
     },
   })
 
@@ -83,7 +78,7 @@ export function useAttachments(projectId: number, options: UseAttachmentsOptions
     attachments: query.data ?? [],
     isLoading: query.isLoading,
     upload: uploadMutation.mutate,
+    uploadAsync: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
-    remove: deleteMutation.mutate,
   }
 }

@@ -1,6 +1,8 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
+
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
 
 import { createDiarioEntry, deleteDiarioEntry, getDiarioEntries } from "../services/diario.service"
 import type { CreateDiarioEntryRequest, DiarioEntry, DiarioPage } from "../types/diario"
@@ -46,27 +48,32 @@ export function useDiario(projectId: number) {
     },
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteDiarioEntry(projectId, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
-      toast.success(t("obra.diario.toasts.deleted"))
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || t("obra.diario.toasts.errorDeleting"))
-    },
+  // Registro some na hora e vai ao servidor depois da janela do Desfazer. O
+  // cache é paginado (infinite query): tira o registro de cada página.
+  const remove = useUndoableDelete<DiarioEntry, InfiniteData<DiarioPage | DiarioEntry[]>>({
+    queryKey: () => queryKey,
+    removeFrom: (data, entry) => ({
+      ...data,
+      pages: data.pages.map((page) =>
+        Array.isArray(page) ? page.filter((e) => e.id !== entry.id) : { ...page, content: page.content.filter((e) => e.id !== entry.id) },
+      ),
+    }),
+    commit: (entry) => deleteDiarioEntry(projectId, entry.id),
+    describe: (entry) => ({ title: t("obra.diario.toasts.deleted"), body: entry.description.slice(0, 80) }),
+    errorMessage: t("obra.diario.toasts.errorDeleting"),
   })
 
   return {
     entries: query.data?.pages.flatMap((page, index) => normalizePage(page, index).content) ?? [],
     isLoading: query.isLoading,
     error: query.error,
+    refetch: query.refetch,
     hasNextPage: query.hasNextPage,
     fetchNextPage: query.fetchNextPage,
     isFetchingNextPage: query.isFetchingNextPage,
     create: createMutation.mutate,
     isCreating: createMutation.isPending,
-    delete: deleteMutation.mutate,
-    isDeleting: deleteMutation.isPending,
+    /** Some na hora; vai ao servidor depois da janela do Desfazer. */
+    remove,
   }
 }

@@ -1,75 +1,47 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import type { UseFormReturn } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { toast } from "react-toastify"
+
+import { resetPasswordSchema } from "../schemas/resetPassword.schema"
+import type { ResetPasswordSchema } from "../schemas/resetPassword.schema"
 import { resetPassword } from "../services/reset-password.service"
 
-export function useResetPasswordForm() {
-	const [searchParams] = useSearchParams()
-	const token = searchParams.get("token") ?? ""
-	const navigate = useNavigate()
+interface UseResetPasswordFormResult {
+  form: UseFormReturn<ResetPasswordSchema>
+  onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>
+  isPending: boolean
+  /** Sem token no link não há o que redefinir — a página redireciona. */
+  hasToken: boolean
+}
 
-	useEffect(() => {
-		if (!token) {
-			navigate("/forgot-password", { replace: true })
-		}
-	}, [token, navigate])
+export function useResetPasswordForm(): UseResetPasswordFormResult {
+  const { t } = useTranslation()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get("token") ?? ""
+  const navigate = useNavigate()
 
-	const [newPassword, setNewPassword] = useState("")
-	const [confirmPassword, setConfirmPassword] = useState("")
-	const [showPassword, setShowPassword] = useState(false)
-	const [showConfirm, setShowConfirm] = useState(false)
+  const form = useForm<ResetPasswordSchema>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { newPassword: "", confirmPassword: "" },
+    mode: "onTouched",
+  })
 
-	const mutation = useMutation({
-		mutationFn: () => resetPassword(token, newPassword),
-		onSuccess: () => {
-			toast.success("Senha redefinida com sucesso!")
-			navigate("/login")
-		},
-		onError: (error: Error) => {
-			toast.error(error.message)
-		},
-	})
+  const mutation = useMutation({
+    mutationFn: (newPassword: string) => resetPassword(token, newPassword),
+    onSuccess: () => {
+      toast.success(t("resetPassword.success"))
+      navigate("/login")
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		if (!token) {
-			toast.error("Token inválido ou ausente.")
-			return
-		}
-		if (!/[A-Z]/.test(newPassword)) {
-			toast.warning("A senha deve conter pelo menos uma letra maiúscula.")
-			return
-		}
-		if (!/[a-z]/.test(newPassword)) {
-			toast.warning("A senha deve conter pelo menos uma letra minúscula.")
-			return
-		}
-		if (!/[0-9]/.test(newPassword)) {
-			toast.warning("A senha deve conter pelo menos um número.")
-			return
-		}
-		if (!/[^a-zA-Z0-9]/.test(newPassword)) {
-			toast.warning("A senha deve conter pelo menos um caractere especial.")
-			return
-		}
-		if (newPassword !== confirmPassword) {
-			toast.warning("As senhas não coincidem.")
-			return
-		}
-		mutation.mutate()
-	}
+  const onSubmit = form.handleSubmit(({ newPassword }) => mutation.mutate(newPassword))
 
-	return {
-		newPassword,
-		setNewPassword,
-		confirmPassword,
-		setConfirmPassword,
-		showPassword,
-		togglePassword: () => setShowPassword((p) => !p),
-		showConfirm,
-		toggleConfirm: () => setShowConfirm((p) => !p),
-		handleSubmit,
-		isPending: mutation.isPending,
-	}
+  return { form, onSubmit, isPending: mutation.isPending, hasToken: token !== "" }
 }

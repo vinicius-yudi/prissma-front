@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
+import { Avatar } from "@/shared/components/ui/avatar/Avatar"
+
 import type { MemberSchedule } from "../types/schedule"
-import { initialsOf } from "../utils/scheduleFormat"
 
 /**
  * Coluna do integrante — avatar de iniciais, nome e responsabilidade na obra.
@@ -12,18 +13,14 @@ import { initialsOf } from "../utils/scheduleFormat"
  */
 
 const header = tv({
-  base: "sticky left-0 z-10 w-[170px] min-w-[170px] bg-surface-container-low px-3.5 py-3 text-left",
-})
-
-const avatar = tv({
-  base: "flex size-8 shrink-0 items-center justify-center rounded-full bg-gold-grad text-[11px] font-bold text-on-primary",
+  base: "sticky left-0 z-10 w-[190px] min-w-[190px] bg-surface px-3.5 py-3 text-left",
 })
 
 const identity = tv({
   base: "flex w-full items-center gap-2.5 text-left",
   variants: {
     interactive: {
-      true: "cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+      true: "cursor-pointer rounded-[8px] outline-none hover:text-gold-hi focus-visible:ring-2 focus-visible:ring-gold",
       false: "",
     },
   },
@@ -44,14 +41,12 @@ export function ScheduleMemberCell({
 
   const content = (
     <>
-      <span className={avatar()} aria-hidden="true">
-        {initialsOf(member.userName)}
-      </span>
+      <Avatar name={member.userName} size={32} className="flex-none" />
       <span className="min-w-0">
-        <span className="block truncate text-[13px] font-semibold text-on-surface">
+        <span className="block truncate text-[13.5px] font-[600] text-ink">
           {member.userName}
         </span>
-        <span className="block truncate text-[10.5px] text-on-surface-faint">
+        <span className="block truncate text-[12px] text-meta">
           {member.userResponsibility ?? t("obra.schedule.noResponsibility")}
         </span>
       </span>

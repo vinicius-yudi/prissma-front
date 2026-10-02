@@ -5,7 +5,7 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 
 import { Progress } from "../Progress"
 
-/** Filho da trilha — é ele que carrega a largura e a trena. */
+/** Primeiro filho do trilho — é ele que carrega a largura. */
 function preenchimento(container: HTMLElement): HTMLElement {
   return container.querySelector("[role=progressbar] > div") as HTMLElement
 }
@@ -46,7 +46,7 @@ describe("<Progress />", () => {
 
   it("usa a altura padrão do design e aceita outra", () => {
     const { container, rerender } = renderWithProviders(<Progress value={30} />)
-    expect(screen.getByRole("progressbar")).toHaveStyle({ height: "8px" })
+    expect(screen.getByRole("progressbar")).toHaveStyle({ height: "10px" })
 
     rerender(<Progress value={30} height={4} />)
 
@@ -54,22 +54,40 @@ describe("<Progress />", () => {
   })
 
   /**
-   * A trena (traços a cada 8px) é a assinatura da marca e vem empilhada sobre
-   * a cor. Barra crua em qualquer outro lugar perde essa assinatura — por isso
-   * o teste guarda a presença dela em todos os tons.
+   * As marcações da trena são a assinatura da marca e ficam sobre qualquer tom.
+   * Na variante fina (< 8px) somem: ali viram ruído.
    */
   it.each(["gold", "ok", "warn", "danger"] as const)(
-    "mantém a trena sobre o preenchimento do tom %s",
+    "mantém as marcações da trena no tom %s",
     (tone) => {
       const { container } = renderWithProviders(<Progress value={50} tone={tone} />)
 
-      expect(preenchimento(container).style.backgroundImage).toContain("--pk-trena")
+      expect(container.querySelector("[data-ticks]")).toBeInTheDocument()
     },
   )
 
-  it("aceita classe extra na trilha", () => {
-    renderWithProviders(<Progress value={50} className="mt-2" />)
+  it("tira as marcações da variante fina", () => {
+    const { container } = renderWithProviders(<Progress value={50} height={6} />)
 
-    expect(screen.getByRole("progressbar")).toHaveClass("mt-2")
+    expect(container.querySelector("[data-ticks]")).not.toBeInTheDocument()
+  })
+
+  // O marcador ▾ mostra onde a obra deveria estar hoje.
+  it("posiciona o marcador de esperado quando há prazo", () => {
+    const { container } = renderWithProviders(<Progress value={30} expected={48} />)
+
+    expect(container.querySelector("[data-expected]")).toHaveStyle({ left: "48%" })
+  })
+
+  it("omite o marcador sem prazo", () => {
+    const { container } = renderWithProviders(<Progress value={30} />)
+
+    expect(container.querySelector("[data-expected]")).not.toBeInTheDocument()
+  })
+
+  it("aceita classe extra no contêiner", () => {
+    const { container } = renderWithProviders(<Progress value={50} className="mt-2" />)
+
+    expect(container.firstElementChild).toHaveClass("mt-2")
   })
 })

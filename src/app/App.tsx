@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { MotionConfig } from "motion/react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ThemeProvider } from "@/contexts/ThemeContext"
@@ -29,6 +28,7 @@ import {
 } from "@/pages/obra-selecionada/modules"
 import { ProjetosPage } from "@/pages/projetos"
 import { ResetPasswordPage } from "@/pages/reset-password"
+import { Toaster } from "@/shared/components/ui/toast/Toaster"
 
 import { ModuleGuard } from "./ModuleGuard"
 import { ProtectedRoute } from "./ProtectedRoute"
@@ -48,153 +48,157 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/cadastro" element={<CadastroPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              {/* Aceite de convite de workspace: público — o convidado pode
-                  ainda não ter conta. */}
-              <Route path="/invite" element={<InvitePage />} />
+      {/* Movimento reduzido tratado uma vez para toda a árvore: com ele,
+          transform e layout do motion ficam instantâneos. */}
+      <MotionConfig reducedMotion="user">
+        <ThemeProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/cadastro" element={<CadastroPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                {/* Aceite de convite de workspace: público — o convidado pode
+                    ainda não ter conta. */}
+                <Route path="/invite" element={<InvitePage />} />
 
-              <Route element={<ProtectedRoute />}>
-                <Route element={<MainLayout />}>
-                  <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<MainLayout />}>
+                    <Route index element={<Navigate to="/dashboard" replace />} />
 
-                  {/* Nível 1 — workspace */}
-                  <Route
-                    path="dashboard"
-                    element={
-                      <ModuleGuard module="home">
-                        <DashboardPage />
-                      </ModuleGuard>
-                    }
-                  />
-                  <Route
-                    path="obras"
-                    element={
-                      <ModuleGuard module="obras">
-                        <ProjetosPage />
-                      </ModuleGuard>
-                    }
-                  />
+                    {/* Nível 1 — workspace */}
+                    <Route
+                      path="dashboard"
+                      element={
+                        <ModuleGuard module="home">
+                          <DashboardPage />
+                        </ModuleGuard>
+                      }
+                    />
+                    <Route
+                      path="obras"
+                      element={
+                        <ModuleGuard module="obras">
+                          <ProjetosPage />
+                        </ModuleGuard>
+                      }
+                    />
 
-                  {/* Conta e preferências. Não é módulo da matriz de acesso —
-                      todo usuário autenticado alcança a própria conta. */}
-                  <Route path="perfil" element={<PerfilPage />} />
+                    {/* Conta e preferências. Não é módulo da matriz de acesso —
+                        todo usuário autenticado alcança a própria conta. */}
+                    <Route path="perfil" element={<PerfilPage />} />
 
-                  {/* Equipe da CONSTRUTORA (workspace_members) — nível 1,
-                      como o design sempre previu. */}
-                  <Route
-                    path="pessoas"
-                    element={
-                      <ModuleGuard module="pessoas">
-                        <PessoasPage />
-                      </ModuleGuard>
-                    }
-                  />
+                    {/* Equipe da CONSTRUTORA (workspace_members) — nível 1,
+                        como o design sempre previu. */}
+                    <Route
+                      path="pessoas"
+                      element={
+                        <ModuleGuard module="pessoas">
+                          <PessoasPage />
+                        </ModuleGuard>
+                      }
+                    />
 
-                  {/* Nível 2 — contexto de obra */}
-                  <Route path="obras/:obraId" element={<ObraLayout />}>
-                    <Route index element={<Navigate to="visao-geral" replace />} />
-                    <Route
-                      path="visao-geral"
-                      element={
-                        <ModuleGuard module="visao-geral">
-                          <VisaoGeralModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="indicadores"
-                      element={
-                        <ModuleGuard module="indicadores">
-                          <IndicadoresModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="etapas"
-                      element={
-                        <ModuleGuard module="etapas">
-                          <EtapasModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="tarefas"
-                      element={
-                        <ModuleGuard module="tarefas">
-                          <TarefasModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="equipes"
-                      element={
-                        <ModuleGuard module="equipes">
-                          <EquipesModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="schedule"
-                      element={
-                        <ModuleGuard module="schedule">
-                          <ScheduleModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="orcamento"
-                      element={
-                        <ModuleGuard module="orcamento">
-                          <OrcamentoModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="diario"
-                      element={
-                        <ModuleGuard module="diario">
-                          <DiarioModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="documentos"
-                      element={
-                        <ModuleGuard module="documentos">
-                          <DocumentosModule />
-                        </ModuleGuard>
-                      }
-                    />
-                    <Route
-                      path="propostas"
-                      element={
-                        <ModuleGuard module="propostas">
-                          <PropostasModule />
-                        </ModuleGuard>
-                      }
-                    />
+                    {/* Nível 2 — contexto de obra */}
+                    <Route path="obras/:obraId" element={<ObraLayout />}>
+                      <Route index element={<Navigate to="visao-geral" replace />} />
+                      <Route
+                        path="visao-geral"
+                        element={
+                          <ModuleGuard module="visao-geral">
+                            <VisaoGeralModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="indicadores"
+                        element={
+                          <ModuleGuard module="indicadores">
+                            <IndicadoresModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="etapas"
+                        element={
+                          <ModuleGuard module="etapas">
+                            <EtapasModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="tarefas"
+                        element={
+                          <ModuleGuard module="tarefas">
+                            <TarefasModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="equipes"
+                        element={
+                          <ModuleGuard module="equipes">
+                            <EquipesModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="schedule"
+                        element={
+                          <ModuleGuard module="schedule">
+                            <ScheduleModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="orcamento"
+                        element={
+                          <ModuleGuard module="orcamento">
+                            <OrcamentoModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="diario"
+                        element={
+                          <ModuleGuard module="diario">
+                            <DiarioModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="documentos"
+                        element={
+                          <ModuleGuard module="documentos">
+                            <DocumentosModule />
+                          </ModuleGuard>
+                        }
+                      />
+                      <Route
+                        path="propostas"
+                        element={
+                          <ModuleGuard module="propostas">
+                            <PropostasModule />
+                          </ModuleGuard>
+                        }
+                      />
+                    </Route>
+
+                    {/* Rotas da estrutura anterior, mantidas por um ciclo. */}
+                    <Route path="projetos" element={<Navigate to="/obras" replace />} />
+
+                    <Route path="*" element={<NotFoundPage />} />
                   </Route>
-
-                  {/* Rotas da estrutura anterior, mantidas por um ciclo. */}
-                  <Route path="projetos" element={<Navigate to="/obras" replace />} />
-
-                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
-              </Route>
 
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-          </BrowserRouter>
-          <ToastContainer position="top-right" theme="dark" autoClose={3000} />
-        </AuthProvider>
-      </ThemeProvider>
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </BrowserRouter>
+            <Toaster />
+          </AuthProvider>
+        </ThemeProvider>
+      </MotionConfig>
     </QueryClientProvider>
   )
 }

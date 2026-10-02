@@ -43,10 +43,12 @@ export async function listAttachments(projectId: number): Promise<Attachment[]> 
   return api.get<Attachment[]>(`/projects/${projectId}/attachments`)
 }
 
-export async function uploadAttachment(projectId: number, file: File): Promise<Attachment> {
+/** Sem `stageId` o anexo é da obra; com ele, fica vinculado à etapa. */
+export async function uploadAttachment(projectId: number, file: File, stageId?: number | null): Promise<Attachment> {
   const formData = new FormData()
   formData.append("file", file)
-  formData.append("target", "PROJECT")
+  formData.append("target", stageId ? "STAGE" : "PROJECT")
+  if (stageId) formData.append("stageId", String(stageId))
 
   const response = await fetch(`${BASE_URL}/projects/${projectId}/attachments`, {
     method: "POST",

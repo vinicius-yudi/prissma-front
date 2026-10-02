@@ -18,9 +18,6 @@ vi.mock("@/shared/hooks/useAccess", () => ({
   useObraIdFromPath: vi.fn(() => null),
 }))
 // A animação Lottie do 404 pede canvas, que o jsdom não tem.
-vi.mock("@lottiefiles/dotlottie-react", () => ({
-  DotLottieReact: () => <div data-testid="lottie" />,
-}))
 
 const { useAuth } = await import("@/contexts/AuthContext")
 const { useAccess } = await import("@/shared/hooks/useAccess")
@@ -157,10 +154,11 @@ describe("<AccessDeniedPage />", () => {
 })
 
 describe("<NotFoundPage />", () => {
-  it("mostra o código e o título do 404", () => {
+  it("mostra o código, o título do 404 e o caminho de volta", () => {
     renderWithProviders(<NotFoundPage />)
 
-    expect(screen.getByTestId("lottie")).toBeInTheDocument()
-    expect(screen.getByRole("heading")).toBeInTheDocument()
+    expect(screen.getByText("404")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/dashboard")
   })
 })

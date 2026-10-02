@@ -18,8 +18,8 @@ describe("<KpiCard />", () => {
   it("desenha o valor em mono, e o rótulo não", () => {
     renderWithProviders(<KpiCard label="Gasto total" value="R$ 25.000" />)
 
-    expect(screen.getByText("R$ 25.000")).toHaveClass("font-mono")
-    expect(screen.getByText("Gasto total")).not.toHaveClass("font-mono")
+    expect(screen.getByText("R$ 25.000")).toHaveClass("t-num")
+    expect(screen.getByText("Gasto total")).not.toHaveClass("t-num")
   })
 
   it("omite a variação quando ela não vem", () => {

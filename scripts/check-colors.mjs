@@ -45,7 +45,7 @@ const RAW_HEX = /#[0-9a-fA-F]{3,8}\b/g
 // deixar passar dois `rgba(138,211,214,.1)` — o teal da identidade anterior —
 // escondidos em style inline. Só hex não bastava.
 //
-// `color-mix(in srgb, var(--pk-b1) 10%, transparent)` continua válido: o
+// `color-mix(in srgb, var(--gold) 10%, transparent)` continua válido: o
 // primeiro argumento não é numérico, então não casa.
 const RAW_COLOR_FN = /\b(?:rgba?|hsla?)\(\s*[\d.]/g
 
@@ -90,7 +90,7 @@ if (findings.length > 0) {
   }
   console.error(
     `\n${findings.length} ocorrência(s). Use um token semântico ` +
-      "(text-on-surface, bg-surface-container-low, text-danger, bg-gold-grad…).\n" +
+      "(text-ink, bg-surface, bg-raised, text-danger, bg-gold-grad…).\n" +
       "Tokens novos entram em src/styles/index.css, o único arquivo que conhece hex.\n" +
       "Exceção pontual: comentar a linha com `check-colors-allow`.\n",
   )

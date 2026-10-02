@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import { ProposalRequestError, getPreview, requestPreview } from "../services/propostas.service"
-import type { PreviewOptions } from "../types/proposal"
+import { PreviewState, type PreviewJob, type PreviewOptions } from "../types/proposal"
 import { propostasQueryKey } from "./usePropostas"
 
 /** De quanto em quanto tempo a tela pergunta se a IA terminou. */
@@ -49,31 +49,37 @@ export function usePreviaIA(projectId: number) {
     },
   })
 
+  /** Terminou (pronto ou falhou): atualiza as listas e avisa uma vez só. */
+  function announce(result: PreviewJob) {
+    if (result.status === PreviewState.PROCESSING || announced.current === result.id) return
+    announced.current = result.id
+    if (result.status === PreviewState.READY) {
+      void queryClient.invalidateQueries({ queryKey: propostasQueryKey(projectId) })
+      // O histórico de versões vive na chave do detalhe — a versão recém-gerada
+      // só aparece nele com esta segunda invalidação.
+      void queryClient.invalidateQueries({ queryKey: ["proposta", projectId] })
+      toast.success(t("obra.propostas.toasts.previewSuccess"))
+      return
+    }
+    toast.error(result.errorMessage || t("obra.propostas.toasts.previewError"))
+  }
+
+  // O aviso sai de dentro do fetch do polling, onde o resultado chega — sem
+  // effect observando a query.
   const statusQuery = useQuery({
     queryKey: ["previa-ia", projectId, job?.previewId],
-    queryFn: () => getPreview(projectId, job!.proposalId, job!.previewId),
+    queryFn: async () => {
+      if (!job) throw new Error("no preview job")
+      const result = await getPreview(projectId, job.proposalId, job.previewId)
+      announce(result)
+      return result
+    },
     enabled: !!job,
     refetchInterval: (query) =>
-      query.state.data?.status === "PROCESSING" ? POLL_INTERVAL_MS : false,
+      query.state.data?.status === PreviewState.PROCESSING ? POLL_INTERVAL_MS : false,
   })
 
   const preview = statusQuery.data ?? null
-
-  useEffect(() => {
-    if (!preview || preview.status === "PROCESSING") return
-    if (announced.current === preview.id) return
-    announced.current = preview.id
-
-    if (preview.status === "READY") {
-      queryClient.invalidateQueries({ queryKey: propostasQueryKey(projectId) })
-      // O histórico de versões vive na chave do detalhe — a versão recém-gerada
-      // só aparece nele com esta segunda invalidação.
-      queryClient.invalidateQueries({ queryKey: ["proposta", projectId] })
-      toast.success(t("obra.propostas.toasts.previewSuccess"))
-    } else {
-      toast.error(preview.errorMessage || t("obra.propostas.toasts.previewError"))
-    }
-  }, [preview, projectId, queryClient, t])
 
   function reset() {
     announced.current = null
@@ -85,8 +91,8 @@ export function usePreviaIA(projectId: number) {
     isStarting: startMutation.isPending,
     preview,
     /** Verdadeiro do disparo até a IA responder — é o estado de loading longo. */
-    isProcessing: startMutation.isPending || preview?.status === "PROCESSING",
-    isFailed: preview?.status === "FAILED",
+    isProcessing: startMutation.isPending || preview?.status === PreviewState.PROCESSING,
+    isFailed: preview?.status === PreviewState.FAILED,
     errorMessage: preview?.errorMessage ?? null,
     activeProposalId: job?.proposalId ?? null,
     reset,

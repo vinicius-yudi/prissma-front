@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import { getMyProfile } from "@/shared/services/user.service"
@@ -24,14 +25,15 @@ const INITIAL_STATE: PerfilFormState = {
   confirmPassword: "",
 }
 
+/** Chaves de i18n dos avisos do perfil. */
 const TOAST_MESSAGES = {
-  success: "Perfil atualizado com sucesso!",
-  noChanges: "Nenhuma alteração detectada.",
-  passwordMismatch: "As senhas não coincidem.",
-  passwordUppercase: "A senha deve conter pelo menos uma letra maiúscula.",
-  passwordLowercase: "A senha deve conter pelo menos uma letra minúscula.",
-  passwordDigit: "A senha deve conter pelo menos um número.",
-  passwordSpecial: "A senha deve conter pelo menos um caractere especial.",
+  success: "perfil.toasts.success",
+  noChanges: "perfil.toasts.noChanges",
+  passwordMismatch: "perfil.toasts.passwordMismatch",
+  passwordUppercase: "perfil.toasts.passwordUppercase",
+  passwordLowercase: "perfil.toasts.passwordLowercase",
+  passwordDigit: "perfil.toasts.passwordDigit",
+  passwordSpecial: "perfil.toasts.passwordSpecial",
 } as const
 
 function buildPayload(original: UserProfile, form: PerfilFormState): UpdateProfilePayload {
@@ -57,6 +59,7 @@ interface UsePerfilFormOptions {
 }
 
 export function usePerfilForm({ open, onClose }: UsePerfilFormOptions) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [form, setForm] = useState<PerfilFormState>(INITIAL_STATE)
   const [showPassword, setShowPassword] = useState(false)
@@ -93,7 +96,7 @@ export function usePerfilForm({ open, onClose }: UsePerfilFormOptions) {
       updateProfile(id, payload),
     onSuccess: (updatedProfile) => {
       queryClient.setQueryData(["profile"], updatedProfile)
-      toast.success(TOAST_MESSAGES.success)
+      toast.success(t(TOAST_MESSAGES.success))
       onClose()
     },
     onError: (error: Error) => {
@@ -126,18 +129,18 @@ export function usePerfilForm({ open, onClose }: UsePerfilFormOptions) {
     if (form.newPassword) {
       const error = validateNewPassword(form.newPassword)
       if (error) {
-        toast.warning(error)
+        toast.warning(t(error))
         return
       }
       if (form.newPassword !== form.confirmPassword) {
-        toast.warning(TOAST_MESSAGES.passwordMismatch)
+        toast.warning(t(TOAST_MESSAGES.passwordMismatch))
         return
       }
     }
 
     const payload = buildPayload(profile, form)
     if (Object.keys(payload).length === 0) {
-      toast.info(TOAST_MESSAGES.noChanges)
+      toast.info(t(TOAST_MESSAGES.noChanges))
       return
     }
 

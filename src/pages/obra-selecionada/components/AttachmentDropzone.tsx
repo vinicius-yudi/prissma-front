@@ -3,7 +3,6 @@ import { useRef, useState, type ChangeEvent, type DragEvent, type RefObject } fr
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
 
-import { Num } from "@/shared/components/ui/num/Num"
 
 /**
  * Dropzone de anexos (Telas §18).
@@ -18,11 +17,11 @@ import { Num } from "@/shared/components/ui/num/Num"
  */
 
 const zone = tv({
-  base: "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed px-6 py-9 text-center transition-all",
+  base: "blueprint-fine flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed px-6 py-8 text-center transition-colors focus-visible:outline-2 focus-visible:outline-gold",
   variants: {
     over: {
-      true: "border-gold bg-surface-container-high shadow-glow",
-      false: "border-outline bg-surface-container-low hover:border-gold hover:shadow-glow",
+      true: "border-gold bg-gold-soft/40",
+      false: "border-border-strong bg-surface hover:border-gold",
     },
     disabled: {
       true: "pointer-events-none opacity-60",
@@ -90,15 +89,15 @@ export function AttachmentDropzone({
         onDragLeave={() => setIsOver(false)}
         onDrop={handleDrop}
       >
-        <UploadCloud size={26} strokeWidth={1.7} className="text-gold-bright" />
+        <UploadCloud size={26} strokeWidth={1.7} className="text-gold-hi" />
 
-        <p className="text-[13.5px] font-semibold text-on-surface">
+        <p className="text-[14px] font-[620] text-ink">
           {t("obra.documentos.dropzone.title")}
         </p>
 
-        <Num className="text-[11px] text-on-surface-faint">
+        <span className="t-num text-[12px] text-meta">
           {acceptLabel} · {t("obra.documentos.dropzone.maxSize", { max: maxSizeMb })}
-        </Num>
+        </span>
 
         <input
           ref={inputRef}
@@ -111,13 +110,10 @@ export function AttachmentDropzone({
 
       {isUploading && (
         <div className="mt-3 space-y-1.5">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container-highest">
-            <div
-              className="h-full w-full animate-pulse rounded-full"
-              style={{ backgroundImage: "var(--pk-trena), var(--pk-grad)" }}
-            />
+          <div className="h-1.5 w-full overflow-hidden rounded-pill bg-raised">
+            <div className="bg-gold-grad h-full w-full animate-pulse rounded-pill" />
           </div>
-          <p className="text-[11px] font-semibold text-gold-bright">
+          <p className="text-[12px] font-[620] text-gold-hi">
             {t("obra.documentos.uploading")}
           </p>
         </div>
