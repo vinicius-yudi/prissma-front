@@ -95,7 +95,7 @@ function tarefa(id: number, title: string, over: Partial<Tarefa> = {}): Tarefa {
     assigneeName: null,
     constructionProjectId: 7,
     createdAt: "2026-01-01T00:00:00Z",
-    updatedAt: "2026-01-01T00:00:00Z",
+    completedAt: null,
     ...over,
   }
 }
@@ -180,7 +180,7 @@ describe("<TarefasTab /> — quadro", () => {
   })
 
   it("mostra só as cinco concluídas mais recentes até pedir mais", async () => {
-    tarefasPorEtapa({ 1: [1, 2, 3, 4, 5, 6, 7].map((id) => tarefa(id, `Feita ${id}`, { status: "DONE", updatedAt: `2026-01-0${id}T00:00:00Z` })) })
+    tarefasPorEtapa({ 1: [1, 2, 3, 4, 5, 6, 7].map((id) => tarefa(id, `Feita ${id}`, { status: "DONE", completedAt: `2026-01-0${id}T00:00:00Z` })) })
     await renderCarregado()
 
     expect(coluna("Concluída").queryByText("Feita 1")).not.toBeInTheDocument()

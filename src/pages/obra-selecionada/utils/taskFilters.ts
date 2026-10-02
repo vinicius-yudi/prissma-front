@@ -41,8 +41,12 @@ export function groupByStatus(items: TarefaComEtapa[]): Record<TarefaStatus, Tar
   return groups
 }
 
-/** As concluídas mais recentes primeiro — o que acabou de fechar é o que interessa. */
+/**
+ * As concluídas mais recentes primeiro — o que acabou de fechar é o que interessa.
+ * Sem `completedAt` (card recém-arrastado, antes do refetch) vai para o topo.
+ */
 export function recentDone(items: TarefaComEtapa[], showAll: boolean): TarefaComEtapa[] {
-  const sorted = [...items].sort((a, b) => b.tarefa.updatedAt.localeCompare(a.tarefa.updatedAt))
+  const key = (item: TarefaComEtapa) => item.tarefa.completedAt ?? "￿"
+  const sorted = [...items].sort((a, b) => key(b).localeCompare(key(a)) || b.tarefa.id - a.tarefa.id)
   return showAll ? sorted : sorted.slice(0, DONE_PREVIEW)
 }

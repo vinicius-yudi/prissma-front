@@ -20,7 +20,7 @@ function item(id: number, over: Partial<Tarefa> = {}, stageId = 1): TarefaComEta
       assigneeName: null,
       constructionProjectId: 7,
       createdAt: "2026-01-01T00:00:00Z",
-      updatedAt: "2026-01-01T00:00:00Z",
+      completedAt: null,
       ...over,
     },
   }
@@ -80,9 +80,14 @@ describe("colunas", () => {
   })
 
   it("mostra as cinco concluídas mais recentes, ou todas", () => {
-    const done = [1, 2, 3, 4, 5, 6, 7].map((id) => item(id, { status: "DONE", updatedAt: `2026-01-0${id}T00:00:00Z` }))
+    const done = [1, 2, 3, 4, 5, 6, 7].map((id) => item(id, { status: "DONE", completedAt: `2026-01-0${id}T00:00:00Z` }))
     expect(recentDone(done, false).map((i) => i.tarefa.id)).toEqual([7, 6, 5, 4, 3])
     expect(recentDone(done, true)).toHaveLength(7)
+  })
+
+  it("não quebra com concluída sem completedAt e a põe no topo", () => {
+    const done = [item(1, { status: "DONE", completedAt: "2026-01-05T00:00:00Z" }), item(2, { status: "DONE", completedAt: null })]
+    expect(recentDone(done, true).map((i) => i.tarefa.id)).toEqual([2, 1])
   })
 })
 
