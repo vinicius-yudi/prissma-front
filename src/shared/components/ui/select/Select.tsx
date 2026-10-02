@@ -17,9 +17,9 @@ const select = tv({
   },
 })
 
-export function Select({ prefix, className, children, ...props }: InterfaceSelectProps) {
+export function Select({ prefix, className, wrapperClassName = "w-full", children, ...props }: InterfaceSelectProps) {
   return (
-    <div className="relative w-full">
+    <div className={`relative ${wrapperClassName}`}>
       {prefix && (
         <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-2">
           {prefix}

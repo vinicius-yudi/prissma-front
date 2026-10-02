@@ -98,7 +98,6 @@ export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: O
               className="w-full"
             />
           </motion.div>
-          <span className="t-data absolute top-4 left-4 text-[11.5px] text-meta">{t("common.facadeScale")}</span>
           {data.members.length > 0 && (
             <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
               <AvatarStack people={data.members} size={30} max={5} />

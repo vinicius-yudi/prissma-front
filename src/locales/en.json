@@ -1206,8 +1206,7 @@
   "common": {
     "close": "Close",
     "dismiss": "Dismiss",
-    "undo": "Undo",
-    "facadeScale": "Elevation · scale 1:100"
+    "undo": "Undo"
   },
   "palette": {
     "label": "Search",

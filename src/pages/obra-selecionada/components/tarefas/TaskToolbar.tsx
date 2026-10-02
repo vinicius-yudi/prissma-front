@@ -44,7 +44,8 @@ export function TaskToolbar({ filterState, stages, lateCount, visibleCount, onCr
           aria-label={t("obra.tarefas.form.stage")}
           value={filters.stageId ?? ""}
           onChange={(event) => filterState.setStage(event.target.value ? Number(event.target.value) : null)}
-          className="h-10 w-auto shrink-0"
+          className="h-10"
+          wrapperClassName="w-auto shrink-0"
         >
           <option value="">{t("obra.tarefas.allStages")}</option>
           {stages.map((stage, index) => (

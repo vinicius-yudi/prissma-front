@@ -81,7 +81,8 @@ export function DocumentsDropzone({ accept, maxSizeMb, maxBatch, stages, stageId
           aria-label={t("obra.documentos.dropzone.stage")}
           value={stageId ?? ""}
           onChange={(event) => onStageChange(event.target.value ? Number(event.target.value) : null)}
-          className="h-10 w-auto"
+          className="h-10"
+          wrapperClassName="w-auto"
         >
           <option value="">{t("obra.documentos.dropzone.noStage")}</option>
           {stages.map((stage) => (

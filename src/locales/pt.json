@@ -1206,8 +1206,7 @@
   "common": {
     "close": "Fechar",
     "dismiss": "Dispensar",
-    "undo": "Desfazer",
-    "facadeScale": "Fachada · esc. 1:100"
+    "undo": "Desfazer"
   },
   "palette": {
     "label": "Buscar",

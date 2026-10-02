@@ -20,7 +20,7 @@ export function ProjectRow({ project }: { project: Project }) {
   return (
     <Link
       to={`/obras/${project.id}/visao-geral`}
-      className="group grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-4 rounded-lg bg-surface px-4 py-3 hairline transition-colors hover:bg-raised/50 md:grid-cols-[64px_minmax(0,2fr)_minmax(0,1.4fr)_auto_auto]"
+      className="group grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-4 rounded-lg bg-surface px-4 py-3 hairline transition-colors hover:bg-raised/50 md:grid-cols-[64px_minmax(0,2fr)_minmax(0,1.4fr)_10.5rem_9rem]"
     >
       <div className="blueprint-fine rounded-[10px] bg-raised">
         <Fachada
@@ -46,8 +46,12 @@ export function ProjectRow({ project }: { project: Project }) {
         />
         <span className="t-data w-10 text-right text-ink-2">{progress === null ? "—" : `${value}%`}</span>
       </div>
-      <ProjectDeadline project={project} className="hidden md:inline" />
-      <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} kind="project" />
+      {/* Colunas de largura fixa: cada linha é um grid próprio, e com `auto` o
+          tamanho do texto do prazo/status empurrava a barra para lugares diferentes. */}
+      <ProjectDeadline project={project} className="hidden truncate md:inline" />
+      <div className="justify-self-end">
+        <StatusBadge status={project.status} plannedEndDate={project.plannedEndDate} kind="project" />
+      </div>
     </Link>
   )
 }
