@@ -4,6 +4,9 @@ import { tv } from "tailwind-variants"
 import { fieldBase } from "../input/fieldStyles"
 import type { InterfaceSelectProps } from "./SelectInterface"
 
+/** Contêiner onde o chevron se ancora; `wrapperClassName` sobrescreve a largura via tailwind-merge. */
+const wrapper = tv({ base: "relative w-full" })
+
 const select = tv({
   base: [
     ...fieldBase,
@@ -17,9 +20,9 @@ const select = tv({
   },
 })
 
-export function Select({ prefix, className, wrapperClassName = "w-full", children, ...props }: InterfaceSelectProps) {
+export function Select({ prefix, className, wrapperClassName, children, ...props }: InterfaceSelectProps) {
   return (
-    <div className={`relative ${wrapperClassName}`}>
+    <div className={wrapper({ className: wrapperClassName })}>
       {prefix && (
         <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-2">
           {prefix}
