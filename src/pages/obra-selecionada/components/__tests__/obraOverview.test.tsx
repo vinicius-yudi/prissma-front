@@ -197,15 +197,14 @@ afterEach(() => {
 })
 
 describe("cabeçalho da obra", () => {
-  it("mostra o cabeçalho grande com avanço, ritmo, prazo e orçamento", async () => {
+  it("mostra o cabeçalho grande com avanço, ritmo e equipe", async () => {
     renderObra()
 
     expect(screen.getByRole("heading", { level: 1, name: "Residência Mercês" })).toBeInTheDocument()
     // Fundação 100% (55 dias) e Alvenaria 0% (92 dias): 37% ponderado.
     expect(await screen.findByLabelText("37")).toBeInTheDocument()
     expect(screen.getByText(/pontos abaixo do esperado/)).toBeInTheDocument()
-    expect(screen.getByText("60% utilizado")).toBeInTheDocument()
-    expect(screen.getByText("2 pessoas na obra")).toBeInTheDocument()
+    expect(screen.getByRole("img", { name: "2 pessoas na obra" })).toBeInTheDocument()
   })
 
   it("encolhe para a barra compacta nos módulos", async () => {
@@ -266,13 +265,16 @@ describe("cabeçalho da obra", () => {
   it("abre editar e excluir e volta para a lista ao excluir", async () => {
     renderObra()
 
-    await userEvent.click(screen.getByRole("button", { name: /Editar obra/ }))
+    await userEvent.click(screen.getByRole("button", { name: "Ações da obra" }))
+    await userEvent.click(screen.getByRole("menuitem", { name: /Editar obra/ }))
     await userEvent.click(screen.getByRole("button", { name: "modal-editar" }))
     expect(screen.queryByText("modal-editar")).not.toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole("button", { name: /Excluir/ }))
+    await userEvent.click(screen.getByRole("button", { name: "Ações da obra" }))
+    await userEvent.click(screen.getByRole("menuitem", { name: /Excluir/ }))
     await userEvent.click(screen.getByRole("button", { name: "fechar-excluir" }))
-    await userEvent.click(screen.getByRole("button", { name: /Excluir/ }))
+    await userEvent.click(screen.getByRole("button", { name: "Ações da obra" }))
+    await userEvent.click(screen.getByRole("menuitem", { name: /Excluir/ }))
     await userEvent.click(screen.getByRole("button", { name: "confirmar-excluir" }))
 
     expect(screen.getByTestId("url")).toHaveTextContent("/obras")
@@ -297,7 +299,7 @@ describe("cabeçalho para quem só acompanha", () => {
 
     expect(await screen.findByText("Em atraso")).toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Trocar status da obra" })).not.toBeInTheDocument()
-    expect(screen.queryByRole("button", { name: /Editar obra/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Ações da obra" })).not.toBeInTheDocument()
   })
 
   it("não mostra a etapa atual nem o ritmo em obra concluída", async () => {

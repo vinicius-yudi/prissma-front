@@ -90,7 +90,7 @@ export function ProjectsContent({
           </motion.div>
         ))}
         {isGrid && !isFiltered && (
-          <motion.div key="new" layout>
+          <motion.div key="new" layout className="h-full">
             <NewProjectCard onCreate={onCreate} />
           </motion.div>
         )}

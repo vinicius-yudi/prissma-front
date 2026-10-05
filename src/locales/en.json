@@ -841,7 +841,6 @@
       },
       "addAtEnd": "Add a stage at the end of the cycle"
     },
-    "startedAt": "started {{date}}",
     "tarefas": {
       "columns": {
         "TODO": "Not started",
@@ -1055,6 +1054,7 @@
     "header": {
       "statusChanged": "Project marked as {{status}}",
       "statusError": "Couldn't change the project status.",
+      "actions": "Project actions",
       "changeStatus": "Change project status",
       "builtArea": "{{built}} m² built on {{land}} m²",
       "pace": {
@@ -1066,12 +1066,8 @@
       },
       "expectedHint": "The ▾ marker shows where the project should be today ({{value}}%).",
       "deadline": "Deadline",
-      "until": "until {{date}}",
       "budget": "Budget",
-      "budgetUsed": "{{percent}}% used",
       "budgetUsedShort": "{{percent}}% used",
-      "budgetOf": "{{spent}} of {{planned}}",
-      "noBudget": "No budget",
       "people_one": "{{count}} person on the project",
       "people_other": "{{count}} people on the project"
     },

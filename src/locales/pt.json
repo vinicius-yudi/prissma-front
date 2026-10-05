@@ -841,7 +841,6 @@
       },
       "addAtEnd": "Adicionar etapa ao fim do ciclo"
     },
-    "startedAt": "início {{date}}",
     "tarefas": {
       "columns": {
         "TODO": "Não iniciada",
@@ -1055,6 +1054,7 @@
     "header": {
       "statusChanged": "Obra marcada como {{status}}",
       "statusError": "Não foi possível trocar o status da obra.",
+      "actions": "Ações da obra",
       "changeStatus": "Trocar status da obra",
       "builtArea": "{{built}} m² construídos em {{land}} m²",
       "pace": {
@@ -1066,12 +1066,8 @@
       },
       "expectedHint": "O marcador ▾ indica onde a obra deveria estar hoje ({{value}}%).",
       "deadline": "Prazo",
-      "until": "até {{date}}",
       "budget": "Orçamento",
-      "budgetUsed": "{{percent}}% utilizado",
       "budgetUsedShort": "{{percent}}% usado",
-      "budgetOf": "{{spent}} de {{planned}}",
-      "noBudget": "Sem orçamento",
       "people_one": "{{count}} pessoa na obra",
       "people_other": "{{count}} pessoas na obra"
     },
