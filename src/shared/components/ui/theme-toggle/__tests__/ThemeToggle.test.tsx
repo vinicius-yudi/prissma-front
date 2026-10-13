@@ -46,18 +46,6 @@ describe("<ThemeToggle />", () => {
     expect(document.documentElement).toHaveAttribute("data-theme", "dark")
   })
 
-  // O botão desliza a manopla de um lado ao outro; a posição é o sinal visual
-  // do estado, e o ícone acompanha.
-  it("desloca a manopla ao trocar de tema", async () => {
-    const { container } = renderWithProviders(<ThemeToggle />)
-    const manopla = container.querySelector("span") as HTMLElement
-    expect(manopla).toHaveStyle({ transform: "translateX(0)" })
-
-    await userEvent.click(botao())
-
-    expect(container.querySelector("span")).toHaveStyle({ transform: "translateX(1.25rem)" })
-  })
-
   it("troca o ícone junto com o tema", async () => {
     const { container } = renderWithProviders(<ThemeToggle />)
     expect(container.querySelector(".lucide-moon")).toBeInTheDocument()

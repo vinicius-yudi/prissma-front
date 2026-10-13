@@ -1,71 +1,82 @@
 import { Check } from "lucide-react"
+import { motion } from "motion/react"
 import { Fragment } from "react"
 import { tv } from "tailwind-variants"
 
-const connector = tv({
-  base: "flex-1 h-0.5 mx-3 mb-5 transition-all",
-  variants: {
-    completed: {
-      true: "bg-primary",
-      false: "bg-outline-variant",
-    },
-  },
-})
+import { SPRING, SPRING_SOFT } from "@/shared/constants/motion"
 
 const circle = tv({
-  base: "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all flex-none",
+  base: "t-num flex size-7 flex-none items-center justify-center rounded-full text-[12.5px] font-bold transition-colors",
   variants: {
     state: {
-      completed: "bg-primary border-primary text-on-primary",
-      active: "bg-primary border-primary text-on-primary",
-      inactive: "bg-transparent border-outline-variant text-on-surface-variant",
+      completed: "bg-gold text-on-gold",
+      active: "bg-gold-soft text-gold-hi inset-ring-2 inset-ring-gold",
+      inactive: "bg-raised text-meta",
     },
   },
 })
 
 const label = tv({
-  base: "text-xs font-semibold uppercase tracking-widest transition-colors",
+  base: "text-[13px] font-semibold transition-colors",
   variants: {
     active: {
-      true: "text-primary",
-      false: "text-on-surface-variant",
+      true: "text-ink",
+      false: "text-meta",
     },
   },
 })
+
+type StepState = "completed" | "active" | "inactive"
+
+function stepState(index: number, current: number): StepState {
+  if (index + 1 < current) return "completed"
+  if (index + 1 === current) return "active"
+  return "inactive"
+}
 
 interface StepIndicatorProps {
   steps: string[]
   current: number // 1-based
 }
 
+/**
+ * Passos de um modal em etapas (nova obra). O número vira ✓ ao concluir e o
+ * fio ouro corre com mola até o próximo passo.
+ */
 export function StepIndicator({ steps, current }: StepIndicatorProps) {
   return (
-    <div className="px-6 pb-5 pt-1">
-      <div className="flex items-center">
-        {steps.map((stepLabel, i) => {
-          const isCompleted = i + 1 < current
-          const isActive = i + 1 === current
+    <ol className="flex items-center gap-3 px-6 pt-1 pb-5">
+      {steps.map((stepLabel, i) => {
+        const state = stepState(i, current)
 
-          return (
-            <Fragment key={stepLabel}>
-              <div className="flex flex-col items-center gap-1.5">
-                <div
-                  className={circle({
-                    state: isCompleted ? "completed" : isActive ? "active" : "inactive",
-                  })}
-                >
-                  {isCompleted ? <Check size={14} strokeWidth={3} /> : <span>{i + 1}</span>}
-                </div>
-                <span className={label({ active: isCompleted || isActive })}>{stepLabel}</span>
-              </div>
+        return (
+          <Fragment key={stepLabel}>
+            <li className="flex flex-none items-center gap-2" aria-current={state === "active" ? "step" : undefined}>
+              <span className={circle({ state })}>
+                {state === "completed" ? (
+                  <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={SPRING}>
+                    <Check size={14} strokeWidth={3} />
+                  </motion.span>
+                ) : (
+                  i + 1
+                )}
+              </span>
+              <span className={label({ active: state !== "inactive" })}>{stepLabel}</span>
+            </li>
 
-              {i < steps.length - 1 && (
-                <div className={connector({ completed: isCompleted })} />
-              )}
-            </Fragment>
-          )
-        })}
-      </div>
-    </div>
+            {i < steps.length - 1 && (
+              <li aria-hidden="true" className="relative h-px flex-1 bg-border">
+                <motion.span
+                  className="absolute inset-y-0 left-0 bg-gold"
+                  initial={false}
+                  animate={{ width: state === "completed" ? "100%" : "0%" }}
+                  transition={SPRING_SOFT}
+                />
+              </li>
+            )}
+          </Fragment>
+        )
+      })}
+    </ol>
   )
 }

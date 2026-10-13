@@ -10,20 +10,19 @@ import type { RoleInProject } from "@/pages/obra-selecionada/types/equipes"
  * em outra. O chip responde "com que papel estou aqui" e aparece na sidebar,
  * nos cards de obra e em Pessoas & papéis.
  *
- * Cores fixas (Style Guide v2 §5): Engenheiro ouro · Arquiteto ouro profundo ·
- * Cliente neutro · Mestre de obras verde. Proprietário acompanha o ouro do
- * engenheiro, como no cartão de contexto do protótipo.
+ * DS v2: papel não é estado, então todos são neutros — só o responsável pela
+ * obra (`OWNER`) fica em ouro. A cor fica reservada para estado.
  */
 
 const chip = tv({
-  base: "inline-flex items-center whitespace-nowrap rounded-full px-[11px] py-[3px] text-[10.5px] font-bold tracking-[0.04em]",
+  base: "inline-flex h-[26px] items-center whitespace-nowrap rounded-pill px-2.5 text-[12px] font-semibold",
   variants: {
     role: {
-      OWNER: "bg-gold/15 text-gold",
-      ENGINEER: "bg-gold/15 text-gold",
-      ARCHITECT: "bg-gold-deep/15 text-gold-deep",
-      FOREMAN: "bg-ok/15 text-ok",
-      USER: "bg-tint text-on-surface-variant",
+      OWNER: "bg-gold-soft text-gold-hi",
+      ENGINEER: "bg-raised text-ink-2 hairline",
+      ARCHITECT: "bg-raised text-ink-2 hairline",
+      FOREMAN: "bg-raised text-ink-2 hairline",
+      USER: "bg-raised text-ink-2 hairline",
     },
   },
 })

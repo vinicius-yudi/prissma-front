@@ -3,9 +3,8 @@ import { createContext, useCallback, useContext, useEffect, useRef } from "react
 /**
  * Guarda das regras "no máximo um por tela" do design.
  *
- * O Style Guide v2 descreve em prosa que a linha de cota aparece uma vez por
- * tela (sob o H1), que o card de contraste é reservado ao conteúdo
- * protagonista e que só existe um botão primário por vista. Sem uma guarda
+ * O design system descreve em prosa que a linha de cota aparece uma vez por
+ * tela (sob o título) e que só existe um botão primário por vista. Sem uma guarda
  * essas regras se dissolvem conforme as telas crescem — e é justamente a
  * multiplicação de destaques que devolve cara de template.
  *
@@ -13,11 +12,10 @@ import { createContext, useCallback, useContext, useEffect, useRef } from "react
  * componentes funcionem nas telas públicas (login, cadastro) sem shell.
  */
 
-export type PageSlot = "dimensionLine" | "contrastCard" | "primaryButton"
+export type PageSlot = "dimensionLine" | "primaryButton"
 
 const SLOT_LABEL: Record<PageSlot, string> = {
   dimensionLine: "A linha de cota (<DimensionLine>)",
-  contrastCard: "O card de contraste (<ContrastCard>)",
   primaryButton: 'O botão primário (<Button variant="primary">)',
 }
 
@@ -41,7 +39,7 @@ export function PageChromeProvider({ children }: PageChromeProviderProps) {
     if (import.meta.env.DEV && next > 1) {
       console.error(
         `[prissma] ${SLOT_LABEL[slot]} aparece ${next}x nesta tela. ` +
-          "O design pede no máximo um — ver Style Guide v2 §4 e §5.",
+          "O design pede no máximo um por tela.",
       )
     }
 

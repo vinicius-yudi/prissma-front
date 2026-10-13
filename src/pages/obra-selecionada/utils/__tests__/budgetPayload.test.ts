@@ -48,6 +48,7 @@ describe("toBudgetItemPayload", () => {
 
 describe("toExpensePayload", () => {
   const form = {
+    itemId: 3,
     description: "Areia média",
     amount: 320.5,
     spentAt: "2026-03-15",

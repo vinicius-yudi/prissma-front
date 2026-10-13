@@ -34,7 +34,7 @@ describe("<BrandPanel />", () => {
   it("mantém as texturas fora do alcance do cursor", () => {
     const { container } = renderWithProviders(<BrandPanel />)
 
-    for (const seletor of [".bg-blueprint-grid", ".bg-brand-glow", ".bg-brand-fade"]) {
+    for (const seletor of [".blueprint", ".bg-brand-glow", ".bg-brand-fade"]) {
       expect(container.querySelector(seletor)).toHaveClass("pointer-events-none")
     }
   })

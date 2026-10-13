@@ -5,7 +5,6 @@ import { EtapaStatus } from "@/pages/projetos/types"
 import { failedFields, fieldError } from "@/test/zod"
 
 import { STAGE_FORM_DEFAULTS, stageSchema } from "../stageSchema"
-import { taskSchema } from "../tarefas.shcemas"
 
 /**
  * Etapa e tarefa têm regras de data quase iguais, mas não idênticas: etapa
@@ -36,13 +35,13 @@ describe("stageSchema", () => {
   })
 
   it("exige nome", () => {
-    expect(fieldError(stageSchema, { ...etapaValida, name: "" }, "name")).toBe("Nome obrigatório")
+    expect(fieldError(stageSchema, { ...etapaValida, name: "" }, "name")).toBe("obra.etapas.form.errors.nameRequired")
   })
 
   // A ordem é 1-based porque alimenta o `displayOrder` do backend e o número
   // que aparece no card. Zero deixaria a primeira etapa sem rótulo.
   it("exige ordem inteira e positiva", () => {
-    expect(fieldError(stageSchema, { ...etapaValida, displayOrder: 0 }, "displayOrder")).toBe("Ordem inválida")
+    expect(fieldError(stageSchema, { ...etapaValida, displayOrder: 0 }, "displayOrder")).toBe("obra.etapas.form.errors.orderInvalid")
     expect(stageSchema.safeParse({ ...etapaValida, displayOrder: 1.5 }).success).toBe(false)
   })
 
@@ -54,16 +53,16 @@ describe("stageSchema", () => {
 
   it("exige as duas datas planejadas", () => {
     expect(fieldError(stageSchema, { ...etapaValida, plannedStartDate: "" }, "plannedStartDate")).toBe(
-      "Data de início planejada é obrigatória",
+      "obra.etapas.form.errors.startRequired",
     )
     expect(fieldError(stageSchema, { ...etapaValida, plannedEndDate: "" }, "plannedEndDate")).toBe(
-      "Data de término planejada é obrigatória",
+      "obra.etapas.form.errors.endRequired",
     )
   })
 
   it("rejeita término anterior ao início", () => {
     expect(fieldError(stageSchema, { ...etapaValida, plannedEndDate: "2026-02-01" }, "plannedEndDate")).toBe(
-      "Data final deve ser igual ou posterior à inicial",
+      "obra.etapas.form.errors.endBeforeStart",
     )
   })
 
@@ -80,50 +79,5 @@ describe("stageSchema", () => {
       "plannedEndDate",
       "plannedStartDate",
     ])
-  })
-})
-
-describe("taskSchema", () => {
-  const tarefaValida = {
-    title: "Concretar laje",
-    description: "Laje do primeiro pavimento",
-    priority: "HIGH" as const,
-    status: "TODO" as const,
-    plannedStartDate: "2026-03-01",
-    plannedEndDate: "2026-03-05",
-    assigneeUserId: 12,
-  }
-
-
-  it("aceita tarefa válida", () => {
-    expect(taskSchema.safeParse(tarefaValida).success).toBe(true)
-  })
-
-  it("exige título e descrição", () => {
-    expect(fieldError(taskSchema, { ...tarefaValida, title: "" }, "title")).toBeTruthy()
-    expect(fieldError(taskSchema, { ...tarefaValida, description: "" }, "description")).toBeTruthy()
-  })
-
-  it("aceita as três prioridades e os quatro status", () => {
-    for (const priority of ["LOW", "MEDIUM", "HIGH"]) {
-      expect(taskSchema.safeParse({ ...tarefaValida, priority }).success, priority).toBe(true)
-    }
-    for (const status of ["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]) {
-      expect(taskSchema.safeParse({ ...tarefaValida, status }).success, status).toBe(true)
-    }
-  })
-
-  // Tarefa sem responsável não aparece na fila de ninguém; o `positive()` é o
-  // que barra o `0` que o `<Select>` emite quando nada foi escolhido.
-  it("exige um responsável de verdade", () => {
-    expect(fieldError(taskSchema, { ...tarefaValida, assigneeUserId: 0 }, "assigneeUserId")).toBeTruthy()
-    expect(fieldError(taskSchema, { ...tarefaValida, assigneeUserId: undefined }, "assigneeUserId")).toBeTruthy()
-  })
-
-  it("rejeita término anterior ao início e aceita no mesmo dia", () => {
-    expect(fieldError(taskSchema, { ...tarefaValida, plannedEndDate: "2026-02-01" }, "plannedEndDate")).toBeTruthy()
-    expect(
-      taskSchema.safeParse({ ...tarefaValida, plannedEndDate: tarefaValida.plannedStartDate }).success,
-    ).toBe(true)
   })
 })

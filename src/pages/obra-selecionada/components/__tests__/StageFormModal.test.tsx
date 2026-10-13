@@ -1,9 +1,11 @@
-import { screen, waitFor } from "@testing-library/react"
+import { act, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import type { ReactElement } from "react"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { EtapaStatus } from "@/pages/projetos/types"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   createStage,
@@ -79,21 +81,12 @@ function render({
   )
 }
 
-/**
- * Os campos são buscados por tipo, não por rótulo: os <Label> do formulário
- * não têm `htmlFor` nem envolvem o input, então `getByLabelText` não os
- * alcança — o mesmo motivo pelo qual um leitor de tela também não os associa.
- */
-function datas(): HTMLInputElement[] {
-  return Array.from(document.querySelectorAll<HTMLInputElement>('input[type="date"]'))
-}
-
 function inicio() {
-  return datas()[0]
+  return screen.getByLabelText("Início Planejado")
 }
 
 function fim() {
-  return datas()[1]
+  return screen.getByLabelText("Término Planejado")
 }
 
 function ordem() {
@@ -207,12 +200,16 @@ describe("<StageFormModal /> — gravação", () => {
     expect(editar.mock.calls[0][0]).toBe(1)
   })
 
-  it("avisa por toast quando o formulário é submetido inválido", async () => {
+  // Erro de campo fica no campo; toast é só para erro do servidor.
+  it("mostra o erro no próprio campo quando o formulário é inválido", async () => {
     render()
 
     await salvar()
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalled())
+    expect(await screen.findByText("Dê um nome à etapa.")).toBeInTheDocument()
+    expect(screen.getByText("Informe quando a etapa começa.")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("Ex.: Fundação")).toHaveAttribute("aria-invalid", "true")
+    expect(toast.error).not.toHaveBeenCalled()
     expect(criar).not.toHaveBeenCalled()
   })
 
@@ -249,11 +246,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo("2026-03-01", "2026-03-20")
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes do início da obra.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes do início da obra.")).toBeInTheDocument()
     expect(criar).not.toHaveBeenCalled()
   })
 
@@ -266,11 +259,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo()
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa anterior precisa ter uma data de início antes desta etapa.",
-      ),
-    )
+    expect(await screen.findByText("A etapa anterior precisa ter uma data de início antes desta etapa.")).toBeInTheDocument()
   })
 
   it("recusa etapa que começa antes da anterior", async () => {
@@ -282,11 +271,7 @@ describe("<StageFormModal /> — cronologia", () => {
     await preencherMinimo("2026-03-01", "2026-03-20")
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes da etapa anterior.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes da etapa anterior.")).toBeInTheDocument()
   })
 
   // A "anterior" é a de maior ordem ABAIXO desta, não a primeira da lista —
@@ -303,11 +288,7 @@ describe("<StageFormModal /> — cronologia", () => {
 
     await salvar()
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "A etapa não pode começar antes da etapa anterior.",
-      ),
-    )
+    expect(await screen.findByText("A etapa não pode começar antes da etapa anterior.")).toBeInTheDocument()
   })
 
   it("aceita a primeira etapa da obra sem antecessora", async () => {
@@ -327,44 +308,31 @@ describe("<StageFormModal /> — exclusão", () => {
     expect(screen.queryByRole("button", { name: "Excluir" })).not.toBeInTheDocument()
   })
 
-  it("troca o formulário pela confirmação", async () => {
+  it("exclui fechando o formulário e só vai ao servidor depois da janela", async () => {
+    relogioDoDesfazer()
     render({ stage: etapa() })
 
     await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
 
-    expect(screen.getByRole("heading", { name: "Excluir etapa" })).toBeInTheDocument()
-    expect(screen.queryByRole("heading", { name: "Editar etapa" })).not.toBeInTheDocument()
-    expect(excluir).not.toHaveBeenCalled()
-  })
-
-  it("exclui e fecha o modal ao confirmar", async () => {
-    render({ stage: etapa() })
-    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
-
-    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
-
-    await waitFor(() => expect(excluir).toHaveBeenCalledWith(1))
     expect(onClose).toHaveBeenCalled()
+    expect(excluir).not.toHaveBeenCalled()
+    await passarJanelaDoDesfazer()
+    await waitFor(() => expect(excluir).toHaveBeenCalledWith(1))
   })
 
-  it("volta ao formulário ao cancelar a exclusão", async () => {
+  it("desfazer no toast cancela a exclusão", async () => {
+    relogioDoDesfazer()
     render({ stage: etapa() })
+
     await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
+    const calls = vi.mocked(toast.success).mock.calls
+    act(() => (calls[calls.length - 1][0] as ReactElement<{ action: { onClick: () => void } }>).props.action.onClick())
+    await passarJanelaDoDesfazer()
 
-    await userEvent.click(screen.getByRole("button", { name: "Cancelar" }))
-
-    expect(screen.getByRole("heading", { name: "Editar etapa" })).toBeInTheDocument()
     expect(excluir).not.toHaveBeenCalled()
   })
+})
 
-  it("mantém o modal aberto quando a exclusão falha", async () => {
-    excluir.mockRejectedValue(new Error("Etapa com tarefas."))
-    render({ stage: etapa() })
-    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
-
-    await userEvent.click(screen.getByRole("button", { name: "Excluir" }))
-
-    await waitFor(() => expect(excluir).toHaveBeenCalled())
-    expect(onClose).not.toHaveBeenCalled()
-  })
+afterEach(() => {
+  vi.useRealTimers()
 })

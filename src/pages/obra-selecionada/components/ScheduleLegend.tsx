@@ -16,9 +16,9 @@ const swatch = tv({
   base: "size-2.5 shrink-0 rounded-[3px]",
   variants: {
     state: {
-      FREE: "border border-outline bg-surface-container-high",
+      FREE: "border border-border-strong bg-raised",
       ALLOCATED: "bg-gold-grad",
-      OVERLAP: "bg-warn",
+      OVERLAP: "bg-warning",
     },
   },
 })
@@ -35,7 +35,7 @@ export function ScheduleLegend() {
   const { t } = useTranslation()
 
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-[18px] text-[11.5px] text-on-surface-variant">
+    <div className="mt-4 flex flex-wrap items-center gap-[18px] text-[11.5px] text-ink-2">
       {ORDER.map((state) => (
         <span key={state} className="flex items-center gap-[7px]">
           <span className={swatch({ state })} />

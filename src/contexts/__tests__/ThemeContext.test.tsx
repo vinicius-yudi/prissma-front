@@ -1,14 +1,13 @@
 import { act, render, renderHook, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import type { ReactNode } from "react"
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { ThemeProvider, useTheme } from "../ThemeContext"
 
 /**
- * O tema não é só uma classe: ele grava a escolha, escreve `data-theme` na
- * raiz (é dali que todo o CSS lê) e liga uma classe de transição temporária.
- * Os três precisam andar juntos — um tema salvo que não chega ao `<html>`
+ * O tema não é só um estado: ele grava a escolha e escreve `data-theme` na
+ * raiz (é dali que todo o CSS lê). Os dois precisam andar juntos — um tema salvo que não chega ao `<html>`
  * deixa a tela clara com o valor "dark" guardado.
  */
 
@@ -21,10 +20,6 @@ function wrapper({ children }: { children: ReactNode }) {
 beforeEach(() => {
   document.documentElement.removeAttribute("data-theme")
   document.documentElement.className = ""
-})
-
-afterEach(() => {
-  vi.useRealTimers()
 })
 
 describe("tema inicial", () => {
@@ -79,45 +74,48 @@ describe("toggleTheme", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("light")
   })
 
-  // A transição vive numa classe TEMPORÁRIA. Se ela ficasse no CSS base, todo
-  // hover e foco do app ficaria mole e o primeiro paint entraria desbotando.
-  it("liga a classe de transição e a remove depois", async () => {
-    vi.useFakeTimers()
+  // A troca acontece dentro de uma View Transition quando o navegador oferece:
+  // o estado e o `data-theme` precisam já estar trocados quando o callback
+  // termina, senão o cross-fade anima para o tema antigo.
+  it("troca o tema dentro de startViewTransition quando disponível", async () => {
+    const startViewTransition = vi.fn((callback: () => void) => {
+      callback()
+      return {} as ViewTransition
+    })
+    Object.defineProperty(document, "startViewTransition", {
+      configurable: true,
+      value: startViewTransition,
+    })
     const { result } = renderHook(() => useTheme(), { wrapper })
 
-    act(() => result.current.toggleTheme())
-    expect(document.documentElement.classList.contains("theme-transition")).toBe(true)
+    await act(async () => result.current.toggleTheme())
 
-    act(() => vi.advanceTimersByTime(350))
-    expect(document.documentElement.classList.contains("theme-transition")).toBe(false)
+    expect(startViewTransition).toHaveBeenCalledOnce()
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light")
+    expect(result.current.theme).toBe("light")
+
+    Reflect.deleteProperty(document, "startViewTransition")
   })
 
-  // Dois cliques rápidos: o segundo precisa reiniciar o relógio, senão o
-  // primeiro timer apaga a classe no meio da segunda transição.
-  it("reinicia o relógio quando alterna de novo antes do fim", () => {
-    vi.useFakeTimers()
+  // Movimento reduzido: nada de cross-fade, a troca é instantânea.
+  it("não usa View Transition com movimento reduzido", async () => {
+    const startViewTransition = vi.fn()
+    Object.defineProperty(document, "startViewTransition", {
+      configurable: true,
+      value: startViewTransition,
+    })
+    const matchMedia = vi
+      .spyOn(window, "matchMedia")
+      .mockReturnValue({ matches: true } as MediaQueryList)
     const { result } = renderHook(() => useTheme(), { wrapper })
 
-    act(() => result.current.toggleTheme())
-    act(() => vi.advanceTimersByTime(200))
-    act(() => result.current.toggleTheme())
-    act(() => vi.advanceTimersByTime(200))
+    await act(async () => result.current.toggleTheme())
 
-    expect(document.documentElement.classList.contains("theme-transition")).toBe(true)
+    expect(startViewTransition).not.toHaveBeenCalled()
+    expect(result.current.theme).toBe("light")
 
-    act(() => vi.advanceTimersByTime(150))
-    expect(document.documentElement.classList.contains("theme-transition")).toBe(false)
-  })
-
-  it("cancela o timer pendente no unmount", () => {
-    vi.useFakeTimers()
-    const clearTimeout = vi.spyOn(window, "clearTimeout")
-    const { result, unmount } = renderHook(() => useTheme(), { wrapper })
-
-    act(() => result.current.toggleTheme())
-    unmount()
-
-    expect(clearTimeout).toHaveBeenCalled()
+    matchMedia.mockRestore()
+    Reflect.deleteProperty(document, "startViewTransition")
   })
 })
 

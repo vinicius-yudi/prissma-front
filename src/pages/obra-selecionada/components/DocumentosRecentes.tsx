@@ -24,8 +24,8 @@ const iconWrap = tv({
   base: "flex size-9 shrink-0 items-center justify-center rounded-[10px]",
   variants: {
     kind: {
-      image: "bg-ok-bg text-ok",
-      document: "bg-tint text-gold-bright",
+      image: "bg-success-soft text-success",
+      document: "bg-raised text-gold-hi",
     },
   },
 })
@@ -51,18 +51,18 @@ export function DocumentosRecentes({ projectId }: { projectId: number }) {
     return (
       <div className="space-y-2">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="h-12 animate-pulse rounded-xl bg-surface-container-high" />
+          <div key={i} className="h-12 animate-pulse rounded-xl bg-raised" />
         ))}
       </div>
     )
   }
 
   if (recent.length === 0) {
-    return <p className="py-6 text-center text-sm text-on-surface-variant">{t("obra.visaoGeral.noDocs")}</p>
+    return <p className="py-6 text-center text-sm text-ink-2">{t("obra.visaoGeral.noDocs")}</p>
   }
 
   return (
-    <ul className="divide-y divide-outline-variant">
+    <ul className="divide-y divide-border">
       {recent.map((file) => {
         const { Icon, kind } = iconFor(file.fileType)
         return (
@@ -70,10 +70,10 @@ export function DocumentosRecentes({ projectId }: { projectId: number }) {
             <span className={iconWrap({ kind })}>
               <Icon size={15} strokeWidth={1.7} />
             </span>
-            <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-on-surface">
+            <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
               {file.fileName}
             </span>
-            <Num className="shrink-0 text-[11px] text-on-surface-faint">
+            <Num className="shrink-0 text-[11px] text-meta">
               {formatDate(file.uploadedAt)}
             </Num>
           </li>

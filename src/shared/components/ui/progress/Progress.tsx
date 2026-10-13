@@ -1,69 +1,101 @@
 import { tv } from "tailwind-variants"
 
 /**
- * Barra de progresso com trena — assinatura da marca.
+ * Trena — toda barra de progresso do PRISSMA (DS v2).
  *
- * Todo preenchimento carrega as marcações da trena (traços a cada 8px)
- * sobre a cor. Este é o **único** lugar do código autorizado a desenhar uma
- * barra de progresso: barra crua em qualquer outro arquivo perde a assinatura
- * e é o tipo de detalhe que dilui a identidade (Style Guide v2 §4).
+ * Trilho `raised` com as marcações de trena (traço maior a cada 10%, menor a
+ * cada 2%: dez traços grandes são 100% em qualquer largura) e, quando há
+ * prazo, o marcador ▾ de onde a obra deveria estar hoje. Este é o **único**
+ * lugar do código autorizado a desenhar uma barra de progresso: barra crua em
+ * outro arquivo perde a assinatura.
+ *
+ * O preenchimento cresce uma vez, ao montar (`@starting-style`, sem JS), e o
+ * marcador chega 0.2s depois. Com movimento reduzido, aparece pronto.
  */
 
 export type ProgressTone = "gold" | "ok" | "warn" | "danger"
 
-// A trena é background-image, então o preenchimento também precisa ser: cor
-// sólida vira gradiente de um tom só para poder empilhar sob as marcações.
-//
-// `warn` não está no Style Guide, que só prevê grad/ok/perigo. Entra porque o
-// orçamento tem um estado real de "chegando no limite" (≥80%) que sem ele
-// ficaria indistinguível do curso normal.
-const FILL: Record<ProgressTone, string> = {
-  gold: "var(--pk-grad)",
-  ok: "linear-gradient(90deg, var(--pk-ok), var(--pk-ok))",
-  warn: "linear-gradient(90deg, var(--pk-wn), var(--pk-wn))",
-  danger: "linear-gradient(90deg, var(--color-danger-solid), var(--color-danger-solid))",
-}
-
-const track = tv({
-  base: "w-full overflow-hidden rounded-full bg-surface-container-highest",
+const fill = tv({
+  base: [
+    "absolute inset-y-0 left-0 origin-left rounded-l-[3px]",
+    "transition-[width,scale] duration-700 ease-out-expo starting:scale-x-0",
+    "motion-reduce:transition-none",
+  ],
+  variants: {
+    tone: {
+      // em andamento
+      gold: "bg-gold-grad",
+      // concluída
+      ok: "bg-success",
+      // categoria acima de 85%
+      warn: "bg-warning",
+      // etapa atrasada, categoria estourada
+      danger: "bg-danger",
+    },
+  },
 })
 
 interface ProgressProps {
   /** 0–100. Valores fora da faixa são achatados. */
   value: number
   tone?: ProgressTone
-  /** Altura da trilha em px. O design usa 4 na sidebar, 6–10 no conteúdo. */
+  /** Onde o valor deveria estar hoje (0–100), ex.: `timeProgress` da obra. */
+  expected?: number
+  /**
+   * Altura do trilho em px: 10 no conteúdo, 6 na variante fina das listas de
+   * categoria. Abaixo de 8 as marcações somem — viram ruído.
+   */
   height?: number
   label?: string
   className?: string
 }
 
+function clamp(value: number): number {
+  return Math.max(0, Math.min(100, Math.round(value)))
+}
+
 export function Progress({
   value,
   tone = "gold",
-  height = 8,
+  expected,
+  height = 10,
   label,
   className,
 }: ProgressProps) {
-  const pct = Math.max(0, Math.min(100, Math.round(value)))
+  const pct = clamp(value)
+  const showTicks = height >= 8
 
   return (
-    <div
-      className={track({ className })}
-      style={{ height }}
-      role="progressbar"
-      aria-valuenow={pct}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-label={label}
-    >
-      <div
-        className="h-full rounded-full transition-[width] duration-300"
-        style={{
-          width: `${pct}%`,
-          backgroundImage: `var(--pk-trena), ${FILL[tone]}`,
-        }}
-      />
+    <div className={className}>
+      <div className="relative" style={{ paddingTop: expected === undefined ? 0 : 7 }}>
+        <div
+          className="relative overflow-hidden rounded-[3px] bg-raised"
+          style={{ height }}
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={label}
+        >
+          <div className={fill({ tone })} style={{ width: `${pct}%` }} />
+          {showTicks && (
+            <div className="tape-ticks pointer-events-none absolute inset-0 opacity-35" data-ticks />
+          )}
+        </div>
+
+        {expected !== undefined && (
+          <div
+            className="pointer-events-none absolute top-0 flex -translate-x-1/2 flex-col items-center transition-opacity delay-200 duration-500 starting:opacity-0 motion-reduce:transition-none"
+            style={{ left: `${clamp(expected)}%` }}
+            data-expected
+          >
+            <svg width="9" height="6" viewBox="0 0 9 6" className="text-ink" aria-hidden="true">
+              <path d="M0 0h9L4.5 6z" fill="currentColor" />
+            </svg>
+            <div className="w-px bg-ink/70" style={{ height: height + 2 }} />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

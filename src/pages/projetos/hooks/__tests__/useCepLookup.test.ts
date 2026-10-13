@@ -146,7 +146,7 @@ describe("useCepLookup — resultado", () => {
 
     await passarDebounce()
 
-    expect(result.current.cepError).toBe("CEP não encontrado")
+    expect(result.current.cepError).toBe("projectModal.cepNotFound")
     expect(result.current.cepData).toBeNull()
   })
 
@@ -156,7 +156,7 @@ describe("useCepLookup — resultado", () => {
 
     await passarDebounce()
 
-    expect(result.current.cepError).toBe("Erro ao buscar CEP")
+    expect(result.current.cepError).toBe("projectModal.cepError")
     expect(result.current.isLookingUp).toBe(false)
   })
 

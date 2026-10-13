@@ -1,16 +1,13 @@
 import { z } from "zod"
 
-import {
-  COLOR_PALETTE,
-  DESIGN_STYLES,
-  ENVIRONMENT_TYPES,
-  FLOORING,
-  LIGHTING,
-} from "../types/proposal"
+import { COLOR_PALETTE, DESIGN_STYLES, ENVIRONMENT_TYPES, FLOORING, GENERATION_MODES, LIGHTING } from "../types/proposal"
+
+/** Mensagens são chaves de i18n: a view faz `t(message)`. */
+const E = "obra.propostas.validation"
 
 export const propostaSchema = z.object({
-  title: z.string().min(1, "Título obrigatório").max(255, "Máximo 255 caracteres"),
-  description: z.string().max(2000, "Máximo 2000 caracteres").optional(),
+  title: z.string().trim().min(1, `${E}.titleRequired`).max(255, `${E}.tooLong`),
+  description: z.string().max(2000, `${E}.tooLong`).optional(),
   environmentType: z.enum(ENVIRONMENT_TYPES),
 })
 
@@ -30,12 +27,12 @@ export const previaIASchema = z.object({
   style: z.enum(DESIGN_STYLES),
   colors: z
     .array(z.enum(COLOR_PALETTE))
-    .min(1, "Escolha ao menos uma cor")
-    .max(5, "No máximo 5 cores"),
+    .min(1, `${E}.colorsMin`)
+    .max(5, `${E}.colorsMax`),
   lighting: z.enum(LIGHTING),
   flooring: z.enum(FLOORING),
-  generationMode: z.enum(["PREVIEW", "FINAL"]),
-  additionalInstructions: z.string().max(1000, "Máximo 1000 caracteres").optional(),
+  generationMode: z.enum(GENERATION_MODES),
+  additionalInstructions: z.string().max(1000, `${E}.tooLong`).optional(),
 })
 
 export type PreviaIAFormData = z.infer<typeof previaIASchema>

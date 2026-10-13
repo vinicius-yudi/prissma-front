@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { Button } from "../../button/Button"
-import { ContrastCard } from "../../contrast-card/ContrastCard"
 import { DimensionLine } from "../../dimension-line/DimensionLine"
 import { PageChromeProvider } from "../PageChrome"
 
@@ -28,7 +27,6 @@ describe("<PageChromeProvider />", () => {
     render(
       <PageChromeProvider>
         <DimensionLine>OBRA-042</DimensionLine>
-        <ContrastCard>Tarefas de hoje</ContrastCard>
         <Button>Salvar</Button>
       </PageChromeProvider>,
     )
@@ -38,7 +36,6 @@ describe("<PageChromeProvider />", () => {
 
   it.each([
     ["a linha de cota", <DimensionLine key="d">OBRA-042</DimensionLine>],
-    ["o card de contraste", <ContrastCard key="c">Tarefas</ContrastCard>],
     ["o botão primário", <Button key="b">Salvar</Button>],
   ])("reclama quando %s aparece duas vezes", (_caso, elemento) => {
     render(

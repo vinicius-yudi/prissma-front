@@ -10,6 +10,8 @@ export const ProjectPermission = {
   MANAGE_TEAMS: "MANAGE_TEAMS",
   MANAGE_TASKS: "MANAGE_TASKS",
   MANAGE_ATTACHMENTS: "MANAGE_ATTACHMENTS",
+  MANAGE_DIARY: "MANAGE_DIARY",
+  MANAGE_PROPOSALS: "MANAGE_PROPOSALS",
 } as const
 
 export type ProjectPermission = (typeof ProjectPermission)[keyof typeof ProjectPermission]
@@ -33,6 +35,8 @@ export const ALL_PROJECT_PERMISSIONS: ProjectPermission[] = [
   ProjectPermission.MANAGE_TEAMS,
   ProjectPermission.MANAGE_TASKS,
   ProjectPermission.MANAGE_ATTACHMENTS,
+  ProjectPermission.MANAGE_DIARY,
+  ProjectPermission.MANAGE_PROPOSALS,
 ]
 
 export const EDITABLE_PROJECT_ROLES: ProjectRole[] = [

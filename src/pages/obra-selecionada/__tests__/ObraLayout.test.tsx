@@ -9,7 +9,7 @@ import { ProjectStatus, type Project } from "@/shared/types/project"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 import { ObraLayout } from "../ObraLayout"
-import { ObraModuleRail } from "../components/ObraModuleRail"
+import { ObraTabs } from "../components/ObraTabs"
 
 vi.mock("@/pages/projetos/services/projects.service", () => ({
   listProjects: vi.fn(),
@@ -17,6 +17,13 @@ vi.mock("@/pages/projetos/services/projects.service", () => ({
   createProject: vi.fn(),
   updateProject: vi.fn(),
   deleteProject: vi.fn(),
+  getProjectAcompanhamento: vi.fn(() => new Promise(() => {})),
+}))
+// O cabeçalho lê orçamento e equipe; aqui só interessa que ele monta.
+vi.mock("../services/budget.service", () => ({ getProjectBudget: vi.fn(() => new Promise(() => {})) }))
+vi.mock("../hooks/useObraMembers", () => ({
+  useObraMembers: () => ({ members: [], list: [], count: 0, isLoading: false, isError: false }),
+  obraMembersKey: (id: number) => ["equipes", id],
 }))
 vi.mock("@/shared/hooks/useAccess", () => ({
   useAccess: vi.fn(),
@@ -127,19 +134,27 @@ describe("<ObraLayout />", () => {
     expect(screen.getByText("Em andamento")).toBeInTheDocument()
   })
 
-  // A legenda técnica é o subtítulo: código, endereço e início numa linha só.
-  it("monta a legenda com código, endereço e início", async () => {
-    render()
+  // A cota fica sob o título grande, só na Visão geral: código e início de
+  // um lado, a área do outro.
+  it("monta a cota com código e início no cabeçalho grande", async () => {
+    render("/obras/7/visao-geral")
 
     await screen.findByRole("heading", { name: "Residencial Alfa" })
     expect(screen.getByText(/OBRA-0007/)).toBeInTheDocument()
     expect(screen.getByText(/Rua das Palmeiras/)).toBeInTheDocument()
   })
 
-  it("omite o início da legenda quando a obra não tem data", async () => {
+  it("usa a barra compacta nos módulos, sem a cota", async () => {
+    render()
+
+    await screen.findByRole("heading", { name: "Residencial Alfa" })
+    expect(screen.queryByText(/OBRA-0007/)).not.toBeInTheDocument()
+  })
+
+  it("omite o início da cota quando a obra não tem data", async () => {
     buscarObra.mockResolvedValue({ ...OBRA, plannedStartDate: null })
 
-    render()
+    render("/obras/7/visao-geral")
 
     await screen.findByRole("heading", { name: "Residencial Alfa" })
     expect(screen.queryByText(/Início/)).not.toBeInTheDocument()
@@ -157,10 +172,9 @@ describe("<ObraLayout />", () => {
 
 /**
  * O passo atrás muda de destino: na Visão geral ele sai da obra; nos demais
- * módulos volta para ela. No desktop quem faz esse papel é o cartão de
- * contexto da sidebar.
+ * módulos volta para ela.
  */
-describe("<ObraLayout /> — passo atrás do celular", () => {
+describe("<ObraLayout /> — passo atrás", () => {
   it("volta ao módulo raiz quando está dentro de um módulo", async () => {
     render("/obras/7/etapas")
     await screen.findByRole("heading", { name: "Residencial Alfa" })
@@ -180,13 +194,10 @@ describe("<ObraLayout /> — passo atrás do celular", () => {
   })
 })
 
-/**
- * A sidebar não existe abaixo de `lg` e a barra de abas é do workspace — sem o
- * trilho não haveria como sair da Visão geral para Etapas no celular.
- */
-describe("<ObraModuleRail />", () => {
+/** Abas de rota da obra, em todas as larguras. */
+describe("<ObraTabs />", () => {
   it("lista os módulos da obra apontando para a obra aberta", () => {
-    renderWithProviders(<ObraModuleRail obraId={7} />, { route: "/obras/7/etapas" })
+    renderWithProviders(<ObraTabs obraId={7} />, { route: "/obras/7/etapas" })
 
     expect(screen.getByRole("link", { name: /Visão geral/ })).toHaveAttribute(
       "href",
@@ -198,19 +209,19 @@ describe("<ObraModuleRail />", () => {
     )
   })
 
-  // Mesma interseção da sidebar: módulo oculto no desktop não reaparece aqui.
+  // Mesma interseção da matriz: módulo oculto não reaparece nas abas.
   it("esconde o módulo que a matriz oculta do papel", () => {
     mockAcesso(["orcamento"])
 
-    renderWithProviders(<ObraModuleRail obraId={7} />, { route: "/obras/7/etapas" })
+    renderWithProviders(<ObraTabs obraId={7} />, { route: "/obras/7/etapas" })
 
     expect(screen.queryByRole("link", { name: /Orçamento/ })).not.toBeInTheDocument()
   })
 
   it("destaca o módulo aberto", () => {
-    renderWithProviders(<ObraModuleRail obraId={7} />, { route: "/obras/7/etapas" })
+    renderWithProviders(<ObraTabs obraId={7} />, { route: "/obras/7/etapas" })
 
-    expect(screen.getByRole("link", { name: /Etapas/ })).toHaveClass("bg-gold-grad")
-    expect(screen.getByRole("link", { name: /Tarefas/ })).not.toHaveClass("bg-gold-grad")
+    expect(screen.getByRole("link", { name: /Etapas/ })).toHaveAttribute("aria-current", "page")
+    expect(screen.getByRole("link", { name: /Tarefas/ })).not.toHaveAttribute("aria-current")
   })
 })

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 
 import type { EtapaStatus } from "@/pages/projetos/types"
+import { useUndoableDelete } from "@/shared/hooks/useUndoableDelete"
 
 import {
   createStage,
@@ -75,15 +76,15 @@ export function useStages(projectId: number) {
     },
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteStage(id),
-    onSuccess: () => {
-      invalidate()
-      toast.success(t("obra.etapas.toasts.deleteSuccess"))
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || t("obra.etapas.toasts.deleteError"))
-    },
+  // Excluir some na hora e vai ao servidor depois da janela do Desfazer. As
+  // tarefas da etapa saem junto no backend, por isso o acompanhamento recarrega.
+  const remove = useUndoableDelete<Stage, Stage[]>({
+    queryKey: () => ["stages", projectId],
+    removeFrom: (list, stage) => list.filter((s) => s.id !== stage.id),
+    commit: (stage) => deleteStage(stage.id),
+    alsoInvalidate: () => [["acompanhamento", projectId]],
+    describe: (stage) => ({ title: t("obra.etapas.toasts.deleteSuccess"), body: stage.name }),
+    errorMessage: t("obra.etapas.toasts.deleteError"),
   })
 
   const reorderMutation = useMutation({
@@ -149,9 +150,7 @@ export function useStages(projectId: number) {
     update: updateMutation.mutate,
     updateAsync: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
-    remove: deleteMutation.mutate,
-    removeAsync: deleteMutation.mutateAsync,
-    isDeleting: deleteMutation.isPending,
+    remove,
     reorder: reorderMutation.mutate,
     isReordering: reorderMutation.isPending,
     move: moveMutation.mutate,

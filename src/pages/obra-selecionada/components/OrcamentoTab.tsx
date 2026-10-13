@@ -1,188 +1,163 @@
+import { Coins, Plus, RefreshCw } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
 
+import { useProjectProgress } from "@/pages/projetos/hooks/useProjectProgress"
+import { Button } from "@/shared/components/ui/button/Button"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
 import { usePrimaryAction } from "@/shared/components/ui/page-chrome/primaryAction"
+import { ProjectStatus, type Project } from "@/shared/types/project"
 
 import { useBudget } from "../hooks/useBudget"
+import { useBudgetExpenses } from "../hooks/useBudgetExpenses"
 import { useBudgetModals } from "../hooks/useBudgetModals"
-import { useExpandedCategories } from "../hooks/useExpandedCategories"
 import { useStagesList } from "../hooks/useStages"
-import {
-  toBudgetItemPayload,
-  toBudgetPayload,
-  toExpensePayload,
-} from "../utils/budgetPayload"
-import { BudgetCategoryList } from "./BudgetCategoryList"
-import { BudgetCharts } from "./BudgetCharts"
-import { BudgetDeleteConfirmModal } from "./BudgetDeleteConfirmModal"
-import { BudgetEmptyState } from "./BudgetEmptyState"
-import { BudgetErrorState } from "./BudgetErrorState"
-import { BudgetExceededBanner } from "./BudgetExceededBanner"
-import { BudgetFormModal } from "./BudgetFormModal"
-import { BudgetItemFormModal } from "./BudgetItemFormModal"
-import { BudgetLoadingState } from "./BudgetLoadingState"
-import { BudgetMainPanel } from "./BudgetMainPanel"
-import { ExpenseFormModal } from "./ExpenseFormModal"
+import { buildCurve } from "../utils/sCurve"
+import { BudgetKpis } from "./orcamento/BudgetKpis"
+import { BudgetModals } from "./orcamento/BudgetModals"
+import { BudgetToolbar } from "./orcamento/BudgetToolbar"
+import { CategoryPanel } from "./orcamento/CategoryPanel"
+import { ExpensesTable } from "./orcamento/ExpensesTable"
+import { SCurve } from "./orcamento/SCurve"
+import { SectionCard } from "./visao-geral/SectionCard"
+
+/** `?categoria=<id>` filtra os lançamentos (CLAUDE.md §8). */
+const CATEGORY_PARAM = "categoria"
 
 interface OrcamentoTabProps {
-  projectId: number
+  project: Pick<Project, "id" | "status" | "plannedStartDate" | "plannedEndDate">
 }
 
-export function OrcamentoTab({ projectId }: OrcamentoTabProps) {
+/**
+ * Orçamento (redesign): KPIs com projeção, curva de gastos contra a curva S
+ * planejada, uma trena por categoria e a tabela de lançamentos.
+ */
+export function OrcamentoTab({ project }: OrcamentoTabProps) {
   const { t } = useTranslation()
-  const {
-    budget,
-    isLoading,
-    isError,
-    refetch,
-    canMutate,
-    isMutating,
-    createBudget,
-    updateBudget,
-    deleteBudget,
-    createItem,
-    updateItem,
-    deleteItem,
-    createExpense,
-    updateExpense,
-    deleteExpense,
-  } = useBudget(projectId)
-  const { stages } = useStagesList(projectId)
-  const {
-    modal,
-    deleteTarget,
-    closeModal,
-    closeDelete,
-    openBudgetForm,
-    openItemForm,
-    openExpenseForm,
-    requestDeleteBudget,
-    requestDeleteItem,
-    requestDeleteExpense,
-  } = useBudgetModals()
-  const { toggle, isExpanded } = useExpandedCategories()
+  const ops = useBudget(project.id)
+  const { budget } = ops
+  const modals = useBudgetModals()
+  const { stages } = useStagesList(project.id)
+  const { expenses, isLoading: expensesLoading } = useBudgetExpenses(project.id, budget?.id ?? null)
+  const { progress } = useProjectProgress(project.id)
+  const [params, setParams] = useSearchParams()
 
-  // A ação primária do celular muda com o estado da tela: sem orçamento, criar
-  // o orçamento; com ele, a próxima categoria. Precisa vir antes dos returns de
-  // loading/erro.
-  usePrimaryAction(
-    !canMutate
-      ? null
-      : budget
-        ? {
-            label: t("obra.orcamento.actions.addCategory"),
-            shortLabel: t("obra.orcamento.actions.addCategoryShort"),
-            onClick: () => openItemForm(null),
-          }
-        : { label: t("obra.orcamento.empty.cta"), onClick: openBudgetForm },
-  )
+  const selectedId = Number(params.get(CATEGORY_PARAM)) || null
+  const selected = budget?.items.find((item) => item.id === selectedId) ?? null
+  const hasItems = (budget?.items.length ?? 0) > 0
 
-  /** O banner leva à categoria estourada abrindo-a na lista. */
-  function handleReviewCategory(itemId: number) {
-    if (!isExpanded(itemId)) toggle(itemId)
-    document.getElementById(`budget-category-${itemId}`)?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    })
+  function selectCategory(id: number | null) {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (id === null) next.delete(CATEGORY_PARAM)
+        else next.set(CATEGORY_PARAM, String(id))
+        return next
+      },
+      { replace: true },
+    )
   }
 
-  async function handleConfirmDelete() {
-    if (!deleteTarget) return
-    try {
-      if (deleteTarget.kind === "budget") await deleteBudget(deleteTarget.id)
-      else if (deleteTarget.kind === "item") await deleteItem(deleteTarget.id)
-      else await deleteExpense(deleteTarget.id)
-      closeDelete()
-    } catch {
-      /* toast handled in hook */
-    }
+  function primaryAction() {
+    if (!ops.canMutate) return null
+    if (!budget) return { label: t("obra.orcamento.empty.cta"), onClick: modals.openBudgetForm }
+    if (!hasItems) return { label: t("obra.orcamento.actions.addCategory"), onClick: () => modals.openItemForm() }
+    return { label: t("obra.orcamento.actions.addExpense"), onClick: () => modals.openExpenseForm() }
   }
 
-  if (isLoading) return <BudgetLoadingState />
-  if (isError) return <BudgetErrorState onRetry={() => refetch()} />
+  // Antes dos early returns: alimenta a ação flutuante do celular.
+  usePrimaryAction(primaryAction())
+
+  const dialogs = <BudgetModals ops={ops} modals={modals} budget={budget} stages={stages} selectedItemId={selected?.id ?? null} />
+
+  if (ops.isLoading) {
+    return (
+      <div className="space-y-6" aria-busy="true">
+        <div className="h-[120px] animate-pulse rounded-lg bg-surface hairline" />
+        <div className="h-[300px] animate-pulse rounded-lg bg-surface hairline" />
+      </div>
+    )
+  }
+
+  if (ops.isError) {
+    return (
+      <EmptyState
+        title={t("obra.orcamento.errors.loadFailed")}
+        action={
+          <Button variant="outline" fullWidth={false} onClick={() => ops.refetch()}>
+            <RefreshCw size={14} />
+            {t("obra.retry")}
+          </Button>
+        }
+      />
+    )
+  }
 
   if (!budget) {
     return (
       <>
-        <BudgetEmptyState canMutate={canMutate} onCreate={openBudgetForm} />
-        <BudgetFormModal
-          open={modal.kind === "budget"}
-          onClose={closeModal}
-          budget={null}
-          onCreate={(form) => createBudget(toBudgetPayload(form))}
-          onUpdate={(id, form) => updateBudget({ id, payload: toBudgetPayload(form) })}
-          isSubmitting={isMutating}
+        <EmptyState
+          icon={<Coins size={26} />}
+          title={t("obra.orcamento.empty.title")}
+          body={t("obra.orcamento.empty.description")}
+          action={
+            ops.canMutate && (
+              <Button fullWidth={false} onClick={modals.openBudgetForm}>
+                <Plus size={15} />
+                {t("obra.orcamento.empty.cta")}
+              </Button>
+            )
+          }
         />
+        {dialogs}
       </>
     )
   }
 
+  const curve = buildCurve({ start: project.plannedStartDate, end: project.plannedEndDate }, budget.plannedTotal, expenses)
+  const visibleExpenses = selected ? expenses.filter((e) => e.budgetItemId === selected.id) : expenses
+
   return (
-    <>
-      <div className="space-y-6">
-        <BudgetExceededBanner budget={budget} onReview={handleReviewCategory} />
+    <div className="flex flex-col gap-6">
+      <BudgetToolbar
+        budget={budget}
+        canMutate={ops.canMutate}
+        onAddExpense={() => modals.openExpenseForm()}
+        onAddCategory={() => modals.openItemForm()}
+        onEditBudget={modals.openBudgetForm}
+        onDeleteBudget={() => modals.requestDelete({ kind: "budget", id: budget.id })}
+      />
 
-        <BudgetMainPanel
-          budget={budget}
-          canMutate={canMutate}
-          onAddItem={() => openItemForm(null)}
-          onEditBudget={openBudgetForm}
-          onDeleteBudget={() => requestDeleteBudget(budget.id)}
-        />
+      <BudgetKpis budget={budget} progress={project.status === ProjectStatus.IN_PROGRESS ? progress : null} />
 
-        <BudgetCharts items={budget.items} />
-
-        <BudgetCategoryList
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <SectionCard title={t("obra.orcamento.curve.title")}>
+          {curve ? <SCurve curve={curve} planned={budget.plannedTotal} /> : <p className="py-8 text-center text-[14px] text-meta">{t("obra.orcamento.curve.noDates")}</p>}
+        </SectionCard>
+        <CategoryPanel
           items={budget.items}
-          stages={stages}
-          isExpanded={isExpanded}
-          canMutate={canMutate}
-          onToggle={toggle}
-          onEditItem={(item) => openItemForm(item)}
-          onDeleteItem={(item) => requestDeleteItem(item.id)}
-          onAddExpense={(itemId) => openExpenseForm(itemId, null)}
-          onEditExpense={(itemId, exp) => openExpenseForm(itemId, exp)}
-          onDeleteExpense={(exp) => requestDeleteExpense(exp.id)}
+          selectedId={selected?.id ?? null}
+          canMutate={ops.canMutate}
+          onSelect={selectCategory}
+          onCreate={() => modals.openItemForm()}
+          onEdit={(item) => modals.openItemForm(item)}
+          onDelete={(item) => modals.requestDelete({ kind: "item", id: item.id, name: item.category })}
         />
       </div>
 
-      <BudgetFormModal
-        open={modal.kind === "budget"}
-        onClose={closeModal}
-        budget={budget}
-        onCreate={(form) => createBudget(toBudgetPayload(form))}
-        onUpdate={(id, form) => updateBudget({ id, payload: toBudgetPayload(form) })}
-        isSubmitting={isMutating}
-      />
-
-      <BudgetItemFormModal
-        open={modal.kind === "item"}
-        onClose={closeModal}
-        item={modal.kind === "item" ? modal.item : null}
-        onCreate={(form) => createItem({ budgetId: budget.id, payload: toBudgetItemPayload(form) })}
-        onUpdate={(id, form) => updateItem({ id, payload: toBudgetItemPayload(form) })}
-        isSubmitting={isMutating}
-      />
-
-      <ExpenseFormModal
-        open={modal.kind === "expense"}
-        onClose={closeModal}
-        expense={modal.kind === "expense" ? modal.expense : null}
+      <ExpensesTable
+        expenses={visibleExpenses}
+        items={budget.items}
         stages={stages}
-        onCreate={(form) =>
-          modal.kind === "expense"
-            ? createExpense({ itemId: modal.itemId, payload: toExpensePayload(form) })
-            : Promise.resolve()
-        }
-        onUpdate={(id, form) => updateExpense({ id, payload: toExpensePayload(form) })}
-        isSubmitting={isMutating}
+        filtered={selected !== null}
+        isLoading={expensesLoading}
+        canMutate={ops.canMutate}
+        onClearFilter={() => selectCategory(null)}
+        onEdit={(expense) => modals.openExpenseForm(expense)}
+        onDelete={ops.removeExpense}
       />
 
-      <BudgetDeleteConfirmModal
-        target={deleteTarget}
-        isSubmitting={isMutating}
-        onClose={closeDelete}
-        onConfirm={handleConfirmDelete}
-      />
-    </>
+      {dialogs}
+    </div>
   )
 }

@@ -8,9 +8,9 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 
 import { DeleteProjectModal } from "../DeleteProjectModal"
 import { ProjectCard } from "../ProjectCard"
-import { ProjectsFilter } from "../ProjectsFilter"
-import { ProjectFilter } from "../../types"
-import { deleteProject } from "../../services/projects.service"
+import { ProjectRow } from "../ProjectRow"
+import { deleteProject, getProjectAcompanhamento } from "../../services/projects.service"
+import type { ProjetoAcompanhamento } from "../../types"
 
 vi.mock("../../services/projects.service", () => ({
   listProjects: vi.fn(),
@@ -18,12 +18,58 @@ vi.mock("../../services/projects.service", () => ({
   createProject: vi.fn(),
   updateProject: vi.fn(),
   deleteProject: vi.fn(),
+  getProjectAcompanhamento: vi.fn(),
 }))
 vi.mock("react-toastify", () => ({
   toast: { success: vi.fn(), error: vi.fn(), warning: vi.fn(), info: vi.fn() },
 }))
 
 const excluir = vi.mocked(deleteProject)
+const acompanhamento = vi.mocked(getProjectAcompanhamento)
+
+/**
+ * Duas etapas de mesma duração: Fundação concluída e Alvenaria com 1 de 2
+ * tarefas feitas. O formato é o do `AcompanhamentoResponse` do backend — sem a
+ * lista de tarefas, só total e contagem por status.
+ */
+function progressoDaObra(over: Partial<ProjetoAcompanhamento> = {}): ProjetoAcompanhamento {
+  return {
+    obraId: 7,
+    titulo: "Residencial Alfa",
+    status: ProjectStatus.IN_PROGRESS,
+    totalEtapas: 2,
+    etapasConcluidas: 1,
+    totalTarefas: 2,
+    tarefasConcluidas: 1,
+    stageStatusCounts: { PLANNED: 0, IN_PROGRESS: 1, BLOCKED: 0, DONE: 1 },
+    taskStatusCounts: { TODO: 1, IN_PROGRESS: 0, BLOCKED: 0, DONE: 1 },
+    etapas: [
+      {
+        id: 1,
+        name: "Fundação",
+        description: null,
+        displayOrder: 1,
+        status: "DONE",
+        plannedStartDate: "2026-01-01",
+        plannedEndDate: "2026-02-01",
+        totalTarefas: 0,
+        taskStatusCounts: { TODO: 0, IN_PROGRESS: 0, BLOCKED: 0, DONE: 0 },
+      },
+      {
+        id: 2,
+        name: "Alvenaria",
+        description: null,
+        displayOrder: 2,
+        status: "IN_PROGRESS",
+        plannedStartDate: "2026-02-01",
+        plannedEndDate: "2026-03-04",
+        totalTarefas: 2,
+        taskStatusCounts: { TODO: 1, IN_PROGRESS: 0, BLOCKED: 0, DONE: 1 },
+      },
+    ],
+    ...over,
+  }
+}
 
 /**
  * Datas relativas a hoje — o card fala em "dias restantes".
@@ -91,7 +137,7 @@ function render(project = obra()) {
  *
  * `shouldAdvanceTime` mantém o `userEvent` funcionando com timers falsos.
  */
-const AGORA = new Date("2026-06-15T00:00:00Z")
+const AGORA = new Date(2026, 5, 15, 12)
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true })
@@ -105,121 +151,88 @@ afterEach(() => {
 })
 
 describe("<ProjectCard />", () => {
-  it("mostra título, endereço, tipo e área construída", () => {
+  beforeEach(() => {
+    acompanhamento.mockResolvedValue(progressoDaObra())
+  })
+
+  it("mostra título, endereço e área construída", async () => {
     render()
 
-    expect(screen.getByRole("heading", { name: "Residencial Alfa" })).toBeInTheDocument()
+    expect(screen.getByText("Residencial Alfa")).toBeInTheDocument()
     expect(screen.getByText("Rua das Palmeiras, 100")).toBeInTheDocument()
-    expect(screen.getByText("Residencial")).toBeInTheDocument()
-    expect(screen.getByText("250 m² construído")).toBeInTheDocument()
+    expect(screen.getByText("250 m² construídos")).toBeInTheDocument()
   })
 
-  it("mostra um traço no lugar das datas ausentes", () => {
-    render(obra({ plannedStartDate: null, plannedEndDate: null }))
+  // O avanço vem das etapas e tarefas, não do calendário: Fundação 100% e
+  // Alvenaria 50%, com o mesmo peso de duração.
+  it("mostra o avanço físico e a etapa atual", async () => {
+    render()
 
-    expect(screen.getAllByText("—").length).toBeGreaterThanOrEqual(2)
+    expect(await screen.findByText("75%")).toBeInTheDocument()
+    expect(screen.getByText("Alvenaria")).toBeInTheDocument()
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "75")
   })
 
-  // O progresso é aproximação por tempo decorrido — o backend ainda não expõe
-  // percentual executado.
-  // Janela escrita à mão, e não com `emDias`: `dateProgress` compara instantes
-  // absolutos, então o ponto médio exato só é o mesmo em todo fuso se as duas
-  // pontas e o "agora" forem UTC. 16/05 → 15/07 são 60 dias; AGORA é o dia 30.
-  it("estima o progresso pela janela planejada", () => {
-    render(obra({ plannedStartDate: "2026-05-16", plannedEndDate: "2026-07-15" }))
+  it("mostra um traço antes de o acompanhamento chegar", () => {
+    acompanhamento.mockReturnValue(new Promise(() => {}))
+    render()
 
-    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "50")
+    expect(screen.getByText("—")).toBeInTheDocument()
+    expect(screen.getByText("Sem etapas")).toBeInTheDocument()
   })
 
-  it("zera o progresso sem janela planejada", () => {
-    render(obra({ plannedStartDate: null, plannedEndDate: null }))
+  // Alvenaria passou do prazo (04/03) sem concluir; Fundação já terminou.
+  it("conta as etapas atrasadas", async () => {
+    render()
 
-    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0")
+    expect(await screen.findByTitle("1 etapa atrasada")).toHaveTextContent("1")
   })
 
-  /**
-   * O rodapé responde "quanto falta" — e cada estado terminal tem sua palavra:
-   * concluída e cancelada não contam dias, e prazo vencido é urgência, não
-   * número negativo.
-   */
-  // As obras vêm em fábrica, não prontas: o array do `it.each` é avaliado na
-  // coleta, antes do `beforeEach`, e as datas nasceriam com o relógio real.
+  // Datas fixas: o relógio está congelado em 15/06/2026.
   it.each([
-    ["conta os dias restantes", () => obra(), /dias restantes/],
-    ["avisa que vence hoje", () => obra({ plannedEndDate: emDias(0) }), /Vence hoje/],
-    ["avisa prazo vencido", () => obra({ plannedEndDate: emDias(-5) }), /Prazo vencido/],
-    ["diz concluído", () => obra({ status: ProjectStatus.COMPLETED }), /^Concluído$/],
-    ["diz cancelado", () => obra({ status: ProjectStatus.CANCELLED }), /^Cancelado$/],
-  ])("%s", (_caso, criarObra, esperado) => {
-    render(criarObra())
+    ["dias restantes", { plannedEndDate: "2026-07-15" }, "30 dias restantes"],
+    ["termina hoje", { plannedEndDate: "2026-06-15" }, "Termina hoje"],
+    ["além do prazo", { plannedEndDate: "2026-06-12" }, "3 dias além do prazo"],
+    ["entregue", { status: ProjectStatus.COMPLETED }, "Entregue"],
+    ["cancelada", { status: ProjectStatus.CANCELLED }, "Cancelado"],
+    ["sem prazo", { plannedEndDate: null }, "Sem prazo"],
+  ] as [string, Partial<Project>, string][])("fala do prazo: %s", (_caso, over, texto) => {
+    render(obra(over))
 
-    expect(screen.getByText(esperado)).toBeInTheDocument()
+    expect(screen.getByText(texto)).toBeInTheDocument()
   })
 
-  // Data pura vinda do backend não pode escorregar um dia na exibição: lida
-  // como meia-noite UTC, 16/05 aparecia como 15/05 em qualquer fuso negativo.
-  it("mostra a data planejada no dia certo", () => {
-    render(obra({ plannedStartDate: "2026-05-16", plannedEndDate: "2026-07-15" }))
-
-    expect(screen.getByText("16/05/2026")).toBeInTheDocument()
-    expect(screen.getByText("15/07/2026")).toBeInTheDocument()
-  })
-
-  it("mostra o traço quando não há prazo final", () => {
-    render(obra({ plannedEndDate: null }))
-
-    expect(screen.getAllByText("—").length).toBeGreaterThan(0)
-  })
-
-  it("marca o atraso no badge de status", () => {
-    render(obra({ plannedEndDate: emDias(-5) }))
+  it("marca o atraso no pill de status", () => {
+    render(obra({ plannedEndDate: "2026-06-01" }))
 
     expect(screen.getByText("Em atraso")).toBeInTheDocument()
   })
 
-  // Editar e excluir moram na Visão geral: no card eles surgiam no hover sobre
-  // o mesmo alvo do clique de abrir.
-  it("abre a visão geral da obra ao clicar no card", async () => {
+  it("abre a visão geral da obra", async () => {
     render()
 
-    await userEvent.click(screen.getByRole("heading", { name: "Residencial Alfa" }))
+    await userEvent.click(screen.getByRole("link"))
 
     expect(screen.getByTestId("url")).toHaveTextContent("/obras/7/visao-geral")
   })
+
+  // Muito atrás do esperado para hoje, o percentual vira alerta.
+  it("pinta o percentual de perigo quando a obra está atrás do esperado", async () => {
+    acompanhamento.mockResolvedValue(progressoDaObra({ etapas: [] }))
+    render(obra({ plannedStartDate: "2026-01-01", plannedEndDate: "2026-07-01" }))
+
+    expect(await screen.findByText("0%")).toHaveClass("text-danger")
+  })
 })
 
-describe("<ProjectsFilter />", () => {
-  const stats = { total: 10, inProgress: 4, completed: 3, overdue: 2 }
-  const onFilter = vi.fn()
+describe("<ProjectRow />", () => {
+  it("mostra a obra em linha com avanço, prazo e status", async () => {
+    acompanhamento.mockResolvedValue(progressoDaObra())
+    renderWithProviders(<ProjectRow project={obra({ plannedEndDate: "2026-07-15" })} />)
 
-  it("mostra as quatro pílulas com as contagens", () => {
-    renderWithProviders(
-      <ProjectsFilter filter={ProjectFilter.ALL} onFilter={onFilter} stats={stats} />,
-    )
-
-    expect(screen.getByRole("button", { name: /Todos/ })).toHaveTextContent("10")
-    expect(screen.getByRole("button", { name: /Em Andamento/ })).toHaveTextContent("4")
-    expect(screen.getByRole("button", { name: /Concluídos/ })).toHaveTextContent("3")
-    expect(screen.getByRole("button", { name: /Atrasados/ })).toHaveTextContent("2")
-  })
-
-  it("avisa o recorte escolhido", async () => {
-    renderWithProviders(
-      <ProjectsFilter filter={ProjectFilter.ALL} onFilter={onFilter} stats={stats} />,
-    )
-
-    await userEvent.click(screen.getByRole("button", { name: /Atrasados/ }))
-
-    expect(onFilter).toHaveBeenCalledWith(ProjectFilter.OVERDUE)
-  })
-
-  it("destaca a pílula ativa", () => {
-    renderWithProviders(
-      <ProjectsFilter filter={ProjectFilter.COMPLETED} onFilter={onFilter} stats={stats} />,
-    )
-
-    expect(screen.getByRole("button", { name: /Concluídos/ })).toHaveClass("bg-gold-grad")
-    expect(screen.getByRole("button", { name: /Todos/ })).not.toHaveClass("bg-gold-grad")
+    expect(await screen.findByText("75%")).toBeInTheDocument()
+    expect(screen.getByText("30 dias restantes")).toBeInTheDocument()
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/obras/7/visao-geral")
   })
 })
 
