@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/shared/components/ui/button/Button"
+import { Field } from "@/shared/components/ui/field/Field"
 import { Input } from "@/shared/components/ui/input/Input"
-import { Label } from "@/shared/components/ui/label/Label"
 import { Modal } from "@/shared/components/ui/modal/Modal"
 
 import { responsibilitySchema, type ResponsibilityFormData } from "../schemas/schedule.schema"
@@ -26,14 +26,8 @@ interface ResponsibilityModalProps {
   onSave: (userResponsibility: string) => void
 }
 
-export function ResponsibilityModal({
-  member,
-  isSaving,
-  onClose,
-  onSave,
-}: ResponsibilityModalProps) {
+export function ResponsibilityModal({ member, isSaving, onClose, onSave }: ResponsibilityModalProps) {
   const { t } = useTranslation()
-
   const {
     register,
     handleSubmit,
@@ -42,6 +36,7 @@ export function ResponsibilityModal({
     resolver: zodResolver(responsibilitySchema),
     defaultValues: { userResponsibility: member.userResponsibility ?? "" },
   })
+  const submit = handleSubmit((data) => onSave(data.userResponsibility))
 
   return (
     <Modal
@@ -51,43 +46,41 @@ export function ResponsibilityModal({
       icon={<HardHat size={18} />}
       title={t("obra.schedule.responsibility.title")}
       description={t("obra.schedule.responsibility.subtitle", { name: member.userName })}
+      footer={
+        <>
+          <Button type="button" variant="outline" fullWidth={false} onClick={onClose}>
+            {t("obra.schedule.allocation.cancel")}
+          </Button>
+          <Button fullWidth={false} disabled={isSaving} onClick={() => void submit()}>
+            {isSaving ? t("obra.schedule.allocation.saving") : t("obra.schedule.responsibility.save")}
+          </Button>
+        </>
+      }
     >
       <form
         noValidate
-        onSubmit={handleSubmit((data) => onSave(data.userResponsibility))}
-        className="px-6 pb-6"
+        className="px-6 pt-5 pb-6"
+        onSubmit={(event) => {
+          event.preventDefault()
+          void submit()
+        }}
       >
-        <Label htmlFor="userResponsibility">{t("obra.schedule.responsibility.field")}</Label>
-        <Input
-          id="userResponsibility"
-          type="text"
-          autoFocus
-          className="mt-1.5"
-          placeholder={t("obra.schedule.responsibility.placeholder")}
-          aria-invalid={!!errors.userResponsibility}
-          {...register("userResponsibility")}
-        />
-
-        {errors.userResponsibility ? (
-          <p role="alert" className="mt-1.5 text-xs text-danger">
-            {t(errors.userResponsibility.message ?? "")}
-          </p>
-        ) : (
-          <p className="mt-1.5 text-xs text-on-surface-faint">
-            {t("obra.schedule.responsibility.help")}
-          </p>
-        )}
-
-        <div className="mt-5 flex justify-end gap-2">
-          <Button type="button" variant="ghost" fullWidth={false} onClick={onClose}>
-            {t("obra.schedule.allocation.cancel")}
-          </Button>
-          <Button type="submit" fullWidth={false} disabled={isSaving}>
-            {isSaving
-              ? t("obra.schedule.allocation.saving")
-              : t("obra.schedule.responsibility.save")}
-          </Button>
-        </div>
+        <Field
+          label={t("obra.schedule.responsibility.field")}
+          hint={t("obra.schedule.responsibility.help")}
+          error={errors.userResponsibility?.message && t(errors.userResponsibility.message)}
+        >
+          {(id) => (
+            <Input
+              id={id}
+              type="text"
+              autoFocus
+              placeholder={t("obra.schedule.responsibility.placeholder")}
+              aria-invalid={!!errors.userResponsibility}
+              {...register("userResponsibility")}
+            />
+          )}
+        </Field>
       </form>
     </Modal>
   )

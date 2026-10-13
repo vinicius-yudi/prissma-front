@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom/vitest"
 
 import { cleanup } from "@testing-library/react"
+import { MotionGlobalConfig } from "motion/react"
 import { afterEach, vi } from "vitest"
 
 /**
@@ -10,6 +11,10 @@ import { afterEach, vi } from "vitest"
  * cada teste declara o que finge, senão um dia alguém depende de um mock
  * global sem saber que ele existe.
  */
+
+// Animações do motion terminam na hora: saída de modal, troca de ícone e
+// contagem não ficam presas esperando quadros que o jsdom não desenha.
+MotionGlobalConfig.skipAnimations = true
 
 afterEach(() => {
   cleanup()
@@ -47,3 +52,32 @@ globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObse
 // módulos da obra e o banner de estouro do orçamento rolam até o item ativo no
 // mount — sem o stub, o componente quebra antes da primeira asserção.
 Element.prototype.scrollIntoView ??= function scrollIntoView() {}
+
+// jsdom não tem IntersectionObserver, e o motion o usa para `whileInView` e
+// `onViewportEnter` (trena, contagem de KPI). O dublê reporta todo elemento
+// observado como visível, que é o caso da tela de teste.
+class IntersectionObserverStub {
+  private readonly callback: IntersectionObserverCallback
+
+  constructor(callback: IntersectionObserverCallback) {
+    this.callback = callback
+  }
+
+  observe(target: Element) {
+    this.callback(
+      [{ isIntersecting: true, intersectionRatio: 1, target } as IntersectionObserverEntry],
+      this as unknown as IntersectionObserver,
+    )
+  }
+
+  unobserve() {}
+  disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return []
+  }
+}
+
+Object.defineProperty(window, "IntersectionObserver", {
+  writable: true,
+  value: IntersectionObserverStub,
+})

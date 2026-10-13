@@ -13,17 +13,19 @@ export interface Tarefa {
   assigneeName: string | null
   constructionProjectId: number
   createdAt: string
-  updatedAt: string
+  /** Preenchido pelo backend quando a tarefa vai para DONE. */
+  completedAt: string | null
 }
 
 export interface CreateTarefaRequest {
   title: string
-  description: string
+  description?: string
   priority: TarefaPriority
   status: TarefaStatus
   plannedStartDate: string
   plannedEndDate: string
-  assigneeUserId: number
+  /** Opcional: tarefa pode nascer sem responsável. */
+  assigneeUserId?: number | null
 }
 
 export interface UpdateTarefaRequest {

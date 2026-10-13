@@ -41,13 +41,13 @@ export function useCepLookup(cep: string): UseCepLookupReturn {
         const json = await res.json()
         if (cancelled) return
         if (json.erro) {
-          setCepError("CEP não encontrado")
+          setCepError("projectModal.cepNotFound")
           setCepData(null)
         } else {
           setCepData(json as CepData)
         }
       } catch {
-        if (!cancelled) setCepError("Erro ao buscar CEP")
+        if (!cancelled) setCepError("projectModal.cepError")
       } finally {
         if (!cancelled) setIsLookingUp(false)
       }

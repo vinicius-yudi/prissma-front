@@ -27,16 +27,16 @@ vi.mock("@/pages/reset-password/components/ResetPasswordForm", () => ({
 vi.mock("@/shared/components/brand/BrandPanel", () => ({
   BrandPanel: () => <span>painel-de-marca</span>,
 }))
-// O shell autenticado monta sidebar, header e barra de abas — cada um com sua
-// própria rede. Aqui interessa apenas que os três entram, e uma vez só.
+// O shell autenticado monta sidebar, barra superior e navegação inferior —
+// cada um com sua própria rede. Aqui interessa apenas que os três entram.
 vi.mock("@/shared/components/sidebar/Sidebar", () => ({
   Sidebar: () => <span>sidebar</span>,
 }))
-vi.mock("@/shared/components/header/Header", () => ({
-  Header: () => <span>header</span>,
+vi.mock("@/shared/components/topbar/Topbar", () => ({
+  Topbar: () => <span>header</span>,
 }))
-vi.mock("@/shared/components/mobile/BottomTabBar", () => ({
-  BottomTabBar: () => <span>barra-de-abas</span>,
+vi.mock("@/shared/components/mobile/MobileNav", () => ({
+  MobileNav: () => <span>barra-de-abas</span>,
 }))
 vi.mock("@/shared/hooks/useAccess", () => ({
   useAccess: vi.fn(() => ({
@@ -69,9 +69,8 @@ describe("telas públicas", () => {
 })
 
 /**
- * Duas navegações que não coexistem: sidebar a partir de `lg`, barra de abas
- * com FAB abaixo disso. As duas são montadas e o CSS decide qual aparece — a
- * gaveta que a sidebar era no celular saiu.
+ * Duas navegações que não coexistem: sidebar a partir de `lg`, navegação
+ * inferior abaixo disso. As duas são montadas e o CSS decide qual aparece.
  */
 describe("<MainLayout />", () => {
   function render(route = "/dashboard") {
@@ -86,7 +85,7 @@ describe("<MainLayout />", () => {
     )
   }
 
-  it("monta sidebar, header e barra de abas em volta do conteúdo", () => {
+  it("monta sidebar, barra superior e navegação inferior em volta do conteúdo", () => {
     render()
 
     expect(screen.getByText("sidebar")).toBeInTheDocument()

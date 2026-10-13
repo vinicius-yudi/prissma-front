@@ -21,7 +21,7 @@ export function ModuleGuard({ module, children }: ModuleGuardProps) {
   // Sem esperar o papel carregar, o guard negaria acesso por um instante e
   // piscaria "Acesso negado" para quem tem permissão.
   if (isLoading) {
-    return <div className="h-40 animate-pulse rounded-2xl bg-surface-container-low" />
+    return <div className="h-40 animate-pulse rounded-2xl bg-surface" />
   }
 
   if (levelOf(module) === "") {

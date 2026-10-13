@@ -189,7 +189,7 @@ describe("usePerfilForm — envio", () => {
 
     act(() => result.current.handleSubmit(submit()))
 
-    expect(toast.info).toHaveBeenCalledWith("Nenhuma alteração detectada.")
+    expect(toast.info).toHaveBeenCalledWith("Nenhuma alteração para salvar.")
     expect(salvar).not.toHaveBeenCalled()
   })
 
@@ -228,7 +228,7 @@ describe("usePerfilForm — envio", () => {
     act(() => result.current.handleSubmit(submit()))
 
     await waitFor(() => expect(onClose).toHaveBeenCalled())
-    expect(toast.success).toHaveBeenCalledWith("Perfil atualizado com sucesso!")
+    expect(toast.success).toHaveBeenCalledWith("Perfil atualizado.")
   })
 
   it("mostra a mensagem do backend e mantém o modal aberto no erro", async () => {

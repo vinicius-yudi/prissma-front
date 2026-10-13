@@ -31,7 +31,7 @@ const { toast } = await import("react-toastify")
 const listar = vi.mocked(listProjects)
 
 /**
- * A busca chega pela URL: quem escreve é o <HeaderSearch>, que vive acima
+ * A busca chega pela URL: quem escreve é a busca ⌘K do shell, que vive acima
  * desta página, e quem lê é o hook. Esta rota inicial é o que simula os dois
  * lados do contrato.
  */
@@ -285,7 +285,7 @@ describe("mutations de obra", () => {
 
     act(() => result.current.handleDelete(7))
 
-    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Obra excluída com sucesso!"))
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Obra excluída."))
     expect(vi.mocked(deleteProject).mock.calls[0][0]).toBe(7)
   })
 

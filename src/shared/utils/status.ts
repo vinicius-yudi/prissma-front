@@ -11,8 +11,14 @@
  * valor persistido vai divergir das outras.
  */
 
-/** Os cinco estados do badge (Style Guide v2 §5). */
-export type BadgeState = "done" | "progress" | "late" | "paused" | "idle"
+/**
+ * Os seis estados do pill (DS v2, Status). "Bloqueada" só existe para tarefa:
+ * o `BLOCKED` de etapa é lido como "Pausada".
+ */
+export type BadgeState = "done" | "progress" | "late" | "paused" | "blocked" | "idle"
+
+/** De qual entidade vem o status — muda o que `BLOCKED` significa. */
+export type StatusKind = "task" | "stage" | "project"
 
 const STATE_BY_STATUS: Record<string, BadgeState> = {
   // concluído
@@ -20,14 +26,23 @@ const STATE_BY_STATUS: Record<string, BadgeState> = {
   DONE: "done",
   // em andamento
   IN_PROGRESS: "progress",
-  // pausado / impedido
+  // pausado (BLOCKED depende da entidade — ver BLOCKED_BY_KIND)
   PAUSED: "paused",
-  BLOCKED: "paused",
   // não iniciado
   PLANNING: "idle",
   PLANNED: "idle",
   TODO: "idle",
   CANCELLED: "idle",
+}
+
+const STATUS_BLOCKED = "BLOCKED"
+
+// Tarefa bloqueada ganha forma própria (listras) para não se confundir com
+// "Em atraso"; etapa e obra com impedimento aparecem como pausadas.
+const BLOCKED_BY_KIND: Record<StatusKind, Pick<DisplayStatus, "state" | "labelKey">> = {
+  task: { state: "blocked", labelKey: "status.BLOCKED" },
+  stage: { state: "paused", labelKey: "status.PAUSED" },
+  project: { state: "paused", labelKey: "status.PAUSED" },
 }
 
 /** Estados que já terminaram e por isso nunca contam como atraso. */
@@ -97,14 +112,18 @@ export function dateProgress(
 interface DeriveInput {
   status: string
   plannedEndDate?: string | null
+  /** Padrão `stage`: `BLOCKED` vira "Pausada". Tarefa passa `task`. */
+  kind?: StatusKind
 }
 
-export function deriveStatus({ status, plannedEndDate }: DeriveInput): DisplayStatus {
+export function deriveStatus({ status, plannedEndDate, kind = "stage" }: DeriveInput): DisplayStatus {
   const late = TERMINAL.has(status) ? 0 : daysLate(plannedEndDate)
 
   if (late > 0) {
     return { state: "late", labelKey: "status.LATE", daysLate: late }
   }
+
+  if (status === STATUS_BLOCKED) return { ...BLOCKED_BY_KIND[kind], daysLate: 0 }
 
   return {
     state: STATE_BY_STATUS[status] ?? "idle",

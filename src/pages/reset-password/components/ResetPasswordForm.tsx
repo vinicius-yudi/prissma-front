@@ -1,109 +1,65 @@
-import { Brand } from "@/shared/components/brand/Brand"
-import { Button } from "@/shared/components/ui/button/Button"
-import { Input } from "@/shared/components/ui/input/Input"
-import { Label } from "@/shared/components/ui/label/Label"
-import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
-import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
-import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Loader2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { Navigate } from "react-router-dom"
+
+import { BackToLogin } from "@/shared/components/auth/BackToLogin"
+import { PasswordInput } from "@/shared/components/auth/PasswordInput"
+import { PasswordRules } from "@/shared/components/auth/PasswordRules"
+import { Button } from "@/shared/components/ui/button/Button"
+import { Field } from "@/shared/components/ui/field/Field"
+
 import { useResetPasswordForm } from "../hooks/useResetPasswordForm"
 
-
 export function ResetPasswordForm() {
-	const {
-		newPassword,
-		setNewPassword,
-		confirmPassword,
-		setConfirmPassword,
-		showPassword,
-		togglePassword,
-		showConfirm,
-		toggleConfirm,
-		handleSubmit,
-		isPending,
-	} = useResetPasswordForm()
-	const { t } = useTranslation()
+  const { t } = useTranslation()
+  const { form, onSubmit, isPending, hasToken } = useResetPasswordForm()
+  const { errors } = form.formState
+  const newPassword = form.watch("newPassword")
 
-	return (
-		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
-			<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-				<LanguageSelect />
-				<ThemeToggle />
-			</div>
-			<div className="w-full max-w-md space-y-12">
-				<div className="flex justify-center">
-					<Brand />
-				</div>
+  // Link sem token não tem o que redefinir: volta para pedir outro.
+  if (!hasToken) return <Navigate to="/forgot-password" replace />
 
-				<div className="text-center space-y-2">
-					<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("resetPassword.title")}</h2>
-					<p className="text-sm text-on-surface-variant">{t("resetPassword.subtitle")}</p>
-				</div>
+  function errorOf(message: string | undefined): string | undefined {
+    return message ? t(message) : undefined
+  }
 
-				<form className="space-y-6" onSubmit={handleSubmit}>
-					<div className="space-y-2">
-						<Label htmlFor="newPassword">{t("resetPassword.newPassword")}</Label>
-						<Input
-							id="newPassword"
-							name="newPassword"
-							type={showPassword ? "text" : "password"}
-							placeholder={t("resetPassword.passwordPlaceholder")}
-							value={newPassword}
-							onChange={(e) => setNewPassword(e.target.value)}
-							required
-							suffix={
-								<button
-									type="button"
-									onClick={togglePassword}
-									className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
-								>
-									{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-								</button>
-							}
-						/>
-					</div>
+  return (
+    <>
+      <h1 className="t-title text-[34px] text-ink">{t("resetPassword.title")}</h1>
+      <p className="mt-2 text-[15px] text-ink-2">{t("resetPassword.subtitle")}</p>
 
-					<div className="space-y-2">
-						<Label htmlFor="confirmPassword">{t("resetPassword.confirmPassword")}</Label>
-						<Input
-							id="confirmPassword"
-							name="confirmPassword"
-							type={showConfirm ? "text" : "password"}
-							placeholder={t("resetPassword.passwordPlaceholder")}
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
-							required
-							suffix={
-								<button
-									type="button"
-									onClick={toggleConfirm}
-									className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
-								>
-									{showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-								</button>
-							}
-						/>
-					</div>
+      <form onSubmit={onSubmit} noValidate className="mt-8 flex flex-col gap-4">
+        <Field label={t("resetPassword.newPassword")} error={errorOf(errors.newPassword?.message)}>
+          {(id) => (
+            <PasswordInput
+              id={id}
+              autoComplete="new-password"
+              aria-invalid={!!errors.newPassword}
+              {...form.register("newPassword")}
+            />
+          )}
+        </Field>
 
-					<div className="space-y-4 pt-4">
-						<Button type="submit" disabled={isPending}>
-							{isPending ? t("resetPassword.submitting") : t("resetPassword.submit")}
-							{!isPending && <ArrowRight size={18} />}
-						</Button>
-					</div>
-				</form>
+        <PasswordRules value={newPassword} />
 
-				<div className="text-center">
-					<Link
-						to="/login"
-						className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
-					>
-						<ArrowLeft size={16} />
-						{t("resetPassword.backToLogin")}
-					</Link>
-				</div>
-			</div>
-		</section>
-	)
+        <Field label={t("resetPassword.confirmPassword")} error={errorOf(errors.confirmPassword?.message)}>
+          {(id) => (
+            <PasswordInput
+              id={id}
+              autoComplete="new-password"
+              aria-invalid={!!errors.confirmPassword}
+              {...form.register("confirmPassword")}
+            />
+          )}
+        </Field>
+
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending && <Loader2 size={16} className="animate-spin" />}
+          {isPending ? t("resetPassword.submitting") : t("resetPassword.submit")}
+        </Button>
+      </form>
+
+      <BackToLogin />
+    </>
+  )
 }

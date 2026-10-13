@@ -3,11 +3,27 @@ import type { ProjectStatus } from "@/shared/types/project"
 export const ProjectFilter = {
   ALL: "ALL",
   IN_PROGRESS: "IN_PROGRESS",
+  PLANNING: "PLANNING",
   COMPLETED: "COMPLETED",
   OVERDUE: "OVERDUE",
 } as const
 
 export type ProjectFilter = (typeof ProjectFilter)[keyof typeof ProjectFilter]
+
+export const ProjectSort = {
+  RECENT: "recentes",
+  DEADLINE: "prazo",
+  NAME: "nome",
+} as const
+
+export type ProjectSort = (typeof ProjectSort)[keyof typeof ProjectSort]
+
+export const ProjectView = {
+  GRID: "grade",
+  LIST: "lista",
+} as const
+
+export type ProjectView = (typeof ProjectView)[keyof typeof ProjectView]
 
 export const EtapaStatus = {
   PLANNED: "PLANNED",
@@ -35,27 +51,26 @@ export const TarefaPriority = {
 
 export type TarefaPriority = (typeof TarefaPriority)[keyof typeof TarefaPriority]
 
-export interface Tarefa {
-  id: number
-  title: string
-  description: string
-  priority: TarefaPriority
-  status: TarefaStatus
-  plannedStartDate: string
-  plannedEndDate: string
-}
+/** Contagem de tarefas por status, como o backend devolve. */
+export type TaskStatusCounts = Partial<Record<TarefaStatus, number>>
 
-export interface Etapa {
+/**
+ * Etapa no acompanhamento (`AcompanhamentoStageResponse`). O backend não
+ * manda a lista de tarefas aqui — só o total e a contagem por status.
+ */
+export interface AcompanhamentoEtapa {
   id: number
   name: string
-  description: string
+  description: string | null
   displayOrder: number
   status: EtapaStatus
-  plannedStartDate: string
-  plannedEndDate: string
-  tasks: Tarefa[]
+  plannedStartDate: string | null
+  plannedEndDate: string | null
+  totalTarefas: number
+  taskStatusCounts: TaskStatusCounts
 }
 
+/** `GET /projects/{id}/acompanhamento` (`AcompanhamentoResponse`). */
 export interface ProjetoAcompanhamento {
   obraId: number
   titulo: string
@@ -64,5 +79,7 @@ export interface ProjetoAcompanhamento {
   etapasConcluidas: number
   totalTarefas: number
   tarefasConcluidas: number
-  etapas: Etapa[]
+  stageStatusCounts: Partial<Record<EtapaStatus, number>>
+  taskStatusCounts: TaskStatusCounts
+  etapas: AcompanhamentoEtapa[]
 }

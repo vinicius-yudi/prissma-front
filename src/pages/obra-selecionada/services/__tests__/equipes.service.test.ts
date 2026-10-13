@@ -11,7 +11,6 @@ import {
   getEquipeMembers,
   removeEquipeMember,
 } from "../equipes.service"
-import { listProjectMembers } from "../projectMembers.service"
 import {
   ALL_PROJECT_PERMISSIONS,
   EDITABLE_PROJECT_ROLES,
@@ -133,16 +132,6 @@ describe("getAvailableUsers", () => {
     membrosDaConta.mockResolvedValue([])
 
     expect(await getAvailableUsers()).toEqual([])
-  })
-})
-
-describe("membros do projeto", () => {
-  it("usa a mesma rota da equipe", async () => {
-    get.mockResolvedValue([])
-
-    await listProjectMembers(7)
-
-    expect(get).toHaveBeenCalledWith("/projects/7/members")
   })
 })
 

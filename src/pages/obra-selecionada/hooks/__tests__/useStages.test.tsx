@@ -1,8 +1,9 @@
 import { act, renderHook, waitFor } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { EtapaStatus } from "@/pages/projetos/types"
 import { createHookWrapper } from "@/test/renderWithProviders"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   createStage,
@@ -124,12 +125,15 @@ describe("useStages — criar, editar, excluir", () => {
     expect(editar.mock.calls[0].slice(0, 2)).toEqual([3, PAYLOAD])
   })
 
-  it("exclui a etapa", async () => {
+  it("exclui a etapa depois da janela do Desfazer", async () => {
+    relogioDoDesfazer()
     excluir.mockResolvedValue(undefined)
     const { result } = render()
 
-    act(() => result.current.remove(3))
+    act(() => result.current.remove(etapa({ id: 3 })))
+    expect(excluir).not.toHaveBeenCalled()
 
+    await passarJanelaDoDesfazer()
     await waitFor(() => expect(excluir).toHaveBeenCalled())
     expect(excluir.mock.calls[0][0]).toBe(3)
   })
@@ -145,10 +149,12 @@ describe("useStages — criar, editar, excluir", () => {
 
   // Erro sem texto (queda de rede) não pode virar toast em branco.
   it("cai numa mensagem traduzida quando o erro não tem texto", async () => {
+    relogioDoDesfazer()
     excluir.mockRejectedValue(new Error(""))
     const { result } = render()
 
-    act(() => result.current.remove(3))
+    act(() => result.current.remove(etapa({ id: 3 })))
+    await passarJanelaDoDesfazer()
 
     await waitFor(() => expect(toast.error).toHaveBeenCalled())
     expect(vi.mocked(toast.error).mock.calls[0][0]).toBeTruthy()
@@ -259,4 +265,8 @@ describe("useStages — mover", () => {
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Etapa bloqueada."))
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

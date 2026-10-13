@@ -32,7 +32,7 @@ export function DeleteProjectModal({ project, onClose, onDeleted }: DeleteProjec
       size="sm"
     >
       <div className="px-6 pb-6 space-y-5">
-        <p className="text-sm text-on-surface-variant leading-relaxed">
+        <p className="text-sm text-ink-2 leading-relaxed">
           {t("projects.deleteModal.message", { name: project?.title ?? "" })}
         </p>
         <div className="flex gap-3">
@@ -42,7 +42,7 @@ export function DeleteProjectModal({ project, onClose, onDeleted }: DeleteProjec
           <Button
             onClick={() => project && handleDelete(project.id)}
             disabled={isLoading}
-            className="bg-error text-on-error border-0 hover:brightness-[0.92]"
+            className="bg-danger text-on-inverse border-0 hover:brightness-[0.92]"
           >
             {isLoading
               ? t("projects.deleteModal.deleting")

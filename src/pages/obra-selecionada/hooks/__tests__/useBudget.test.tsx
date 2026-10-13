@@ -1,10 +1,11 @@
 import { act, renderHook, waitFor } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getMyProfile } from "@/shared/services/user.service"
 import { GlobalRole } from "@/shared/types/user"
 import { createHookWrapper } from "@/test/renderWithProviders"
 import type { BudgetItem, Expense, ProjectBudget } from "@/shared/types/budget"
+import { passarJanelaDoDesfazer, relogioDoDesfazer } from "@/test/undo"
 
 import {
   createBudget,
@@ -398,21 +399,21 @@ describe("useBudget — despesas", () => {
     expect(toast.warning).toHaveBeenCalledTimes(1)
   })
 
-  it("exclui a despesa", async () => {
+  it("exclui a despesa depois da janela do Desfazer", async () => {
+    relogioDoDesfazer()
     const { result } = await renderCarregado()
 
-    await act(async () => {
-      await result.current.deleteExpense(11)
-    })
-
-    expect(excluirDespesa).toHaveBeenCalledWith(11)
+    act(() => result.current.removeExpense(despesa({ id: 11 })))
+    expect(excluirDespesa).not.toHaveBeenCalled()
     expect(toast.success).toHaveBeenCalled()
+
+    await passarJanelaDoDesfazer()
+    await waitFor(() => expect(excluirDespesa).toHaveBeenCalledWith(11))
   })
 
   it.each([
     ["lançamento", () => criarDespesa.mockRejectedValue(new Error("Data futura."))],
     ["edição", () => editarDespesa.mockRejectedValue(new Error("Data futura."))],
-    ["exclusão", () => excluirDespesa.mockRejectedValue(new Error("Data futura."))],
   ])("avisa quando o %s da despesa falha", async (caso, prepara) => {
     prepara()
     const { result } = await renderCarregado()
@@ -420,10 +421,8 @@ describe("useBudget — despesas", () => {
     await act(async () => {
       if (caso === "lançamento") {
         await result.current.createExpense({ itemId: 3, payload: {} }).catch(() => {})
-      } else if (caso === "edição") {
-        await result.current.updateExpense({ id: 11, payload: {} }).catch(() => {})
       } else {
-        await result.current.deleteExpense(11).catch(() => {})
+        await result.current.updateExpense({ id: 11, payload: {} }).catch(() => {})
       }
     })
 
@@ -451,4 +450,8 @@ describe("useBudget — isMutating", () => {
 
     await waitFor(() => expect(result.current.isMutating).toBe(false))
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

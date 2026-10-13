@@ -1,90 +1,65 @@
-import { Brand } from "@/shared/components/brand/Brand"
-import { Button } from "@/shared/components/ui/button/Button"
-import { Input } from "@/shared/components/ui/input/Input"
-import { Label } from "@/shared/components/ui/label/Label"
-import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageSelect"
-import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
-import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Loader2, MailCheck } from "lucide-react"
+import { motion } from "motion/react"
 import { useTranslation } from "react-i18next"
+
+import { BackToLogin } from "@/shared/components/auth/BackToLogin"
+import { Button } from "@/shared/components/ui/button/Button"
+import { Field } from "@/shared/components/ui/field/Field"
+import { Input } from "@/shared/components/ui/input/Input"
+import { SPRING } from "@/shared/constants/motion"
+
 import { useForgotPasswordForm } from "../hooks/useForgotPasswordForm"
 
-
 export function ForgotPasswordForm() {
-	const { email, setEmail, handleSubmit, isPending, submitted } = useForgotPasswordForm()
-	const { t } = useTranslation()
+  const { t } = useTranslation()
+  const { form, onSubmit, isPending, sentTo } = useForgotPasswordForm()
+  const { errors } = form.formState
 
-	return (
-		<section className="relative w-full lg:w-[45%] h-full flex flex-col justify-center items-center px-8 sm:px-16 lg:px-24 py-12 overflow-y-auto bg-surface">
-			<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-				<LanguageSelect />
-				<ThemeToggle />
-			</div>
-			<div className="w-full max-w-md space-y-12">
-				<div className="flex justify-center">
-					<Brand />
-				</div>
+  if (sentTo) {
+    return (
+      <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={SPRING}>
+        <span className="flex size-14 items-center justify-center rounded-lg bg-gold-soft text-gold-hi">
+          <MailCheck size={26} />
+        </span>
+        <h1 className="t-title mt-6 text-[32px] text-ink">{t("forgotPassword.sentTitle")}</h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-ink-2">
+          {t("forgotPassword.sentBefore")} <b className="font-[650] text-ink">{sentTo}</b>{" "}
+          {t("forgotPassword.sentAfter")}
+        </p>
+        <BackToLogin />
+      </motion.div>
+    )
+  }
 
-				{submitted ? (
-					<div className="text-center space-y-6">
-						<div className="space-y-2">
-							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.sentTitle")}</h2>
-							<p className="text-sm text-on-surface-variant">
-								{t("forgotPassword.sentBefore")}{" "}
-								<span className="font-semibold text-gold-bright">{email}</span>{" "}
-								{t("forgotPassword.sentAfter")}
-							</p>
-						</div>
-						<Link
-							to="/login"
-							className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
-						>
-							<ArrowLeft size={16} />
-							{t("forgotPassword.backToLogin")}
-						</Link>
-					</div>
-				) : (
-					<>
-						<div className="text-center space-y-2">
-							<h2 className="text-on-surface text-3xl font-bold tracking-tight">{t("forgotPassword.title")}</h2>
-							<p className="text-sm text-on-surface-variant">{t("forgotPassword.subtitle")}</p>
-						</div>
+  return (
+    <>
+      <h1 className="t-title text-[34px] text-ink">{t("forgotPassword.title")}</h1>
+      <p className="mt-2 text-[15px] text-ink-2">{t("forgotPassword.subtitle")}</p>
 
-						<form className="space-y-6" onSubmit={handleSubmit}>
-							<div className="space-y-2">
-								<Label htmlFor="email">{t("forgotPassword.email")}</Label>
-								<Input
-									id="email"
-									name="email"
-									type="email"
-									placeholder={t("forgotPassword.emailPlaceholder")}
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-									required
-									suffix={<Mail size={20} />}
-								/>
-							</div>
+      <form onSubmit={onSubmit} noValidate className="mt-8 flex flex-col gap-4">
+        <Field
+          label={t("forgotPassword.email")}
+          error={errors.email?.message ? t(errors.email.message) : undefined}
+        >
+          {(id) => (
+            <Input
+              id={id}
+              type="email"
+              autoComplete="email"
+              placeholder={t("forgotPassword.emailPlaceholder")}
+              aria-invalid={!!errors.email}
+              {...form.register("email")}
+            />
+          )}
+        </Field>
 
-							<div className="space-y-4 pt-4">
-								<Button type="submit" disabled={isPending}>
-									{isPending ? t("forgotPassword.submitting") : t("forgotPassword.submit")}
-									{!isPending && <ArrowRight size={18} />}
-								</Button>
-							</div>
-						</form>
+        <Button type="submit" disabled={isPending}>
+          {isPending && <Loader2 size={16} className="animate-spin" />}
+          {isPending ? t("forgotPassword.submitting") : t("forgotPassword.submit")}
+        </Button>
+      </form>
 
-						<div className="text-center">
-							<Link
-								to="/login"
-								className="flex items-center justify-center gap-2 text-sm font-medium text-gold-bright hover:underline underline-offset-4 transition-colors"
-							>
-								<ArrowLeft size={16} />
-								{t("forgotPassword.backToLogin")}
-							</Link>
-						</div>
-					</>
-				)}
-			</div>
-		</section>
-	)
+      <BackToLogin />
+    </>
+  )
 }

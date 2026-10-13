@@ -1,24 +1,25 @@
 import type { ButtonHTMLAttributes } from "react"
 
 type ButtonVariant =
-  // Gradiente ouro + glow. **Um por vista** (Style Guide v2 §5).
+  // Gradiente ouro. **Um por vista**.
   | "primary"
-  // Secundário do design: borda forte, texto de apoio.
+  // Contorno: secundária do mesmo contexto.
   | "outline"
-  // Terciário do design: só texto, para "Ver todas ›".
+  // Quieta: só texto ouro, para "Ver todas ›".
   | "ghost"
-  // Destrutivo: fundo translúcido de perigo.
+  // Perigo: só ação destrutiva.
   | "destructive"
   // Itens de navegação por abas.
   | "menu"
   | "menuSelected"
 
 type ButtonSize =
-  // Altura 38–44px do design. Padrão: é o botão de formulário e de ação de tela.
+  // 44px. Padrão: botão de formulário e de ação de tela.
   | "md"
-  // Compacto, para ações que acompanham um título. Na altura cheia elas
-  // competiam com o H1 ao lado.
+  // 36px, para barras de ferramenta de aba e ações ao lado de um título.
   | "sm"
+  // 40×40, só ícone — exige `aria-label`.
+  | "icon"
 
 interface InterfaceButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
