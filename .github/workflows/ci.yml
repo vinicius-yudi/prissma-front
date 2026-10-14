@@ -1,14 +1,19 @@
 name: CI
 
-# Roda na abertura e em cada push do PR, e de novo depois do merge em develop
-# ou main. O `synchronize` é o que garante que um push novo no PR revalida —
-# sem ele, um PR aprovado poderia receber commit quebrado e continuar verde.
+# Roda na abertura e em cada push do PR, e de novo depois do merge em develop.
+# O `synchronize` é o que garante que um push novo no PR revalida — sem ele,
+# um PR aprovado poderia receber commit quebrado e continuar verde.
+#
+# Depois do merge na main quem roda é a CD (cd.yml), chamando este workflow
+# via `workflow_call` como gate do deploy — por isso a main não está em `push`:
+# senão cada merge rodaria a CI duas vezes.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop, main]
   push:
-    branches: [develop, main]
+    branches: [develop]
+  workflow_call:
   workflow_dispatch:
 
 # Um PR que recebe três pushes seguidos não precisa de três execuções: cancela
