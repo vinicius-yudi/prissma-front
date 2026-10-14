@@ -1,0 +1,68 @@
+name: CD
+
+# Deploy de produção na Vercel a cada push na main — na prática, a cada PR
+# mergeado nela (develop → main). O deploy só sai se a CI inteira passar:
+# lint, trava de cor, tipos, testes e build rodam antes, no job `ci`.
+#
+# A integração Git da Vercel está desligada para a main (vercel.json →
+# git.deploymentEnabled). Sem isso ela publicaria em paralelo, sem esperar os
+# testes, e o gate daqui não valeria nada. Previews das outras branches
+# continuam saindo pela integração.
+#
+# Segredos necessários (Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN       vercel.com/account/tokens
+#   VERCEL_ORG_ID      ID do time/conta dono do projeto na Vercel
+#   VERCEL_PROJECT_ID  projeto na Vercel → Settings → General → Project ID
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Deploy de produção
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Dois merges seguidos: o segundo deploy espera o primeiro terminar em vez
+    # de cancelá-lo — deploy interrompido no meio é pior que deploy atrasado.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://prissma-front.vercel.app
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar Vercel CLI
+        run: npm install --global vercel@latest
+
+      # Traz as configurações e variáveis de ambiente de produção do projeto,
+      # para o build daqui sair igual ao que a Vercel faria.
+      - name: Baixar configuração do projeto
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Build no runner e upload do resultado pronto (--prebuilt): o que vai
+      # para produção é exatamente o que foi construído depois da CI passar.
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
