@@ -1069,7 +1069,10 @@
       "budget": "Budget",
       "budgetUsedShort": "{{percent}}% used",
       "people_one": "{{count}} person on the project",
-      "people_other": "{{count}} people on the project"
+      "people_other": "{{count}} people on the project",
+      "directions": "Get directions",
+      "openInMaps": "Open in Google Maps",
+      "siteMap": "Site plan"
     },
     "gantt": {
       "empty": "No stage with planned dates yet.",
