@@ -1069,7 +1069,10 @@
       "budget": "Orçamento",
       "budgetUsedShort": "{{percent}}% usado",
       "people_one": "{{count}} pessoa na obra",
-      "people_other": "{{count}} pessoas na obra"
+      "people_other": "{{count}} pessoas na obra",
+      "directions": "Como chegar",
+      "openInMaps": "Abrir no Google Maps",
+      "siteMap": "Planta de situação"
     },
     "gantt": {
       "empty": "Nenhuma etapa com datas planejadas ainda.",
