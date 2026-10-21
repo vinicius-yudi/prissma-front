@@ -60,6 +60,11 @@ vi.mock("@/shared/hooks/useAccess", () => ({
   useObraIdFromPath: () => 7,
 }))
 vi.mock("../DocumentosRecentes", () => ({ DocumentosRecentes: () => <span>documentos-recentes</span> }))
+// Sem layout salvo: a visão geral usa o padrão (a customização tem teste próprio).
+vi.mock("@/shared/services/preferences.service", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/shared/services/preferences.service")>()),
+  getPreference: vi.fn().mockResolvedValue(null),
+}))
 vi.mock("@/pages/projetos/components/ProjectStepModal", () => ({
   ProjectStepModal: ({ open, onClose }: { open: boolean; onClose: () => void }) =>
     open ? <button onClick={onClose}>modal-editar</button> : null,
