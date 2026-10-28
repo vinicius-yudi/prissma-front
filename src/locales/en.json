@@ -290,7 +290,6 @@
     "backToList": "Back to list",
     "acompError": "Could not load project progress.",
     "retry": "Try again",
-    "comingSoon": "Coming soon",
     "tabs": {
       "visaoGeral": "Overview",
       "etapas": "Stages",
@@ -1170,9 +1169,6 @@
         "planned": "Planned",
         "late": "Past due"
       }
-    },
-    "comingSoonBody": {
-      "indicadores": "Progress curves, crew productivity and schedule and cost deviations, gathered in one project dashboard."
     }
   },
   "profile": {
@@ -1357,6 +1353,111 @@
       "passwordLowercase": "The password needs at least one lowercase letter.",
       "passwordDigit": "The password needs at least one number.",
       "passwordSpecial": "The password needs at least one special character."
+    }
+  },
+  "relatorios": {
+    "title": "Reports",
+    "subtitle": "Budget, schedule and team across the account's projects, in a dashboard refreshed every hour.",
+    "updatedAt": "Updated {{date}}",
+    "neverUpdated": "Indicators not loaded yet",
+    "filter": {
+      "label": "Project",
+      "all": "All projects"
+    },
+    "actions": {
+      "refresh": "Refresh data",
+      "export": "Export PDF",
+      "exporting": "Generating PDF…",
+      "report": "Project report"
+    },
+    "toasts": {
+      "refreshed": "Indicators refreshed.",
+      "refreshError": "Could not refresh the indicators.",
+      "reportError": "Could not generate the project report.",
+      "exportError": "Could not generate the dashboard PDF."
+    },
+    "errors": {
+      "load": "Could not load the indicators."
+    },
+    "empty": {
+      "title": "No progress data yet",
+      "body": "Add stages, tasks and a budget. Indicators show up on the next refresh, which runs every hour."
+    },
+    "kpi": {
+      "budget": "Budget spent",
+      "budgetHint": "{{executed}} of {{planned}}",
+      "stages": "Stages completed",
+      "stagesHint": "{{percent}} complete",
+      "overdueTasks": "Overdue tasks",
+      "overdueTasksHint_zero": "no tasks yet",
+      "overdueTasksHint_one": "of {{count}} task in total",
+      "overdueTasksHint_other": "of {{count}} tasks in total",
+      "deviation": "Average schedule deviation",
+      "deviationValue_zero": "{{value}} days",
+      "deviationValue_one": "{{value}} day",
+      "deviationValue_other": "{{value}} days",
+      "deviationHint": "stages completed in the last 30 days"
+    },
+    "series": {
+      "planned": "Planned",
+      "executed": "Spent",
+      "exceeded": "Over plan",
+      "plannedRemaining": "Planned",
+      "actualRemaining": "Actual",
+      "done": "Done",
+      "open": "Open, on time",
+      "overdue": "Overdue"
+    },
+    "charts": {
+      "budget": {
+        "title": "Planned vs. spent budget (cumulative)",
+        "empty": "No budget or expenses recorded."
+      },
+      "expenses": {
+        "title": "Expenses by category",
+        "empty": "No budget categories.",
+        "exceeded": "Over plan: {{categories}}"
+      },
+      "burndown": {
+        "title": "Task burndown",
+        "empty": "No tasks with a planned due date.",
+        "week": "Week of {{date}}",
+        "consolidatedHint": "All projects: each project only counts within its own schedule, so the task total shifts when a project starts or ends."
+      },
+      "team": {
+        "title": "Team effort",
+        "empty": "No active members on the projects."
+      }
+    },
+    "overdue": {
+      "title": "Overdue stages",
+      "empty": "No overdue stages.",
+      "stage": "Stage",
+      "project": "Project",
+      "due": "Due",
+      "late": "Delay",
+      "status": "Status",
+      "days_one": "+{{count}} day",
+      "days_other": "+{{count}} days"
+    },
+    "report": {
+      "title": "Project report",
+      "description": "PDF with the project details, stages, tasks, budget and expenses for the period.",
+      "from": "From",
+      "fromHint": "Empty: project's planned start",
+      "to": "To",
+      "toHint": "Empty: today",
+      "cancel": "Cancel",
+      "submit": "Download PDF",
+      "generating": "Generating…",
+      "validation": {
+        "dateInvalid": "Invalid date.",
+        "rangeInvalid": "The end date must be on or after the start date."
+      }
+    },
+    "pdf": {
+      "title": "PRISSMA · Indicators",
+      "generatedAt": "Generated {{date}}"
     }
   }
 }
