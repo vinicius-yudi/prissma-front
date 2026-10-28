@@ -2,7 +2,13 @@
   "header": {
     "themeLight": "Activar modo claro",
     "themeDark": "Activar modo oscuro",
-    "readOnly": "Solo lectura en tu perfil"
+    "readOnly": "Solo lectura en tu perfil",
+    "notifications": "Notificaciones",
+    "noNotifications": "No tienes notificaciones por ahora.",
+    "unreadCount": "Sin leer: {{count}}",
+    "loadingNotifications": "Cargando notificaciones...",
+    "notificationsError": "No se pudieron cargar las notificaciones.",
+    "retryNotifications": "Intentar de nuevo"
   },
   "sidebar": {
     "accountType": "Cuenta personal",

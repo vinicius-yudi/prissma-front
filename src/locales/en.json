@@ -2,7 +2,13 @@
   "header": {
     "themeLight": "Switch to light mode",
     "themeDark": "Switch to dark mode",
-    "readOnly": "Read-only for your role"
+    "readOnly": "Read-only for your role",
+    "notifications": "Notifications",
+    "noNotifications": "You have no notifications right now.",
+    "unreadCount": "Unread: {{count}}",
+    "loadingNotifications": "Loading notifications...",
+    "notificationsError": "Notifications could not be loaded.",
+    "retryNotifications": "Try again"
   },
   "sidebar": {
     "accountType": "Personal account",

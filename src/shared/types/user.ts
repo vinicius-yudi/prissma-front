@@ -1,3 +1,5 @@
+import type { Notification } from "./notification"
+
 /** Papel GLOBAL da conta do usuário. Espelha o enum Role do backend. */
 export const GlobalRole = {
 	ADMIN: "ADMIN",
@@ -26,4 +28,5 @@ export interface UserProfile {
 	name: string
 	email: string
 	role: Role
+	notifications?: Notification[]
 }
