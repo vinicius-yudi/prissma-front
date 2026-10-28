@@ -296,7 +296,6 @@
     "backToList": "Voltar para a listagem",
     "acompError": "Não foi possível carregar o acompanhamento.",
     "retry": "Tentar novamente",
-    "comingSoon": "Em breve",
     "tabs": {
       "visaoGeral": "Visão Geral",
       "etapas": "Etapas",
@@ -340,6 +339,92 @@
         "daysLeft_one": "{{count}} dia para concluir",
         "daysLeft_other": "{{count}} dias para concluir",
         "tasks": "{{done}} de {{total}} tarefas concluídas"
+      },
+      "customize": {
+        "start": "Personalizar",
+        "toolbar": "Personalizar a visão geral",
+        "title": "Personalizando a visão geral",
+        "hint": "Arraste pela alça ⠿ para reordenar. Levar um widget para a outra coluna muda o tamanho dele.",
+        "add": "Adicionar widget",
+        "addShort": "Adicionar",
+        "addOne": "Adicionar {{title}}",
+        "restore": "Restaurar padrão",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "done": "Concluir",
+        "saving": "Salvando…",
+        "saved": "Visão geral salva.",
+        "saveError": "Não foi possível salvar a visão geral. Tente de novo.",
+        "drag": "Mover {{title}}",
+        "moveUp": "Subir {{title}}",
+        "moveDown": "Descer {{title}}",
+        "toSide": "Levar {{title}} para a coluna lateral",
+        "toMain": "Levar {{title}} para a coluna principal",
+        "remove": "Remover {{title}}",
+        "nothingNow": "Nada para mostrar agora. O widget aparece quando houver dados.",
+        "dropHere": "Solte um widget aqui",
+        "catalogTitle": "Adicionar widget",
+        "catalogHint": "Widgets que estão fora da tela. O que você adicionar entra no fim da coluna dele.",
+        "catalogEmpty": "Todos os widgets disponíveis já estão na tela.",
+        "emptyTitle": "Nenhum widget na visão geral",
+        "emptyBody": "Você removeu todos os widgets. Adicione os que quiser acompanhar."
+      },
+      "widgets": {
+        "loadError": "Não foi possível carregar.",
+        "attention": {
+          "title": "Pede atenção",
+          "description": "Etapas vencidas e categorias do orçamento estouradas ou perto do limite."
+        },
+        "budget": {
+          "title": "Orçamento",
+          "description": "Quanto do previsto já foi gasto e o saldo por categoria."
+        },
+        "schedule": {
+          "title": "Cronograma",
+          "description": "Gantt das etapas com o andamento de cada uma."
+        },
+        "team": {
+          "title": "Equipe",
+          "description": "Quem participa da obra e o papel de cada um."
+        },
+        "current-stage": {
+          "title": "Etapa atual",
+          "description": "A etapa em andamento, com avanço, prazo e tarefas."
+        },
+        "diary": {
+          "title": "Diário da obra",
+          "description": "Os últimos registros do diário."
+        },
+        "documents": {
+          "title": "Documentos recentes",
+          "description": "Os últimos arquivos anexados à obra."
+        },
+        "my-tasks": {
+          "title": "Minhas tarefas",
+          "description": "Suas tarefas abertas nesta obra, das mais urgentes para as menos.",
+          "action": "Ver tarefas",
+          "empty": "Nenhuma tarefa sua em aberto nesta obra."
+        },
+        "proposals": {
+          "title": "Propostas aguardando aprovação",
+          "description": "Versões de design que esperam a decisão do cliente.",
+          "action": "Ver propostas",
+          "empty": "Nenhuma proposta aguardando aprovação.",
+          "version": "v{{version}} · {{author}}"
+        },
+        "week-schedule": {
+          "title": "Schedule da semana",
+          "description": "Horas alocadas de cada integrante na semana atual.",
+          "action": "Abrir schedule",
+          "empty": "Ninguém alocado nesta semana.",
+          "member": "Integrante"
+        },
+        "recent-expenses": {
+          "title": "Últimas despesas",
+          "description": "Os lançamentos mais recentes do orçamento.",
+          "action": "Ver orçamento",
+          "empty": "Nenhuma despesa lançada ainda."
+        }
       }
     },
     "documentos": {
@@ -1090,9 +1175,6 @@
         "planned": "Planejada",
         "late": "Além do prazo"
       }
-    },
-    "comingSoonBody": {
-      "indicadores": "Curvas de avanço, produtividade por equipe e desvios de prazo e custo, reunidos num painel da obra."
     }
   },
   "profile": {
@@ -1277,6 +1359,111 @@
       "passwordLowercase": "A senha precisa de pelo menos uma letra minúscula.",
       "passwordDigit": "A senha precisa de pelo menos um número.",
       "passwordSpecial": "A senha precisa de pelo menos um caractere especial."
+    }
+  },
+  "relatorios": {
+    "title": "Relatórios",
+    "subtitle": "Orçamento, prazo e equipe das obras da conta, num painel atualizado de hora em hora.",
+    "updatedAt": "Atualizado em {{date}}",
+    "neverUpdated": "Indicadores ainda sem carga",
+    "filter": {
+      "label": "Obra",
+      "all": "Todas as obras"
+    },
+    "actions": {
+      "refresh": "Atualizar dados",
+      "export": "Exportar PDF",
+      "exporting": "Gerando PDF…",
+      "report": "Relatório da obra"
+    },
+    "toasts": {
+      "refreshed": "Indicadores atualizados.",
+      "refreshError": "Não foi possível atualizar os indicadores.",
+      "reportError": "Não foi possível gerar o relatório da obra.",
+      "exportError": "Não foi possível gerar o PDF do painel."
+    },
+    "errors": {
+      "load": "Não foi possível carregar os indicadores."
+    },
+    "empty": {
+      "title": "Sem dados de andamento ainda",
+      "body": "Cadastre etapas, tarefas e orçamento. Os indicadores aparecem na próxima atualização, que roda de hora em hora."
+    },
+    "kpi": {
+      "budget": "Orçamento consumido",
+      "budgetHint": "{{executed}} de {{planned}}",
+      "stages": "Etapas concluídas",
+      "stagesHint": "{{percent}} de conclusão",
+      "overdueTasks": "Tarefas em atraso",
+      "overdueTasksHint_zero": "nenhuma tarefa cadastrada",
+      "overdueTasksHint_one": "de {{count}} tarefa no total",
+      "overdueTasksHint_other": "de {{count}} tarefas no total",
+      "deviation": "Desvio médio de prazo",
+      "deviationValue_zero": "{{value}} dias",
+      "deviationValue_one": "{{value}} dia",
+      "deviationValue_other": "{{value}} dias",
+      "deviationHint": "etapas concluídas nos últimos 30 dias"
+    },
+    "series": {
+      "planned": "Previsto",
+      "executed": "Executado",
+      "exceeded": "Acima do previsto",
+      "plannedRemaining": "Previsto",
+      "actualRemaining": "Real",
+      "done": "Concluídas",
+      "open": "Abertas no prazo",
+      "overdue": "Atrasadas"
+    },
+    "charts": {
+      "budget": {
+        "title": "Orçamento previsto vs. executado (acumulado)",
+        "empty": "Sem orçamento nem despesas lançadas."
+      },
+      "expenses": {
+        "title": "Despesas por categoria",
+        "empty": "Sem categorias de orçamento.",
+        "exceeded": "Acima do previsto: {{categories}}"
+      },
+      "burndown": {
+        "title": "Burndown de tarefas",
+        "empty": "Sem tarefas com prazo planejado.",
+        "week": "Semana de {{date}}",
+        "consolidatedHint": "Todas as obras: cada obra só entra na soma dentro do próprio cronograma, então o total de tarefas muda quando uma obra começa ou termina."
+      },
+      "team": {
+        "title": "Esforço da equipe",
+        "empty": "Nenhum membro ativo nas obras."
+      }
+    },
+    "overdue": {
+      "title": "Etapas em atraso",
+      "empty": "Nenhuma etapa em atraso.",
+      "stage": "Etapa",
+      "project": "Obra",
+      "due": "Prazo",
+      "late": "Atraso",
+      "status": "Status",
+      "days_one": "+{{count}} dia",
+      "days_other": "+{{count}} dias"
+    },
+    "report": {
+      "title": "Relatório da obra",
+      "description": "PDF com identificação da obra, etapas, tarefas, orçamento e despesas do período.",
+      "from": "De",
+      "fromHint": "Vazio: início planejado da obra",
+      "to": "Até",
+      "toHint": "Vazio: hoje",
+      "cancel": "Cancelar",
+      "submit": "Baixar PDF",
+      "generating": "Gerando…",
+      "validation": {
+        "dateInvalid": "Data inválida.",
+        "rangeInvalid": "A data final precisa ser igual ou posterior à inicial."
+      }
+    },
+    "pdf": {
+      "title": "PRISSMA · Indicadores",
+      "generatedAt": "Gerado em {{date}}"
     }
   }
 }
