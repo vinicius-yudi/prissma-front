@@ -58,13 +58,14 @@ function jsonResponse(body: unknown, status = 200): Response {
   })
 }
 
-/**
- * `blob.text()` e não `FileReader`: o `Response` do teste é o nativo do Node,
- * que devolve um `Blob` do Node — e o `FileReader` do jsdom só aceita o
- * `Blob` do próprio jsdom ("parameter 1 is not of type 'Blob'").
- */
+/** `Blob.text()` não está disponível na implementação de Blob do jsdom. */
 function readBlob(blob: Blob): Promise<string> {
-  return blob.text()
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(reader.error)
+    reader.readAsText(blob)
+  })
 }
 
 describe("rotas que passam pelo cliente comum", () => {
