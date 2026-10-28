@@ -334,6 +334,92 @@
         "daysLeft_one": "{{count}} day to finish",
         "daysLeft_other": "{{count}} days to finish",
         "tasks": "{{done}} of {{total}} tasks completed"
+      },
+      "customize": {
+        "start": "Customize",
+        "toolbar": "Customize the overview",
+        "title": "Customizing the overview",
+        "hint": "Drag by the ⠿ handle to reorder. Moving a widget to the other column changes its size.",
+        "add": "Add widget",
+        "addShort": "Add",
+        "addOne": "Add {{title}}",
+        "restore": "Restore default",
+        "cancel": "Cancel",
+        "save": "Save",
+        "done": "Done",
+        "saving": "Saving…",
+        "saved": "Overview saved.",
+        "saveError": "Could not save the overview. Please try again.",
+        "drag": "Move {{title}}",
+        "moveUp": "Move {{title}} up",
+        "moveDown": "Move {{title}} down",
+        "toSide": "Move {{title}} to the side column",
+        "toMain": "Move {{title}} to the main column",
+        "remove": "Remove {{title}}",
+        "nothingNow": "Nothing to show right now. The widget appears when there is data.",
+        "dropHere": "Drop a widget here",
+        "catalogTitle": "Add widget",
+        "catalogHint": "Widgets that are off the screen. Whatever you add goes to the end of its column.",
+        "catalogEmpty": "Every available widget is already on the screen.",
+        "emptyTitle": "No widgets on the overview",
+        "emptyBody": "You removed every widget. Add the ones you want to follow."
+      },
+      "widgets": {
+        "loadError": "Could not load.",
+        "attention": {
+          "title": "Needs attention",
+          "description": "Overdue stages and budget categories over or near the limit."
+        },
+        "budget": {
+          "title": "Budget",
+          "description": "How much of the plan was spent and the balance per category."
+        },
+        "schedule": {
+          "title": "Schedule",
+          "description": "Gantt of the stages with the progress of each one."
+        },
+        "team": {
+          "title": "Team",
+          "description": "Who works on the project and their role."
+        },
+        "current-stage": {
+          "title": "Current stage",
+          "description": "The stage in progress, with progress, deadline and tasks."
+        },
+        "diary": {
+          "title": "Site diary",
+          "description": "The latest diary entries."
+        },
+        "documents": {
+          "title": "Recent documents",
+          "description": "The latest files attached to the project."
+        },
+        "my-tasks": {
+          "title": "My tasks",
+          "description": "Your open tasks on this project, most urgent first.",
+          "action": "See tasks",
+          "empty": "You have no open tasks on this project."
+        },
+        "proposals": {
+          "title": "Proposals awaiting approval",
+          "description": "Design versions waiting for the client's decision.",
+          "action": "See proposals",
+          "empty": "No proposals awaiting approval.",
+          "version": "v{{version}} · {{author}}"
+        },
+        "week-schedule": {
+          "title": "This week's schedule",
+          "description": "Hours allocated to each member this week.",
+          "action": "Open schedule",
+          "empty": "Nobody is allocated this week.",
+          "member": "Member"
+        },
+        "recent-expenses": {
+          "title": "Recent expenses",
+          "description": "The latest budget entries.",
+          "action": "See budget",
+          "empty": "No expenses yet."
+        }
       }
     },
     "documentos": {

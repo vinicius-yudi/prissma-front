@@ -334,6 +334,92 @@
         "daysLeft_one": "{{count}} día para concluir",
         "daysLeft_other": "{{count}} días para concluir",
         "tasks": "{{done}} de {{total}} tareas concluidas"
+      },
+      "customize": {
+        "start": "Personalizar",
+        "toolbar": "Personalizar la vista general",
+        "title": "Personalizando la vista general",
+        "hint": "Arrastra por el asa ⠿ para reordenar. Llevar un widget a la otra columna cambia su tamaño.",
+        "add": "Agregar widget",
+        "addShort": "Agregar",
+        "addOne": "Agregar {{title}}",
+        "restore": "Restaurar predeterminado",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "done": "Listo",
+        "saving": "Guardando…",
+        "saved": "Vista general guardada.",
+        "saveError": "No se pudo guardar la vista general. Inténtalo de nuevo.",
+        "drag": "Mover {{title}}",
+        "moveUp": "Subir {{title}}",
+        "moveDown": "Bajar {{title}}",
+        "toSide": "Llevar {{title}} a la columna lateral",
+        "toMain": "Llevar {{title}} a la columna principal",
+        "remove": "Quitar {{title}}",
+        "nothingNow": "Nada que mostrar por ahora. El widget aparece cuando haya datos.",
+        "dropHere": "Suelta un widget aquí",
+        "catalogTitle": "Agregar widget",
+        "catalogHint": "Widgets que están fuera de la pantalla. Lo que agregues va al final de su columna.",
+        "catalogEmpty": "Todos los widgets disponibles ya están en la pantalla.",
+        "emptyTitle": "Ningún widget en la vista general",
+        "emptyBody": "Quitaste todos los widgets. Agrega los que quieras seguir."
+      },
+      "widgets": {
+        "loadError": "No se pudo cargar.",
+        "attention": {
+          "title": "Requiere atención",
+          "description": "Etapas vencidas y categorías del presupuesto excedidas o cerca del límite."
+        },
+        "budget": {
+          "title": "Presupuesto",
+          "description": "Cuánto de lo previsto ya se gastó y el saldo por categoría."
+        },
+        "schedule": {
+          "title": "Cronograma",
+          "description": "Gantt de las etapas con el avance de cada una."
+        },
+        "team": {
+          "title": "Equipo",
+          "description": "Quién participa en la obra y el rol de cada uno."
+        },
+        "current-stage": {
+          "title": "Etapa actual",
+          "description": "La etapa en curso, con avance, plazo y tareas."
+        },
+        "diary": {
+          "title": "Diario de obra",
+          "description": "Los últimos registros del diario."
+        },
+        "documents": {
+          "title": "Documentos recientes",
+          "description": "Los últimos archivos adjuntos a la obra."
+        },
+        "my-tasks": {
+          "title": "Mis tareas",
+          "description": "Tus tareas abiertas en esta obra, de la más urgente a la menos.",
+          "action": "Ver tareas",
+          "empty": "No tienes tareas abiertas en esta obra."
+        },
+        "proposals": {
+          "title": "Propuestas pendientes de aprobación",
+          "description": "Versiones de diseño que esperan la decisión del cliente.",
+          "action": "Ver propuestas",
+          "empty": "Ninguna propuesta pendiente de aprobación.",
+          "version": "v{{version}} · {{author}}"
+        },
+        "week-schedule": {
+          "title": "Agenda de la semana",
+          "description": "Horas asignadas a cada integrante en la semana actual.",
+          "action": "Abrir agenda",
+          "empty": "Nadie asignado esta semana.",
+          "member": "Integrante"
+        },
+        "recent-expenses": {
+          "title": "Últimos gastos",
+          "description": "Los registros más recientes del presupuesto.",
+          "action": "Ver presupuesto",
+          "empty": "Aún no hay gastos registrados."
+        }
       }
     },
     "documentos": {
