@@ -27,6 +27,7 @@ import {
   VisaoGeralModule,
 } from "@/pages/obra-selecionada/modules"
 import { ProjetosPage } from "@/pages/projetos"
+import { RelatoriosPage } from "@/pages/relatorios"
 import { ResetPasswordPage } from "@/pages/reset-password"
 import { Toaster } from "@/shared/components/ui/toast/Toaster"
 
@@ -81,6 +82,14 @@ function App() {
                       element={
                         <ModuleGuard module="obras">
                           <ProjetosPage />
+                        </ModuleGuard>
+                      }
+                    />
+                    <Route
+                      path="relatorios"
+                      element={
+                        <ModuleGuard module="relatorios">
+                          <RelatoriosPage />
                         </ModuleGuard>
                       }
                     />

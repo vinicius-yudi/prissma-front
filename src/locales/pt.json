@@ -290,7 +290,6 @@
     "backToList": "Voltar para a listagem",
     "acompError": "Não foi possível carregar o acompanhamento.",
     "retry": "Tentar novamente",
-    "comingSoon": "Em breve",
     "tabs": {
       "visaoGeral": "Visão Geral",
       "etapas": "Etapas",
@@ -1170,9 +1169,6 @@
         "planned": "Planejada",
         "late": "Além do prazo"
       }
-    },
-    "comingSoonBody": {
-      "indicadores": "Curvas de avanço, produtividade por equipe e desvios de prazo e custo, reunidos num painel da obra."
     }
   },
   "profile": {
@@ -1357,6 +1353,111 @@
       "passwordLowercase": "A senha precisa de pelo menos uma letra minúscula.",
       "passwordDigit": "A senha precisa de pelo menos um número.",
       "passwordSpecial": "A senha precisa de pelo menos um caractere especial."
+    }
+  },
+  "relatorios": {
+    "title": "Relatórios",
+    "subtitle": "Orçamento, prazo e equipe das obras da conta, num painel atualizado de hora em hora.",
+    "updatedAt": "Atualizado em {{date}}",
+    "neverUpdated": "Indicadores ainda sem carga",
+    "filter": {
+      "label": "Obra",
+      "all": "Todas as obras"
+    },
+    "actions": {
+      "refresh": "Atualizar dados",
+      "export": "Exportar PDF",
+      "exporting": "Gerando PDF…",
+      "report": "Relatório da obra"
+    },
+    "toasts": {
+      "refreshed": "Indicadores atualizados.",
+      "refreshError": "Não foi possível atualizar os indicadores.",
+      "reportError": "Não foi possível gerar o relatório da obra.",
+      "exportError": "Não foi possível gerar o PDF do painel."
+    },
+    "errors": {
+      "load": "Não foi possível carregar os indicadores."
+    },
+    "empty": {
+      "title": "Sem dados de andamento ainda",
+      "body": "Cadastre etapas, tarefas e orçamento. Os indicadores aparecem na próxima atualização, que roda de hora em hora."
+    },
+    "kpi": {
+      "budget": "Orçamento consumido",
+      "budgetHint": "{{executed}} de {{planned}}",
+      "stages": "Etapas concluídas",
+      "stagesHint": "{{percent}} de conclusão",
+      "overdueTasks": "Tarefas em atraso",
+      "overdueTasksHint_zero": "nenhuma tarefa cadastrada",
+      "overdueTasksHint_one": "de {{count}} tarefa no total",
+      "overdueTasksHint_other": "de {{count}} tarefas no total",
+      "deviation": "Desvio médio de prazo",
+      "deviationValue_zero": "{{value}} dias",
+      "deviationValue_one": "{{value}} dia",
+      "deviationValue_other": "{{value}} dias",
+      "deviationHint": "etapas concluídas nos últimos 30 dias"
+    },
+    "series": {
+      "planned": "Previsto",
+      "executed": "Executado",
+      "exceeded": "Acima do previsto",
+      "plannedRemaining": "Previsto",
+      "actualRemaining": "Real",
+      "done": "Concluídas",
+      "open": "Abertas no prazo",
+      "overdue": "Atrasadas"
+    },
+    "charts": {
+      "budget": {
+        "title": "Orçamento previsto vs. executado (acumulado)",
+        "empty": "Sem orçamento nem despesas lançadas."
+      },
+      "expenses": {
+        "title": "Despesas por categoria",
+        "empty": "Sem categorias de orçamento.",
+        "exceeded": "Acima do previsto: {{categories}}"
+      },
+      "burndown": {
+        "title": "Burndown de tarefas",
+        "empty": "Sem tarefas com prazo planejado.",
+        "week": "Semana de {{date}}",
+        "consolidatedHint": "Todas as obras: cada obra só entra na soma dentro do próprio cronograma, então o total de tarefas muda quando uma obra começa ou termina."
+      },
+      "team": {
+        "title": "Esforço da equipe",
+        "empty": "Nenhum membro ativo nas obras."
+      }
+    },
+    "overdue": {
+      "title": "Etapas em atraso",
+      "empty": "Nenhuma etapa em atraso.",
+      "stage": "Etapa",
+      "project": "Obra",
+      "due": "Prazo",
+      "late": "Atraso",
+      "status": "Status",
+      "days_one": "+{{count}} dia",
+      "days_other": "+{{count}} dias"
+    },
+    "report": {
+      "title": "Relatório da obra",
+      "description": "PDF com identificação da obra, etapas, tarefas, orçamento e despesas do período.",
+      "from": "De",
+      "fromHint": "Vazio: início planejado da obra",
+      "to": "Até",
+      "toHint": "Vazio: hoje",
+      "cancel": "Cancelar",
+      "submit": "Baixar PDF",
+      "generating": "Gerando…",
+      "validation": {
+        "dateInvalid": "Data inválida.",
+        "rangeInvalid": "A data final precisa ser igual ou posterior à inicial."
+      }
+    },
+    "pdf": {
+      "title": "PRISSMA · Indicadores",
+      "generatedAt": "Gerado em {{date}}"
     }
   }
 }

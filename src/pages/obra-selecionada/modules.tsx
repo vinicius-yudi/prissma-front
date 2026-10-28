@@ -1,8 +1,9 @@
 import { useOutletContext } from "react-router-dom"
 
+import { AnalyticsDashboard } from "@/pages/relatorios/components/AnalyticsDashboard"
+import { useAccess } from "@/shared/hooks/useAccess"
 import type { Project } from "@/shared/types/project"
 
-import { ComingSoon } from "./components/ComingSoon"
 import { DocumentosTab } from "./components/DocumentosTab"
 import DiarioDaObra from "./components/DiarioDaObra"
 import { EquipesTab } from "./components/EquipesTab"
@@ -54,8 +55,14 @@ export function DocumentosModule() {
   return <DocumentosTab projectId={useObra().id} />
 }
 
+/**
+ * O mesmo dashboard de analytics do consolidado (Relatórios), com a obra fixa.
+ * O módulo é leitura para A, C e M: só o engenheiro exporta.
+ */
 export function IndicadoresModule() {
-  return <ComingSoon module="indicadores" />
+  const project = useObra()
+  const { isReadOnly } = useAccess()
+  return <AnalyticsDashboard projectId={project.id} scopeLabel={project.title} canExport={!isReadOnly("indicadores")} />
 }
 
 export function DiarioModule() {
