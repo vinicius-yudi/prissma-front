@@ -25,6 +25,11 @@ const editar = vi.mocked(updateProject)
 
 const onClose = vi.fn()
 
+// Com fake timers, o userEvent precisa avançá-los ele mesmo: sem isso cada
+// tecla espera o relógio real andar e o preenchimento dos dois passos passa
+// dos 5s do timeout na suíte completa.
+let user: ReturnType<typeof userEvent.setup>
+
 function obra(over: Partial<Project> = {}): Project {
   return {
     id: 7,
@@ -66,31 +71,34 @@ function datas(): HTMLInputElement[] {
 
 /** Preenche o passo 1 com o mínimo válido e avança. */
 async function preencherPasso1() {
-  await userEvent.type(screen.getByPlaceholderText("Ex: Residencial Aurora"), "Residencial Alfa")
-  await userEvent.selectOptions(screen.getAllByRole("combobox")[0], "RESIDENTIAL")
-  await userEvent.selectOptions(screen.getAllByRole("combobox")[1], "BUILDING")
-  await userEvent.clear(campoNumerico(0))
-  await userEvent.type(campoNumerico(0), "400")
-  await userEvent.clear(campoNumerico(1))
-  await userEvent.type(campoNumerico(1), "250")
-  await userEvent.type(datas()[0], "2026-03-01")
-  await userEvent.type(datas()[1], "2026-12-01")
-  await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
+  await user.type(screen.getByPlaceholderText("Ex: Residencial Aurora"), "Residencial Alfa")
+  await user.selectOptions(screen.getAllByRole("combobox")[0], "RESIDENTIAL")
+  await user.selectOptions(screen.getAllByRole("combobox")[1], "BUILDING")
+  await user.clear(campoNumerico(0))
+  await user.type(campoNumerico(0), "400")
+  await user.clear(campoNumerico(1))
+  await user.type(campoNumerico(1), "250")
+  await user.type(datas()[0], "2026-03-01")
+  await user.type(datas()[1], "2026-12-01")
+  await user.click(screen.getByRole("button", { name: /Próximo/ }))
+  // A validação é assíncrona: só segue quando o passo 2 já está na tela.
+  await screen.findByPlaceholderText("00000-000")
 }
 
 /** Preenche o passo 2 com o mínimo válido. */
 async function preencherPasso2() {
-  await userEvent.type(screen.getByPlaceholderText("00000-000"), "01001000")
-  await userEvent.type(screen.getByPlaceholderText("SP"), "SP")
-  await userEvent.type(screen.getByPlaceholderText("Rua, Avenida..."), "Rua das Palmeiras")
-  await userEvent.type(screen.getByPlaceholderText("123"), "100")
-  await userEvent.type(screen.getByPlaceholderText("Nome do bairro"), "Centro")
-  await userEvent.type(screen.getByPlaceholderText("Nome da cidade"), "São Paulo")
+  await user.type(screen.getByPlaceholderText("00000-000"), "01001000")
+  await user.type(screen.getByPlaceholderText("SP"), "SP")
+  await user.type(screen.getByPlaceholderText("Rua, Avenida..."), "Rua das Palmeiras")
+  await user.type(screen.getByPlaceholderText("123"), "100")
+  await user.type(screen.getByPlaceholderText("Nome do bairro"), "Centro")
+  await user.type(screen.getByPlaceholderText("Nome da cidade"), "São Paulo")
 }
 
 beforeEach(() => {
   vi.resetAllMocks()
   vi.useFakeTimers({ shouldAdvanceTime: true })
+  user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
   // A busca de CEP é a única chamada direta a rede externa (viacep) no
   // projeto; sem stub ela vazaria para fora do teste.
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ json: async () => ({ erro: true }) }))
@@ -145,7 +153,7 @@ describe("<ProjectStepModal /> — navegação entre passos", () => {
   it("só avança com o passo 1 válido e mostra o erro no campo", async () => {
     render()
 
-    await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
+    await user.click(screen.getByRole("button", { name: /Próximo/ }))
 
     expect(await screen.findByText("O nome precisa de pelo menos 3 caracteres.")).toBeInTheDocument()
     expect(screen.getByPlaceholderText("Ex: Residencial Aurora")).toHaveAttribute("aria-invalid", "true")
@@ -167,7 +175,7 @@ describe("<ProjectStepModal /> — navegação entre passos", () => {
     render()
     await preencherPasso1()
 
-    await userEvent.click(screen.getByRole("button", { name: /Voltar/ }))
+    await user.click(screen.getByRole("button", { name: /Voltar/ }))
 
     expect(screen.getByDisplayValue("Residencial Alfa")).toBeInTheDocument()
   })
@@ -175,7 +183,7 @@ describe("<ProjectStepModal /> — navegação entre passos", () => {
   it("mostra o endereço atual no passo 2 ao editar", async () => {
     render(obra())
 
-    await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
+    await user.click(screen.getByRole("button", { name: /Próximo/ }))
 
     expect(await screen.findByText("Endereço atual")).toBeInTheDocument()
   })
@@ -187,7 +195,7 @@ describe("<ProjectStepModal /> — gravação", () => {
     await preencherPasso1()
     await preencherPasso2()
 
-    await userEvent.click(screen.getByRole("button", { name: "Salvar" }))
+    await user.click(screen.getByRole("button", { name: "Salvar" }))
 
     await waitFor(() => expect(criar).toHaveBeenCalled())
     expect(criar.mock.calls[0][0]).toMatchObject({
@@ -204,10 +212,10 @@ describe("<ProjectStepModal /> — gravação", () => {
 
   it("edita pela rota da própria obra", async () => {
     render(obra())
-    await userEvent.click(screen.getByRole("button", { name: /Próximo/ }))
+    await user.click(screen.getByRole("button", { name: /Próximo/ }))
     await screen.findByText("Endereço atual")
 
-    await userEvent.click(screen.getByRole("button", { name: "Salvar" }))
+    await user.click(screen.getByRole("button", { name: "Salvar" }))
 
     await waitFor(() => expect(editar).toHaveBeenCalled())
     expect(editar.mock.calls[0][0]).toBe(7)
@@ -217,7 +225,7 @@ describe("<ProjectStepModal /> — gravação", () => {
     render()
     await preencherPasso1()
 
-    await userEvent.click(screen.getByRole("button", { name: "Salvar" }))
+    await user.click(screen.getByRole("button", { name: "Salvar" }))
 
     expect(await screen.findByText("O CEP tem 8 dígitos.")).toBeInTheDocument()
     expect(screen.getByText("Informe o logradouro.")).toBeInTheDocument()
@@ -227,7 +235,7 @@ describe("<ProjectStepModal /> — gravação", () => {
   it("fecha no cancelar do passo 1", async () => {
     render()
 
-    await userEvent.click(screen.getByRole("button", { name: "Cancelar" }))
+    await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(onClose).toHaveBeenCalled()
     expect(criar).not.toHaveBeenCalled()
@@ -249,7 +257,7 @@ describe("<ProjectStepModal /> — CEP", () => {
   it("mostra o CEP mascarado mantendo os dígitos no formulário", async () => {
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "01001000")
+    await user.type(screen.getByPlaceholderText("00000-000"), "01001000")
 
     expect(screen.getByPlaceholderText("00000-000")).toHaveValue("01001-000")
   })
@@ -257,7 +265,7 @@ describe("<ProjectStepModal /> — CEP", () => {
   it("descarta o que não é dígito", async () => {
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "abc01001")
+    await user.type(screen.getByPlaceholderText("00000-000"), "abc01001")
 
     expect(screen.getByPlaceholderText("00000-000")).toHaveValue("01001")
   })
@@ -276,7 +284,7 @@ describe("<ProjectStepModal /> — CEP", () => {
     )
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "01001000")
+    await user.type(screen.getByPlaceholderText("00000-000"), "01001000")
     await vi.advanceTimersByTimeAsync(600)
 
     await waitFor(() => expect(screen.getByDisplayValue("Praça da Sé")).toBeInTheDocument())
@@ -287,7 +295,7 @@ describe("<ProjectStepModal /> — CEP", () => {
   it("avisa quando o CEP não existe", async () => {
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "00000000")
+    await user.type(screen.getByPlaceholderText("00000-000"), "00000000")
     await vi.advanceTimersByTimeAsync(600)
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("CEP não encontrado."))
@@ -297,7 +305,7 @@ describe("<ProjectStepModal /> — CEP", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")))
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "01001000")
+    await user.type(screen.getByPlaceholderText("00000-000"), "01001000")
     await vi.advanceTimersByTimeAsync(600)
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Não foi possível buscar o CEP."))
@@ -308,7 +316,7 @@ describe("<ProjectStepModal /> — CEP", () => {
   it("não consulta com o CEP incompleto", async () => {
     await irParaEndereco()
 
-    await userEvent.type(screen.getByPlaceholderText("00000-000"), "0100")
+    await user.type(screen.getByPlaceholderText("00000-000"), "0100")
     await vi.advanceTimersByTimeAsync(600)
 
     expect(fetch).not.toHaveBeenCalled()

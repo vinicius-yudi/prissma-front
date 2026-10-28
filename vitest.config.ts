@@ -13,6 +13,9 @@ import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   plugins: [react()],
+  // PostCSS inline (vazio) para o Vite não subir diretórios e pegar um
+  // ~/postcss.config.mjs perdido — mesmo motivo do `vite.config.ts`.
+  css: { postcss: {} },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
