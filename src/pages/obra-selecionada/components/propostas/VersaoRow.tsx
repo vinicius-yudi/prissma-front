@@ -35,7 +35,7 @@ interface VersaoRowProps {
  * sem segunda ida ao servidor, e só aparece com a URL pronta.
  */
 export function VersaoRow({ projectId, proposalId, version, canMutate, isBusy, onChangeStatus }: VersaoRowProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { url } = useProposalImage(projectId, proposalId, version.id, version.hasImage)
 
   return (
@@ -61,7 +61,7 @@ export function VersaoRow({ projectId, proposalId, version, canMutate, isBusy, o
         </div>
         {version.description && <p className="line-clamp-2 text-[13px] leading-relaxed text-ink-2">{version.description}</p>}
         <p className="text-[12px] text-meta">
-          {version.authorName} · <span className="t-num">{formatDate(version.submittedAt)}</span>
+          {version.authorName} · <span className="t-num">{formatDate(version.submittedAt, i18n.language)}</span>
         </p>
 
         {(canMutate || url) && (

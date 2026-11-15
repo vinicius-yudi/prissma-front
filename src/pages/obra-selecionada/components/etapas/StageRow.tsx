@@ -88,7 +88,7 @@ interface StageRowProps {
  */
 export function StageRow(props: StageRowProps) {
   const { stage, position, total, summary, photoCount, canMutate } = props
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: stage.id,
@@ -129,8 +129,8 @@ export function StageRow(props: StageRowProps) {
             <span className="t-num mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12.5px] text-meta">
               <span className="inline-flex items-center gap-1">
                 <CalendarDays size={12} />
-                {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : "—"} →{" "}
-                {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : "—"}
+                {stage.plannedStartDate ? formatDate(stage.plannedStartDate, i18n.language) : "—"} →{" "}
+                {stage.plannedEndDate ? formatDate(stage.plannedEndDate, i18n.language) : "—"}
               </span>
               {late && (
                 <span className="font-[620] text-danger">{t("obra.visaoGeral.attention.daysLate", { count: daysLate })}</span>

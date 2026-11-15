@@ -25,7 +25,7 @@ interface ExpenseTableRowProps {
 
 /** Linha de lançamento; editar e excluir aparecem no hover (sempre no toque). */
 export function ExpenseTableRow({ expense, category, stageName, canMutate, onEdit, onDelete }: ExpenseTableRowProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <motion.tr
@@ -36,7 +36,7 @@ export function ExpenseTableRow({ expense, category, stageName, canMutate, onEdi
       transition={{ duration: 0.35 }}
       className="group border-b border-border last:border-0 hover:bg-raised/60"
     >
-      <td className="t-num px-5 py-3 whitespace-nowrap text-ink-2 sm:px-6">{formatDate(expense.spentAt)}</td>
+      <td className="t-num px-5 py-3 whitespace-nowrap text-ink-2 sm:px-6">{formatDate(expense.spentAt, i18n.language)}</td>
       <td className="px-3 py-3">
         <span className="font-[540] text-ink">{expense.description}</span>
         {stageName && <span className="block text-[12px] text-meta">{stageName}</span>}

@@ -30,8 +30,8 @@ interface DocumentItemProps {
 
 /** Um arquivo: folha do tipo, nome, data, etapa, quem enviou e as ações. */
 export function DocumentItem({ attachment, stageName, uploaderName, isDownloading, canDelete, onDownload, onDelete }: DocumentItemProps) {
-  const { t } = useTranslation()
-  const meta = [formatDate(attachment.uploadedAt), stageName].filter(Boolean).join(" · ")
+  const { t, i18n } = useTranslation()
+  const meta = [formatDate(attachment.uploadedAt, i18n.language), stageName].filter(Boolean).join(" · ")
 
   return (
     <motion.li

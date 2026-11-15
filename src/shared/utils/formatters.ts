@@ -1,7 +1,7 @@
 import { EXTENSION_PATTERN } from "./regex"
 
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("pt-BR")
+export function formatDate(iso: string, locale: string): string {
+  return new Date(iso).toLocaleDateString(locale)
 }
 
 export function stripExtension(fileName: string): string {

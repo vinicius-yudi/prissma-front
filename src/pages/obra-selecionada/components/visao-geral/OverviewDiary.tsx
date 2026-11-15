@@ -38,7 +38,7 @@ const RECENT = 3
 
 /** Os três últimos registros do diário, em linha do tempo. */
 export function OverviewDiary({ projectId }: { projectId: number }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { entries } = useDiario(projectId)
   const recent = entries.slice(0, RECENT)
 
@@ -57,7 +57,7 @@ export function OverviewDiary({ projectId }: { projectId: number }) {
                 </span>
                 <div className="min-w-0">
                   <p className="t-num text-[12px] text-meta">
-                    {t(`obra.diario.types.${entry.entryType}`)} · {formatDate(entry.entryDate)}
+                    {t(`obra.diario.types.${entry.entryType}`)} · {formatDate(entry.entryDate, i18n.language)}
                   </p>
                   <p className="mt-0.5 line-clamp-2 text-[13.5px] leading-snug text-ink">{entry.description}</p>
                 </div>
