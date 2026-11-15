@@ -49,6 +49,18 @@ vi.mock("../components/DiarioDaObra", () => ({
 vi.mock("../components/PropostasTab", () => ({
   PropostasTab: ({ projectId }: { projectId: number }) => <span>propostas-{projectId}</span>,
 }))
+vi.mock("@/pages/relatorios/components/AnalyticsDashboard", () => ({
+  AnalyticsDashboard: ({ projectId, scopeLabel, canExport }: { projectId: number; scopeLabel: string; canExport: boolean }) => (
+    <span>
+      analytics-{projectId}-{scopeLabel}-{String(canExport)}
+    </span>
+  ),
+}))
+
+const access = vi.hoisted(() => ({ readOnly: false }))
+vi.mock("@/shared/hooks/useAccess", () => ({
+  useAccess: () => ({ isReadOnly: () => access.readOnly }),
+}))
 
 const OBRA: Project = {
   id: 7,
@@ -112,14 +124,21 @@ describe("módulos da obra", () => {
 })
 
 /**
- * Melhor uma tela honesta que um item de menu que não abre: Indicadores está
- * no design e ficou para a fase seguinte.
+ * Indicadores é o dashboard de analytics do consolidado com a obra fixa. Só
+ * quem edita o módulo exporta: para A, C e M ele é somente-leitura.
  */
-describe("módulos ainda sem backend", () => {
-  it("anuncia Indicadores como em breve", () => {
+describe("Indicadores", () => {
+  it("abre o dashboard da obra do Outlet, com export para quem edita", () => {
+    access.readOnly = false
     renderModule(IndicadoresModule)
 
-    expect(screen.getByText("Indicadores")).toBeInTheDocument()
-    expect(screen.getByText(/em breve|Em breve/)).toBeInTheDocument()
+    expect(screen.getByText("analytics-7-Residencial Alfa-true")).toBeInTheDocument()
+  })
+
+  it("esconde o export de quem só lê o módulo", () => {
+    access.readOnly = true
+    renderModule(IndicadoresModule)
+
+    expect(screen.getByText("analytics-7-Residencial Alfa-false")).toBeInTheDocument()
   })
 })

@@ -8,6 +8,7 @@ import { LanguageSelect } from "@/shared/components/ui/language-select/LanguageS
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle/ThemeToggle"
 import { useAccess, useCurrentModule } from "@/shared/hooks/useAccess"
 
+import { NotificationsMenu } from "./NotificationsMenu"
 import { ReadOnlyNotice } from "./ReadOnlyNotice"
 import { SearchTrigger } from "./SearchTrigger"
 
@@ -49,6 +50,7 @@ export function Topbar() {
             {t("sidebar.newObra")}
           </Button>
         )}
+        <NotificationsMenu />
         <div className="hidden sm:block">
           <LanguageSelect />
         </div>

@@ -1,4 +1,3 @@
-import { MapPin } from "lucide-react"
 import { motion } from "motion/react"
 import { useTranslation } from "react-i18next"
 
@@ -7,14 +6,15 @@ import { DimensionLine } from "@/shared/components/ui/dimension-line/DimensionLi
 import { Fachada } from "@/shared/components/ui/fachada/Fachada"
 import { estimateFloors, roofFor } from "@/shared/components/ui/fachada/fachadaGeometry"
 import { SPRING } from "@/shared/constants/motion"
-import { formatProjectAddress } from "@/shared/types/project"
 import type { Project } from "@/shared/types/project"
 import { formatObraCode } from "@/shared/utils/formatters"
 
 import type { ObraHeaderData } from "../../hooks/useObraHeader"
 import { RowMenu } from "../orcamento/RowMenu"
+import { ObraAddress } from "./ObraAddress"
 import { CATEGORY_KEY, PROJECT_TYPE_KEY } from "./obraHeaderText"
 import { ObraHeaderStats } from "./ObraHeaderStats"
+import { ObraSiteMap } from "./ObraSiteMap"
 import { ProjectStatusMenu } from "./ProjectStatusMenu"
 
 interface ObraHeaderFullProps {
@@ -28,7 +28,7 @@ interface ObraHeaderFullProps {
 /**
  * Cabeçalho grande da Visão geral (DS v2, Tabs): status, nome `t-title-lg`,
  * avanço físico com o esperado para hoje, prazo, orçamento e a fachada em
- * prancha. Editar e excluir ficam no "⋮" para não competir com o título. Título e fachada têm `layoutId` e animam até a forma compacta.
+ * prancha, com a planta de situação (Google Maps) no canto. Editar e excluir ficam no "⋮" para não competir com o título. Título e fachada têm `layoutId` e animam até a forma compacta.
  */
 export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: ObraHeaderFullProps) {
   const { t } = useTranslation()
@@ -66,10 +66,7 @@ export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: O
           >
             {[formatObraCode(project.id), typeKey && t(typeKey), categoryKey && t(categoryKey)].filter(Boolean).join(" · ")}
           </DimensionLine>
-          <p className="mt-3 flex items-center gap-1.5 text-[13.5px] text-ink-2">
-            <MapPin size={14} className="text-meta" />
-            {formatProjectAddress(project)}
-          </p>
+          <ObraAddress project={project} />
 
           <ObraHeaderStats data={data} />
         </div>
@@ -84,6 +81,7 @@ export function ObraHeaderFull({ project, data, canManage, onEdit, onDelete }: O
               className="w-full"
             />
           </motion.div>
+          <ObraSiteMap project={project} className="absolute top-4 left-4 z-10 hidden sm:block" />
           {data.members.length > 0 && (
             <div
               role="img"

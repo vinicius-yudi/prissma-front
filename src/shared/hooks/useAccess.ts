@@ -64,6 +64,7 @@ export function useCurrentModule(): AppModule | null {
 
   if (pathname.startsWith("/dashboard")) return "home"
   if (pathname.startsWith("/obras")) return "obras"
+  if (pathname.startsWith("/relatorios")) return "relatorios"
   return null
 }
 

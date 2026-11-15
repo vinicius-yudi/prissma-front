@@ -22,10 +22,25 @@ vi.mock("@/shared/hooks/useAccess", () => ({
   useObraIdFromPath: vi.fn(() => null),
 }))
 vi.mock("@/shared/hooks/useProjectList", () => ({ useProjectList: vi.fn(() => []) }))
+vi.mock("@/shared/services/notification.service", () => ({ markNotificationAsRead: vi.fn() }))
+vi.mock("@/shared/services/user.service", () => ({ getMyProfile: vi.fn() }))
 
 const { useAccess, useCurrentModule } = await import("@/shared/hooks/useAccess")
 const acesso = vi.mocked(useAccess)
 const moduloAtual = vi.mocked(useCurrentModule)
+const { markNotificationAsRead } = await import("@/shared/services/notification.service")
+const marcarNotificacaoComoLida = vi.mocked(markNotificationAsRead)
+const { getMyProfile } = await import("@/shared/services/user.service")
+const buscarMeuPerfil = vi.mocked(getMyProfile)
+
+const notificacao = {
+  id: 17,
+  type: "TASK_ASSIGNED" as const,
+  title: "Tarefa atribuída",
+  message: "Revisar o cronograma da obra.",
+  read: false,
+  createdAt: "2026-10-13T12:00:00Z",
+}
 
 interface AcessoOpts {
   ocultos?: AppModule[]
@@ -50,6 +65,14 @@ function Url() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  buscarMeuPerfil.mockResolvedValue({
+    id: 1,
+    name: "Ana",
+    email: "ana@example.com",
+    role: "ENG",
+    notifications: [],
+  })
+  marcarNotificacaoComoLida.mockImplementation(async (id) => ({ ...notificacao, id, read: true }))
   moduloAtual.mockReturnValue(null)
   mockAcesso()
 })
@@ -71,6 +94,38 @@ describe("<Topbar />", () => {
     await userEvent.click(screen.getByRole("button", { name: "Buscar" }))
 
     expect(screen.getByRole("dialog", { name: "Buscar" })).toBeInTheDocument()
+  })
+
+  it("abre e fecha o menu de notificações", async () => {
+    render()
+
+    await userEvent.click(screen.getByRole("button", { name: "Notificações" }))
+
+    expect(screen.getByRole("dialog", { name: "Notificações" })).toBeInTheDocument()
+    expect(await screen.findByText("Você não tem notificações no momento.")).toBeInTheDocument()
+
+    await userEvent.keyboard("{Escape}")
+
+    expect(screen.queryByRole("dialog", { name: "Notificações" })).not.toBeInTheDocument()
+  })
+
+  it("lista notificações e marca como lida ao selecionar uma", async () => {
+    buscarMeuPerfil.mockResolvedValueOnce({
+      id: 1,
+      name: "Ana",
+      email: "ana@example.com",
+      role: "ENG",
+      notifications: [notificacao],
+    })
+    render()
+
+    await userEvent.click(screen.getByRole("button", { name: "Notificações" }))
+    const item = await screen.findByRole("button", { name: /Tarefa atribuída/ })
+
+    expect(screen.getByText("Pendentes: 1")).toBeInTheDocument()
+    await userEvent.click(item)
+
+    expect(marcarNotificacaoComoLida.mock.calls[0][0]).toBe(17)
   })
 
   it("leva ao cadastro de obra por Nova obra", async () => {

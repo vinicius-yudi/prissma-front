@@ -43,6 +43,8 @@ export interface NavItem<M extends AppModule = AppModule> {
 export const WORKSPACE_NAV: NavItem<WorkspaceModule>[] = [
   { module: "home", path: "/dashboard", icon: Home, labelKey: "sidebar.nav.home" },
   { module: "obras", path: "/obras", icon: Building2, labelKey: "sidebar.nav.obras" },
+  // Dashboard de analytics consolidado das obras da conta.
+  { module: "relatorios", path: "/relatorios", icon: BarChart3, labelKey: "sidebar.nav.relatorios" },
   // Equipe da CONSTRUTORA (workspace_members) — a matriz esconde de quem não gerencia a conta.
   { module: "pessoas", path: "/pessoas", icon: UserCog, labelKey: "sidebar.nav.pessoas" },
 ]
@@ -67,5 +69,4 @@ export const OBRA_NAV: NavItem<ObraModule>[] = [
  */
 export const DEFERRED_WORKSPACE_NAV: NavItem<WorkspaceModule>[] = [
   { module: "agenda", path: "/agenda", icon: CalendarDays, labelKey: "sidebar.nav.agenda" },
-  { module: "relatorios", path: "/relatorios", icon: BarChart3, labelKey: "sidebar.nav.relatorios" },
 ]

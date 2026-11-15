@@ -1,72 +1,110 @@
+import { LayoutGrid } from "lucide-react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
 
 import { useProjectProgress } from "@/pages/projetos/hooks/useProjectProgress"
-import { ProjectStatus } from "@/shared/types/project"
+import { Button } from "@/shared/components/ui/button/Button"
+import { EmptyState } from "@/shared/components/ui/empty-state/EmptyState"
+import { useAccess } from "@/shared/hooks/useAccess"
 import type { Project } from "@/shared/types/project"
 
 import { useProjectBudgetQuery } from "../../hooks/useProjectBudgetQuery"
-import { DocumentosRecentes } from "../DocumentosRecentes"
-import { Gantt } from "../gantt/Gantt"
-import { CurrentStageCard } from "./CurrentStageCard"
-import { OverviewAttention } from "./OverviewAttention"
-import { OverviewBudget } from "./OverviewBudget"
-import { OverviewDiary } from "./OverviewDiary"
-import { OverviewTeam } from "./OverviewTeam"
-import { SectionCard } from "./SectionCard"
+import { CustomizeBar } from "./layout/CustomizeBar"
+import { hiddenFor, show, visibleFor } from "./layout/layoutModel"
+import { useOverviewLayout } from "./layout/useOverviewLayout"
+import { WidgetCatalog } from "./layout/WidgetCatalog"
+import { WidgetGrid } from "./layout/WidgetGrid"
+import { WIDGETS_BY_ID, type WidgetContext } from "./widgets/registry"
 
 interface VisaoGeralProps {
   project: Project
 }
 
 /**
- * Visão geral da obra (DS v2). O cabeçalho grande (nome, avanço, prazo,
- * orçamento e fachada) já está acima, no <ObraHeader>; aqui fica o que pede
- * decisão, o cronograma, a etapa atual e os resumos de orçamento, equipe,
- * diário e documentos — cada um leva ao módulo cheio, nenhum edita.
+ * Visão geral da obra (DS v2), customizável. O cabeçalho grande (nome,
+ * avanço, prazo, orçamento e fachada) já está acima, no <ObraHeader>; aqui
+ * ficam os widgets — o que pede decisão, cronograma, etapa atual e os resumos
+ * de cada módulo. Cada um leva ao módulo cheio, nenhum edita.
+ *
+ * Quais widgets aparecem, em que ordem e em que coluna é preferência do
+ * usuário (salva no servidor, igual em todas as obras). Widget de módulo que
+ * o perfil não acessa não aparece nem no catálogo.
  */
 export function VisaoGeral({ project }: VisaoGeralProps) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { stages, currentStage } = useProjectProgress(project.id)
   const budget = useProjectBudgetQuery(project.id)
-  const base = `/obras/${project.id}`
-  const doneCount = stages.filter((s) => s.progress === 100).length
-  const showCurrent = !!currentStage && project.status !== ProjectStatus.COMPLETED
+  const { canSee } = useAccess()
+  const overview = useOverviewLayout()
+  const [catalogOpen, setCatalogOpen] = useState(false)
+
+  const canSeeWidget = (id: string) => {
+    const definition = WIDGETS_BY_ID.get(id)
+    return !!definition && canSee(definition.module)
+  }
+  const ctx: WidgetContext = { project, stages, currentStage, budget }
+  const nothingVisible = visibleFor(overview.layout, canSeeWidget).length === 0
+
+  function startAndAdd() {
+    overview.startEditing()
+    setCatalogOpen(true)
+  }
+
+  if (overview.isLoading) {
+    return (
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,8fr)_minmax(0,4fr)]" aria-busy>
+        <div className="h-72 animate-pulse rounded-lg bg-surface hairline" />
+        <div className="h-72 animate-pulse rounded-lg bg-surface hairline" />
+      </div>
+    )
+  }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,8fr)_minmax(0,4fr)]">
-      <div className="flex min-w-0 flex-col gap-6">
-        <OverviewAttention projectId={project.id} stages={stages} budgetItems={budget?.items ?? []} />
+    <div className="flex flex-col gap-4">
+      <CustomizeBar
+        editing={overview.editing}
+        dirty={overview.dirty}
+        isSaving={overview.isSaving}
+        onStart={overview.startEditing}
+        onAdd={() => setCatalogOpen(true)}
+        onRestore={overview.restoreDefault}
+        onCancel={() => {
+          setCatalogOpen(false)
+          overview.cancel()
+        }}
+        onSave={() => {
+          setCatalogOpen(false)
+          void overview.save()
+        }}
+      />
 
-        <SectionCard
-          title={t("obra.visaoGeral.schedule")}
-          meta={t("obra.visaoGeral.stagesDone", { done: doneCount, total: stages.length })}
-          action={{ to: `${base}/etapas`, label: t("obra.visaoGeral.manageStages") }}
-        >
-          <Gantt stages={stages} onSelect={() => navigate(`${base}/etapas`)} />
-        </SectionCard>
+      {nothingVisible && !overview.editing ? (
+        <EmptyState
+          icon={<LayoutGrid size={22} />}
+          title={t("obra.visaoGeral.customize.emptyTitle")}
+          body={t("obra.visaoGeral.customize.emptyBody")}
+          action={
+            <Button variant="outline" size="sm" fullWidth={false} onClick={startAndAdd}>
+              {t("obra.visaoGeral.customize.add")}
+            </Button>
+          }
+        />
+      ) : (
+        <WidgetGrid
+          layout={overview.layout}
+          ctx={ctx}
+          editing={overview.editing}
+          canSee={canSeeWidget}
+          onChange={overview.apply}
+        />
+      )}
 
-        {showCurrent && (
-          <CurrentStageCard
-            stage={currentStage}
-            position={stages.findIndex((s) => s.id === currentStage.id) + 1}
-            total={stages.length}
-          />
-        )}
-      </div>
-
-      <div className="flex min-w-0 flex-col gap-6">
-        <OverviewBudget projectId={project.id} budget={budget} />
-        <OverviewTeam projectId={project.id} />
-        <OverviewDiary projectId={project.id} />
-        <SectionCard
-          title={t("obra.visaoGeral.recentDocs")}
-          action={{ to: `${base}/documentos`, label: t("obra.visaoGeral.seeAllDocs") }}
-        >
-          <DocumentosRecentes projectId={project.id} />
-        </SectionCard>
-      </div>
+      <WidgetCatalog
+        open={catalogOpen && overview.editing}
+        hidden={hiddenFor(overview.layout, canSeeWidget)}
+        onAdd={(id) => overview.apply((layout) => show(layout, id))}
+        onClose={() => setCatalogOpen(false)}
+      />
     </div>
   )
 }
