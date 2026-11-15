@@ -17,7 +17,7 @@ interface RecentExpensesWidgetProps {
 
 /** Os últimos lançamentos, com a categoria do item e o valor. */
 export function RecentExpensesWidget({ projectId, budget }: RecentExpensesWidgetProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { expenses, isLoading } = useBudgetExpenses(projectId, budget?.id ?? null)
   const categoryOf = new Map((budget?.items ?? []).map((item) => [item.id, item.category]))
   const recent = [...expenses].sort((a, b) => b.spentAt.localeCompare(a.spentAt)).slice(0, MAX)
@@ -40,7 +40,7 @@ export function RecentExpensesWidget({ projectId, budget }: RecentExpensesWidget
               <div className="min-w-0">
                 <p className="truncate text-[14px] font-[580] text-ink">{expense.description}</p>
                 <p className="t-num text-[12px] text-meta">
-                  {categoryOf.get(expense.budgetItemId) ?? "—"} · {formatDate(expense.spentAt)}
+                  {categoryOf.get(expense.budgetItemId) ?? "—"} · {formatDate(expense.spentAt, i18n.language)}
                 </p>
               </div>
               <span className="t-num flex-none text-[13.5px] font-[600] text-ink">{formatCurrency(expense.amount)}</span>

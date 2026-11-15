@@ -15,7 +15,7 @@ interface CurrentStageCardProps {
 
 /** A etapa em andamento: nome `t-title-sm`, status, trena, datas e tarefas. */
 export function CurrentStageCard({ stage, position, total }: CurrentStageCardProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const late = stage.daysLate > 0
   const days = daysUntil(stage.plannedEndDate)
   const done = stage.taskStatusCounts.DONE ?? 0
@@ -48,8 +48,8 @@ export function CurrentStageCard({ stage, position, total }: CurrentStageCardPro
       </div>
 
       <p className="t-num mt-2 text-[12.5px] text-meta">
-        {stage.plannedStartDate ? formatDate(stage.plannedStartDate) : "—"} →{" "}
-        {stage.plannedEndDate ? formatDate(stage.plannedEndDate) : "—"}
+        {stage.plannedStartDate ? formatDate(stage.plannedStartDate, i18n.language) : "—"} →{" "}
+        {stage.plannedEndDate ? formatDate(stage.plannedEndDate, i18n.language) : "—"}
         {days !== null && " · "}
         {days !== null && late && t("obra.visaoGeral.attention.daysLate", { count: stage.daysLate })}
         {days !== null && !late && t("obra.visaoGeral.current.daysLeft", { count: Math.max(0, days) })}

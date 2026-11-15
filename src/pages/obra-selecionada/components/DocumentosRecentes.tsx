@@ -36,7 +36,7 @@ function iconFor(fileType: string): { Icon: LucideIcon; kind: "image" | "documen
 }
 
 export function DocumentosRecentes({ projectId }: { projectId: number }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { attachments, isLoading } = useAttachments(projectId)
 
   const recent = useMemo(
@@ -74,7 +74,7 @@ export function DocumentosRecentes({ projectId }: { projectId: number }) {
               {file.fileName}
             </span>
             <Num className="shrink-0 text-[11px] text-meta">
-              {formatDate(file.uploadedAt)}
+              {formatDate(file.uploadedAt, i18n.language)}
             </Num>
           </li>
         )

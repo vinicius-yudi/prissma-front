@@ -15,7 +15,7 @@ const MAX = 4
  * chave da aba Propostas, então aprovar lá atualiza aqui.
  */
 export function ProposalsWidget({ projectId }: { projectId: number }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const query = useQuery({
     queryKey: propostasQueryKey(projectId),
     queryFn: () => listProposals(projectId),
@@ -45,7 +45,7 @@ export function ProposalsWidget({ projectId }: { projectId: number }) {
                   version: proposal.latestVersion?.version ?? 1,
                   author: proposal.latestVersion?.authorName ?? proposal.createdByName,
                 })}
-                {proposal.latestVersion && ` · ${formatDate(proposal.latestVersion.submittedAt)}`}
+                {proposal.latestVersion && ` · ${formatDate(proposal.latestVersion.submittedAt, i18n.language)}`}
               </p>
             </li>
           ))}

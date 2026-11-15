@@ -16,7 +16,7 @@ const MAX = 5
  * outra.
  */
 export function MyTasksWidget({ projectId }: { projectId: number }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const query = useQuery({ queryKey: ["me", "tasks"], queryFn: getMyTasks })
 
   const open = (query.data ?? [])
@@ -43,7 +43,7 @@ export function MyTasksWidget({ projectId }: { projectId: number }) {
                 <p className="truncate text-[14px] font-[580] text-ink">{task.title}</p>
                 <p className="t-num text-[12px] text-meta">
                   {task.stageName}
-                  {task.plannedEndDate && ` · ${formatDate(task.plannedEndDate)}`}
+                  {task.plannedEndDate && ` · ${formatDate(task.plannedEndDate, i18n.language)}`}
                 </p>
               </div>
               <StatusBadge status={task.status} plannedEndDate={task.plannedEndDate} kind="task" className="flex-none" />

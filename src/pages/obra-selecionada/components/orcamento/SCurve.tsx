@@ -79,7 +79,7 @@ export function SCurve({ curve, planned }: SCurveProps) {
             className="pointer-events-none absolute top-0 z-10 -translate-x-1/2 rounded-[10px] bg-inverse px-3 py-2 text-[12px] whitespace-nowrap text-on-inverse shadow-lift"
             style={{ left: `${Math.min(85, Math.max(15, (hoverX / W) * 100))}%` }}
           >
-            <p className="font-[640]">{formatDate(reading.date.toISOString())}</p>
+            <p className="font-[640]">{formatDate(reading.date.toISOString(), i18n.language)}</p>
             <p className="t-num opacity-80">{t("obra.orcamento.curve.plannedAt", { value: formatCompactCurrency(reading.planned) })}</p>
             {!reading.future && <p className="t-num">{t("obra.orcamento.curve.spentAt", { value: formatCompactCurrency(reading.spent) })}</p>}
           </motion.div>

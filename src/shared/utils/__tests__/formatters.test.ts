@@ -25,11 +25,19 @@ describe("formatDate", () => {
   // seria meia-noite UTC e viraria 14/03 em qualquer fuso negativo, deixando o
   // teste verde na máquina do dev e vermelho no CI (que roda em UTC).
   it("formata ISO no padrão brasileiro", () => {
-    expect(formatDate("2026-03-15T12:00:00Z")).toBe("15/03/2026")
+    expect(formatDate("2026-03-15T12:00:00Z", "pt-BR")).toBe("15/03/2026")
   })
 
   it("preserva o dia quando o mês tem um dígito", () => {
-    expect(formatDate("2026-01-05T12:00:00Z")).toBe("05/01/2026")
+    expect(formatDate("2026-01-05T12:00:00Z", "pt-BR")).toBe("05/01/2026")
+  })
+
+  it("usa o formato de data do inglês", () => {
+    expect(formatDate("2026-03-15T12:00:00Z", "en")).toBe("3/15/2026")
+  })
+
+  it("usa o formato de data do espanhol", () => {
+    expect(formatDate("2026-03-15T12:00:00Z", "es")).toBe("15/3/2026")
   })
 })
 

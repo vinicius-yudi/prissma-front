@@ -60,15 +60,15 @@ interface TaskCardBodyProps {
 
 /** O desenho do card — o mesmo na coluna e no fantasma do arraste. */
 export function TaskCardBody({ tarefa, stageName, dragging = false }: TaskCardBodyProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const tone = dueTone(tarefa)
   const Icon = DUE_ICON[tone]
   const done = tarefa.status === TASK_STATUS.DONE
   const dueLabel = {
     done: t("obra.tarefas.columns.DONE"),
     late: t("obra.tarefas.lateShort", { count: daysLate(tarefa.plannedEndDate) }),
-    soon: daysUntil(tarefa.plannedEndDate) === 0 ? t("obra.tarefas.dueToday") : formatDate(tarefa.plannedEndDate),
-    normal: tarefa.plannedEndDate ? formatDate(tarefa.plannedEndDate) : "—",
+    soon: daysUntil(tarefa.plannedEndDate) === 0 ? t("obra.tarefas.dueToday") : formatDate(tarefa.plannedEndDate, i18n.language),
+    normal: tarefa.plannedEndDate ? formatDate(tarefa.plannedEndDate, i18n.language) : "—",
   }[tone]
 
   return (
